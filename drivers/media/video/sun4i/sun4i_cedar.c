@@ -611,6 +611,7 @@ long cedardev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 
 		case IOCTL_SET_VE_FREQ:
 			{
+#if 0
 				int arg_rate = (int)arg;
 				if(arg_rate >= 320){
 					clk_set_rate(ve_moduleclk, pll4clk_rate/3);//ve_moduleclk rate is 320khz
@@ -620,6 +621,17 @@ long cedardev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 					clk_set_rate(ve_moduleclk, pll4clk_rate/6);//ve_moduleclk rate is 160khz
 				}else{
 					printk("IOCTL_SET_VE_FREQ set ve freq error,%s,%d\n", __func__, __LINE__);
+				}
+#endif
+				int arg_rate = (int)arg;
+				int v_div = 0;
+
+				v_div = (pll4clk_rate/1000000 + (arg_rate-1))/arg_rate;
+				unsigned long pl = pll4clk_rate/v_div;
+				printk("arg_rate:%d  v_div:%d  pll4clk_rate:%ld  pll4clk_rate/v_div:%ld\n",arg_rate,v_div,pll4clk_rate,pl);
+				if (v_div <= 8 && v_div >= 1) {
+					printk("set ve rate");
+					clk_set_rate(ve_moduleclk, pll4clk_rate/v_div);
 				}
 				break;
 			}
@@ -807,6 +819,28 @@ long cedardev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
         		printk("IC_VER get error:%s,%d\n", __func__, __LINE__);
         		return -EFAULT;
         	}
+        }
+        case IOCTL_READ_REG:
+        {
+            struct cedarv_regop reg_para;
+
+						if(copy_from_user(&reg_para, (void __user*)arg, sizeof(struct cedarv_regop)))
+						{
+			                return -EFAULT;
+						}
+            return readl(reg_para.addr);
+        }
+
+        case IOCTL_WRITE_REG:
+        {
+            struct cedarv_regop reg_para;
+
+						if(copy_from_user(&reg_para, (void __user*)arg, sizeof(struct cedarv_regop)))
+						{
+			                return -EFAULT;
+						}
+            writel(reg_para.value, reg_para.addr);
+            break;
         }
         case IOCTL_FLUSH_CACHE:
         {

@@ -49,14 +49,14 @@ static struct sw_dma_client sun4i_dma_client_in = {
 
 static struct sun4i_dma_params sun4i_i2s_pcm_stereo_out = {
 	.client		=	&sun4i_dma_client_out,
-	.channel	=	DMACH_NIIS,	
+	.channel	=	DMACH_NIIS_PLAY,	
 	.dma_addr 	=	SUN4I_IISBASE + SUN4I_IISTXFIFO,
 	.dma_size 	=   4,               /* dma transfer 32bits */
 };
 
 static struct sun4i_dma_params sun4i_i2s_pcm_stereo_in = {
 	.client		=	&sun4i_dma_client_in,
-	.channel	=	DMACH_NIIS,	
+	.channel	=	DMACH_NIIS_CAPTURE,	
 	.dma_addr 	=	SUN4I_IISBASE + SUN4I_IISRXFIFO,
 	.dma_size 	=   4,               /* dma transfer 32bits */
 };
@@ -149,9 +149,24 @@ void sun4i_snd_txctrl_i2s(struct snd_pcm_substream *substream, int on)
 	}		
 }
 
-void sun4i_snd_rxctrl_i2s(int on)
+void sun4i_snd_rxctrl_i2s(struct snd_pcm_substream *substream, int on)
 {
 	u32 reg_val;
+	//printk("Enter %s, line = %d, on = %d\n", __func__, __LINE__, on);
+
+	reg_val = readl(sun4i_iis.regs + SUN4I_RXCHSEL);
+	reg_val &= ~0x7;
+	reg_val |= SUN4I_RXCHSEL_CHNUM(substream->runtime->channels);
+	writel(reg_val, sun4i_iis.regs + SUN4I_RXCHSEL);
+
+	reg_val = readl(sun4i_iis.regs + SUN4I_RXCHMAP);
+	reg_val = 0;
+	if(substream->runtime->channels == 1) {
+		reg_val = 0x00003200;
+	} else {
+		reg_val = 0x00003210;
+	}
+	writel(reg_val, sun4i_iis.regs + SUN4I_RXCHMAP);
 	
 	//flush RX FIFO
 	reg_val = readl(sun4i_iis.regs + SUN4I_IISFCTL);
@@ -314,7 +329,7 @@ static int sun4i_i2s_set_fmt(struct snd_soc_dai *cpu_dai, unsigned int fmt)
 	writel(reg_val, sun4i_iis.regs + SUN4I_IISFAT1);
 	
 	/* set FIFO control register */
-	reg_val = 0 & 0x3;
+	reg_val = 1 & 0x3;
 	reg_val |= (1 & 0x1)<<2;
 	reg_val |= SUN4I_IISFCTL_RXTL(0xf);				//RX FIFO trigger level
 	reg_val |= SUN4I_IISFCTL_TXTL(0x40);				//TX FIFO empty trigger level
@@ -352,7 +367,7 @@ static int sun4i_i2s_trigger(struct snd_pcm_substream *substream,
 		case SNDRV_PCM_TRIGGER_RESUME:
 		case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
 			if (substream->stream == SNDRV_PCM_STREAM_CAPTURE) {
-				sun4i_snd_rxctrl_i2s(1);
+				sun4i_snd_rxctrl_i2s(substream, 1);
 			} else {
 				sun4i_snd_txctrl_i2s(substream, 1);
 			}
@@ -362,7 +377,7 @@ static int sun4i_i2s_trigger(struct snd_pcm_substream *substream,
 		case SNDRV_PCM_TRIGGER_SUSPEND:
 		case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
 			if (substream->stream == SNDRV_PCM_STREAM_CAPTURE) {
-				sun4i_snd_rxctrl_i2s(0);
+				sun4i_snd_rxctrl_i2s(substream, 0);
 			} else {
 			  sun4i_snd_txctrl_i2s(substream, 0);
 			}

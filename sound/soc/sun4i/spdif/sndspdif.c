@@ -91,7 +91,7 @@ struct snd_soc_dai_driver sndspdif_dai = {
 	.playback = {
 		.stream_name = "Playback",
 		.channels_min = 1,
-		.channels_max = 2,
+		.channels_max = 4,
 		.rates = SNDSPDIF_RATES,
 		.formats = SNDSPDIF_FORMATS,
 	},

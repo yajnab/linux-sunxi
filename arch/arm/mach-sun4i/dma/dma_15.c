@@ -114,7 +114,7 @@ static struct sw_dma_map __initdata sw_dma_mappings[DMACH_MAX] = {
 		.channels = {DMA_CH_VALID,DMA_CH_VALID,DMA_CH_VALID,DMA_CH_VALID,DMA_CH_VALID,DMA_CH_VALID,DMA_CH_VALID,DMA_CH_VALID,
 				0,0,0,0,0,0,0,0,},
 	},
-  	[DMACH_NIIS] = {
+  	[DMACH_NIIS_PLAY] = {
 		.name		= "iis",
 		.channels = {DMA_CH_VALID,DMA_CH_VALID,DMA_CH_VALID,DMA_CH_VALID,DMA_CH_VALID,DMA_CH_VALID,DMA_CH_VALID,DMA_CH_VALID,
 				0,0,0,0,0,0,0,0,},

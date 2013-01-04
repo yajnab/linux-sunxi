@@ -254,7 +254,7 @@ static struct snd_soc_dai_link sun4i_sndi2s_dai_link = {
 };
 
 static struct snd_soc_card snd_soc_sun4i_sndi2s = {
-	.name = "sun4i-sndi2s",
+	.name = "sndi2s",
 	.dai_link = &sun4i_sndi2s_dai_link,
 	.num_links = 1,
 };

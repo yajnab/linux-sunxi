@@ -48,7 +48,7 @@ enum IOCTL_CMD {
 	IOCTL_ENABLE_VE,
 	IOCTL_DISABLE_VE,
 	IOCTL_SET_VE_FREQ,
-
+	
 	IOCTL_CONFIG_AVS2 = 0x200,
 	IOCTL_GETVALUE_AVS2 ,
 	IOCTL_PAUSE_AVS2 ,
@@ -59,9 +59,11 @@ enum IOCTL_CMD {
 	IOCTL_ENGINE_REL,
 	IOCTL_ENGINE_CHECK_DELAY,
 	IOCTL_GET_IC_VER,
-
+	
 	IOCTL_ADJUST_AVS2_ABS,
 	IOCTL_FLUSH_CACHE,
+	IOCTL_READ_REG = 0x300,
+	IOCTL_WRITE_REG,
 };
 
 struct cedarv_env_infomation{
@@ -78,13 +80,13 @@ struct cedarv_cache_range{
 struct __cedarv_task {
 	int task_prio;
 	int ID;
-	unsigned long timeout;
+	unsigned long timeout;	
 	unsigned int frametime;
 	unsigned int block_mode;
 };
 
 struct cedarv_engine_task {
-	struct __cedarv_task t;
+	struct __cedarv_task t;	
 	struct list_head list;
 	struct task_struct *task_handle;
 	unsigned int status;
@@ -99,6 +101,10 @@ struct cedarv_engine_task_info {
 	unsigned int total_time;
 };
 
+struct cedarv_regop {
+    unsigned int addr;
+    unsigned int value;
+};
 /*--------------------------------------------------------------------------------*/
 #define REGS_pBASE			(0x01C00000)	 	      // register base addr
 

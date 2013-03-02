@@ -45,6 +45,11 @@ modules.builtin
 /Module.markers
 /Module.symvers
 
+/bImage
+/rootfs.cpio.gz
+/rootfs/
+/output/
+
 #
 # Debian directory (make deb-pkg)
 #
@@ -55,6 +60,7 @@ modules.builtin
 #
 !.gitignore
 !.mailmap
+!/drivers/input/touchscreen/ft_app.i
 
 #
 # Generated include files
@@ -84,3 +90,15 @@ GTAGS
 *.orig
 *~
 \#*#
+modules/wifi/usi-bcm4329/v4.218.248.15/open-src/src/dhd/linux/dhd-cdc-sdmmc-gpl-3.3
+modules/example/Module.symvers
+modules/mali/*/devicedrv/mali/arch
+modules/mali/*/devicedrv/ump/arch
+modules/mali/*/devicedrv/mali/Module.symvers
+modules/mali/*/devicedrv/ump/Module.symvers
+modules/mali/*/*/src/devicedrv/mali/Module.symvers
+modules/mali/*/*/src/devicedrv/mali/arch
+modules/mali/*/*/src/devicedrv/ump/Module.symvers
+modules/mali/*/*/src/devicedrv/ump/arch
+modules/wifi/ar6302/AR6K_SDK_ISC.build_3.1_RC.329/host/os/linux/Module.symvers
+modules/wifi/bcm4018*/5.90.125*/open-src/src/dhd/linux/dhd-cdc-sdmmc-gpl-*

@@ -1,0 +1,9 @@
+#
+# sun7i gpio test configuration.
+#
+
+config SUN7I_GPIO_TEST
+	bool "sun7i gpio test driver"
+	default n
+	help
+	Nothing help.

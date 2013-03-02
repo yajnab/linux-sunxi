@@ -91,6 +91,9 @@ obj-$(CONFIG_SOC_CAMERA_OV9740)		+= ov9740.o
 obj-$(CONFIG_SOC_CAMERA_RJ54N1)		+= rj54n1cb0c.o
 obj-$(CONFIG_SOC_CAMERA_TW9910)		+= tw9910.o
 
+obj-$(CONFIG_VIDEO_CSI_SUNXI)					+= sunxi_csi/device/
+obj-$(CONFIG_CSI_CAMERA_DETECTOR)   += sunxi_csi/camera_detector/
+
 # And now the v4l2 drivers:
 
 obj-$(CONFIG_VIDEO_BT848) += bt8xx/
@@ -198,6 +201,14 @@ obj-$(CONFIG_VIDEO_IR_I2C)  += ir-kbd-i2c.o
 obj-y	+= davinci/
 
 obj-$(CONFIG_ARCH_OMAP)	+= omap/
+ifdef CONFIG_VIDEO_SUN7I_CEDAR
+  obj-$(CONFIG_VIDEO_SUN7I_CEDAR) += sun7i/
+endif
+
+obj-$(CONFIG_CSI0_SUNXI) += sunxi_csi/csi0/
+obj-$(CONFIG_CSI1_SUNXI) += sunxi_csi/csi1/
+obj-$(CONFIG_AW_TSC) += tsc/
+obj-$(CONFIG_SUN7I_TVD) += sun7i_tvd/
 
 ccflags-y += -Idrivers/media/dvb/dvb-core
 ccflags-y += -Idrivers/media/dvb/frontends

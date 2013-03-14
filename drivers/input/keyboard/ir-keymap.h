@@ -30,9 +30,11 @@
 //0--PIOB10, 1--PIOB17
 #define IR_IO_MAPPING			1
 
+#if 0
 /*IR Key Match Config*/
-//#define IR_CHECK_ADDR_CODE  
 #define IR_ADDR_CODE		(0x7f80) //(addr|((~addr)<<8))
+#endif
+
 //#define INPUT_VALUE_MAPPING
 
 /*

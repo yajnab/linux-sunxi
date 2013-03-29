@@ -139,7 +139,7 @@ static int sndhdmi_soc_probe(struct snd_soc_codec *codec)
 	
 	sndhdmi = kzalloc(sizeof(struct sndhdmi_priv), GFP_KERNEL);
 	if(sndhdmi == NULL){
-		printk("error at:%s,%d\n",__func__,__LINE__);
+		pr_err("error at:%s,%d\n",__func__,__LINE__);
 		return -ENOMEM;
 	}		
 	snd_soc_codec_set_drvdata(codec, sndhdmi);

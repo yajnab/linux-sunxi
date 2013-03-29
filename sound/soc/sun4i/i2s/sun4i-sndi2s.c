@@ -268,10 +268,10 @@ static int __init sun4i_sndi2s_init(void)
 	
 	ret2 = script_parser_fetch("i2s_para","i2s_used", &i2s_used, sizeof(int));
 	if (ret2) {
-        printk("[I2S]sun4i_sndi2s_init fetch i2s using configuration failed\n");
-    } 
+		pr_err("[I2S]sun4i_sndi2s_init fetch i2s using configuration failed\n");
+	}
     
-    if (i2s_used) {
+	if (i2s_used) {
 		sun4i_sndi2s_device = platform_device_alloc("soc-audio", 2);
 		if(!sun4i_sndi2s_device)
 			return -ENOMEM;
@@ -281,8 +281,8 @@ static int __init sun4i_sndi2s_init(void)
 			platform_device_put(sun4i_sndi2s_device);
 		}
 	}else{
-		printk("[I2S]sun4i_sndi2s cannot find any using configuration for controllers, return directly!\n");
-        return 0;
+		pr_info("[I2S]sun4i_sndi2s cannot find any using configuration for controllers, return directly!\n");
+		return 0;
 	}
 	return ret;
 }

@@ -155,7 +155,6 @@ static void sun4i_audio_capture_buffdone(struct sw_dma_chan *channel,
 {
 	struct sun4i_capture_runtime_data *capture_prtd;
 	struct snd_pcm_substream *substream = dev_id;
-	//printk("%s,line:%d\n", __func__, __LINE__);
 	if (result == SW_RES_ABORT || result == SW_RES_ERR)
 		return;
 		
@@ -170,7 +169,6 @@ static void sun4i_audio_capture_buffdone(struct sw_dma_chan *channel,
 		sun4i_pcm_enqueue(substream);
 	}
 	spin_unlock(&capture_prtd->lock);
-	//printk("%s,line:%d\n", __func__, __LINE__);
 }
 
 static void sun4i_audio_play_buffdone(struct sw_dma_chan *channel, 
@@ -179,7 +177,6 @@ static void sun4i_audio_play_buffdone(struct sw_dma_chan *channel,
 {
 	struct sun4i_playback_runtime_data *play_prtd;
 	struct snd_pcm_substream *substream = dev_id;
-	//printk("%s,line:%d\n", __func__, __LINE__);
 	if (result == SW_RES_ABORT || result == SW_RES_ERR)
 		return;
 		
@@ -194,7 +191,6 @@ static void sun4i_audio_play_buffdone(struct sw_dma_chan *channel,
 		sun4i_pcm_enqueue(substream);
 	}
 	spin_unlock(&play_prtd->lock);
-	//printk("%s,line:%d\n", __func__, __LINE__);
 }
 
 static snd_pcm_uframes_t sun4i_pcm_pointer(struct snd_pcm_substream *substream)
@@ -214,18 +210,15 @@ static snd_pcm_uframes_t sun4i_pcm_pointer(struct snd_pcm_substream *substream)
 		}
 		return bytes_to_frames(substream->runtime, play_res);
     } else {
-    	//printk("%s,line:%d\n", __func__, __LINE__);
     	capture_prtd = substream->runtime->private_data;
     	spin_lock(&capture_prtd->lock);
     	sw_dma_getcurposition(DMACH_NIIS_CAPTURE, (dma_addr_t*)&capture_dmasrc, (dma_addr_t*)&capture_dmadst);
     	capture_res = capture_dmadst + capture_prtd->dma_period - capture_prtd->dma_start;
     	spin_unlock(&capture_prtd->lock);
-    	//printk("%s,line:%d,capture_res:%lu\n", __func__, __LINE__, capture_res);
     	if (capture_res >= snd_pcm_lib_buffer_bytes(substream)) {
 			if (capture_res == snd_pcm_lib_buffer_bytes(substream))
 				capture_res = 0;
 		}
-		//printk("%s,line:%d,capture_res:%lu\n", __func__, __LINE__, capture_res);
 		return bytes_to_frames(substream->runtime, capture_res);
     }
 }
@@ -365,7 +358,7 @@ static int sun4i_pcm_prepare(struct snd_pcm_substream *substream)
 	struct sun4i_capture_runtime_data *capture_prtd = NULL;
 
 	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
-		printk("%s,%d\n", __func__, __LINE__);
+		pr_debug("%s,%d\n", __func__, __LINE__);
 		play_prtd = substream->runtime->private_data;
 		if (!play_prtd->params) {
 			return 0;
@@ -392,7 +385,7 @@ static int sun4i_pcm_prepare(struct snd_pcm_substream *substream)
 		
 		return play_ret;
 	} else {
-		printk("%s,%d\n", __func__, __LINE__);		
+		pr_debug("%s,%d\n", __func__, __LINE__);		
 		capture_prtd = substream->runtime->private_data;
 		
 		if (!capture_prtd->params) {
@@ -435,15 +428,13 @@ static int sun4i_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
 		case SNDRV_PCM_TRIGGER_START:
 		case SNDRV_PCM_TRIGGER_RESUME:
 		case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-			printk("[IIS] playback dma trigger start\n");
-			//printk("[IIS] 0x01c22400+0x24 = %#x, line= %d\n", readl(0xf1c22400+0x24), __LINE__);
+			pr_debug("[IIS] playback dma trigger start\n");
 			sw_dma_ctrl(play_prtd->params->channel, SW_DMAOP_START);
 			break;			
 		case SNDRV_PCM_TRIGGER_SUSPEND:
 		case SNDRV_PCM_TRIGGER_STOP:
 		case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-	        printk("[IIS] playback dma trigger stop\n");
-	        //printk("[IIS] 0x01c22400+0x24 = %#x, line= %d\n", readl(0xf1c22400+0x24), __LINE__);
+			pr_debug("[IIS] playback dma trigger stop\n");
 			sw_dma_ctrl(play_prtd->params->channel, SW_DMAOP_STOP);
 			break;	
 		default:
@@ -459,23 +450,13 @@ static int sun4i_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
 		case SNDRV_PCM_TRIGGER_START:
 		case SNDRV_PCM_TRIGGER_RESUME:
 		case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-			printk("[IIS] capture dma trigger start\n");
-			//printk("[IIS] 0x01c22400+0x00 = %#x, line= %d\n", readl(0xf1c22400+0x00), __LINE__);
-			//printk("[IIS] 0x01c22400+0x04 = %#x, line= %d\n", readl(0xf1c22400+0x04), __LINE__);
-			//printk("[IIS] 0x01c22400+0x14 = %#x, line= %d\n", readl(0xf1c22400+0x14), __LINE__);
-			//printk("[IIS] 0x01c22400+0x18 = %#x, line= %d\n", readl(0xf1c22400+0x18), __LINE__);
-			//printk("[IIS] 0x01c22400+0x1c = %#x, line= %d\n", readl(0xf1c22400+0x1c), __LINE__);
-			//printk("[IIS] 0x01c22400+0x20 = %#x, line= %d\n", readl(0xf1c22400+0x20), __LINE__);
-			//printk("[IIS] 0x01c22400+0x2c = %#x, line= %d\n", readl(0xf1c22400+0x2c), __LINE__);
-			//printk("[IIS] 0x01c22400+0x38 = %#x, line= %d\n", readl(0xf1c22400+0x38), __LINE__);
-			//printk("[IIS] 0x01c22400+0x3c = %#x, line= %d\n", readl(0xf1c22400+0x3c), __LINE__);
+			pr_debug("[IIS] capture dma trigger start\n");
 			sw_dma_ctrl(capture_prtd->params->channel, SW_DMAOP_START);
 			break;			
 		case SNDRV_PCM_TRIGGER_SUSPEND:
 		case SNDRV_PCM_TRIGGER_STOP:
 		case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-	        printk("[IIS] capture dma trigger stop\n");
-	        //printk("[IIS] 0x01c22400+0x24 = %#x, line= %d\n", readl(0xf1c22400+0x24), __LINE__);
+			pr_debug("[IIS] capture dma trigger stop\n");
 			sw_dma_ctrl(capture_prtd->params->channel, SW_DMAOP_STOP);
 			break;
 		default:

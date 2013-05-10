@@ -314,7 +314,7 @@ struct recv_priv
 	_queue	free_recv_buf_queue;
 	u32	free_recv_buf_queue_cnt;
 
-#ifdef CONFIG_SDIO_HCI
+#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
 	_queue	recv_buf_pending_queue;
 #endif
 
@@ -334,6 +334,8 @@ struct recv_priv
 	u8 signal_qual;
 	u8 noise;
 	int RxSNRdB[2];
+	s8 RxRssi[2];
+	int FalseAlmCnt_all;
 
 #ifdef CONFIG_NEW_SIGNAL_STAT_PROCESS
 	_timer signal_stat_timer;
@@ -468,6 +470,14 @@ struct recv_frame_hdr
 
 	//for A-MPDU Rx reordering buffer control
 	struct recv_reorder_ctrl *preorder_ctrl;
+
+#ifdef CONFIG_WAPI_SUPPORT
+	u8 UserPriority;
+	u8 WapiTempPN[16];
+	u8 WapiSrcAddr[6];
+	u8 bWapiCheckPNInDecrypt;
+	u8 bIsWaiPacket;
+#endif
 
 };
 

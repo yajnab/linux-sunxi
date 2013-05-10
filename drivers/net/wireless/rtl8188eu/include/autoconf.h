@@ -42,15 +42,18 @@
 
 //#define CONFIG_IOCTL_CFG80211 1
 
-#ifdef CONFIG_PLATFORM_ARM_SUN4I
+#ifdef CONFIG_PLATFORM_ARM_SUNxI
 	#ifndef CONFIG_IOCTL_CFG80211 
 		#define CONFIG_IOCTL_CFG80211 1
 	#endif
 #endif
 
 #ifdef CONFIG_IOCTL_CFG80211
+	#define RTW_USE_CFG80211_STA_EVENT /* Opne this for Android 4.1's wpa_supplicant */
 	#define CONFIG_CFG80211_FORCE_COMPATIBLE_2_6_37_UNDER
 	//#define CONFIG_DEBUG_CFG80211 1
+	//#define CONFIG_DRV_ISSUE_PROV_REQ // IOT FOR S2
+	#define CONFIG_SET_SCAN_DENY_TIMER
 #endif
 
 /*
@@ -62,6 +65,7 @@
 #define CONFIG_EMBEDDED_FWIMG	1
 //#define CONFIG_FILE_FWIMG
 
+#define CONFIG_XMIT_ACK
 
 #define CONFIG_80211N_HT	1
 
@@ -78,7 +82,7 @@
 //#define CONFIG_USB_INTERRUPT_IN_PIPE	1
 #endif
 
-#ifndef CONFIG_MP_INCLUDED
+//#ifndef CONFIG_MP_INCLUDED
 	#define CONFIG_IPS	1
 	#ifdef CONFIG_IPS
 	//#define CONFIG_IPS_LEVEL_2	1 //enable this to set default IPS mode to IPS_LEVEL_2
@@ -102,25 +106,23 @@
 	#define CONFIG_HW_ANTENNA_DIVERSITY		
 	#endif
 
-	//#define CONFIG_CONCURRENT_MODE 1
+	#define CONFIG_CONCURRENT_MODE 1
 	#ifdef CONFIG_CONCURRENT_MODE
-		#if	defined (CONFIG_IPS)
-			#undef CONFIG_IPS
-		#endif
-		#if	defined (CONFIG_LPS)
-			#undef CONFIG_LPS
-		#endif
-
+		//#define CONFIG_HWPORT_SWAP				//Port0->Sec , Port1 -> Pri
+		#define CONFIG_TSF_RESET_OFFLOAD 1			// For 2 PORT TSF SYNC.
 	#endif
 
 	//#define CONFIG_IOL
-#else 	//#ifndef CONFIG_MP_INCLUDED
-	#define CONFIG_MP_IWPRIV_SUPPORT	1
-#endif 	//#ifndef CONFIG_MP_INCLUDED
+//#else 	//#ifndef CONFIG_MP_INCLUDED
+	
+//#endif 	//#ifndef CONFIG_MP_INCLUDED
 
 #define CONFIG_AP_MODE	1
 #ifdef CONFIG_AP_MODE
-	#define CONFIG_INTERRUPT_BASED_TXBCN // Tx Beacon when driver BCN_OK ,BCN_ERR interrupt occurs	
+	#define CONFIG_INTERRUPT_BASED_TXBCN // Tx Beacon when driver BCN_OK ,BCN_ERR interrupt occurs
+	#if defined(CONFIG_CONCURRENT_MODE) && defined(CONFIG_INTERRUPT_BASED_TXBCN)
+		#undef CONFIG_INTERRUPT_BASED_TXBCN
+	#endif
 	#ifdef CONFIG_INTERRUPT_BASED_TXBCN
 		//#define CONFIG_INTERRUPT_BASED_TXBCN_EARLY_INT
 		#define CONFIG_INTERRUPT_BASED_TXBCN_BCN_OK_ERR		
@@ -137,20 +139,23 @@
 #define CONFIG_P2P	1
 #ifdef CONFIG_P2P
 	//The CONFIG_WFD is for supporting the Wi-Fi display
-	//#define CONFIG_WFD	1
-
-	//Unmarked if there is low p2p scanned ratio; Kurt
-	//#define CONFIG_P2P_AGAINST_NOISE	1
+	#define CONFIG_WFD	1
 	
-	#define CONFIG_P2P_REMOVE_GROUP_INFO
+	#ifndef CONFIG_WIFI_TEST
+		#define CONFIG_P2P_REMOVE_GROUP_INFO
+	#endif
 	//#define CONFIG_DBG_P2P
+	#define CONFIG_P2P_IPS
 #endif
 
 //	Added by Kurt 20110511
 //#define CONFIG_TDLS	1
 #ifdef CONFIG_TDLS
-	#define CONFIG_TDLS_AUTOSETUP			1
-	#define CONFIG_TDLS_AUTOCHECKALIVE		1
+//	#ifndef CONFIG_WFD
+//		#define CONFIG_WFD	1
+//	#endif
+//	#define CONFIG_TDLS_AUTOSETUP			1
+//	#define CONFIG_TDLS_AUTOCHECKALIVE		1
 #endif
 
 
@@ -164,6 +169,11 @@
 	#endif
 #endif // CONFIG_LED
 
+#ifdef CONFIG_IOL
+	#define CONFIG_IOL_READ_EFUSE_MAP
+	//#define DBG_IOL_READ_EFUSE_MAP
+	#define CONFIG_IOL_LLT
+#endif
 
 
 #define USB_INTERFERENCE_ISSUE // this should be checked in all usb interface
@@ -177,6 +187,7 @@
 #define CONFIG_LONG_DELAY_ISSUE
 #define CONFIG_NEW_SIGNAL_STAT_PROCESS
 //#define CONFIG_SIGNAL_DISPLAY_DBM //display RX signal with dbm
+#define RTW_NOTCH_FILTER 0 /* 0:Disable, 1:Enable, */
 
 #define CONFIG_BR_EXT	1	// Enable NAT2.5 support for STA mode interface with a L2 Bridge
 #ifdef CONFIG_BR_EXT
@@ -186,9 +197,6 @@
 #define CONFIG_TX_MCAST2UNI	1	// Support IP multicast->unicast
 //#define CONFIG_CHECK_AC_LIFETIME 1	// Check packet lifetime of 4 ACs.
 
-#ifdef CONFIG_CONCURRENT_MODE
-#define CONFIG_TSF_RESET_OFFLOAD 1			// For 2 PORT TSF SYNC.
-#endif	// CONFIG_CONCURRENT_MODE
 
 /* 
  * Interface  Related Config 
@@ -209,11 +217,12 @@
 //#define CONFIG_USE_USB_BUFFER_ALLOC_TX 1	// Trade-off: For TX path, improve stability on some platforms, but may cause performance degrade on other platforms.
 //#define CONFIG_USE_USB_BUFFER_ALLOC_RX 1	// For RX path
 
-#ifdef CONFIG_PLATFORM_ARM_SUN4I
+#ifdef CONFIG_PLATFORM_ARM_SUNxI
 	#ifndef 	CONFIG_USE_USB_BUFFER_ALLOC_TX 
 		#define CONFIG_USE_USB_BUFFER_ALLOC_TX
 	#endif
 #endif
+
 /* 
  * USB VENDOR REQ BUFFER ALLOCATION METHOD
  * if not set we'll use function local variable (stack memory)
@@ -254,8 +263,9 @@
 
 #ifdef CONFIG_MP_INCLUDED
 	#define MP_DRIVER 1
-	#undef CONFIG_USB_TX_AGGREGATION
-	#undef CONFIG_USB_RX_AGGREGATION
+	#define CONFIG_MP_IWPRIV_SUPPORT	1
+	//#undef CONFIG_USB_TX_AGGREGATION
+	//#undef CONFIG_USB_RX_AGGREGATION
 #else
 	#define MP_DRIVER 0
 #endif
@@ -265,18 +275,21 @@
  * Platform  Related Config
  */
 #ifdef CONFIG_PLATFORM_MN10300
-#define CONFIG_SPECIAL_SETTING_FOR_FUNAI_TV
+	#define CONFIG_SPECIAL_SETTING_FOR_FUNAI_TV
+	#define CONFIG_USE_USB_BUFFER_ALLOC_RX 1
+	
+	#if	defined (CONFIG_SW_ANTENNA_DIVERSITY)
+		#undef CONFIG_SW_ANTENNA_DIVERSITY
+		#define CONFIG_HW_ANTENNA_DIVERSITY
+	#endif
 
-#if	defined (CONFIG_SW_ANTENNA_DIVERSITY)
-	#undef CONFIG_SW_ANTENNA_DIVERSITY
-	#define CONFIG_HW_ANTENNA_DIVERSITY
-#endif
+	#if	defined (CONFIG_POWER_SAVING)
+		#undef CONFIG_POWER_SAVING
+	#endif
+	
+#endif//CONFIG_PLATFORM_MN10300
 
-#endif
 
-#ifdef CONFIG_WISTRON_PLATFORM
-
-#endif
 
 #ifdef CONFIG_PLATFORM_TI_DM365
 #define CONFIG_USE_USB_BUFFER_ALLOC_RX 1
@@ -323,14 +336,18 @@
 #endif
 
 /*
- * Debug  Related Config
+ * Debug Related Config
  */
-//#define CONFIG_DEBUG_RTL871X
-
 #define DBG	1
-#define CONFIG_DEBUG_RTL819X
 
-#define CONFIG_PROC_DEBUG	1
+#define CONFIG_DEBUG /* DBG_871X, etc... */
+//#define CONFIG_DEBUG_RTL871X /* RT_TRACE, RT_PRINT_DATA, _func_enter_, _func_exit_ */
+
+#define CONFIG_PROC_DEBUG
+
+#define DBG_CONFIG_ERROR_DETECT
+//#define DBG_CONFIG_ERROR_DETECT_INT
+//#define DBG_CONFIG_ERROR_RESET
 
 //#define DBG_IO
 //#define DBG_DELAY_OS
@@ -355,8 +372,4 @@
 //#define DBG_HAL_INIT_PROFILING
 
 //#define DBG_MEMORY_LEAK	1
-
-#define DBG_CONFIG_ERROR_DETECT
-//#define DBG_CONFIG_ERROR_DETECT_INT
-//#define DBG_CONFIG_ERROR_RESET
 

@@ -10,7 +10,7 @@
  * File    : cpu_freq_dvfs.c
  * By      : pannan
  * Version : v1.0
- * Date    : 2011-09-01
+ * Date    : 2011-09-01 
  * Descript: cpufreq driver on Reuuimlla chips;
  * Update  : date                auther      ver     notes
  ***************************************************************************************************
@@ -95,7 +95,7 @@ static void sun5i_cpufreq_show(const char *pfx, struct sun5i_cpu_freq_t *cfg)
  *
  *Return     : result, 0 - set frequency and voltage successed
  *                    -1 - set voltage failed
- *Notes      :
+ *Notes      : 
  *
  ***************************************************************************************************
 */
@@ -192,10 +192,10 @@ static int sun5i_cpufreq_settarget(struct cpufreq_policy *policy, struct sun5i_c
         if(cpu_new.pll > cpu_cur.pll) {
             /* notify everyone that clock transition finish */
             if (policy) {
-		freqs.cpu = 0;
+    	    	freqs.cpu = 0;
                 freqs.old = freqs.new;
                 freqs.new = cpu_cur.pll / 1000;
-	        cpufreq_notify_transition(&freqs, CPUFREQ_POSTCHANGE);
+    	        cpufreq_notify_transition(&freqs, CPUFREQ_POSTCHANGE);
 	        }
             return -EINVAL;
         }
@@ -501,7 +501,7 @@ static __init int sun5i_cpufreq_initclks(void)
 
 	CPUFREQ_INF("%s: clocks pll=%lu,cpu=%lu,axi=%lu,ahp=%lu,apb=%lu\n", __func__,
 	       clk_get_rate(clk_pll), clk_get_rate(clk_cpu), clk_get_rate(clk_axi),
-	       clk_get_rate(clk_ahb), clk_get_rate(clk_apb));
+	       clk_get_rate(clk_ahb), clk_get_rate(clk_apb));   
 
 	return 0;
 }

@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // Copyright (c) 2006-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -53,7 +53,7 @@ struct XTensa_exception_frame_s {
         A_UINT32 a3;
     } wb[AR6002_REGDUMP_FRAMES];
 };
-typedef struct XTensa_exception_frame_s CPU_exception_frame_t;
+typedef struct XTensa_exception_frame_s CPU_exception_frame_t; 
 #define RD_SIZE sizeof(CPU_exception_frame_t)
 
 #endif

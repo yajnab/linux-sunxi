@@ -1182,7 +1182,7 @@ static int cmd_sta_set_11n(struct sigma_dut *dut, struct sigma_conn *conn,
 
 	mcs32 = get_param(cmd, "MCS32"); /* HT Duplicate Mode Enable/Disable */
 	rate = get_param(cmd, "MCS_FIXEDRATE"); /* Fixed MCS rate (0..31) */
-
+	
 	if (mcs32 && rate) {
 		/* TODO */
 		send_resp(dut, conn, SIGMA_ERROR,

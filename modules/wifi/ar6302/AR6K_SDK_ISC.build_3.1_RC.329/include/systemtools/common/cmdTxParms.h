@@ -24,14 +24,14 @@
 
 // pwrGain: pwr 0.5dB step, gain(PCDAC) 1=0.5dB
 
-//
+// 
 // Map data rate to power/gain
 //
 #define RATE_MASK_ROW_MAX    2
 #define RATE_MASK_BIT_MAX    32
 #define PWRGAIN_ROW_MAX      ((RATE_MASK_ROW_MAX * RATE_MASK_BIT_MAX) / 4)
 #define PWRGAIN_MASK                  0xFF
-#define PWRGAIN_MASK_SIGN_BIT_MASK    0x80
+#define PWRGAIN_MASK_SIGN_BIT_MASK    0x80  
 #define NEGATE(x) (((x) & (PWRGAIN_MASK_SIGN_BIT_MASK)) ? ((x) = 128 - (x)) : (x))
 #define PWRGAIN_PER_PWRGAIN_ROW      4
 #define PWRGAIN_PER_MASK_ROW         8
@@ -41,7 +41,7 @@ typedef enum {
     _txParm_code_txMode,
     _txParm_code_rateMask0,
     _txParm_code_rateMask1,
-    _txParm_code_pwrGainStart0,   // cck
+    _txParm_code_pwrGainStart0,   // cck 
     _txParm_code_pwrGainStart1,   // ofdm
     _txParm_code_pwrGainStart2,   // ht20-1
     _txParm_code_pwrGainStart3,   // ht40-1
@@ -57,7 +57,7 @@ typedef enum {
     _txParm_code_pwrGainStart13,   // ht40-2
     _txParm_code_pwrGainStart14,   // ht40-2
     _txParm_code_pwrGainStart15,   // ht40-2
-    _txParm_code_pwrGainEnd0,     // cck
+    _txParm_code_pwrGainEnd0,     // cck 
     _txParm_code_pwrGainEnd1,     // ofdm
     _txParm_code_pwrGainEnd2,     // ht20-1
     _txParm_code_pwrGainEnd3,     // ht40-1
@@ -73,7 +73,7 @@ typedef enum {
     _txParm_code_pwrGainEnd13,     // ht40-2
     _txParm_code_pwrGainEnd14,     // ht40-2
     _txParm_code_pwrGainEnd15,     // ht40-2
-    _txParm_code_pwrGainStep0,    // cck
+    _txParm_code_pwrGainStep0,    // cck 
     _txParm_code_pwrGainStep1,    // ofdm
     _txParm_code_pwrGainStep2,    // ht20-1
     _txParm_code_pwrGainStep3,    // ht40-1
@@ -105,7 +105,7 @@ typedef struct _txParm {
     A_UINT32  channel;
     A_UINT32  txMode;
     A_UINT32  rateMask[RATE_MASK_ROW_MAX/*2*/];
-    A_INT32   pwrGainStart[PWRGAIN_ROW_MAX/*16*/];
+    A_INT32   pwrGainStart[PWRGAIN_ROW_MAX/*16*/];  
     A_INT32   pwrGainEnd[PWRGAIN_ROW_MAX/*16*/];
     A_INT32   pwrGainStep[PWRGAIN_ROW_MAX/*16*/];
     A_UINT32  antenna;
@@ -122,3 +122,4 @@ typedef struct _txParm {
 extern _PARM_BIN_TEMPLATE _txParm_bin_template[];
 
 #endif // #if !defined(_CMD_TX_PARMS_H)
+

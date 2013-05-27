@@ -12,3 +12,5 @@ __s32 hdmi_i2c_del_driver(void)
 {
     return 0;
 }
+
+

@@ -103,15 +103,15 @@ EXPORT_SYMBOL(sndspdif_dai);
 
 static int sndspdif_soc_probe(struct snd_soc_codec *codec)
 {
-	struct sndspdif_priv *sndspdif;
-
+	struct sndspdif_priv *sndspdif;	
+	
 	sndspdif = kzalloc(sizeof(struct sndspdif_priv), GFP_KERNEL);
 	if(sndspdif == NULL){
 		printk("%s,%d\n",__func__,__LINE__);
 		return -ENOMEM;
-	}
+	}		
 	snd_soc_codec_set_drvdata(codec, sndspdif);
-
+	
 	return 0;
 }
 
@@ -132,7 +132,7 @@ static struct snd_soc_codec_driver soc_codec_dev_sndspdif = {
 
 static int __devinit sndspdif_codec_probe(struct platform_device *pdev)
 {
-	return snd_soc_register_codec(&pdev->dev, &soc_codec_dev_sndspdif, &sndspdif_dai, 1);
+	return snd_soc_register_codec(&pdev->dev, &soc_codec_dev_sndspdif, &sndspdif_dai, 1);	
 }
 
 static int __devexit sndspdif_codec_remove(struct platform_device *pdev)
@@ -157,15 +157,15 @@ static struct platform_driver sndspdif_codec_driver = {
 };
 
 static int __init sndspdif_codec_init(void)
-{
+{	
 	int err = 0;
 	int ret = 0;
-
+	
 //	ret = script_parser_fetch("spdif_para","spdif_used", &spdif_used, sizeof(int));
 //	if (ret) {
 //		return -1;
 //        printk("[SPDIF]sndspdif_init fetch spdif using configuration failed\n");
-//    }
+//    } 
 
 	if (spdif_used) {
 		if((err = platform_device_register(&sndspdif_codec_device)) < 0)
@@ -177,14 +177,14 @@ static int __init sndspdif_codec_init(void)
         printk("[SPDIF]sndspdif cannot find any using configuration for controllers, return directly!\n");
         return 0;
     }
-
+	
 	return 0;
 }
 module_init(sndspdif_codec_init);
 
 static void __exit sndspdif_codec_exit(void)
 {
-	if (spdif_used) {
+	if (spdif_used) {	
 		spdif_used = 0;
 		platform_driver_unregister(&sndspdif_codec_driver);
 	}

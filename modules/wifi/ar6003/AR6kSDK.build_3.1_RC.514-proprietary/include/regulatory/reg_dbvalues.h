@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // Copyright (c) 2005-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 // The software source and binaries included in this development package are
 // licensed, not sold. You, or your company, received the package under one
 // or more license agreements. The rights granted to you are specifically
@@ -10,7 +10,7 @@
 // portion of this package must be in strict compliance with the license
 // agreement(s) terms.
 // </copyright>
-//
+// 
 // <summary>
 // 	Wifi driver for AR6002
 // </summary>
@@ -116,7 +116,7 @@ enum CountryCode {
     CTRY_MEXICO               = 484,     /* Mexico */
     CTRY_MONACO               = 492,     /* Principality of Monaco */
     CTRY_MOROCCO              = 504,     /* Morocco */
-    CTRY_NEPAL                = 524,     /* Nepal */
+    CTRY_NEPAL                = 524,     /* Nepal */   
     CTRY_NETHERLANDS          = 528,     /* Netherlands */
     CTRY_NETHERLAND_ANTILLES  = 530,     /* Netherlands-Antilles */
     CTRY_NEW_ZEALAND          = 554,     /* New Zealand */
@@ -249,17 +249,17 @@ enum EnumRd {
     WOR1_WORLD  = 0x61,     /* World1 (WO1 SKU) */
     WOR2_WORLD  = 0x62,     /* World2 (WO2 SKU) */
     WOR3_WORLD  = 0x63,     /* World3 (WO3 SKU) */
-    WOR4_WORLD  = 0x64,     /* World4 (WO4 SKU) */
-    WOR5_ETSIC  = 0x65,     /* World5 (WO5 SKU) */
+    WOR4_WORLD  = 0x64,     /* World4 (WO4 SKU) */  
+    WOR5_ETSIC  = 0x65,     /* World5 (WO5 SKU) */    
 
     WOR01_WORLD = 0x66,     /* World0-1 (WW0-1 SKU) */
     WOR02_WORLD = 0x67,     /* World0-2 (WW0-2 SKU) */
     EU1_WORLD   = 0x68,     /* Same as World0-2 (WW0-2 SKU), except active scan ch1-13. No ch14 */
 
-    WOR9_WORLD  = 0x69,     /* World9 (WO9 SKU) */
-    WORA_WORLD  = 0x6A,     /* WorldA (WOA SKU) */
-    WORB_WORLD  = 0x6B,     /* WorldB (WOA SKU) */
-    WORC_WORLD  = 0x6C,     /* WorldC (WOA SKU) */
+    WOR9_WORLD  = 0x69,     /* World9 (WO9 SKU) */  
+    WORA_WORLD  = 0x6A,     /* WorldA (WOA SKU) */  
+    WORB_WORLD  = 0x6B,     /* WorldB (WOA SKU) */  
+    WORC_WORLD  = 0x6C,     /* WorldC (WOA SKU) */  
 
     /*
      * Regulator domains ending in a number (e.g. APL1,
@@ -291,11 +291,11 @@ enum EnumRd {
 
     FCC1        = 0x0110,   /* US & others */
     FCC2        = 0x0120,   /* Canada, Australia & New Zealand */
-    FCC3        = 0x0160,   /* US w/new middle band & DFS */
+    FCC3        = 0x0160,   /* US w/new middle band & DFS */    
     FCC4        = 0x0165,
     FCC5        = 0x0180,
     FCC6        = 0x0610,
-    FCCA        = 0x0A10,
+    FCCA        = 0x0A10,    
 
     APLD        = 0x0D50,   /* South Korea */
 
@@ -374,7 +374,7 @@ enum {
 
 #define DEF_REGDMN      FCC1_FCCA
 
-/*
+/* 
  * The following table is the master list for all different freqeuncy
  * bands with the complete matrix of all possible flags and settings
  * for each band if it is used in ANY reg domain.
@@ -382,7 +382,7 @@ enum {
  * The table of frequency bands is indexed by a bitmask.  The ordering
  * must be consistent with the enum below.  When adding a new
  * frequency band, be sure to match the location in the enum with the
- * comments
+ * comments 
  */
 
 /*
@@ -506,5 +506,5 @@ enum {
     WBG1_2484_2484, /* No G */
     WBG2_2484_2484, /* No G */
 };
-
+    
 #endif /* __REG_DBVALUE_H__ */

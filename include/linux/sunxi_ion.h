@@ -37,7 +37,7 @@
  *
  * Provided by userspace as an argument to the ioctl
  */
-struct sunxi_ion_tiler_alloc_data
+struct sunxi_ion_tiler_alloc_data 
 {
 	size_t w;
 	size_t h;
@@ -92,3 +92,4 @@ enum {
 };
 
 #endif /* _LINUX_ION_H */
+

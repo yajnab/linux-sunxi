@@ -10,7 +10,7 @@
 *
 * Author 		: javen
 *
-* Description 	: å¯„å­˜å™¨å®šä¹‰
+* Description 	: ¼Ä´æÆ÷¶¨Òå
 *
 * Notes         :
 *
@@ -115,3 +115,4 @@ static inline void  sw_hcd_write_txhubport(void __iomem *usbc_base, u8 epnum, u8
 }
 
 #endif   //__SW_HCD_REGS_I_H__
+

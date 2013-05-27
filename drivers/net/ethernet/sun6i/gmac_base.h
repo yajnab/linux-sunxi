@@ -55,13 +55,13 @@ void core_init(void __iomem *ioaddr);
 int core_en_rx_coe(void __iomem *ioaddr);
 void core_set_filter(struct net_device *dev);
 void core_flow_ctrl(void __iomem *ioaddr, unsigned int duplex,
-					unsigned int fc, unsigned int pause_time);
+ 					unsigned int fc, unsigned int pause_time);
 void core_irq_status(void __iomem *ioaddr);
 void core_dump_regs(void __iomem *ioaddr);
 
 void gmac_set_umac_addr(void __iomem *ioaddr, unsigned char *addr,
-						unsigned int reg_n);
+ 						unsigned int reg_n);
 void gmac_set_tx_rx(void __iomem *ioaddr, bool enable);
-void gmac_get_umac_addr(void __iomem *ioaddr, unsigned char *addr,
-						unsigned int reg_n);
+void gmac_get_umac_addr(void __iomem *ioaddr, unsigned char *addr, 
+ 						unsigned int reg_n);
 #endif //__GMAC_BASE_H__

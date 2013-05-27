@@ -41,29 +41,29 @@ void init_perfcounters (__u32 do_reset, __u32 enable_divider)
 void backup_perfcounter(void)
 {
 	//backup performance-counter ctrl reg
-	asm volatile ("MRC p15, 0, %0, c9, c12, 0\t\n": "=r"(backup_perf_counter_ctrl_reg));
-
+	asm volatile ("MRC p15, 0, %0, c9, c12, 0\t\n": "=r"(backup_perf_counter_ctrl_reg)); 
+	
 	//backup enable reg
-	asm volatile ("MRC p15, 0, %0, c9, c12, 1\t\n": "=r"(backup_perf_counter_enable_reg));
+	asm volatile ("MRC p15, 0, %0, c9, c12, 1\t\n": "=r"(backup_perf_counter_enable_reg)); 
 
 }
 
 void restore_perfcounter(void)
 {
-
+	
 	// restore performance-counter control-register:
 	asm volatile ("mcr p15, 0, %0, c9, c12, 0" : : "r"(backup_perf_counter_ctrl_reg));
 
 	// restore enable reg
 	asm volatile ("mcr p15, 0, %0, c9, c12, 1" : : "r"(backup_perf_counter_enable_reg));
-
+	
 }
-
+	
 __u32 get_cyclecount (void)
 {
 	__u32 value;
 	// Read CCNT Register
-	asm volatile ("MRC p15, 0, %0, c9, c13, 0\t\n": "=r"(value));
+	asm volatile ("MRC p15, 0, %0, c9, c13, 0\t\n": "=r"(value));  
 	return value;
 }
 
@@ -85,7 +85,7 @@ void change_runtime_env(__u32 mmu_flag)
 	__u32 factor_m = 0;
 	__u32 factor_p = 0;
 	__u32 start = 0;
-	__u32 reg_val = 0;
+	__u32 reg_val = 0; 
 	volatile __ccmu_reg_list_t *cmu_reg;
 	__ccmu_pll1_core_reg0000_t pll1Ctrl;
 
@@ -106,7 +106,7 @@ void change_runtime_env(__u32 mmu_flag)
 	if(0 == reg_val){
 		//32khz osc
 		cpu_freq = 32;
-
+		
 	}else if(1 == reg_val){
 		//hosc, 24Mhz
 		cpu_freq = 24000; 			//unit is khz
@@ -118,18 +118,18 @@ void change_runtime_env(__u32 mmu_flag)
 		factor_n = pll1Ctrl.FactorN;		//the range is 0-31
 		factor_k = pll1Ctrl.FactorK + 1;		//the range is 1-4
 		factor_m = pll1Ctrl.FactorM + 1;		//the range is 1-4
-
+		
 		//cpu_freq = (24000*factor_n*factor_k)/(factor_p*factor_m);
 		cpu_freq = raw_lib_udiv(24000*factor_n*factor_k, factor_p*factor_m);
 		//msg("cpu_freq = dec(%d). \n", cpu_freq);
 		//busy_waiting();
 	}
-
+	
 }
 
 /*
  * input para range: 1-1000 us, so the max us_cnt equal = 1008*1000;
- */
+ */	
 void delay_us(__u32 us)
 {
 	__u32 us_cnt = 0;
@@ -141,10 +141,10 @@ void delay_us(__u32 us)
 	if(cpu_freq > 1000){
 		us_cnt = ((raw_lib_udiv(cpu_freq, 1000)) + 1)*us;
 	}else{
-		//32 <--> 32k, 1cycle = 1s/32k =32us
+		//32 <--> 32k, 1cycle = 1s/32k =32us 
 		return;
 	}
-
+	
 	cur = get_cyclecount();
 	target = cur - overhead + us_cnt;
 
@@ -154,7 +154,7 @@ void delay_us(__u32 us)
 		//cnt++;
 	}
 #endif
-
+	
 
 #if 0
 	__s32 s_cur = 0;
@@ -170,25 +170,25 @@ void delay_us(__u32 us)
 	while((typecheck(__u32, cur) && \
 			typecheck(__u32, target) && \
 			((__s32)(cur) - (__s32)(target) >= 0))){
-
+		
 			s_cur = (__s32)(cur);
 			s_target = (__s32)(target);
 			if(s_cur - s_target >= 0){
-				cnt++;
+				cnt++;				
 			}
 			cur = get_cyclecount();
 	}
 #endif
 	//busy_waiting();
 
-
+	
 	return;
 }
 
 void delay_ms(__u32 ms)
 {
 	delay_us(ms*1000);
-
+	
 	return;
 }
 
@@ -196,24 +196,24 @@ void delay_ms(__u32 ms)
 static __u32 match_event_counter(enum counter_type_e type)
 {
 	int cnter = 0;
-
+	
 	switch(type){
-		case I_CACHE_MISS:
+		case I_CACHE_MISS: 
 			cnter = 0;
 			break;
-		case I_TLB_MISS:
+		case I_TLB_MISS: 
 			cnter = 1;
 			break;
-		case D_CACHE_MISS:
+		case D_CACHE_MISS: 
 			cnter = 2;
 			break;
-		case D_TLB_MISS:
+		case D_TLB_MISS: 
 			cnter = 3;
 			break;
 
 		default:
 			break;
-
+	
 	}
 	return cnter;
 
@@ -251,7 +251,7 @@ void init_event_counter (__u32 do_reset, __u32 enable_divider)
 
 void set_event_counter(enum counter_type_e type)
 {
-
+	
 	__u32 cnter = 0;
 	cnter = match_event_counter(type);
 
@@ -278,10 +278,12 @@ int get_event_counter(enum counter_type_e type)
 	asm volatile ("MCR p15, 0, %0, c9, c12, 5" : : "r"(cnter));
 
 	//read event counter
-	asm volatile ("MRC p15, 0, %0, c9, c13, 2\t\n": "=r"(event_cnt));
-
+	asm volatile ("MRC p15, 0, %0, c9, c13, 2\t\n": "=r"(event_cnt)); 
+	
 	asm volatile ("dsb");
 	asm volatile ("isb");
 
 	return event_cnt;
 }
+
+

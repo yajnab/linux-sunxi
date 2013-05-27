@@ -299,3 +299,4 @@ module_exit(sunxi_timer_test_exit);
 MODULE_LICENSE ("GPL");
 MODULE_AUTHOR ("liugang");
 MODULE_DESCRIPTION ("sunxi timer test driver code");
+

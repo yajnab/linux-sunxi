@@ -1,5 +1,5 @@
 /*
-const __disp_vga_t disp_vga_h1024_v768 =
+const __disp_vga_t disp_vga_h1024_v768 = 
 {
 	//__u32	pixel_clk;
 	65000000,
@@ -11,7 +11,7 @@ const __disp_vga_t disp_vga_h1024_v768 =
 	1344,
 	//__u16	hor_front_porch;
 	24,
-	//__u16	hor_sync_time;
+	//__u16	hor_sync_time;	
 	136,
 	//__u16	hor_back_porch;
 	160,
@@ -26,6 +26,6 @@ const __disp_vga_t disp_vga_h1024_v768 =
 	//__bool	hor_sync_polarity;
 	0,
 	//__bool	ver_sync_polarity;
-	0,
+	0,	
 };
 */

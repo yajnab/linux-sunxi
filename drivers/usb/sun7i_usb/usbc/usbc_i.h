@@ -13,7 +13,7 @@
 *
 * Date 			: 2009.09.15
 *
-* Description 	: é€‚ç”¨äºsuniiå¹³å°ï¼ŒUSBå…¬å…±æ“ä½œéƒ¨åˆ†
+* Description 	: ÊÊÓÃÓÚsuniiÆ½Ì¨£¬USB¹«¹²²Ù×÷²¿·Ö
 *
 * History 		:
 *
@@ -26,7 +26,7 @@
 
 #define  USBC_MAX_OPEN_NUM    8
 
-/* è®°å½•USBçš„å…¬å…±ä¿¡æ¯ */
+/* ¼ÇÂ¼USBµÄ¹«¹²ĞÅÏ¢ */
 typedef struct __fifo_info{
     __u32 port0_fifo_addr;
 	__u32 port0_fifo_size;
@@ -38,13 +38,14 @@ typedef struct __fifo_info{
 	__u32 port2_fifo_size;
 }__fifo_info_t;
 
-/* è®°å½•å½“å‰USB portæ‰€æœ‰çš„ç¡¬ä»¶ä¿¡æ¯ */
+/* ¼ÇÂ¼µ±Ç°USB portËùÓĞµÄÓ²¼şĞÅÏ¢ */
 typedef struct __usbc_otg{
     __u32 port_num;
 	__u32 base_addr;        /* usb base address 		*/
 
-	__u32 used;             /* æ˜¯å¦æ­£åœ¨è¢«ä½¿ç”¨   		*/
-    __u32 no;               /* åœ¨ç®¡ç†æ•°ç»„ä¸­çš„ä½ç½® 		*/
+	__u32 used;             /* ÊÇ·ñÕıÔÚ±»Ê¹ÓÃ   		*/
+    __u32 no;               /* ÔÚ¹ÜÀíÊı×éÖĞµÄÎ»ÖÃ 		*/
 }__usbc_otg_t;
 
 #endif   //__USBC_I_H__
+

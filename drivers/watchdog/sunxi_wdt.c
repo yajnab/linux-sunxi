@@ -315,7 +315,7 @@ static long sunxi_wdt_ioctl(struct file *file, unsigned int cmd,
 	int new_timeout;
 	int __user *argp = (void __user *)arg;
 	static const struct watchdog_info ident = {
-		.options 		= WDIOF_SETTIMEOUT
+		.options 		= WDIOF_SETTIMEOUT 
 					| WDIOF_MAGICCLOSE
 					| WDIOF_KEEPALIVEPING,
 		.firmware_version 	= 0,

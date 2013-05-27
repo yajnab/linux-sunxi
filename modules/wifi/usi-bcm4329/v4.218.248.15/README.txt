@@ -1,7 +1,7 @@
 
 This distribution includes binary files in the following subdirectories:
 
-firmware/  -- binary images (and their ascii bin-arrays) for download
+firmware/  -- binary images (and their ascii bin-arrays) for download 
               to the dongle device
 host/      -- linux kernel modules: host drivers for the dongle
 apps/      -- tools for dongle download and runtime WLAN commands

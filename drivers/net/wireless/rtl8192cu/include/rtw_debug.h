@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
- *
+ *                                        
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -103,7 +103,7 @@
 	#define	_MODULE_DEFINE_	_module_rtl871x_security_c_
 #elif defined _RTW_EEPROM_C_
 	#define	_MODULE_DEFINE_	_module_rtl871x_eeprom_c_
-#elif defined _HAL_INIT_C_
+#elif defined _HAL_INTF_C_
 	#define	_MODULE_DEFINE_	_module_hal_init_c_
 #elif defined _HCI_HAL_INIT_C_
 	#define	_MODULE_DEFINE_	_module_hci_hal_init_c_
@@ -340,15 +340,15 @@ extern u32 GlobalDebugLevel;
 	int proc_get_log_level(char *page, char **start,
 			  off_t offset, int count,
 			  int *eof, void *data);
-
+			  
 	int proc_set_log_level(struct file *file, const char *buffer,
 			unsigned long count, void *data);
-
+	
 	int proc_get_write_reg(char *page, char **start,
 			  off_t offset, int count,
 			  int *eof, void *data);
 
-	int proc_set_write_reg(struct file *file, const char *buffer,
+ 	int proc_set_write_reg(struct file *file, const char *buffer,
 		unsigned long count, void *data);
 
 	int proc_get_read_reg(char *page, char **start,
@@ -406,7 +406,7 @@ extern u32 GlobalDebugLevel;
 	int proc_get_mac_reg_dump3(char *page, char **start,
 			  off_t offset, int count,
 			  int *eof, void *data);
-
+	
 	int proc_get_bb_reg_dump1(char *page, char **start,
 			  off_t offset, int count,
 			  int *eof, void *data);
@@ -414,11 +414,11 @@ extern u32 GlobalDebugLevel;
 	int proc_get_bb_reg_dump2(char *page, char **start,
 			  off_t offset, int count,
 			  int *eof, void *data);
-
+	
 	int proc_get_bb_reg_dump3(char *page, char **start,
 			  off_t offset, int count,
 			  int *eof, void *data);
-
+	
 	int proc_get_rf_reg_dump1(char *page, char **start,
 			  off_t offset, int count,
 			  int *eof, void *data);
@@ -461,29 +461,36 @@ extern u32 GlobalDebugLevel;
 
 	int proc_set_rx_signal(struct file *file, const char *buffer,
 		unsigned long count, void *data);
-
+		
+	int proc_get_ht_enable(char *page, char **start,
+			  off_t offset, int count,
+			  int *eof, void *data);
+			  
+	int proc_set_ht_enable(struct file *file, const char *buffer,
+		unsigned long count, void *data);
+			  
 	int proc_get_cbw40_enable(char *page, char **start,
 			  off_t offset, int count,
 			  int *eof, void *data);
 
 	int proc_set_cbw40_enable(struct file *file, const char *buffer,
 		unsigned long count, void *data);
-
+	
 	int proc_get_ampdu_enable(char *page, char **start,
 			  off_t offset, int count,
 			  int *eof, void *data);
-
+			  
 	int proc_set_ampdu_enable(struct file *file, const char *buffer,
 		unsigned long count, void *data);
-
+	
 	int proc_get_two_path_rssi(char *page, char **start,
 			  off_t offset, int count,
 			  int *eof, void *data);
-
+	
 	int proc_get_rx_stbc(char *page, char **start,
 			  off_t offset, int count,
 			  int *eof, void *data);
-
+		
 	int proc_set_rx_stbc(struct file *file, const char *buffer,
 		unsigned long count, void *data);
 
@@ -502,8 +509,9 @@ extern u32 GlobalDebugLevel;
 
 	int proc_set_rssi_disp(struct file *file, const char *buffer,
 		unsigned long count, void *data);
-
+	
 
 #endif //CONFIG_PROC_DEBUG
 
 #endif	//__RTW_DEBUG_H__
+

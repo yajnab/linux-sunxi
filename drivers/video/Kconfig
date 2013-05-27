@@ -264,6 +264,9 @@ comment "Frame buffer hardware drivers"
 config LYCHEE_FB_SUN7I
         tristate "DISP Driver Support(sun7i)"
         depends on FB
+	select FB_CFB_FILLRECT
+	select FB_CFB_COPYAREA
+	select FB_CFB_IMAGEBLIT
         ---help---
         default m
 
@@ -271,12 +274,12 @@ config LYCHEE_LCD_SUN7I
         tristate "LCD Driver Support(sun7i)"
         ---help---
         default m
-
+        
 config LYCHEE_HDMI_SUN7I
         tristate "HDMI Driver Support(sun7i)"
         ---help---
         default m
-
+        
 config FB_GRVGA
 	tristate "Aeroflex Gaisler framebuffer support"
 	depends on FB && SPARC

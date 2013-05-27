@@ -23,12 +23,12 @@ struct gpio_sw_platdata {
 struct gpio_sw_classdev{
 	const char	*name;
 	u32	pio_hdle;
-	int	port;					/*GPIOä½¿ç”¨çš„ç«¯å£å· 1:PA 2:PB .... */
-	int port_num;				/*GPIOåœ¨å½“å‰ç«¯å£çš„åºå·(ç¬¬å‡ ä¸ªå¼•è„š)  */
-	int mul_sel;				/*GPIOçš„åŠŸèƒ½é€‰æ‹© 0ï¼šè¾“å…¥  1ï¼šè¾“å‡º */
-	int pull;					/*GPIOçš„å†…ç½®ç”µé˜»çŠ¶æ€ 0ä»£è¡¨é«˜é˜»ï¼Œ1ä»£è¡¨ä¸Šæ‹‰ï¼Œ2ä»£è¡¨ä¸‹æ‹‰ */
-	int drv_level;				/*GPIOçš„é©±åŠ¨èƒ½åŠ› æœ‰0åˆ°3å››ä¸ªç­‰çº§ */
-	int data;					/*GPIOçš„ç”µå¹³ */
+	int	port;					/*GPIOÊ¹ÓÃµÄ¶Ë¿ÚºÅ 1:PA 2:PB .... */
+	int port_num;				/*GPIOÔÚµ±Ç°¶Ë¿ÚµÄĞòºÅ(µÚ¼¸¸öÒı½Å)  */
+	int mul_sel;				/*GPIOµÄ¹¦ÄÜÑ¡Ôñ 0£ºÊäÈë  1£ºÊä³ö */
+	int pull;					/*GPIOµÄÄÚÖÃµç×è×´Ì¬ 0´ú±í¸ß×è£¬1´ú±íÉÏÀ­£¬2´ú±íÏÂÀ­ */
+	int drv_level;				/*GPIOµÄÇı¶¯ÄÜÁ¦ ÓĞ0µ½3ËÄ¸öµÈ¼¶ */
+	int data;					/*GPIOµÄµçÆ½ */
 	int flags;
 	char irq;
 	char irq_num;
@@ -43,21 +43,21 @@ struct gpio_sw_classdev{
 	#define SW_GPIO_SUSPENDED		(1 << 0)
 	#define SW_GPIO_CORE_SUSPENDED		(1 << 16)
 	int		(*gpio_sw_cfg_set)(struct gpio_sw_classdev *gpio_sw_cdev,
-					int  mul_sel);		/*è®¾ç½®gpioçš„è¾“å…¥è¾“å‡ºçŠ¶æ€ */
+					int  mul_sel);		/*ÉèÖÃgpioµÄÊäÈëÊä³ö×´Ì¬ */
 	int		(*gpio_sw_pull_set)(struct gpio_sw_classdev *gpio_sw_cdev,
-					int  pull);			/*è®¾ç½®gpioçš„ç”µé˜»æ˜¯ä¸Šæ‹‰è¿˜æ˜¯é«˜é˜»æˆ–è€…ä¸‹æ‹‰ */
+					int  pull);			/*ÉèÖÃgpioµÄµç×èÊÇÉÏÀ­»¹ÊÇ¸ß×è»òÕßÏÂÀ­ */
 	int		(*gpio_sw_data_set)(struct gpio_sw_classdev *gpio_sw_cdev,
-					int  data);			/*è®¾ç½®gpioçš„è¾“å‡ºç”µå¹³*/
+					int  data);			/*ÉèÖÃgpioµÄÊä³öµçÆ½*/
 	int		(*gpio_sw_drv_level_set)(struct gpio_sw_classdev *gpio_sw_cdev,
-					int  drv_level);	/*è®¾ç½®gpioçš„é©±åŠ¨ç­‰çº§ */
+					int  drv_level);	/*ÉèÖÃgpioµÄÇı¶¯µÈ¼¶ */
 	int		(*gpio_sw_cfg_get)(struct gpio_sw_classdev *gpio_sw_cdev);
-										/*è·å–gpioçš„è¾“å…¥è¾“å‡º */
+										/*»ñÈ¡gpioµÄÊäÈëÊä³ö */
 	int		(*gpio_sw_pull_get)(struct gpio_sw_classdev *gpio_sw_cdev);
-										/*è·å–gpioçš„ç”µé˜»æ˜¯ä¸Šæ‹‰è¿˜æ˜¯é«˜é˜»æˆ–è€…ä¸‹æ‹‰ */
+										/*»ñÈ¡gpioµÄµç×èÊÇÉÏÀ­»¹ÊÇ¸ß×è»òÕßÏÂÀ­ */
 	int		(*gpio_sw_data_get)(struct gpio_sw_classdev *gpio_sw_cdev);
-										/*è·å–pioçš„è¾“å‡ºç”µå¹³*/
+										/*»ñÈ¡pioµÄÊä³öµçÆ½*/
 	int		(*gpio_sw_drv_level_get)(struct gpio_sw_classdev *gpio_sw_cdev);
-										/*è·å–gpioçš„é©±åŠ¨ç­‰çº§ */
+										/*»ñÈ¡gpioµÄÇı¶¯µÈ¼¶ */
 	struct device		*dev;
 	struct list_head	 node;
 

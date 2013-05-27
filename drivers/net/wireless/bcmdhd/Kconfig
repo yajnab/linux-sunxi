@@ -9,14 +9,14 @@ config BCMDHD
 config BCMDHD_FW_PATH
 	depends on BCMDHD
 	string "Firmware path"
-	default "/system/vendor/modules/fw_bcm40181a2.bin"
+	default "/system/vendor/modules/fw_bcmxxxx.bin"
 	---help---
 	  Path to the firmware file.
 
 config BCMDHD_NVRAM_PATH
 	depends on BCMDHD
 	string "NVRAM path"
-	default "/system/vendor/modules/nvram_ap6210.txt"
+	default "/system/vendor/modules/nvram_apxxxx.txt"
 	---help---
 	  Path to the calibration file.
 
@@ -27,13 +27,6 @@ config BCMDHD_WEXT
 	select WEXT_PRIV
 	help
 	  Enables WEXT support
-
-config DHD_USE_SCHED_SCAN
-	bool "Use CFG80211 sched scan"
-	depends on BCMDHD && CFG80211
-	default n
-	---help---
-	  Use CFG80211 sched scan
 
 choice
     depends on BCMDHD

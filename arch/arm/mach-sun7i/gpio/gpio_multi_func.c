@@ -460,7 +460,7 @@ u32 sw_gpio_getall_range(struct gpio_config *pcfg, u32 cfg_num)
             if (0 == axp_gpio_get_io(offset, &io_status)) {
                 pcfg->mul_sel = io_status;
             } else {
-                PIO_ERR("%s: get axp pin(%d) io status failed\n",
+                PIO_ERR("%s: get axp pin(%d) io status failed\n", 
                         __func__, pcfg->gpio);
             }
 
@@ -542,3 +542,5 @@ u32 sw_gpio_resume(void)
     return uret;
 }
 EXPORT_SYMBOL(sw_gpio_resume);
+
+

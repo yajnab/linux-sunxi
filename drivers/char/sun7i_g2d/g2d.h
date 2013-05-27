@@ -11,7 +11,7 @@
 typedef struct
 {
 	g2d_init_para init_para;
-
+	
 }g2d_dev_t;
 
 int g2d_openclk(void);

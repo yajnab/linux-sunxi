@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -91,7 +91,7 @@
          *    A_UINT8       data[length]
          * Response format: none
          */
-/*
+/* 
  * Capbility to write "segmented files" is provided for two reasons
  * 1) backwards compatibility for certain situations where Hosts
  *    have limited flexibility
@@ -125,7 +125,7 @@
  * can use an arbitrary address.  In each BMI_WRITE_MEMORY command, the
  * length specifies the number of data bytes transmitted (except for the
  * special cases listed above).
- *
+ * 
  * Alternatively, a segmented file may be sent to the Target using a
  * BMI_LZ_STREAM_START command with address=BMI_SEGMENTED_WRITE_ADDR
  * followed by a series of BMI_LZ_DATA commands that each send the next portion
@@ -194,7 +194,7 @@ struct bmi_segmented_metadata {
          * Request format:
          *    A_UINT32      command (BMI_READ_REGISTER)
          *    A_UINT32      address
-         * Response format:
+         * Response format: 
          *    A_UINT32      value
          */
 

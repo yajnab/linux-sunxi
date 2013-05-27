@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="dl_list.h" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -47,14 +47,14 @@ typedef struct _DL_LIST {
 #define DL_LIST_INIT(pList)\
     {(pList)->pPrev = pList; (pList)->pNext = pList;}
 
-/* faster macro to init list and add a single item */
+/* faster macro to init list and add a single item */    
 #define DL_LIST_INIT_AND_ADD(pList,pItem) \
 {   (pList)->pPrev = (pItem); \
     (pList)->pNext = (pItem); \
     (pItem)->pNext = (pList); \
     (pItem)->pPrev = (pList); \
 }
-
+    
 #define DL_LIST_IS_EMPTY(pList) (((pList)->pPrev == (pList)) && ((pList)->pNext == (pList)))
 #define DL_LIST_GET_ITEM_AT_HEAD(pList) (pList)->pNext
 #define DL_LIST_GET_ITEM_AT_TAIL(pList) (pList)->pPrev
@@ -147,9 +147,9 @@ static INLINE void DL_ListTransferItemsToTail(PDL_LIST pDest, PDL_LIST pSrc) {
             /* cut out circular list in src and re-attach to end of dest */
         pSrc->pPrev->pNext = pDest;
         pSrc->pNext->pPrev = pDest->pPrev;
-        pDest->pPrev->pNext = pSrc->pNext;
+        pDest->pPrev->pNext = pSrc->pNext; 
         pDest->pPrev = pSrc->pPrev;
-            /* terminate src list, it is now empty */
+            /* terminate src list, it is now empty */      
         pSrc->pPrev = pSrc;
         pSrc->pNext = pSrc;
     }

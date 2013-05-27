@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="sdio_lib_wince.h" company="Atheros">
 //    Copyright (c) 2008 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -33,29 +33,29 @@
 #include "sdlist.h"
 
     /* generic registry data fetch */
-SDIO_STATUS SDLIB_GetRegistryKeyValue(HKEY hKey,
-                                      WCHAR *pKeyPath,
-                                      WCHAR *pValueName,
-                                      PUCHAR pValue,
+SDIO_STATUS SDLIB_GetRegistryKeyValue(HKEY hKey, 
+                                      WCHAR *pKeyPath, 
+                                      WCHAR *pValueName, 
+                                      PUCHAR pValue, 
                                       ULONG BufferSize);
-    /* get generic DWORD data from the registry */
-SDIO_STATUS SDLIB_GetRegistryKeyDWORD(HKEY   hKey,
+    /* get generic DWORD data from the registry */                                      
+SDIO_STATUS SDLIB_GetRegistryKeyDWORD(HKEY   hKey, 
                                       WCHAR  *pKeyPath,
-                                      WCHAR  *pValueName,
+                                      WCHAR  *pValueName, 
                                       DWORD  *pValue);
-
+                                  
 #define SDGetDebugLevelFromPath(hkey,Path)              \
     SDLIB_GetRegistryKeyDWORD(hkey,                     \
                               (Path),                   \
                               TEXT("debuglevel"),       \
-                              &DBG_GET_DEBUG_LEVEL())
-
+                              &DBG_GET_DEBUG_LEVEL())  
+                                                                
 typedef VOID (*PCT_WORKER_CALLBACK)(PVOID);
 
 typedef struct _CT_WORKER_TASK {
     SDLIST              List;
     PCT_WORKER_CALLBACK pCallBack;
-    PVOID               pContext;
+    PVOID               pContext;   
     BOOL                Queued;
 }CT_WORKER_TASK, *PCT_WORKER_TASK;
 
@@ -70,7 +70,7 @@ SDIO_STATUS SDLIB_QueueWorkTask(PVOID Worker, PCT_WORKER_TASK pTask);
 VOID SDLIB_DestroyWorker(PVOID Worker);
 
 PVOID SDLIB_CreateWorker(INT WorkerPriority);
-
+                            
 VOID SDLIB_FlushWorkTask(PVOID Worker, PCT_WORKER_TASK pTask);
 
 BOOL SDIO_LibraryInit();

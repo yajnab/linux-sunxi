@@ -2,7 +2,7 @@
 @file: sdio_std_hcd.h
 
 @abstract: OS Independent standard host header file
-
+ 
 @notice: Copyright (c), 2006 Atheros Communications, Inc.
 
 
@@ -19,22 +19,22 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
-// Portions of this code were developed with information supplied from the
+// Portions of this code were developed with information supplied from the 
 // SD Card Association Simplified Specifications. The following conditions and disclaimers may apply:
 //
 //  The following conditions apply to the release of the SD simplified specification (“Simplified
-//  Specification”) by the SD Card Association. The Simplified Specification is a subset of the complete
-//  SD Specification which is owned by the SD Card Association. This Simplified Specification is provided
-//  on a non-confidential basis subject to the disclaimers below. Any implementation of the Simplified
+//  Specification”) by the SD Card Association. The Simplified Specification is a subset of the complete 
+//  SD Specification which is owned by the SD Card Association. This Simplified Specification is provided 
+//  on a non-confidential basis subject to the disclaimers below. Any implementation of the Simplified 
 //  Specification may require a license from the SD Card Association or other third parties.
 //  Disclaimers:
-//  The information contained in the Simplified Specification is presented only as a standard
-//  specification for SD Cards and SD Host/Ancillary products and is provided "AS-IS" without any
-//  representations or warranties of any kind. No responsibility is assumed by the SD Card Association for
-//  any damages, any infringements of patents or other right of the SD Card Association or any third
-//  parties, which may result from its use. No license is granted by implication, estoppel or otherwise
-//  under any patent or other rights of the SD Card Association or any third party. Nothing herein shall
-//  be construed as an obligation by the SD Card Association to disclose or distribute any technical
+//  The information contained in the Simplified Specification is presented only as a standard 
+//  specification for SD Cards and SD Host/Ancillary products and is provided "AS-IS" without any 
+//  representations or warranties of any kind. No responsibility is assumed by the SD Card Association for 
+//  any damages, any infringements of patents or other right of the SD Card Association or any third 
+//  parties, which may result from its use. No license is granted by implication, estoppel or otherwise 
+//  under any patent or other rights of the SD Card Association or any third party. Nothing herein shall 
+//  be construed as an obligation by the SD Card Association to disclose or distribute any technical 
 //  information, know-how or other confidential information to any third party.
 //
 //
@@ -71,11 +71,11 @@
 
 enum STD_HOST_TRACE_ENUM {
     STD_HOST_TRACE_CARD_INSERT = (SDDBG_TRACE + 1),
-    STD_HOST_TRACE_DATA = (SDDBG_TRACE + 2),
-    STD_HOST_TRACE_REQUESTS,
-    STD_HOST_TRACE_DATA_DUMP,
-    STD_HOST_TRACE_CONFIG,
-    STD_HOST_TRACE_INT,
+    STD_HOST_TRACE_DATA = (SDDBG_TRACE + 2),       
+    STD_HOST_TRACE_REQUESTS,  
+    STD_HOST_TRACE_DATA_DUMP,  
+    STD_HOST_TRACE_CONFIG,     
+    STD_HOST_TRACE_INT,    
     STD_HOST_TRACE_CLOCK,
     STD_HOST_TRACE_SDIO_INT,
     STD_HOST_TRACE_LAST
@@ -84,7 +84,7 @@ enum STD_HOST_TRACE_ENUM {
 typedef enum _STD_HCD_DMA_MODE {
     STD_HCD_DMA_NONE = 0,
     STD_HCD_DMA_COMMON = 1,
-    STD_HCD_DMA_SG
+    STD_HCD_DMA_SG    
 } STD_HCD_DMA_MODE;
 
         /* Host Controller register definitions */
@@ -96,7 +96,7 @@ typedef enum _STD_HCD_DMA_MODE {
 #define HOST_REG_BLOCK_SIZE_DMA_SHIFT               12
 #define HOST_REG_BLOCK_SIZE_DMA_512K_BOUNDARY       (7 << HOST_REG_BLOCK_SIZE_DMA_SHIFT)
 
-#define SDHC_SDMA_512K_BOUNDARY_LENGTH              (512*1024)
+#define SDHC_SDMA_512K_BOUNDARY_LENGTH              (512*1024)  
 
 #define HOST_REG_BLOCK_COUNT                        0x06
 
@@ -163,8 +163,8 @@ typedef enum _STD_HCD_DMA_MODE {
 #define HOST_REG_CLOCK_CONTROL_CLOCK_ENABLE         (1 << 0)
 #define HOST_REG_CLOCK_CONTROL_CLOCK_STABLE         (1 << 1)
 #define HOST_REG_CLOCK_CONTROL_SD_ENABLE            (1 << 2)
-#define HOST_REG_CLOCK_CONTROL_FREQ_SELECT_MASK     (0xFF00)
-
+#define HOST_REG_CLOCK_CONTROL_FREQ_SELECT_MASK     (0xFF00)             
+ 
 #define HOST_REG_TIMEOUT_CONTROL                    0x2E
 #define HOST_REG_TIMEOUT_CONTROL_DEFAULT            0x0C
 
@@ -231,9 +231,9 @@ typedef enum _STD_HCD_DMA_MODE {
 #define HOST_REG_CAPABILITIES_SUSPEND_RESUME        (1 << 23)
 #define HOST_REG_CAPABILITIES_DMA                   (1 << 22)
 #define HOST_REG_CAPABILITIES_HIGH_SPEED            (1 << 21)
-#define HOST_REG_CAPABILITIES_ADMA                  (1 << 20)
-#define HOST_REG_CAPABILITIES_64                    (1 << 19)
-#define HOST_REG_CAPABILITIES_MMC8                  (1 << 18)
+#define HOST_REG_CAPABILITIES_ADMA                  (1 << 20) 
+#define HOST_REG_CAPABILITIES_64                    (1 << 19) 
+#define HOST_REG_CAPABILITIES_MMC8                  (1 << 18) 
 
 #define HOST_REG_CAPABILITIES_MAX_BLOCK_LEN_MASK    0x30000
 #define HOST_REG_CAPABILITIES_MAX_BLOCK_LEN_SHIFT   16
@@ -265,7 +265,7 @@ typedef enum _STD_HCD_DMA_MODE {
 
 #define HOST_REG_SLOT_INT_STATUS                    0xFC
 #define HOST_REG_SLOT_INT_MASK                      0xFF
-#define HOST_REG_MAX_INT_SLOTS                      8
+#define HOST_REG_MAX_INT_SLOTS                      8  
 
 #define HOST_REG_VERSION                            0xFE
 #define HOST_REG_VERSION_SPEC_VERSION_MASK          0xFF
@@ -285,7 +285,7 @@ typedef enum _STD_HCD_DMA_MODE {
 
 typedef struct _SD_CLOCK_TBL_ENTRY {
     UINT      ClockRateDivisor;  /* divisor */
-    UINT16    RegisterValue;     /* register value for clock divisor */
+    UINT16    RegisterValue;     /* register value for clock divisor */  
 }SD_CLOCK_TBL_ENTRY;
 
     /* standard host controller instance */
@@ -301,8 +301,8 @@ typedef struct _SDHCD_INSTANCE {
     BOOL         Cancel;          /* cancel flag */
     BOOL         ShuttingDown;    /* indicates shut down of HCD */
     BOOL         StartUpCardCheckDone;
-    UINT32       BaseClock;       /* base clock in hz */
-    UINT32       TimeOut;         /* timeout setting */
+    UINT32       BaseClock;       /* base clock in hz */ 
+    UINT32       TimeOut;         /* timeout setting */ 
     UINT32       ClockSpinLimit;  /* clock limit for command spin loops */
     BOOL         KeepClockOn;
     UINT32       BufferReadyWaitLimit;
@@ -324,24 +324,24 @@ typedef struct _SDHCD_INSTANCE {
     UINT32       CommonBufferUserDataOffset; /* user data offset of the common buffer */
     UINT32       FixedMaxSlotCurrent;  /* if non-zero, fixed max current in mA */
     UINT32       NonStdBehaviorFlags;  /* special flags to work around non-standard behavior */
-    SDHCD_OS_SPECIFIC OsSpecific;
+    SDHCD_OS_SPECIFIC OsSpecific;      
 }SDHCD_INSTANCE, *PSDHCD_INSTANCE;
 
 #define NON_STD_WAIT_CMD_DONE (1 << 0)
 
 
-#include "../../include/ctstartpack.h"
+#include "../../include/ctstartpack.h" 
 
 /* scatter-gather tables, as we use it in 32-bit mode */
 struct _SDHCD_SGDMA_DESCRIPTOR {
     UINT32      Length;
     UINT32      Address;
-}CT_PACK_STRUCT;
+}CT_PACK_STRUCT; 
 
-#include "../../include/ctendpack.h"
+#include "../../include/ctendpack.h" 
 
 typedef struct _SDHCD_SGDMA_DESCRIPTOR SDHCD_SGDMA_DESCRIPTOR;
-typedef struct _SDHCD_SGDMA_DESCRIPTOR *PSDHCD_SGDMA_DESCRIPTOR;
+typedef struct _SDHCD_SGDMA_DESCRIPTOR *PSDHCD_SGDMA_DESCRIPTOR; 
 
 #define SDDMA_VALID         0x1
 #define SDDMA_END           0x2
@@ -358,7 +358,7 @@ typedef struct _SDHCD_SGDMA_DESCRIPTOR *PSDHCD_SGDMA_DESCRIPTOR;
     ((d)->Address |= SDDMA_END);
 
 #define SDHCD_ADMA_BUFFER_PAGE_ALIGN   4096
-
+    
 /* prototypes */
 SDIO_STATUS HcdRequest(PSDHCD pHcd);
 SDIO_STATUS HcdConfig(PSDHCD pHcd, PSDCONFIG pReq);

@@ -2,7 +2,7 @@
 // Copyright (c) 2004-2010 Atheros Communications Inc.
 // All rights reserved.
 //
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -254,8 +254,8 @@ typedef enum {
     AR6000_XIOCTL_WMI_SETFIXRATES,
     AR6000_XIOCTL_WMI_GETFIXRATES,
     AR6000_XIOCTL_WMI_SET_RSSITHRESHOLD,
-    AR6000_XIOCTL_WMI_CLR_RSSISNR,
-    AR6000_XIOCTL_WMI_SET_LQTHRESHOLD,
+    AR6000_XIOCTL_WMI_CLR_RSSISNR,                   
+    AR6000_XIOCTL_WMI_SET_LQTHRESHOLD,               
     AR6000_XIOCTL_WMI_SET_RTS,
     AR6000_XIOCTL_WMI_SET_LPREAMBLE,
     AR6000_XIOCTL_WMI_SET_AUTHMODE,
@@ -402,10 +402,10 @@ typedef enum {
     AR6000_XIOCTL_RESUME_DRIVER,
     AR6000_XIOCTL_GET_SUBMODE,
     AR6000_XIOCTL_WMI_AP_SET_APSD,
-    AR6000_XIOCTL_TCMD_SETREG,
+    AR6000_XIOCTL_TCMD_SETREG, 
     AR6000_XIOCTL_GET_HT_CAP,
     AR6000_XIOCTL_WMI_GET_P2P_IE, /* 198 */
-} XTND_IOCLTS;
+} XTND_IOCLTS; 
 
 
 
@@ -1178,7 +1178,7 @@ typedef enum {
 // *   UINT8  mode
 // * uses: WMI_SET_QOS_SUPP_CMDID
 // */
-//#define AR6000_XIOCTL_WMI_SET_QOS_SUPP                  148
+//#define AR6000_XIOCTL_WMI_SET_QOS_SUPP                  148 
 //
 //#define AR6000_XIOCTL_AP_SET_DFS                        149
 //
@@ -1190,8 +1190,8 @@ typedef enum {
 //#define AR6000_XIOCTL_WMI_WPS_CONFIG              154
 //#define AR6000_XIOCTL_WMI_P2P_FINDNODE            155
 //#endif
-//#define AR6000_XIOCTL_SET_BT_HW_POWER_STATE             156
-//#define AR6000_XIOCTL_GET_BT_HW_POWER_STATE             157
+//#define AR6000_XIOCTL_SET_BT_HW_POWER_STATE             156 
+//#define AR6000_XIOCTL_GET_BT_HW_POWER_STATE             157 
 //#define AR6000_XIOCTL_GET_WLAN_SLEEP_STATE              158
 //#define AR6000_XIOCTL_WMI_SET_TX_SGI_PARAM              159
 ///*
@@ -1455,7 +1455,7 @@ struct drv_debug_module_s {
 };
 
 /* All HCI related rx events are sent up to the host app
- * via a wmi event id. It can contain ACL data or HCI event,
+ * via a wmi event id. It can contain ACL data or HCI event, 
  * based on which it will be de-multiplexed.
  */
 typedef enum {

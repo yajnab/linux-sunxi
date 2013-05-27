@@ -9,7 +9,7 @@ static struct class *hdmi_class;
 hdmi_info_t ghdmi;
 
 
-static struct resource hdmi_resource[1] =
+static struct resource hdmi_resource[1] = 
 {
 	[0] = {
 		.start = 0x01c16000,
@@ -18,7 +18,7 @@ static struct resource hdmi_resource[1] =
 	},
 };
 
-struct platform_device hdmi_device =
+struct platform_device hdmi_device = 
 {
 	.name           = "hdmi",
 	.id		        = -1,
@@ -27,17 +27,76 @@ struct platform_device hdmi_device =
 	.dev            = {}
 };
 
+static ssize_t hdmi_debug_show(struct device *dev,struct device_attribute *attr, char *buf)
+{
+	return sprintf(buf, "debug=%s\n", hdmi_print?"on" : "off");
+}
+
+static ssize_t hdmi_debug_store(struct device *dev,
+				struct device_attribute *attr,
+				const char *buf, size_t count)
+{
+	if (count < 1)
+        return -EINVAL;
+
+        if (strnicmp(buf, "on", 2) == 0 || strnicmp(buf, "1", 1) == 0)
+        {
+                hdmi_print = 1;
+        }
+        else if (strnicmp(buf, "off", 3) == 0 || strnicmp(buf, "0", 1) == 0)
+        {
+                hdmi_print = 0;
+        }
+        else
+        {
+                return -EINVAL;
+        }
+
+	return count;
+}
+
+static DEVICE_ATTR(debug, S_IRUGO|S_IWUSR|S_IWGRP,hdmi_debug_show, hdmi_debug_store);
+
+__s32 hdmi_hpd_state(__u32 state);
+static ssize_t hdmi_state_show(struct device *dev,struct device_attribute *attr, char *buf)
+{
+	return sprintf(buf, "nothing\n");
+}
+
+static ssize_t hdmi_state_store(struct device *dev,
+				struct device_attribute *attr,
+				const char *buf, size_t count)
+{
+	if (count < 1)
+        return -EINVAL;
+
+        if (strnicmp(buf, "1", 1) == 0)
+        {
+                hdmi_hpd_state(1);
+	}
+        else
+	{
+                hdmi_hpd_state(0);
+        }
+
+	return count;
+}
+
+static DEVICE_ATTR(state, S_IRUGO|S_IWUSR|S_IWGRP,hdmi_state_show, hdmi_state_store);
+
+
 
 static int __init hdmi_probe(struct platform_device *pdev)
 {
 	__inf("hdmi_probe call\n");
-
-    memset(&ghdmi, 0, sizeof(hdmi_info_t));
+		
+        memset(&ghdmi, 0, sizeof(hdmi_info_t));
 
 	ghdmi.base_hdmi = 0xf1c16000;
+        ghdmi.dev = &pdev->dev;
 
 	Hdmi_init();
-    Fb_Init(1);
+        Fb_Init(1);
 
 	return 0;
 }
@@ -45,29 +104,29 @@ static int __init hdmi_probe(struct platform_device *pdev)
 
 static int hdmi_remove(struct platform_device *pdev)
 {
-    __inf("hdmi_remove call\n");
+        __inf("hdmi_remove call\n");
 
-    Hdmi_exit();
+        Hdmi_exit();
 
-    return 0;
+        return 0;
 }
 
 int hdmi_suspend(struct platform_device *pdev, pm_message_t state)
 {
-    return 0;
+        return 0;
 }
 
 int hdmi_resume(struct platform_device *pdev)
 {
-    return 0;
+        return 0;
 }
-static struct platform_driver hdmi_driver =
+static struct platform_driver hdmi_driver = 
 {
 	.probe		= hdmi_probe,
 	.remove		= hdmi_remove,
 	.suspend    = hdmi_suspend,
 	.resume    = hdmi_resume,
-	.driver		=
+	.driver		= 
 	{
 		.name	= "hdmi",
 		.owner	= THIS_MODULE,
@@ -92,7 +151,7 @@ ssize_t hdmi_read(struct file *file, char __user *buf, size_t count, loff_t *ppo
 
 ssize_t hdmi_write(struct file *file, const char __user *buf, size_t count, loff_t *ppos)
 {
-    return -EINVAL;
+        return -EINVAL;
 }
 
 int hdmi_mmap(struct file *file, struct vm_area_struct * vma)
@@ -106,7 +165,7 @@ long hdmi_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 }
 
 
-static const struct file_operations hdmi_fops =
+static const struct file_operations hdmi_fops = 
 {
 	.owner		= THIS_MODULE,
 	.open		= hdmi_open,
@@ -117,10 +176,22 @@ static const struct file_operations hdmi_fops =
 	.mmap       = hdmi_mmap,
 };
 
+static struct attribute *hdmi_attributes[] = 
+{
+        &dev_attr_debug.attr,
+        &dev_attr_state.attr,
+        NULL
+};
+
+static struct attribute_group hdmi_attribute_group = {
+	.name = "attr",
+	.attrs = hdmi_attributes
+};
+
 int __init hdmi_module_init(void)
 {
 	int ret = 0, err;
-
+	
 	__inf("hdmi_module_init\n");
 
 	 alloc_chrdev_region(&devid, 0, 1, "hdmi");
@@ -134,22 +205,26 @@ int __init hdmi_module_init(void)
 		  return -1;
 	 }
 
-    hdmi_class = class_create(THIS_MODULE, "hdmi");
-    if (IS_ERR(hdmi_class))
-    {
-        __wrn("class_create fail\n");
-        return -1;
-    }
+        hdmi_class = class_create(THIS_MODULE, "hdmi");
+        if (IS_ERR(hdmi_class))
+        {
+                __wrn("class_create fail\n");
+                return -1;
+        }
 
+        ghdmi.dev = device_create(hdmi_class, NULL, devid, NULL, "hdmi");
+
+        ret = sysfs_create_group(&ghdmi.dev->kobj,&hdmi_attribute_group);
+    
 	ret |= hdmi_i2c_add_driver();
 
 	ret = platform_device_register(&hdmi_device);
-
+	
 	if (ret == 0)
-	{
+	{	
 		ret = platform_driver_register(&hdmi_driver);
 	}
-
+	
 	return ret;
 }
 
@@ -162,9 +237,9 @@ static void __exit hdmi_module_exit(void)
 
 	hdmi_i2c_del_driver();
 
-    class_destroy(hdmi_class);
+        class_destroy(hdmi_class);
 
-    cdev_del(my_cdev);
+        cdev_del(my_cdev);
 }
 
 
@@ -176,3 +251,4 @@ MODULE_AUTHOR("tyle");
 MODULE_DESCRIPTION("hdmi driver");
 MODULE_LICENSE("GPL");
 MODULE_ALIAS("platform:hdmi");
+

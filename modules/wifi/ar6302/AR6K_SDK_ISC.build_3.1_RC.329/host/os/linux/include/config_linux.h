@@ -2,7 +2,7 @@
 // Copyright (c) 2004-2010 Atheros Communications Inc.
 // All rights reserved.
 //
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -40,8 +40,8 @@ extern "C" {
 /*
  * Host side Test Command support
  * Note: when HCI SDIO is enabled, a low stack IRQ or statck overflow is
- *       hit on FC10. So with HCI SDIO, minimize the stack allocation by
- *       mutually exclude TCMD_SUPPORT, which allocates large buffers
+ *       hit on FC10. So with HCI SDIO, minimize the stack allocation by 
+ *       mutually exclude TCMD_SUPPORT, which allocates large buffers 
  *       in AR_TCMD_RESP in AR_SOFTC_T
  *
  */

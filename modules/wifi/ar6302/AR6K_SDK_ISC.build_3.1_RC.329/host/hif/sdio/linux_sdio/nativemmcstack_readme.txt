@@ -30,3 +30,6 @@ d. new platform type is:
 	ATH_PLATFORM=LOCAL_i686_NATIVEMMC-SDIO
 	TARGET_TYPE=AR6002
 e. known issues: unloading the driver on Fedora Core 9 after conecting to an AP seems to not be complete.
+
+
+

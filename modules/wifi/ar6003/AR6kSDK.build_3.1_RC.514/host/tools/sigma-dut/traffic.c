@@ -20,7 +20,7 @@ int is_ip_addr(const char *str);
 
 
 int cmd_traffic_send_ping(struct sigma_dut *dut,
-                                        tgPingStart_t *staPing,
+                                        tgPingStart_t *staPing, 
                                         dutCmdResponse_t *spresp)
 {
 	const char *dst;
@@ -190,5 +190,5 @@ void traffic_register_cmds(void)
 #if 0
 	sigma_dut_reg_cmd("traffic_send_ping", NULL, cmd_traffic_send_ping);
 	sigma_dut_reg_cmd("traffic_stop_ping", NULL, cmd_traffic_stop_ping);
-#endif
+#endif    
 }

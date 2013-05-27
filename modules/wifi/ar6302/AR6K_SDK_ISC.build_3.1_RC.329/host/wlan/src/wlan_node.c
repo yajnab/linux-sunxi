@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="wlan_node.c" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -53,7 +53,7 @@ ATH_DEBUG_INSTANTIATE_MODULE_VAR(wlan,
                                  ATH_DEBUG_MASK_DEFAULTS,
                                  ATH_DEBUG_DESCRIPTION_COUNT(wlan_debug_desc),
                                  wlan_debug_desc);
-
+                                 
 #endif
 
 static bss_t * _ieee80211_find_node (struct ieee80211_node_table *nt,
@@ -70,12 +70,12 @@ wlan_node_alloc(struct ieee80211_node_table *nt, int wh_size)
         A_MEMZERO(ni, sizeof(bss_t));
         if (wh_size)
         {
-		ni->ni_buf = A_MALLOC_NOWAIT(wh_size);
-		if (ni->ni_buf == NULL) {
-		A_FREE(ni);
-		ni = NULL;
-		return ni;
-		} else {
+        	ni->ni_buf = A_MALLOC_NOWAIT(wh_size);
+        	if (ni->ni_buf == NULL) {
+            	A_FREE(ni);
+            	ni = NULL;
+            	return ni;
+        	} else {
                 A_MEMZERO(ni->ni_buf, wh_size);
             }
         }
@@ -203,8 +203,8 @@ _ieee80211_find_node(struct ieee80211_node_table *nt,
     if (NULL == nt->nt_hash[hash])
     {
         return NULL;
-    }
-
+    }  
+  
     for(ni = nt->nt_hash[hash]; ni; ni = ni->ni_hash_next) {
         if (IEEE80211_ADDR_EQ(ni->ni_macaddr, macaddr)) {
             ieee80211_node_incref(ni);  /* mark referenced */
@@ -237,7 +237,7 @@ wlan_find_node(struct ieee80211_node_table *nt, const A_UINT8 *macaddr)
  * 2) Allocating a new buffer
  * 3) Update the node timestamp with the current time.
  */
-A_STATUS
+A_STATUS 
 wlan_node_buf_update(struct ieee80211_node_table *nt, bss_t *ni, A_UINT32 len)
 {
     IEEE80211_NODE_LOCK(nt);
@@ -371,7 +371,7 @@ wlan_node_table_init(void *wmip, struct ieee80211_node_table *nt)
     IEEE80211_NODE_LOCK_INIT(nt);
 
     A_REGISTER_MODULE_DEBUG_INFO(wlan);
-
+    
     nt->nt_node_first = nt->nt_node_last = NULL;
     for(i = 0; i < IEEE80211_NODE_HASHSIZE; i++)
     {
@@ -382,7 +382,7 @@ wlan_node_table_init(void *wmip, struct ieee80211_node_table *nt)
     nt->nt_nodeAge = WLAN_NODE_INACT_TIMEOUT_MSEC;
 
     //
-    // nt_scangen never initialized before and during suspend/resume of winmobile,
+    // nt_scangen never initialized before and during suspend/resume of winmobile, 
     // that some junk has been stored in this, due to this scan list didn't properly updated
     //
     nt->nt_scangen   = 0;
@@ -641,3 +641,4 @@ wlan_find_matching_Ssidnode (struct ieee80211_node_table *nt, A_UCHAR *pSsid,
 
     return best_ni;
 }
+

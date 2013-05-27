@@ -10,7 +10,7 @@
 *
 * Author 		: javen
 *
-* Description 	: å¯„å­˜å™¨å®šä¹‰
+* Description 	: ¼Ä´æÆ÷¶¨Òå
 *
 * History 		:
 *      <author>    		<time>       	<version >    		<desc>
@@ -26,3 +26,4 @@
 
 
 #endif   //__SUN4I_SYS_REG_H__
+

@@ -62,7 +62,7 @@ u32 addr_table[][2] = {
 /**
  * __addr_valid - check if the addr is valid
  * @addr: addr to judge
- *
+ * 
  * return true if the addr is register addr, false if not.
  */
 bool __addr_valid(u32 addr)
@@ -153,7 +153,7 @@ int __parse_dump_str(const char *buf, size_t size, u32 *start, u32 *end)
  * @start_reg:   address of start reg.
  * @end_reg:     address of end reg.
  * @buf:         store the dump info.
- *
+ * 
  * return bytes written to buf, <=0 indicate err
  */
 ssize_t __sunxi_dump_regs_ex(u32 start_reg, u32 end_reg, char *buf)
@@ -195,7 +195,7 @@ ssize_t __sunxi_dump_regs_ex(u32 start_reg, u32 end_reg, char *buf)
  * @dev:     class ptr.
  * @attr:    attribute ptr.
  * @buf:     the input buf which contain the start and end reg. eg: "0x01c20000,0x01c20100\n"
- *
+ * 
  * return size written to the buf, otherwise failed
  */
 ssize_t dump_show(struct class *class, struct class_attribute *attr, char *buf)
@@ -209,7 +209,7 @@ ssize_t dump_show(struct class *class, struct class_attribute *attr, char *buf)
  * @attr:    attribute ptr.
  * @buf:     the input buf which contain the start and end reg. eg: "0x01c20000,0x01c20100\n"
  * @size:    buf size.
- *
+ * 
  * return size if success, otherwise failed
  */
 ssize_t dump_store(struct class *class, struct class_attribute *attr,
@@ -241,7 +241,7 @@ err:
  * @reg_addr:   store the reg address. eg: 0x01c20000.
  * @val_expect: store the expect value. eg: 0x80000011.
  * @val_mask:   store the mask value. eg: 0x00000011.
- *
+ * 
  * return 0 if success, otherwise failed.
  */
 int __parse_compare_str(char *str, u32 *reg_addr,
@@ -270,7 +270,7 @@ int __parse_compare_str(char *str, u32 *reg_addr,
  * @buf:     the input string, eg: "0x01c20000 0x80000011 0x00000011,0x01c20004 0x0000c0a4 0x0000c0a0...".
  * @size:    buf size.
  * @ppgroup: store the struct allocated, the struct contains items parsed from input buf.
- *
+ * 
  * return 0 if success, otherwise failed.
  */
 int __compare_item_init(const char *buf, size_t size, struct compare_group **ppgroup)
@@ -426,7 +426,7 @@ ssize_t compare_store(struct class *class, struct class_attribute *attr,
  * @str:     string to be parsed, eg: "0x01c20818 0x55555555".
  * @reg_addr:   store the reg address. eg: 0x01c20818.
  * @val: store the expect value. eg: 0x55555555.
- *
+ * 
  * return 0 if success, otherwise failed.
  */
 int __parse_write_str(char *str, u32 *reg_addr, u32 *val)
@@ -449,7 +449,7 @@ int __parse_write_str(char *str, u32 *reg_addr, u32 *val)
  * @buf:     the input string, eg: "0x01c20800 0x00000031,0x01c20818 0x55555555,...".
  * @size:    buf size.
  * @ppgroup: store the struct allocated, the struct contains items parsed from input buf.
- *
+ * 
  * return 0 if success, otherwise failed.
  */
 int __write_item_init(const char *buf, size_t size, struct write_group **ppgroup)
@@ -830,3 +830,4 @@ static void __exit sunxi_reg_exit(void) {
 module_init(sunxi_reg_init);
 module_exit(sunxi_reg_exit);
 #endif /* ADD_MISC_DRIVER */
+

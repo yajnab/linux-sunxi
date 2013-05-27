@@ -51,3 +51,4 @@ extern __s32 twi_byte_rw(enum twi_op_type_e op, __u8 saddr, __u8 baddr, __u8 *da
 
 
 #endif  /* __STANDBY_TWI_H__ */
+

@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 //
 // Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -80,7 +80,7 @@
 #define A_STRTOUL               simple_strtoul
 #endif  /* A_STRTOL */
 
-#ifndef A_STRTOL
+#ifndef A_STRTOL 
 #define A_STRTOL                simple_strtol
 #endif /* A_STRTOL */
 
@@ -109,7 +109,7 @@ A_STATUS AthDoParsePatch(A_UCHAR *, A_UINT32, A_UCHAR*);
 /* parses a PS information buffer and stores it in a global structure */
 A_STATUS AthDoParsePS(A_UCHAR *, A_UINT32);
 
-/*
+/* 
  *  Uses the output of Both AthDoParsePS and AthDoParsePatch APIs to form HCI command array with
  *  all the PS and patch commands.
  *  The list will have the below mentioned commands in order.
@@ -119,7 +119,7 @@ A_STATUS AthDoParsePS(A_UCHAR *, A_UINT32);
  *  PS Reset Command
  *  PS Tag Command(s)
  *
- */
+ */  
 int AthCreateCommandList(PSCmdPacket **, A_UINT32 *);
 
 /* Cleanup the dynamically allicated HCI command list */

@@ -2,7 +2,7 @@
 // Copyright (c) 2004-2010 Atheros Communications Inc.
 // All rights reserved.
 //
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -28,7 +28,7 @@
 #define free(ptr) kfree((ptr))
 
 typedef struct MemInfo {
-    void *ptr;
+    void *ptr; 
     const char *caller;
     int lineno;
     size_t size;
@@ -205,7 +205,7 @@ void* a_mem_alloc(size_t msize, int type, const char *func, int lineno)
 void a_mem_free(void *ptr)
 {
     a_meminfo_del(ptr);
-    kfree(ptr);
+    kfree(ptr);   
 }
 
 static void printMemInfo(HashItem *item, void*arg)
@@ -228,3 +228,6 @@ void a_meminfo_report(int clear)
     }
     A_PRINTF("Total %d bytes\n", total);
 }
+
+   
+

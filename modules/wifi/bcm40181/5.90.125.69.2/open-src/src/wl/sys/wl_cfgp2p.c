@@ -2,13 +2,13 @@
  * Linux cfgp2p driver
  *
  * Copyright (C) 1999-2011, Broadcom Corporation
- *
+ * 
  *         Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- *
+ * 
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -16,7 +16,7 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- *
+ * 
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
@@ -59,7 +59,7 @@ wl_cfgp2p_has_ie(u8 *ie, u8 **tlvs, u32 *tlvs_len, const u8 *oui, u32 oui_len, u
 static s32
 wl_cfgp2p_vndr_ie(struct net_device *ndev, s32 bssidx, s32 pktflag,
             s8 *oui, s32 ie_id, s8 *data, s32 data_len, s32 delete);
-/*
+/* 
  *  Initialize variables related to P2P
  *
  */
@@ -930,7 +930,7 @@ wl_cfgp2p_listen_complete(struct wl_priv *wl, struct net_device *ndev,
 
 /*
  *  Timer expire callback function for LISTEN
- *  We can't report cfg80211_remain_on_channel_expired from Timer ISR context,
+ *  We can't report cfg80211_remain_on_channel_expired from Timer ISR context, 
  *  so lets do it from thread context.
  */
 static void
@@ -944,7 +944,7 @@ wl_cfgp2p_listen_expired(unsigned long data)
 	wl_cfg80211_event(wl_to_p2p_bss_ndev(wl, P2PAPI_BSSCFG_DEVICE), &msg, NULL);
 }
 
-/*
+/* 
  * Do a P2P Listen on the given channel for the given duration.
  * A listen consists of sitting idle and responding to P2P probe requests
  * with a P2P probe response.
@@ -992,7 +992,7 @@ wl_cfgp2p_discover_listen(struct wl_priv *wl, s32 channel, u32 duration_ms)
 		return -ENOMEM;
 	}
 
-	/*  We will wait to receive WLC_E_P2P_DISC_LISTEN_COMPLETE from dongle ,
+	/*  We will wait to receive WLC_E_P2P_DISC_LISTEN_COMPLETE from dongle , 
 	 *  otherwise we will wait up to duration_ms + 200ms
 	 */
 	INIT_TIMER(wl->p2p->listen_timer, wl_cfgp2p_listen_expired, duration_ms, 200);

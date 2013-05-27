@@ -1,9 +1,9 @@
 //
 // Copyright (c) 2006 Atheros Communications Inc.
 // All rights reserved.
+// 
 //
-//
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -18,10 +18,10 @@
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
 //
-//
+// 
 //
 
-/* This tool parses the recevent logs stored in the binary format
+/* This tool parses the recevent logs stored in the binary format 
    by the wince athsrc */
 #define WAPI_ENABLE
 #include <stdlib.h>
@@ -190,8 +190,8 @@ static const char *btStatus2text(A_INT32 status)
     switch (status) {
     CASE_STR_CONST(BT_UNDEF, 1, btState);
     CASE_STR_CONST(BT_ON, 2, btState);
-    CASE_STR_CONST(BT_OFF, 3, btState);
-    CASE_STR_CONST(BT_IGNORE, 4, btState);
+    CASE_STR_CONST(BT_OFF, 3, btState); 
+    CASE_STR_CONST(BT_IGNORE, 4, btState);    
     CASE_DEF_STR(btState);
     }
     return btState;
@@ -240,7 +240,7 @@ static const char* txrxstatus2text(A_INT32 status)
 
 static int rxfilter2text(char *buf, size_t blen, A_INT32 rxfilter)
 {
-    int ret = 0;
+    int ret = 0;  
     BIT_STR(buf, blen, ret, "UCAST "    , 0x00000001, rxfilter);
     BIT_STR(buf, blen, ret, "MCAST "    , 0x00000002, rxfilter);
     BIT_STR(buf, blen, ret, "BCAST "   , 0x00000004, rxfilter);
@@ -300,7 +300,7 @@ static int WMI_SET_MCAST_FILTER_CMDID_fmt(char *output, size_t len, const A_UINT
 {
     WMI_SET_MCAST_FILTER_CMD *cmd = (WMI_SET_MCAST_FILTER_CMD*)cmdbuf;
     return snprintf(output, len, "%02X:%02X:%02X:%02X:%02X:%02X",
-                    cmd->multicast_mac[0], cmd->multicast_mac[1], cmd->multicast_mac[2],
+                    cmd->multicast_mac[0], cmd->multicast_mac[1], cmd->multicast_mac[2], 
                     cmd->multicast_mac[3], cmd->multicast_mac[4], cmd->multicast_mac[5]);
 }
 
@@ -362,10 +362,10 @@ static int WMI_CONNECT_CMDID_fmt(char *output, size_t len, const A_UINT8 *cmdbuf
     CASE_DEF_STR(authMode);
     }
     return snprintf(output, len, "'%s' ch %d %s %s uni:%s grp:%s %02X:%02X:%02X:%02X:%02X:%02X ctrl 0x%x",
-        ssid, cmd->channel,
+        ssid, cmd->channel, 
         dot11Auth, authMode, pairwise, group,
-        cmd->bssid[0], cmd->bssid[1], cmd->bssid[2],
-        cmd->bssid[3], cmd->bssid[4], cmd->bssid[5],
+        cmd->bssid[0], cmd->bssid[1], cmd->bssid[2], 
+        cmd->bssid[3], cmd->bssid[4], cmd->bssid[5], 
         cmd->ctrl_flags);
 }
 
@@ -390,12 +390,12 @@ static int WMI_SET_BTCOEX_SCO_CONFIG_CMDID_fmt(char *output, size_t len, const A
     int blen = sizeof(scoFlags);
     int bret = 0;
     BIT_STR(scoFlags, blen, bret, "OPT ", (1<<0), cmd->scoConfig.scoFlags);
-    BIT_STR(scoFlags, blen, bret, "EDR ", (1<<1), cmd->scoConfig.scoFlags);
+    BIT_STR(scoFlags, blen, bret, "EDR ", (1<<1), cmd->scoConfig.scoFlags);   
     BIT_STR(scoFlags, blen, bret, "MASTER ", (1<<2), cmd->scoConfig.scoFlags);
     BIT_STR(scoFlags, blen, bret, "FRM ", (1<<3), cmd->scoConfig.scoFlags);
     scoFlags[(bret>0) ? --bret : bret] = 0;
 
-    return snprintf(output, len, "%d/%d slots [%s] ps %u-%u-%u opt %u-%u-%u-%u-%u-%u scan %u/%u",
+    return snprintf(output, len, "%d/%d slots [%s] ps %u-%u-%u opt %u-%u-%u-%u-%u-%u scan %u/%u", 
                     cmd->scoConfig.scoSlots, cmd->scoConfig.scoIdleSlots, scoFlags,
 
                     cmd->scoPspollConfig.scoCyclesForceTrigger,
@@ -512,7 +512,7 @@ static int TXRX_MGMTBUF_WLAN_RESET_ON_ERROR_fmt(char *output, size_t len, A_UINT
         rxfilter2text(buf, sizeof(buf),rxfilter);
         return snprintf(output, len, "rxfilter:[%s]", buf);
     } else if (numargs==2) {
-        return snprintf(output, len, "rstCnt %d caller %p",
+        return snprintf(output, len, "rstCnt %d caller %p", 
                         buffer[1], (void*)buffer[2]);
     } else {
         return 0;
@@ -597,7 +597,7 @@ static int DC_SEND_NEXT_SSID_PROBE_fmt(char *output, size_t len, A_UINT32 numarg
     CASE_STR(SPECIFIC_SSID_FLAG, flags);
     CASE_STR(ANY_SSID_FLAG, flags);
     CASE_DEF_STR(flags);
-    }
+    }  
     return snprintf(output, len, "idx %d %s", buffer[1], flags);
 }
 
@@ -605,16 +605,16 @@ static int DC_SCAN_CHAN_FINISH_fmt(char *output, size_t len, A_UINT32 numargs, A
 {
     A_UINT16 freq = buffer[1] & 0xffff;
     A_UINT16 status = (buffer[1] >> 16) & 0xffff;
-    A_INT32 rxfilter = buffer[2];
+    A_INT32 rxfilter = buffer[2];   
     char rxfilterMsg[1024];
     rxfilter2text(rxfilterMsg, sizeof(rxfilterMsg), rxfilter);
-    return snprintf(output, len, "freq %d status %s(%d), %s",
+    return snprintf(output, len, "freq %d status %s(%d), %s", 
                     freq, status2text(status), status, rxfilterMsg);
 }
 
 static int DC_SCAN_CHAN_START_fmt(char *output, size_t len, A_UINT32 numargs, A_INT32 *buffer)
 {
-    A_INT32 rxfilter = buffer[2];
+    A_INT32 rxfilter = buffer[2];   
     char rxfilterMsg[1024];
     A_UINT16 freq;
     A_UINT16 attrib;
@@ -624,7 +624,7 @@ static int DC_SCAN_CHAN_START_fmt(char *output, size_t len, A_UINT32 numargs, A_
     attrib = (buffer[1] >> 16) & 0xffff;
     probed = ((attrib & (0x0100|0x10))==(0x0100|0x10)) && !(attrib &  0x0800) ? "allow" : "not allow";
 
-    return snprintf(output, len, "freq %d attrib %d probed %s %s",
+    return snprintf(output, len, "freq %d attrib %d probed %s %s", 
                     freq, attrib, probed, rxfilterMsg);
 }
 
@@ -634,7 +634,7 @@ static int DC_START_SEARCH_fmt(char *output, size_t len, A_UINT32 numargs, A_INT
         return snprintf(output, len, "devid %d", buffer[1]);
     } else {
         A_INT32 stype = buffer[1];
-        int ret = 0;
+        int ret = 0;  
         char buf[1024];
         size_t blen = sizeof(buf);
         if (stype == 0) {
@@ -712,7 +712,7 @@ static int PM_SET_STATE_fmt(char *output, size_t len, A_UINT32 numargs, A_INT32 
     A_INT8 pmSleepCount = (buffer[2] >> 8) & 0xff;
     A_INT8 pmOldState = buffer[2] & 0xff;
     return snprintf(output, len, "StateWakeupCnt %d AwakeCnt %d, SleepCnt %d, %s to %s",
-                    pmStateWakeupCount, pmAwakeCount, pmSleepCount,
+                    pmStateWakeupCount, pmAwakeCount, pmSleepCount, 
                     pmmode2text(pmOldState), pmmode2text(pmState));
 }
 
@@ -763,7 +763,7 @@ static int BTCOEX_DBG_PM_SLEEP_fmt(char *output, size_t len, A_UINT32 numargs, A
 {
     A_INT32 pmWakeupCnt = buffer[1];
     A_INT32 btCoexFlags = buffer[2];
-    return BTCOEX_DBG_pmwakeupcnt_flags(output,len,pmWakeupCnt,btCoexFlags);
+    return BTCOEX_DBG_pmwakeupcnt_flags(output,len,pmWakeupCnt,btCoexFlags); 
 }
 
 static int BTCOEX_PSPOLL_QUEUED_fmt(char *output, size_t len, A_UINT32 numargs, A_INT32 *buffer)
@@ -771,7 +771,7 @@ static int BTCOEX_PSPOLL_QUEUED_fmt(char *output, size_t len, A_UINT32 numargs, 
     A_INT16 isEolEnabled = (buffer[1] >> 16) & 0xffff;
     A_INT8 bSendAtLowestRate = (buffer[1] >>8) & 0xff;
     A_INT8 isPmSleep = (buffer[1]) & 0xff;
-    return snprintf(output, len, "Eol:%s LowestRate:%s PmSleep:%s",
+    return snprintf(output, len, "Eol:%s LowestRate:%s PmSleep:%s", 
                     enable2text(isEolEnabled), enable2text(bSendAtLowestRate),
                     enable2text(isPmSleep));
 }
@@ -873,7 +873,7 @@ static int BTCOEX_SET_WEIGHTS_fmt(char *output, size_t len, A_UINT32 numargs, A_
     CASE_DEF_STR(weights);
     }
 
-    return snprintf(output, len, "%s val 0x%x", weights, buffer[2]);
+    return snprintf(output, len, "%s val 0x%x", weights, buffer[2]);    
 }
 
 static int BTCOEX_PM_FAKE_SLEEP_fmt(char *output, size_t len, A_UINT32 numargs, A_INT32 *buffer)
@@ -884,7 +884,7 @@ static int BTCOEX_PM_FAKE_SLEEP_fmt(char *output, size_t len, A_UINT32 numargs, 
 }
 
 static const struct wmi_id_desc evt_desc[] = {
-    WM_ID_DESC(WMI_READY_EVENTID),
+    WM_ID_DESC(WMI_READY_EVENTID), 
     WM_ID_DESC(WMI_CONNECT_EVENTID),
     WM_ID_DESC(WMI_DISCONNECT_EVENTID),
     WM_ID_DESC(WMI_BSSINFO_EVENTID),
@@ -950,7 +950,7 @@ static const struct wmi_id_desc evt_desc[] = {
     WM_ID_DESC(WMI_WAC_REPORT_BSS_EVENTID),
     WM_ID_DESC(WMI_WAC_START_WPS_EVENTID),
     WM_ID_DESC(WMI_WAC_CTRL_REQ_REPLY_EVENTID),
-
+        
     /*RFKILL Events*/
     WM_ID_DESC(WMI_RFKILL_STATE_CHANGE_EVENTID),
     WM_ID_DESC(WMI_RFKILL_GET_MODE_CMD_EVENTID),
@@ -1026,7 +1026,7 @@ static const struct wmi_id_desc cmds_desc[] = {
     WM_ID_DESC(WMI_SET_WMM_TXOP_CMDID),
     WM_ID_DESC(WMI_TEST_CMDID),
     /* COEX AR6002 only*/
-    WM_ID_DESC(WMI_SET_BT_STATUS_CMDID),
+    WM_ID_DESC(WMI_SET_BT_STATUS_CMDID),                
     WM_ID_DESC(WMI_SET_BT_PARAMS_CMDID),                /* 60 */
 
     WM_ID_DESC(WMI_SET_KEEPALIVE_CMDID),
@@ -1151,7 +1151,7 @@ static const struct wmi_id_desc cmdxs_desc[] = {
 
     /* ACS command, consists of sub-commands */
     WM_ID_DESC(WMI_ACS_CTRL_CMDID),
-
+    
     /* Ultra low power store / recall commands */
     WM_ID_DESC(WMI_STORERECALL_CONFIGURE_CMDID),
     WM_ID_DESC(WMI_STORERECALL_RECALL_CMDID),
@@ -1201,11 +1201,11 @@ static int WMI_EVENT_SEND_fmt(char *output, size_t len, A_UINT32 numargs, A_INT3
 {
     A_INT32 idx = buffer[1];
     A_INT32 sidx;
-    if (idx>=(A_INT32)WMI_READY_EVENTID &&
+    if (idx>=(A_INT32)WMI_READY_EVENTID && 
             idx<(A_INT32)(WMI_READY_EVENTID+ARRAY_SIZE(evt_desc))) {
         sidx = idx - WMI_READY_EVENTID;
         return snprintf(output, len, "%s", evt_desc[sidx].desc);
-    } else if (idx>=(A_INT32)WMI_SET_BITRATE_CMDID &&
+    } else if (idx>=(A_INT32)WMI_SET_BITRATE_CMDID && 
             idx<(A_INT32)(WMI_SET_BITRATE_CMDID+ARRAY_SIZE(cmdxs_desc))) {
         sidx = idx - WMI_SET_BITRATE_CMDID;
         return snprintf(output, len, "%s", cmdxs_desc[sidx].desc);
@@ -1219,15 +1219,15 @@ static int WMI_CMD_RX_fmt(char *output, size_t len, A_UINT32 numargs, A_INT32 *b
     A_INT32 idx = buffer[1];
     A_INT32 length = buffer[2];
     A_INT32 sidx;
-    if (idx>=(A_INT32)WMI_CONNECT_CMDID &&
+    if (idx>=(A_INT32)WMI_CONNECT_CMDID && 
             idx<(A_INT32)(WMI_CONNECT_CMDID+ARRAY_SIZE(cmds_desc))) {
         sidx = idx-WMI_CONNECT_CMDID;
-        return snprintf(output, len, "%s, len %d",
+        return snprintf(output, len, "%s, len %d", 
                        cmds_desc[sidx].desc, length);
-    } else if (idx>=(A_INT32)WMI_SET_BITRATE_CMDID &&
+    } else if (idx>=(A_INT32)WMI_SET_BITRATE_CMDID && 
             idx<(A_INT32)(WMI_SET_BITRATE_CMDID+ARRAY_SIZE(cmdxs_desc))) {
         sidx = idx - WMI_SET_BITRATE_CMDID;
-        return snprintf(output, len, "%s, len %d",
+        return snprintf(output, len, "%s, len %d", 
                        cmdxs_desc[sidx].desc, length);
     }
     return 0;
@@ -1248,7 +1248,7 @@ static int WMI_CMD_PARAMS_fmt(char *output, size_t len, A_UINT32 numargs, A_INT3
     if (dbg_wmi_cmd_params_buf == NULL) {
         /* partial debug log where there is no START. Skip it*/
         return 0;
-    }
+    }   
     memcpy(&dbg_wmi_cmd_params_buf[dbg_wmi_cmd_params_pos], &buffer[1], sizeof(A_INT32));
     memcpy(&dbg_wmi_cmd_params_buf[dbg_wmi_cmd_params_pos+4], &buffer[2], sizeof(A_INT32));
     dbg_wmi_cmd_params_pos += (sizeof(A_INT32) * 2);
@@ -1264,12 +1264,12 @@ static int WMI_CMD_PARAMS_DUMP_END_fmt(char *output, size_t len, A_UINT32 numarg
     if (dbg_wmi_cmd_params_buf == NULL) {
         /* partial debug log where there is no START. Skip it*/
         return 0;
-    }
-    if (idx>=(A_INT32)WMI_CONNECT_CMDID &&
+    }   
+    if (idx>=(A_INT32)WMI_CONNECT_CMDID && 
             idx<(A_INT32)(WMI_CONNECT_CMDID+ARRAY_SIZE(cmds_desc)) ) {
         cmdFormatter = cmds_desc[idx-WMI_CONNECT_CMDID].formatter;
         cmdSize = cmds_desc[idx-WMI_CONNECT_CMDID].cmdSize;
-    } else if (idx>=(A_INT32)WMI_SET_BITRATE_CMDID &&
+    } else if (idx>=(A_INT32)WMI_SET_BITRATE_CMDID && 
             idx<(A_INT32)(WMI_SET_BITRATE_CMDID+ARRAY_SIZE(cmdxs_desc))) {
         cmdFormatter = cmdxs_desc[idx-WMI_SET_BITRATE_CMDID].formatter;
         cmdSize = cmdxs_desc[idx-WMI_SET_BITRATE_CMDID].cmdSize;
@@ -1546,7 +1546,7 @@ static struct dbglog_desc btcoex_desc[] = {
     DBG_DESC(BTCOEX_BDG_BMISS),
     DBG_DESC(BTCOEX_DBG_DATA_RECV_WAKEUP_TIM),
     DBG_DESC(BTCOEX_DBG_SECOND_BMISS),
-    DBG_DESC(0),
+    DBG_DESC(0), 
     DBG_DESC_FMT(BTCOEX_DBG_SET_WLAN_STATE),
     DBG_DESC(BTCOEX_BDG_FIRST_BMISS),
     DBG_DESC(BTCOEX_DBG_A2DP_CHAN_OP),
@@ -1557,7 +1557,7 @@ static struct dbglog_desc btcoex_desc[] = {
     DBG_DESC(BTCOEX_DBG_SCO_OPT_MODE_TIMER_HANDLER),
     DBG_DESC(BTCOEX_DBG_NULL_FRAME_SLEEP),
     DBG_DESC(BTCOEX_DBG_NULL_FRAME_AWAKE),
-    DBG_DESC(0), DBG_DESC(0), DBG_DESC(0), DBG_DESC(0),
+    DBG_DESC(0), DBG_DESC(0), DBG_DESC(0), DBG_DESC(0), 
     DBG_DESC(BTCOEX_DBG_SET_AGGR_SIZE),
     DBG_DESC(BTCOEX_DBG_TEAR_BA_TIMEOUT),
     DBG_DESC(BTCOEX_DBG_MGMT_FRAME_SEQ_NO),
@@ -1580,7 +1580,7 @@ static struct dbglog_desc btcoex_desc[] = {
     DBG_DESC(BTCOEX_DBG_GET_STATS),
     DBG_DESC(BTCOEX_DBG_BT_OPERATING_STATUS),
     DBG_DESC(BTCOEX_DBG_PERFORM_RECONNECT),
-    DBG_DESC(0),
+    DBG_DESC(0), 
     DBG_DESC(BTCOEX_DBG_ACL_WLAN_MED),
     DBG_DESC(BTCOEX_DBG_ACL_BT_MED),
     DBG_DESC(BTCOEX_DBG_WLAN_CONNECT),
@@ -1613,7 +1613,7 @@ static struct dbglog_desc btcoex_desc[] = {
 
 static struct dbglog_desc pm_desc[] = {
     DBG_DESC(0),
-    DBG_DESC(PM_INIT),
+    DBG_DESC(PM_INIT), 
     DBG_DESC(PM_ENABLE),
     DBG_DESC_FMT(PM_SET_STATE),
     DBG_DESC_FMT(PM_SET_POWERMODE),
@@ -1680,12 +1680,12 @@ static void do_check_ids()
         dlog = modules[m].descs;
         mlen = modules[m].len;
         d=td=1;
-        while (dlog && (d<mlen||dbglog_id_tag[m][td][0]!='\0')) {
+        while (dlog && (d<mlen||dbglog_id_tag[m][td][0]!='\0')) {       
             if (d>=mlen) {
                 if (dlog != dummy_desc) {
-                    printf("m %s dbgid %s(%d) is larger than max internal table %d host/firmware mismatch?\n",
+                    printf("m %s dbgid %s(%d) is larger than max internal table %d host/firmware mismatch?\n", 
                             modules[m].name, dbglog_id_tag[m][td], td, mlen);
-                }
+                }                
                 break;
             }
 
@@ -1696,9 +1696,9 @@ static void do_check_ids()
                 printf("debug id does not matched '%s' <> '%s'\n", dbglog_id_tag[m][td], dlog[d].desc);
                 break;
             } else {
-                if (td!=d && !modules[m].bsearch) {
+                if (td!=d && !modules[m].bsearch) {                    
                     printf("Module %s debugid %s(%d) mismatched. using binary search for debugid",
-                           modules[m].name, dbglog_id_tag[m][td], td);
+                           modules[m].name, dbglog_id_tag[m][td], td); 
                     modules[m].bsearch = 1;
                 }
             }
@@ -1725,7 +1725,7 @@ static DbgLogFormatter getFormatter(A_INT32 moduleid, A_INT32 debugid)
                 d = (struct dbglog_desc*)bsearch(&debugid, m->descs, m->len, sizeof(m->descs[0]), compOid);
                 return d ? d->formatter : NULL;
             } else if (debugid>0 && debugid<m->len) {
-                return m->descs[debugid].formatter;
+                return m->descs[debugid].formatter;   
             }
         }
     }
@@ -1787,3 +1787,4 @@ int dbg_formater(int lv, char *output, size_t len, A_UINT32 ts, A_INT32 *logbuf)
     ret += snprintf(output+ret, len-ret, "\n");
     return ret;
 }
+

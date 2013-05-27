@@ -2,7 +2,7 @@
 // Copyright (c) 2004-2010 Atheros Communications Inc.
 // All rights reserved.
 //
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -378,7 +378,7 @@ static void ar6000_uapsd_trigger_frame_rx(AR_SOFTC_DEV_T *arPriv, conn_t *conn);
 extern void android_module_init(OSDRV_CALLBACKS *osdrvCallbacks);
 extern void android_module_exit(void);
 extern void android_send_reload_event(AR_SOFTC_DEV_T *arPriv);
-#define ANDROID_RELOAD_THRESHOLD_FOR_EP_FULL 5
+#define ANDROID_RELOAD_THRESHOLD_FOR_EP_FULL 5 
 static int android_epfull_cnt;
 #endif
 /*
@@ -742,7 +742,7 @@ ar6000_parse_dev_mode(A_CHAR *mode)
                                "none,p2pdev",
                                "p2pdev,none",
                                /*"none,p2pclient",*/ //persistent p2p support
-                               /*"none,p2pgo"*/ // persistent p2p support
+                               /*"none,p2pgo"*/ // persistent p2p support 
                     };
 
     A_CHAR *dev_mode;
@@ -753,7 +753,7 @@ ar6000_parse_dev_mode(A_CHAR *mode)
     str      = mode;
     num_device = 0;
     fwmode     = 0;
-
+    
     mode_len = strlen(dev_mode);
     for (i=0; i <= 9; i++) {
         if ((mode_len == strlen(valid_modes[i])) && (strcmp(dev_mode,valid_modes[i]))==0) {
@@ -761,13 +761,13 @@ ar6000_parse_dev_mode(A_CHAR *mode)
             break;
         }
     }
-
+    
     if(!match) {
         num_device = fwmode = 1;
         AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("ERROR: Wrong mode. using default (single device STA mode).\n"));
         return;
     }
-
+    
     do
     {
         str++;
@@ -802,7 +802,7 @@ ar6000_parse_dev_mode(A_CHAR *mode)
     num_submode = 0;
     fwsubmode = 0;
     match = FALSE;
-
+    
     mode_len = strlen(dev_mode);
     for (i=0; i<6; i++) {
         if ((mode_len == strlen(valid_submodes[i])) && (strcmp(dev_mode,valid_submodes[i]))==0) {
@@ -810,7 +810,7 @@ ar6000_parse_dev_mode(A_CHAR *mode)
             break;
         }
     }
-
+    
     if (!match) {
         fwsubmode = 0;
         AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("ERROR: Wrong submode. using default (none for all devs).\n"));
@@ -857,7 +857,7 @@ ar6000_parse_dev_mode(A_CHAR *mode)
     for (i=0; i<num_device; i++) {
         val_mode = (fwmode >> (i * HI_OPTION_FW_MODE_BITS)) &
                                               HI_OPTION_FW_MODE_MASK;
-        val_submode = (fwsubmode >> (i * HI_OPTION_FW_SUBMODE_BITS)) &
+        val_submode = (fwsubmode >> (i * HI_OPTION_FW_SUBMODE_BITS)) & 
                                               HI_OPTION_FW_SUBMODE_MASK;
         switch (val_mode) {
         case HI_OPTION_FW_MODE_IBSS:
@@ -874,7 +874,7 @@ ar6000_parse_dev_mode(A_CHAR *mode)
                 fwsubmode &= ~(HI_OPTION_FW_SUBMODE_MASK << (i*HI_OPTION_FW_SUBMODE_BITS));
                 fwsubmode |= (HI_OPTION_FW_SUBMODE_NONE << (i * HI_OPTION_FW_SUBMODE_BITS));
             }
-
+ 
         break;
         case HI_OPTION_FW_MODE_AP:
             if (val_submode == HI_OPTION_FW_SUBMODE_P2PDEV ||
@@ -1266,10 +1266,10 @@ ar6000_softmac_update(AR_SOFTC_T *ar, A_UCHAR *eeprom_data, size_t eeprom_size)
         return;
     }
 
-    AR_DEBUG_PRINTF(ATH_DEBUG_WARN,
-                ("MAC from EEPROM %02X:%02X:%02X:%02X:%02X:%02X\n",
-                ptr_mac[0], ptr_mac[1], ptr_mac[2],
-                ptr_mac[3], ptr_mac[4], ptr_mac[5]));
+    AR_DEBUG_PRINTF(ATH_DEBUG_WARN,  
+                ("MAC from EEPROM %02X:%02X:%02X:%02X:%02X:%02X\n", 
+                ptr_mac[0], ptr_mac[1], ptr_mac[2], 
+                ptr_mac[3], ptr_mac[4], ptr_mac[5])); 
 
     if (memcmp(random_mac, "\0\0\0\0\0\0", 6)!=0) {
         memcpy(ptr_mac, random_mac, 6);
@@ -1278,19 +1278,19 @@ ar6000_softmac_update(AR_SOFTC_T *ar, A_UCHAR *eeprom_data, size_t eeprom_size)
         ptr_mac[0] = random_mac[0] = 2; /* locally administered */
         ptr_mac[1] = random_mac[1] = 0x03;
         ptr_mac[2] = random_mac[2] = 0x7F;
-        ptr_mac[3] = random_mac[3] = random32() & 0xff;
-        ptr_mac[4] = random_mac[4] = random32() & 0xff;
+        ptr_mac[3] = random_mac[3] = random32() & 0xff; 
+        ptr_mac[4] = random_mac[4] = random32() & 0xff; 
         ptr_mac[5] = random_mac[5] = random32() & 0xff;
-    }
+    } 
 
     if ((A_REQUEST_FIRMWARE(&softmac_entry, "softmac", ((struct device *)ar->osDevInfo.pOSDevice))) == 0)
     {
         A_CHAR *macbuf = A_MALLOC_NOWAIT(softmac_entry->size+1);
-        if (macbuf) {
+        if (macbuf) {            
             unsigned int softmac[6];
             memcpy(macbuf, softmac_entry->data, softmac_entry->size);
             macbuf[softmac_entry->size] = '\0';
-            if (sscanf(macbuf, "%02x:%02x:%02x:%02x:%02x:%02x",
+            if (sscanf(macbuf, "%02x:%02x:%02x:%02x:%02x:%02x", 
                         &softmac[0], &softmac[1], &softmac[2],
                         &softmac[3], &softmac[4], &softmac[5])==6) {
                 int i;
@@ -1308,8 +1308,8 @@ ar6000_softmac_update(AR_SOFTC_T *ar, A_UCHAR *eeprom_data, size_t eeprom_size)
     if (memcmp(random_mac, "\0\0\0\0\0\0", 6)!=0) {
         AR_DEBUG_PRINTF(ATH_DEBUG_ERR, ("Warning! Random MAC address is just for testing purpose\n"));
     }
-
-    AR_DEBUG_PRINTF(ATH_DEBUG_WARN,
+    
+    AR_DEBUG_PRINTF(ATH_DEBUG_WARN, 
                     ("MAC from %s %02X:%02X:%02X:%02X:%02X:%02X\n",  source,
                      ptr_mac[0], ptr_mac[1], ptr_mac[2],
                      ptr_mac[3], ptr_mac[4], ptr_mac[5]));
@@ -1539,16 +1539,16 @@ ar6000_update_bdaddr(AR_SOFTC_T *ar)
             A_UINT32 address;
 
            if (BMIReadMemory(ar->arHifDevice,
-		HOST_INTEREST_ITEM_ADDRESS(ar->arTargetType, hi_board_data), (A_UCHAR *)&address, 4) != A_OK)
+           	HOST_INTEREST_ITEM_ADDRESS(ar->arTargetType, hi_board_data), (A_UCHAR *)&address, 4) != A_OK)
            {
-		AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("BMIReadMemory for hi_board_data failed\n"));
-		return A_ERROR;
+    	      	AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("BMIReadMemory for hi_board_data failed\n"));
+           	return A_ERROR;
            }
 
            if (BMIReadMemory(ar->arHifDevice, address + BDATA_BDADDR_OFFSET, (A_UCHAR *)ar->bdaddr, 6) != A_OK)
            {
-		AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("BMIReadMemory for BD address failed\n"));
-		return A_ERROR;
+    	    	AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("BMIReadMemory for BD address failed\n"));
+           	return A_ERROR;
            }
 	   AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("BDADDR 0x%x:0x%x:0x%x:0x%x:0x%x:0x%x\n", ar->bdaddr[0],
 								ar->bdaddr[1], ar->bdaddr[2], ar->bdaddr[3],
@@ -1798,7 +1798,7 @@ ar6000_sysfs_bmi_get_config(AR_SOFTC_T *ar, A_UINT32 mode)
 #ifdef CONFIG_HOST_TCMD_SUPPORT
         if (testmode == 2) {
 			if (ar->arVersion.target_ver == AR6003_REV2_VERSION) {
-				filename = AR6003_REV2_UTF_FIRMWARE_FILE;
+ 				filename = AR6003_REV2_UTF_FIRMWARE_FILE;
                 if ((A_REQUEST_FIRMWARE(&fw_entry, filename, ((struct device *)ar->osDevInfo.pOSDevice))) != 0)
                 {
                     AR_DEBUG_PRINTF(ATH_DEBUG_ERR, ("Failed to get %s\n", filename));
@@ -2320,7 +2320,7 @@ ar6000_avail_ev(void *context, void *hif_handle)
         if (arPriv->arNetworkSubType == SUBTYPE_P2PDEV ||
             arPriv->arNetworkSubType == SUBTYPE_P2PCLIENT ||
             arPriv->arNetworkSubType == SUBTYPE_P2PGO) {
-            arPriv->p2p_ctx = p2p_init(arPriv);
+            arPriv->p2p_ctx = p2p_init(arPriv); 
         }
 #endif /* P2P */
     }
@@ -2685,7 +2685,7 @@ ar6000_stop_endpoint(AR_SOFTC_T *ar, A_BOOL keepprofile, A_BOOL getdbglogs)
                 }
                 ar->arWmiReady  = FALSE;
                 arPriv->arWmiEnabled = FALSE;
-                wmi_shutdown(arPriv->arWmi);
+                wmi_shutdown(arPriv->arWmi);                
                 arPriv->arWmi = NULL;
                /*
                 * After wmi_shudown all WMI events will be dropped.
@@ -2719,7 +2719,7 @@ ar6000_stop_endpoint(AR_SOFTC_T *ar, A_BOOL keepprofile, A_BOOL getdbglogs)
             {
                 AR_DEBUG_PRINTF(ATH_DEBUG_INFO,("%s(): Shut down WMI\n", __func__));
                 arPriv->arWmiEnabled = FALSE;
-                wmi_shutdown(arPriv->arWmi);
+                wmi_shutdown(arPriv->arWmi);                
                 arPriv->arWmi = NULL;
             }
         }
@@ -3227,7 +3227,7 @@ int ar6000_init(struct net_device *dev)
     ar = arPriv->arSoftc;
 
     if (wlaninitmode == WLAN_INIT_MODE_USR || wlaninitmode == WLAN_INIT_MODE_DRV) {
-
+    
         ar6000_update_bdaddr(ar);
     }
 
@@ -3790,7 +3790,7 @@ ar6000_data_tx(struct sk_buff *skb, struct net_device *dev)
                       * MoreData bit has to be set.
                       */
                          A_MUTEX_LOCK(&arAp->mcastpsqLock);
-                         if(!A_NETBUF_QUEUE_EMPTY(&arAp->mcastpsq)) {
+                         if(!A_NETBUF_QUEUE_EMPTY(&arAp->mcastpsq)) {   
                             wmiDataFlags |= WMI_DATA_HDR_FLAGS_MORE;
                          }
                          A_MUTEX_UNLOCK(&arAp->mcastpsqLock);
@@ -3803,7 +3803,7 @@ ar6000_data_tx(struct sk_buff *skb, struct net_device *dev)
                         /* If this transmit is not because of a PsPoll q it*/
                         if (!(STA_IS_PS_POLLED(conn) || STA_IS_APSD_TRIGGER(conn))) {
                             A_BOOL trigger = FALSE;
-
+                            
                             if (conn->apsd_info) {
                                 A_UINT8 up = 0;
                                 A_UINT8 trafficClass;
@@ -3825,17 +3825,17 @@ ar6000_data_tx(struct sk_buff *skb, struct net_device *dev)
                                         etherType = llcHdr->etherType;
                                         ipHdr = (A_UINT8 *)(llcHdr + 1);
                                     }
-
+                            
                                     if (etherType == A_CPU2BE16(ipType)) {
                                         up = wmi_determine_userPriority (ipHdr, 0);
                                     }
-                                }
+                                } 
                                 trafficClass = convert_userPriority_to_trafficClass(up);
                                 if (conn->apsd_info & (1 << trafficClass)) {
                                     trigger = TRUE;
                                 }
                             }
-
+    
                             if (trigger) {
                                 A_BOOL isApsdqEmpty;
                                 /* Queue the frames if the STA is sleeping */
@@ -3868,7 +3868,7 @@ ar6000_data_tx(struct sk_buff *skb, struct net_device *dev)
 
                             return 0;
                         } else {
-                         /*
+                         /* 
                           * This tx is because of a PsPoll or trigger. Determine if
                           * MoreData bit has to be set
                           */
@@ -4697,7 +4697,7 @@ ar6000_rx(void *Context, HTC_PACKET *pPacket)
                        /*DIX to ETHERNET hdr conversion is offloaded to firmware */
                        /*Empty LLC header is moved to get ethernet header*/
                         A_UINT32 datalen = (A_UINT32)A_NETBUF_LEN(skb)-offset;
-
+                        
                         is_amsdu = WMI_DATA_HDR_IS_AMSDU(dhdr);
                         containsDot11Hdr = WMI_DATA_HDR_GET_DOT11(dhdr);
                         if(!containsDot11Hdr && !is_amsdu && !is_acl_data_frame
@@ -4707,7 +4707,7 @@ ar6000_rx(void *Context, HTC_PACKET *pPacket)
                         else {
                             datap = (ATH_MAC_HDR *)((A_INT8*)A_NETBUF_DATA(skb)+offset);
                         }
-
+                        
 #else
                         datap = (ATH_MAC_HDR *)(A_NETBUF_DATA(skb)+offset);
 #endif
@@ -4768,7 +4768,7 @@ ar6000_rx(void *Context, HTC_PACKET *pPacket)
                                     if (!isApsdqEmptyAtStart) {
                                         wmi_set_apsd_buffered_traffic_cmd(arPriv->arWmi, conn->aid, 0, 0);
                                     }
-
+                                    
                                     /* Clear the PVB for this STA */
                                     wmi_set_pvb_cmd(arPriv->arWmi, conn->aid, 0);
                                 }
@@ -4833,7 +4833,7 @@ ar6000_rx(void *Context, HTC_PACKET *pPacket)
                         }
                         else {
                             status = A_OK;
-                        }
+                        }     
 #else
                         status = wmi_dot3_2_dix(skb);
 #endif
@@ -4899,7 +4899,7 @@ ar6000_deliver_frames_to_nw_stack(void *dev, void *osbuf)
                 ATH_MAC_HDR *datap;
                 struct net_device *net_dev = arPriv->arNetDev;
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM 
                 ar6000_check_wow_status(ar, skb, FALSE);
 #endif /* CONFIG_PM */
 
@@ -5146,12 +5146,12 @@ static HTC_PACKET *ar6000_alloc_amsdu_rxbuf(void *Context, HTC_ENDPOINT_ID Endpo
     return pPacket;
 }
 
-static void
+static void	
 ar6000_set_multicast_list(struct net_device *dev)
 {
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 35)
     int mc_count = dev->mc_count;
-	struct dev_mc_list *mc;
+ 	struct dev_mc_list *mc;
     int j;
 #else
     int mc_count = netdev_mc_count(dev);
@@ -5159,7 +5159,7 @@ ar6000_set_multicast_list(struct net_device *dev)
 #endif
     AR_SOFTC_DEV_T *arPriv = (AR_SOFTC_DEV_T *)ar6k_priv(dev);
     AR_SOFTC_T     *ar     = arPriv->arSoftc;
-
+        
     int i;
     A_BOOL enableAll, disableAll;
     enum {
@@ -5173,21 +5173,21 @@ ar6000_set_multicast_list(struct net_device *dev)
     A_UINT8 *filter;
     A_BOOL filterValid;
 
-    if (ar->arWmiReady == FALSE || ar->arWlanState == WLAN_DISABLED)
+    if (ar->arWmiReady == FALSE || ar->arWlanState == WLAN_DISABLED) 
         return;
 
     enableAll = FALSE;
     disableAll = FALSE;
 
-    /*
-      *  Enable receive all multicast, if
-      * 1. promiscous mode,
+    /* 
+      *  Enable receive all multicast, if 
+      * 1. promiscous mode, 
       * 2. Allow all multicast
       * 3. H/W supported filters is less than application requested filter
-      */
-    if ((dev->flags & IFF_PROMISC) ||
-        (dev->flags & IFF_ALLMULTI) ||
-        (mc_count > MAC_MAX_FILTERS_PER_LIST))
+      */ 
+    if ((dev->flags & IFF_PROMISC) || 
+        (dev->flags & IFF_ALLMULTI) || 
+        (mc_count > MAC_MAX_FILTERS_PER_LIST)) 
     {
         enableAll = TRUE;
     } else {
@@ -5196,15 +5196,15 @@ ar6000_set_multicast_list(struct net_device *dev)
             disableAll = TRUE;
         }
     }
-
+    
     /*
      * Firmware behaviour
-     * enableAll - set filter to enable and delete valid filters
-     * disableAll - set filter to disable and delete valid filers
+     * enableAll - set filter to enable and delete valid filters 
+     * disableAll - set filter to disable and delete valid filers 
      * filter - set valid filters
      */
 
-    /*
+    /* 
      *  Pass 1: Mark all the valid filters to delete
      */
     for (i=0; i<MAC_MAX_FILTERS_PER_LIST; i++) {
@@ -5218,18 +5218,18 @@ ar6000_set_multicast_list(struct net_device *dev)
     }
 
     if ((!enableAll) && (!disableAll))  {
-        /*
+        /* 
          *  Pass 2: Mark all filters which match the previous ones
          */
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 34)
-		for (j = 0, mc = dev->mc_list; mc && (j < dev->mc_count);
-			    j++, mc = mc->next) {
+ 		for (j = 0, mc = dev->mc_list; mc && (j < dev->mc_count);
+ 			    j++, mc = mc->next) {
             mac = mc->dmi_addr;
 #else
 		netdev_for_each_mc_addr(ha, dev) {
             mac = ha->addr;
 #endif
-
+            
             mcValid =  (mac[2] || mac[3] || mac[4] || mac[5]);
             if (mcValid) {
                 for (i=0; i<MAC_MAX_FILTERS_PER_LIST; i++) {
@@ -5257,15 +5257,15 @@ ar6000_set_multicast_list(struct net_device *dev)
                 action[i] = IGNORE;
             }
         }
-        /*
+        /* 
          *  Pass 3: Add new filters to empty slots
          */
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 34)
-		for (j = 0, mc = dev->mc_list; mc && (j < dev->mc_count);
-			    j++, mc = mc->next) {
+ 		for (j = 0, mc = dev->mc_list; mc && (j < dev->mc_count);
+ 			    j++, mc = mc->next) {
 #else
 		netdev_for_each_mc_addr(ha, dev) {
-
+            
 #endif
             A_BOOL match;
             A_INT32 free;
@@ -5292,12 +5292,12 @@ ar6000_set_multicast_list(struct net_device *dev)
                 }
                 if ((!match) && (free != -1)) {
                     filter = arPriv->mcast_filters[free];
-                    A_MEMCPY(filter, &mac[2], AR_MCAST_FILTER_MAC_ADDR_SIZE);
+                    A_MEMCPY(filter, &mac[2], AR_MCAST_FILTER_MAC_ADDR_SIZE); 
                     action[free] = ADD;
                 }
             }
         }
-    }
+    } 
 
 
     for (i = 0; i < MAC_MAX_FILTERS_PER_LIST; i++) {
@@ -5320,7 +5320,7 @@ ar6000_set_multicast_list(struct net_device *dev)
     if (enableAll) {
         /* target allow all multicast packets if fitler enable and fitler list is zero */
         wmi_mcast_filter_cmd(arPriv->arWmi, TRUE);
-    } else if (disableAll) {
+    } else if (disableAll) {         
         /* target drop multicast packets if fitler disable and fitler list is zero */
         wmi_mcast_filter_cmd(arPriv->arWmi, FALSE);
     }
@@ -5563,7 +5563,7 @@ ar6000_connect_event(AR_SOFTC_DEV_T *arPriv, WMI_CONNECT_EVENT *pEvt)
     assocReqLen = pEvt->assocReqLen;
     assocRespLen = pEvt->assocRespLen;
     assocInfo = pEvt->assocInfo;
-
+    
     /* BSSID and MAC_ADDR is in the same location for all modes */
     bssid = pEvt->u.infra_ibss_bss.bssid;
 
@@ -5670,7 +5670,7 @@ skip_key:
 
         AR_DEBUG_PRINTF(ATH_DEBUG_INFO,("NEW STA %2.2x:%2.2x:%2.2x:%2.2x:%2.2x:%2.2x \n "
             " AID=%d AUTH=%d WMODE=%d KEYMGMT=%d CIPHER=%d APSD=%x\n",
-            pEvt->u.ap_sta.mac_addr[0], pEvt->u.ap_sta.mac_addr[1], pEvt->u.ap_sta.mac_addr[2],
+            pEvt->u.ap_sta.mac_addr[0], pEvt->u.ap_sta.mac_addr[1], pEvt->u.ap_sta.mac_addr[2], 
             pEvt->u.ap_sta.mac_addr[3], pEvt->u.ap_sta.mac_addr[4], pEvt->u.ap_sta.mac_addr[5],
             aid, auth_alg, wmode, keymgmt, pEvt->u.ap_sta.cipher, pEvt->u.ap_sta.apsd_info));
 
@@ -5962,15 +5962,15 @@ remove_sta(AR_SOFTC_DEV_T *arPriv, A_UINT8 *mac, A_UINT16 reason)
     }
 
     if(reason == AP_DISCONNECT_MAX_STA) {
-        AR_DEBUG_PRINTF(ATH_DEBUG_INFO,("MAX STA %2.2x:%2.2x:%2.2x:%2.2x:%2.2x:%2.2x\n", mac[0],
+        AR_DEBUG_PRINTF(ATH_DEBUG_INFO,("MAX STA %2.2x:%2.2x:%2.2x:%2.2x:%2.2x:%2.2x\n", mac[0], 
             mac[1], mac[2], mac[3], mac[4], mac[5]));
         return removed;
     } else if(reason == AP_DISCONNECT_ACL) {
-        AR_DEBUG_PRINTF(ATH_DEBUG_INFO,("ACL STA %2.2x:%2.2x:%2.2x:%2.2x:%2.2x:%2.2x\n", mac[0],
+        AR_DEBUG_PRINTF(ATH_DEBUG_INFO,("ACL STA %2.2x:%2.2x:%2.2x:%2.2x:%2.2x:%2.2x\n", mac[0], 
             mac[1], mac[2], mac[3], mac[4], mac[5]));
         return removed;
     }
-
+    
     for(i=0; i < NUM_CONN; i++) {
         if(A_MEMCMP(ar->connTbl[i].mac, mac, ATH_MAC_LEN)==0) {
             AR_DEBUG_PRINTF(ATH_DEBUG_INFO,("DEL STA %2.2x:%2.2x:%2.2x:%2.2x:%2.2x:%2.2x "
@@ -6025,7 +6025,7 @@ ar6000_disconnect_event(AR_SOFTC_DEV_T *arPriv, A_UINT8 reason, A_UINT8 *bssid,
              * to the p2p-dev (STA) mode.
              */
             /* TODO: arNetworkSubType will remains as p2pdev for all p2p modes
-             * for now. we will have to set this appropriately to either
+             * for now. we will have to set this appropriately to either 
              * p2p-client or p2p-go. But since we do not make any decisions on
              * the host side with this state w.r.t P2P, we are fine with having
              * this state not updated.
@@ -6471,7 +6471,7 @@ ar6000_scanComplete_event(AR_SOFTC_DEV_T *arPriv, A_STATUS status)
         wmi_bssfilter_cmd(arPriv->arWmi, NONE_BSS_FILTER, 0);
     }
     if (arPriv->arSta.scan_triggered) {
-        union iwreq_data wrqu;
+        union iwreq_data wrqu;   
         A_MEMZERO(&wrqu, sizeof(wrqu));
         wireless_send_event(arPriv->arNetDev, SIOCGIWSCAN, &wrqu, NULL);
         arPriv->arSta.scan_triggered = 0;
@@ -7168,7 +7168,7 @@ void ar6000_send_event_to_app(AR_SOFTC_DEV_T *arPriv, A_UINT16 eventId,
 #ifdef ANDROID_ENV
     if (eventId == WMI_ERROR_REPORT_EVENTID) {
         android_send_reload_event(arPriv);
-    }
+    }   
 #endif /* ANDROID_ENV */
 
 #endif
@@ -7357,7 +7357,7 @@ void ar6000_pspoll_event(AR_SOFTC_DEV_T *arPriv,A_UINT8 aid)
         A_MUTEX_UNLOCK(&conn->psqLock);
 
     }
-
+    
     /* Clear the PVB for this STA if the queue has become empty */
     if (isPsqEmpty) {
         wmi_set_pvb_cmd(arPriv->arWmi, conn->aid, 0);
@@ -7423,8 +7423,8 @@ static void ar6000_uapsd_trigger_frame_rx(AR_SOFTC_DEV_T *arPriv, conn_t *conn)
      */
 
     numFramesToDeliver = (conn->apsd_info >> 4) & 0xF;
-
-    /* Number of frames to send in a service period is indicated by the station
+    
+    /* Number of frames to send in a service period is indicated by the station 
      * in the QOS_INFO of the association request
      * If it is zero, send all frames
      */
@@ -7436,7 +7436,7 @@ static void ar6000_uapsd_trigger_frame_rx(AR_SOFTC_DEV_T *arPriv, conn_t *conn)
     isApsdqEmpty  = A_NETBUF_QUEUE_EMPTY(&conn->apsdq);
     A_MUTEX_UNLOCK(&conn->psqLock);
     isApsdqEmptyAtStart  = isApsdqEmpty;
-
+    
     while ((!isApsdqEmpty) && (numFramesToDeliver)) {
         struct sk_buff *skb = NULL;
 
@@ -7460,7 +7460,7 @@ static void ar6000_uapsd_trigger_frame_rx(AR_SOFTC_DEV_T *arPriv, conn_t *conn)
 
     if (isApsdqEmpty) {
         if (isApsdqEmptyAtStart) {
-            wmi_set_apsd_buffered_traffic_cmd(arPriv->arWmi, conn->aid, 0,
+            wmi_set_apsd_buffered_traffic_cmd(arPriv->arWmi, conn->aid, 0, 
                          WMI_AP_APSD_NO_DELIVERY_FRAMES_FOR_THIS_TRIGGER);
         } else {
             wmi_set_apsd_buffered_traffic_cmd(arPriv->arWmi, conn->aid, 0, 0);
@@ -7771,7 +7771,7 @@ ar6000_init_mode_info(AR_SOFTC_DEV_T *arPriv)
     arPriv->ap_profile_flag      = 0;
     arPriv->num_sta              = 0xFF;
     ar->gNumSta                  = AP_MAX_NUM_STA;
-
+    
     if(arPriv->arNextMode == AP_NETWORK) {
         AR_SOFTC_AP_T *arAp;
         if(arPriv->arNetworkType != AP_NETWORK) {
@@ -7820,13 +7820,13 @@ ar6000_init_mode_info(AR_SOFTC_DEV_T *arPriv)
     }
 }
 
-int
+int 
 ar6000_ap_set_num_sta(AR_SOFTC_T *ar, AR_SOFTC_DEV_T *arPriv, A_UINT8 num_sta)
 {
     int ret = A_OK;
     A_UINT8 i, total_num_sta;
     AR_SOFTC_DEV_T *tpriv = NULL;
-
+    
     if(num_sta & 0x80) {
         total_num_sta = (num_sta & (~0x80));
         for(i=0; i<num_device; i++) {
@@ -7839,7 +7839,7 @@ ar6000_ap_set_num_sta(AR_SOFTC_T *ar, AR_SOFTC_DEV_T *arPriv, A_UINT8 num_sta)
         ar->gNumSta = 0xFF;
         for(i=0; i<num_device; i++) {
             tpriv = (AR_SOFTC_DEV_T *)ar6k_priv(ar6000_devices[i]);
-            if((tpriv != arPriv) && (tpriv->num_sta !=0xFF) &&
+            if((tpriv != arPriv) && (tpriv->num_sta !=0xFF) && 
               (tpriv->arNetworkType == AP_NETWORK)) {
                 total_num_sta += tpriv->num_sta;
             }
@@ -7850,13 +7850,13 @@ ar6000_ap_set_num_sta(AR_SOFTC_T *ar, AR_SOFTC_DEV_T *arPriv, A_UINT8 num_sta)
         ret = -EINVAL;
     } else {
         if(num_sta & 0x80) {
-            ar->gNumSta = (num_sta & (~0x80));
+            ar->gNumSta = (num_sta & (~0x80));            
         } else {
             arPriv->num_sta = num_sta;
         }
         wmi_ap_set_num_sta(arPriv->arWmi, num_sta);
     }
-
+    
     return ret;
 }
 
@@ -8132,14 +8132,14 @@ is_iwioctl_allowed(A_UINT8 mode, A_UINT16 cmd)
 A_STATUS
 is_xioctl_allowed(A_UINT8 mode, A_UINT8 submode, int cmd)
 {
-    A_UINT8 mode_bits, submode_bits;
+    A_UINT8 mode_bits, submode_bits; 
     A_BOOL is_valid_mode=FALSE, is_valid_submode=FALSE;
 
     if(sizeof(xioctl_filter)-1 < cmd) {
         AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Filter for this cmd=%d not defined\n",cmd));
         return A_OK;
     }
-
+    
     /* Valid for all modes/submodes */
     if(xioctl_filter[cmd] == 0xFF) return A_OK;
 
@@ -8296,7 +8296,7 @@ void ar6000_p2pdev_event(AR_SOFTC_DEV_T *arPriv, const A_UINT8 *addr,
 
     A_MEMCPY(pos, dev_addr, IEEE80211_ADDR_LEN);
     pos += IEEE80211_ADDR_LEN;
-
+    
     /* Size of P2P Attributes hardcoded here. Can this be changed ?
      */
     A_MEMCPY(pos, pri_dev_type, 8);
@@ -8318,7 +8318,7 @@ void ar6000_p2pdev_event(AR_SOFTC_DEV_T *arPriv, const A_UINT8 *addr,
     A_MEMZERO(&wrqu, sizeof(wrqu));
     wrqu.data.length = (pos-buf);
     wireless_send_event(arPriv->arNetDev, IWEVCUSTOM, &wrqu, buf);
-
+    
     return;
 }
 

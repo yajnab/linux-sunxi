@@ -16,28 +16,28 @@
 #define MAX_BARS 6
 
 // This IOCTL is sent to get the version number of the driver
-
+ 
 #define IOCTL_ANWI_GET_VERSION CTL_CODE(\
 		FILE_DEVICE_UNKNOWN,	\
 		0X801,			\
 		METHOD_IN_DIRECT,	\
 		FILE_ANY_ACCESS)
 
-// This IOCTL is sent to get the client info of the client
+// This IOCTL is sent to get the client info of the client 
 #define IOCTL_ANWI_GET_CLIENT_INFO CTL_CODE(\
 		FILE_DEVICE_UNKNOWN,	\
 		0X802,			\
 		METHOD_IN_DIRECT,	\
 		FILE_ANY_ACCESS)
 
-// This IOCTL is sent to the WDM for device I/O Access
+// This IOCTL is sent to the WDM for device I/O Access 
 #define IOCTL_ANWI_DEV_OP CTL_CODE(\
 		FILE_DEVICE_UNKNOWN,	\
 		0X803,			\
 		METHOD_IN_DIRECT,	\
 		FILE_ANY_ACCESS)
 
-// This IOCTL is sent to the WDM for Event Handling
+// This IOCTL is sent to the WDM for Event Handling 
 #define IOCTL_ANWI_EVENT_OP CTL_CODE(\
 		FILE_DEVICE_UNKNOWN,	\
 		0X804,			\
@@ -90,7 +90,7 @@ typedef struct anwiOutClientInfo_{
 	ULONG32 irqLevel;
 	ULONG32	regRange; // retain this for backward compatibility
 	ULONG32 memSize;
-	ULONG32 aregPhyAddr[MAX_BARS];
+	ULONG32 aregPhyAddr[MAX_BARS];	
 	ULONG32 aregVirAddr[MAX_BARS];
 	ULONG32	aregRange[MAX_BARS];
     ULONG32 numBars;
@@ -98,8 +98,8 @@ typedef struct anwiOutClientInfo_{
 }anwiOutClientInfo, *pAnwiOutClientInfo;
 
 typedef struct anwiVersionInfo_ {
-	ULONG32 majorVersion;
-	ULONG32 minorVersion;
+	ULONG32 majorVersion;	
+	ULONG32 minorVersion;	
 } anwiVersionInfo, *pAnwiVersionInfo;
 
 typedef struct anwiDevOpStruct_ {

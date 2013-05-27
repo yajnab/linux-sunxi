@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="wmix.h" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 // The software source and binaries included in this development package are
 // licensed, not sold. You, or your company, received the package under one
 // or more license agreements. The rights granted to you are specifically
@@ -11,7 +11,7 @@
 // portion of this package must be in strict compliance with the license
 // agreement(s) terms.
 // </copyright>
-//
+// 
 // <summary>
 // 	Wifi driver for AR6002
 // </summary>
@@ -143,7 +143,7 @@ typedef PREPACK struct {
 } POSTPACK WMIX_DSETDATA_REPLY_CMD;
 
 
-/*
+/* 
  * =============GPIO support=================
  * NB: Some of the WMIX APIs use a 32-bit mask.  On Targets that support
  * more than 32 GPIO pins, those APIs only support the first 32 GPIO pins.
@@ -167,7 +167,7 @@ typedef PREPACK struct {
     A_UINT32              disable_mask;         /* pins to disable/tristate */
 } POSTPACK WMIX_GPIO_OUTPUT_SET_CMD;
 
-/*
+/* 
  * Set a GPIO register.  For debug/exceptional cases.
  * Values for gpioreg_id are GPIO_ID_*, defined in a
  * platform-dependent header, gpio.h.
@@ -207,7 +207,7 @@ typedef PREPACK struct {
  * using a GPIO_DATA_EVENT with
  *   value set to the mask of GPIO pin inputs and
  *   reg_id set to GPIO_ID_NONE
- *
+ * 
  *
  * Target responds to Hosts's earlier WMIX_GPIO_REGISTER_GET_CMDID request
  * using a GPIO_DATA_EVENT with

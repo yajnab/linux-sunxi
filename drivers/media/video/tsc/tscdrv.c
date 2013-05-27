@@ -782,3 +782,4 @@ MODULE_AUTHOR("Soft-Allwinner");
 MODULE_DESCRIPTION("User mode tsc and demux device interface");
 MODULE_LICENSE("GPL");
 MODULE_VERSION(DRV_VERSION);
+

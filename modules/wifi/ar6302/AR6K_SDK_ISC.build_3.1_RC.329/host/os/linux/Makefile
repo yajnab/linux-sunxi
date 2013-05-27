@@ -1,7 +1,7 @@
 #------------------------------------------------------------------------------
 # <copyright file="makefile" company="Atheros">
 #    Copyright (c) 2005-2010 Atheros Corporation.  All rights reserved.
-#
+# 
 #
 # Permission to use, copy, modify, and/or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -149,17 +149,17 @@ ar6000-objs += ../../htc2/AR6000/ar6k.o        \
                ../../htc2/htc_send.o       \
                ../../htc2/htc_recv.o       \
                ../../htc2/htc_services.o   \
-               ../../htc2/htc.o
+               ../../htc2/htc.o     	   
 endif
 
 ifeq ($(ATH_HIF_MESSAGE_BASED),yes)
 ar6000-objs += ../../htc_thin/htc_send.o       \
                ../../htc_thin/htc_recv.o       \
                ../../htc_thin/htc_services.o   \
-               ../../htc_thin/htc.o
-endif
-
-
+               ../../htc_thin/htc.o     	   
+endif               
+                        
+               
 ar6000-objs += ../../bmi/src/bmi.o              \
                ar6000_drv.o           			\
                ar6000_pm.o           			\
@@ -188,7 +188,7 @@ ar6000-objs += ../../bmi/src/bmi.o              \
                ../../regtable/regtable.o  \
                ../../regtable/AR6002def.o \
                ../../regtable/AR6003def.o \
-               ../../regtable/MCKINLEYdef.o
+               ../../regtable/MCKINLEYdef.o 
 
 ifeq ($(ATH_BUILD_P2P),yes)
 ar6000-objs += ../../p2p/p2p_main.o
@@ -287,7 +287,7 @@ obj-y += $(ATH_SRC_BASE)/htc2/htc.o \
 ifeq ($(ATH_HIF_TYPE),SPI2)
 obj-y += $(ATH_SRC_BASE)/hif/common/hif_bmi_reg_access.o \
          $(ATH_SRC_BASE)/hif/common/hif_diag_reg_access.o
-
+         
 endif
 
 obj-m += htc.o \
@@ -331,6 +331,6 @@ obj-m += hif_bmi_reg_access.o \
 		 hif_diag_reg_access.o
 
 endif
-
+             
 include $(ATH_LINUXPATH)/Rules.make
 endif

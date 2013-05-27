@@ -41,6 +41,8 @@
 #define SUSPEND_WAKEUP_SRC_IR       (1<<3)  /* ir event */
 #define SUSPEND_WAKEUP_SRC_ALARM    (1<<4)  /* alarm event  */
 #define SUSPEND_WAKEUP_SRC_TIMEOFF  (1<<5)  /* set time to power off event  */
+#define SUSPEND_WAKEUP_SRC_PIO      (1<<6)  /* gpio event  */
+
 
 #define WAKEUP_GPIO_PH(num)     (1 << (num))
 #define WAKEUP_GPIO_PI(num)     (1 << (num + 21))
@@ -54,26 +56,5 @@ struct aw_pmu_arg{
     unsigned char dev_addr;     /**<address of pmu device   */
 };
 
-
-/**
-*@brief struct of standby
-*/
-struct aw_standby_para{
-	unsigned int event_enable;     /**<event type for system wakeup    */
-	unsigned int event;          /**<event type for system wakeup    */
-	unsigned int axp_src;        /**<axp event type for system wakeup    */
-	unsigned int axp_enable;     /**<axp event type for system wakeup    */
-	signed int   time_off;       /**<time to power off from now, based on second */
-};
-
-
-/**
-*@brief struct of power management info
-*/
-struct aw_pm_info{
-    struct aw_standby_para  standby_para;   /* standby parameter            */
-    struct aw_pmu_arg       pmu_arg;        /**<args used by main function  */
-};
-
-
 #endif /* __AW_PM_H__ */
+

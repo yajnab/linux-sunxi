@@ -5,3 +5,4 @@ How to install:
 insmod drm/drm.ko
 insmod mali_drm/mali_drm.ko
 insmod trunk/src/devicedrv/mali/mali.ko
+

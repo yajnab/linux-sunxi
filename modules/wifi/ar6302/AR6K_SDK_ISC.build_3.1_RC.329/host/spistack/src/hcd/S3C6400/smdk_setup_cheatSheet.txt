@@ -4,10 +4,10 @@ Setting up Samsung SMDK6400 (3/4/2008)
 
 Requirements:
 ===============
-  - You must install the latest Windows Mobile Platform builder for WM6 (Jetstream).
+  - You must install the latest Windows Mobile Platform builder for WM6 (Jetstream).  
     Platform Builder for WINCE 5.0 is incompatible with the flash.bin format and USB KITL support.
-  - Windows Mobile 6 AKU 0.4
-  - Samsung BSP
+  - Windows Mobile 6 AKU 0.4 
+  - Samsung BSP 
 
 
 I. Build OS image
@@ -15,7 +15,7 @@ I. Build OS image
 
 1). Start "New Build Window Wizard"
 2). Point wizard to AKU directory (i.e. c:\WM604)
-3). For BSP: drop down, select SMDK6400
+3). For BSP: drop down, select SMDK6400 
 4). For Release type: drop down, select "Retail"
 5). Select SKU: Pocket PC
 6). Select 192 DPI, 480 x 640 res
@@ -27,7 +27,7 @@ I. Build OS image
 and comment out all entries for atlce400.dll.  This dll is already populated by other packages.
 
 Enabling USB kitl:
-
+  
 1). From command-line build environment navigate to \Platform\SMDK6400\
 2). Execute "kitl_set.bat"
 3). Execute "build -c"
@@ -39,8 +39,8 @@ II. Flash SuperIPL loader over USB
 *** NOTE : ONLY NEEDS to be DONE ONCE ******
 *** NOTE : If the SMDK6400 was used for CE 6.0 development, the superIPL loader must be re-installed using the procedure below *****
 
-SuperIPL is the initial program loader (IPL) that is placed in a boot partition of the NAND flash device.
-This loader extracts the flash.bin image stored in another partition directly into main memory.
+SuperIPL is the initial program loader (IPL) that is placed in a boot partition of the NAND flash device.  
+This loader extracts the flash.bin image stored in another partition directly into main memory. 
 This loader is primarily used for WM6 images.
 
 1). Move CFG0, switch 4 to ON position
@@ -73,7 +73,7 @@ III. Flash OS Image over USB
 6). Select Eboot.nb0 (from release directory) to download to target.
 7). After download completes, press space bar in dnw.exe to stop Eboot.
 8). From Eboot menu, Select F (Low-level format the Smart Media Card)
-9). From Eboot menu, Select U (DOWNLOAD image now (USB)) ** Note, this may require you to
+9). From Eboot menu, Select U (DOWNLOAD image now (USB)) ** Note, this may require you to 
     install the USB device on your PC ***
 10). From dnw.exe , Select USBPort->UBOOT->UBOOT.  Select flash.bin from release directory
 11). Wait for download/reflash operation to complete
@@ -96,10 +96,10 @@ IV.  Using KITL over USB
 9). Power on platform.  After USB device insertion occurs (listen for device insert chime), select from
     Platform Builder, Target->Attach.
 
-*** NOTE:
-      a) You may need to uninstall Active Sync before you try to connect target with USB KITL.
+*** NOTE: 
+      a) You may need to uninstall Active Sync before you try to connect target with USB KITL. 
       b) It is better to power off S3C6400 before you detach the target. Otherwise, there will be a blue screen.
-
+    
 Registry or File Updates:
 =========================
    - this requires an updated flash.bin.  You can simply use Step III above to reflash a new flash.bin
@@ -114,7 +114,7 @@ Limitations:
   1. In the upper left system tray click on the battery-charge icon
   2. Select the "Advanced" tab.
   3. Uncheck "Turn off device if not used for .."
-
+  
 
 Using UARTS:
 ============
@@ -133,3 +133,13 @@ set BSP_KITL=USBSERIAL
 This change requires you to re-build the BSP to apply the changes. If you have not built the BSP, you do not need to do anything
 more.  The changes will be built in when you do a "Build All".  If you have already built an image, you can simply rebuild the
 BSP (switch to "SMDK6400\src", enter "build -c") and then do a "makeimg".
+
+
+
+
+
+
+
+
+
+

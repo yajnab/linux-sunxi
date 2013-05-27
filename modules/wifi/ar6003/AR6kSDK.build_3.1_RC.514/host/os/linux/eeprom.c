@@ -2,7 +2,7 @@
 // Copyright (c) 2004-2010 Atheros Communications Inc.
 // All rights reserved.
 //
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -33,7 +33,7 @@
 //
 
 #define MAX_FILENAME 1023
-#define EEPROM_WAIT_LIMIT 16
+#define EEPROM_WAIT_LIMIT 16 
 
 #define EEPROM_SZ 768
 
@@ -148,7 +148,7 @@ BMI_read_mem(A_UINT32 address, A_UINT32 *pvalue)
 inline void
 BMI_write_mem(A_UINT32 address, A_UINT8 *p_data, A_UINT32 sz)
 {
-    BMIWriteMemory(p_bmi_device, address, (A_UCHAR*)(p_data), sz);
+    BMIWriteMemory(p_bmi_device, address, (A_UCHAR*)(p_data), sz); 
 }
 
 /*
@@ -192,14 +192,14 @@ enable_SI(HIF_DEVICE *p_device)
                 SI_CONFIG_INACTIVE_DATA_SET(1)   |
                 SI_CONFIG_DIVIDER_SET(6);
     BMI_write_reg(SI_BASE_ADDRESS+SI_CONFIG_OFFSET, regval);
-
+    
 }
 
 static void
 disable_SI(void)
 {
     A_UINT32 regval;
-
+    
     printk("%s\n", __FUNCTION__);
 
     BMI_write_reg(RTC_SOC_BASE_ADDRESS+RESET_CONTROL_OFFSET, RESET_CONTROL_SI0_RST_MASK);
@@ -220,12 +220,12 @@ request_8byte_read(int offset)
 
 //    printk("%s: request_8byte_read from offset 0x%x\n", __FUNCTION__, offset);
 
-
+    
     /* SI_TX_DATA0 = read from offset */
         regval =(0xa1<<16)|
                 ((offset & 0xff)<<8)    |
                 (0xa0 | ((offset & 0xff00)>>7));
-
+    
         BMI_write_reg(SI_BASE_ADDRESS+SI_TX_DATA0_OFFSET, regval);
 
         regval = SI_CS_START_SET(1)      |
@@ -294,7 +294,7 @@ static void eeprom_type_detect(void)
     do{
         BMI_read_reg(SI_BASE_ADDRESS+SI_CS_OFFSET, &regval);
         if (regval & SI_CS_DONE_ERR_MASK) {
-            printk("%s: ERROR : address type was wrongly set\n", __FUNCTION__);
+            printk("%s: ERROR : address type was wrongly set\n", __FUNCTION__);     
             break;
         }
         if (i++ == EEPROM_WAIT_LIMIT) {
@@ -456,12 +456,12 @@ void eeprom_ar6000_transfer(HIF_DEVICE *device, char *fake_file, char *p_mac)
         struct file		*filp;
         struct inode		*inode = NULL;
         int			length;
-
+        
         /* open file */
         oldfs = get_fs();
         set_fs(KERNEL_DS);
         filp = filp_open(p_mac, O_RDONLY, S_IRUSR);
-
+        
         printk("%s try to open file %s\n", __FUNCTION__, p_mac);
 
         if (IS_ERR(filp)) {
@@ -469,14 +469,14 @@ void eeprom_ar6000_transfer(HIF_DEVICE *device, char *fake_file, char *p_mac)
             set_fs(oldfs);
             return;
         }
-
+        
         if (!filp->f_op) {
             printk("%s: File Operation Method Error\n", __FUNCTION__);
             filp_close(filp, NULL);
             set_fs(oldfs);
             return;
         }
-
+        
         inode = GET_INODE_FROM_FILEP(filep);
         if (!inode) {
             printk("%s: Get inode from filp failed\n", __FUNCTION__);
@@ -484,9 +484,9 @@ void eeprom_ar6000_transfer(HIF_DEVICE *device, char *fake_file, char *p_mac)
             set_fs(oldfs);
             return;
         }
-
+        
         printk("%s file offset opsition: %xh\n", __FUNCTION__, (unsigned)filp->f_pos);
-
+        
         /* file's size */
         length = i_size_read(inode->i_mapping->host);
         printk("%s: length=%d\n", __FUNCTION__, length);
@@ -496,7 +496,7 @@ void eeprom_ar6000_transfer(HIF_DEVICE *device, char *fake_file, char *p_mac)
             set_fs(oldfs);
             return;
         }
-
+        
         /* read data */
         if (filp->f_op->read(filp, soft_mac_tmp_buf, length, &filp->f_pos) != length) {
             printk("%s: file read error\n", __FUNCTION__);

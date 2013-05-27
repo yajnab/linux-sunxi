@@ -2,7 +2,7 @@
  * Copyright (c) 2004-2009 Atheros Communications Inc.
  * All rights reserved.
  *
- *
+ * 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -140,14 +140,14 @@ enum {
     WMI_AP_GET_ACL_LIST,    /* AP mode */
     WMI_AP_COMMIT_CONFIG,   /* AP mode */
     WMI_AP_INACT_TIME,      /* AP mode */
-    WMI_AP_PROT_TIME,       /* AP mode */
+    WMI_AP_PROT_TIME,       /* AP mode */    
     WMI_AP_SET_MLME,        /* AP mode */
     WMI_AP_SET_COUNTRY,     /* AP mode */
     WMI_AP_GET_COUNTRY_LIST,/* AP mode */
     WMI_AP_DISABLE_REGULATORY, /* AP mode */
-    WMI_AP_SET_DTIM,        /* AP mode */
-    WMI_AP_INTRA_BSS,       /* AP mode */
-    WMI_AP_INTER_BSS,       /* AP mode */
+    WMI_AP_SET_DTIM,        /* AP mode */    
+    WMI_AP_INTRA_BSS,       /* AP mode */    
+    WMI_AP_INTER_BSS,       /* AP mode */    
     WMI_GET_IP,
     WMI_SET_MCAST_FILTER,
     WMI_DEL_MCAST_FILTER,
@@ -166,7 +166,7 @@ enum {
     WMI_AP_GET_COUNTRY,     /* AP mode */
     WMI_AP_GET_WMODE,       /* AP mode */
     WMI_AP_GET_DTIM,        /* AP mode */
-    WMI_AP_GET_BINTVL,      /* AP mode */
+    WMI_AP_GET_BINTVL,      /* AP mode */    
     WMI_GET_RTS,
     DIAG_FETCH_TARGET_REGS,
 #ifdef ATH_INCLUDE_PAL
@@ -202,12 +202,12 @@ enum {
     WMI_AP_ACS_DISABLE_HI_CHANNELS,
     WMI_SET_DIVERSITY_PARAM,
     WMI_SET_EXCESS_TX_RETRY_THRES,
-    WMI_FORCE_ASSERT,
+    WMI_FORCE_ASSERT,    
     WMI_AP_SET_GNUM_STA,
     WMI_AP_GET_GNUM_STA,
     WMI_AP_GET_NUM_STA,
     WMI_SUSPEND_DRIVER,
-    WMI_RESUME_DRIVER,
+    WMI_RESUME_DRIVER,    
     WMI_SCAN_PROBED_SSID,
     WMI_AP_SET_APSD,
 };
@@ -224,14 +224,14 @@ enum {
 **        0       0          xxxx    -> Bit11-0 is a Regulatory Domain
 **        0       1          xxxx    -> Bit11-0 is a WWR code
 **        1       X          xxxx    -> Bit11-0 is a Country code
-**
+**  
 ***************************************************************************
 */
 #define REGCODE_IS_CC_BITSET(x)     ((x) & 0x80000000)
 #define REGCODE_GET_CODE(x)         ((x) & 0xFFF)
 #define REGCODE_IS_WWR_BITSET(x)    ((x) & 0x40000000)
 #ifdef ATH_INCLUDE_PAL
-#define MAX_BUFFER_SIZE             1512
+#define MAX_BUFFER_SIZE             1512    
 #endif
 
 typedef struct {
@@ -348,7 +348,7 @@ enum CountryCode {
     CTRY_MEXICO               = 484,     /* Mexico */
     CTRY_MONACO               = 492,     /* Principality of Monaco */
     CTRY_MOROCCO              = 504,     /* Morocco */
-    CTRY_NEPAL                = 524,     /* Nepal */
+    CTRY_NEPAL                = 524,     /* Nepal */   
     CTRY_NETHERLANDS          = 528,     /* Netherlands */
     CTRY_NETHERLAND_ANTILLES  = 530,     /* Netherlands-Antilles */
     CTRY_NEW_ZEALAND          = 554,     /* New Zealand */
@@ -402,12 +402,12 @@ enum CountryCode {
 #define REGCODE_COUNTRY_BIT 0x80000000
 
 typedef struct {
-    A_UINT16    countryCode;
+    A_UINT16    countryCode;       
     A_CHAR      isoName[3];
 } COUNTRY_CODE_MAP;
 
 static COUNTRY_CODE_MAP allCountries[] = {
-    {CTRY_DEBUG,        "DB"},
+    {CTRY_DEBUG,        "DB"}, 
     {CTRY_DEFAULT,      "NA"},
     {CTRY_ALBANIA,      "AL"},
     {CTRY_ALGERIA,      "DZ"},
@@ -528,7 +528,7 @@ static COUNTRY_CODE_MAP allCountries[] = {
     {CTRY_UNITED_STATES_AP, "US"},
     {CTRY_UNITED_STATES_PS, "PS"},
     {CTRY_URUGUAY,        "UY"},
-    {CTRY_UZBEKISTAN,     "UZ"},
+    {CTRY_UZBEKISTAN,     "UZ"},    
     {CTRY_VENEZUELA,      "VE"},
     {CTRY_VIET_NAM,       "VN"},
     {CTRY_YEMEN,          "YE"},

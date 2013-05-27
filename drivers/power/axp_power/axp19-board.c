@@ -256,15 +256,15 @@ static struct axp_supply_init_data axp_sply_init_data = {
 };
 
 static struct axp_funcdev_info axp_splydev[]={
-	{   .name = "axp19-supplyer",
+   	{   .name = "axp19-supplyer",
 		.id = AXP19_ID_SUPPLY,
         .platform_data = &axp_sply_init_data,
     },
 };
 
 static struct axp_funcdev_info axp_gpiodev[]={
-	{   .name = "axp19-gpio",
-		.id = AXP19_ID_GPIO,
+   	{   .name = "axp19-gpio",
+   		.id = AXP19_ID_GPIO,
     },
 };
 
@@ -296,3 +296,4 @@ fs_initcall(axp_board_init);
 MODULE_DESCRIPTION("Krosspower axp board");
 MODULE_AUTHOR("Kyle Cheung");
 MODULE_LICENSE("GPL");
+

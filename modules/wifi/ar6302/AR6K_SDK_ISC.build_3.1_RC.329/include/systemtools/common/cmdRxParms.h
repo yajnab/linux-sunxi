@@ -40,10 +40,11 @@ typedef struct _rxParm {
     A_UINT32  secErrPkt;
     A_UINT32  antswitch1;
     A_UINT32  antswitch2;
-    A_UCHAR   addr[ATH_MAC_LEN/*6*/];
+    A_UCHAR   addr[ATH_MAC_LEN/*6*/];  
 } __ATTRIB_PACK _CMD_RX_PARMS;
 
 
-extern _PARM_BIN_TEMPLATE _rxParm_bin_template[];
+extern _PARM_BIN_TEMPLATE _rxParm_bin_template[]; 
 
 #endif // #if !defined(_CMD_RX_PARM_TEMPLATE)
+

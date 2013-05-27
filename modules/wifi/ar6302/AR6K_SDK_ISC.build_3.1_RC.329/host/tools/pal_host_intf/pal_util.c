@@ -3,7 +3,7 @@
  * All rights reserved.
 
  *
- *
+ * 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -68,7 +68,7 @@ void
 pal_decode_event(A_UINT8 *buf, A_UINT16 sz)
 {
     A_UINT8 i;
-
+    
     for(i = 0; i < (N(evt_tbl) - 1); i++) {
         if(evt_tbl[i].event_code == ((HCI_EVENT_PKT *)buf)->event_code)
             break;
@@ -85,7 +85,7 @@ dump_frame(A_UINT8 *frm, A_UINT32 len)
     PAL_PRINT("\n----------------------------------------------\n");
     for(i = 0; i < len; i++) {
         PAL_PRINT("0x%02x ", frm[i]);
-        if((i+1) % 16 == 0)
+        if((i+1) % 16 == 0) 
             PAL_PRINT("\n");
     }
     PAL_PRINT("\n===============================================\n\n");

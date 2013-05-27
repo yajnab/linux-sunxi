@@ -1,9 +1,9 @@
 /*
  * Copyright (C) 2010-2012 ARM Limited. All rights reserved.
- *
+ * 
  * This program is free software and is provided to you under the terms of the GNU General Public License version 2
  * as published by the Free Software Foundation, and any use by you of this program is subject to the terms of such GNU licence.
- *
+ * 
  * A copy of the licence is included with the program, and can also be obtained from Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
@@ -356,9 +356,9 @@ void _mali_osk_mem_unmapioregion( u32 phys, u32 size, mali_io_address virt )
 mali_io_address _mali_osk_mem_allocioregion( u32 *phys, u32 size )
 {
 	void * virt;
-	MALI_DEBUG_ASSERT_POINTER( phys );
-	MALI_DEBUG_ASSERT( 0 == (size & ~_MALI_OSK_CPU_PAGE_MASK) );
-	MALI_DEBUG_ASSERT( 0 != size );
+ 	MALI_DEBUG_ASSERT_POINTER( phys );
+ 	MALI_DEBUG_ASSERT( 0 == (size & ~_MALI_OSK_CPU_PAGE_MASK) );
+ 	MALI_DEBUG_ASSERT( 0 != size );
 
 	/* dma_alloc_* uses a limited region of address space. On most arch/marchs
 	 * 2 to 14 MiB is available. This should be enough for the page tables, which
@@ -367,22 +367,22 @@ mali_io_address _mali_osk_mem_allocioregion( u32 *phys, u32 size )
 
 	MALI_DEBUG_PRINT(3, ("Page table virt: 0x%x = dma_alloc_coherent(size:%d, phys:0x%x, )\n", virt, size, phys));
 
-	if ( NULL == virt )
-	{
+ 	if ( NULL == virt )
+ 	{
 		MALI_DEBUG_PRINT(5, ("allocioregion: Failed to allocate Pagetable memory, size=0x%.8X\n", size ));
-		return 0;
-	}
+ 		return 0;
+ 	}
 
 	MALI_DEBUG_ASSERT( 0 == (*phys & ~_MALI_OSK_CPU_PAGE_MASK) );
 
-	return (mali_io_address)virt;
+ 	return (mali_io_address)virt;
 }
 
 void _mali_osk_mem_freeioregion( u32 phys, u32 size, mali_io_address virt )
 {
-	MALI_DEBUG_ASSERT_POINTER( (void*)virt );
-	MALI_DEBUG_ASSERT( 0 != size );
-	MALI_DEBUG_ASSERT( 0 == (phys & ( (1 << PAGE_SHIFT) - 1 )) );
+ 	MALI_DEBUG_ASSERT_POINTER( (void*)virt );
+ 	MALI_DEBUG_ASSERT( 0 != size );
+ 	MALI_DEBUG_ASSERT( 0 == (phys & ( (1 << PAGE_SHIFT) - 1 )) );
 
 	dma_free_coherent(NULL, size, virt, phys);
 }

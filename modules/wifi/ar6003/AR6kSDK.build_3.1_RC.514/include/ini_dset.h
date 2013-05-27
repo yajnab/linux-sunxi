@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -48,8 +48,8 @@ typedef enum {
     WHAL_INI_DATA_ID_ANALOG_BANK7       =23, /* 24 */
     WHAL_INI_DATA_ID_ADDAC              =25, /* 26 */
 #else
-    WHAL_INI_DATA_ID_ANALOG_COMMON      =11, /* 12 */
-    WHAL_INI_DATA_ID_ANALOG_MODE_SPECIFIC=13, /* 14,15 */
+    WHAL_INI_DATA_ID_ANALOG_COMMON      =11, /* 12 */ 
+    WHAL_INI_DATA_ID_ANALOG_MODE_SPECIFIC=13, /* 14,15 */ 
     WHAL_INI_DATA_ID_ANALOG_BANK6       =16, /* 17,18 */
     WHAL_INI_DATA_ID_MODE_OVERRIDES     =19, /* 20,21,22,23 */
     WHAL_INI_DATA_ID_COMMON_OVERRIDES   =24, /* 25 */

@@ -10,7 +10,7 @@
 *
 * Author 		: javen
 *
-* Description 	: Cacheæ“ä½œ
+* Description 	: Cache²Ù×÷
 *
 * History 		:
 *      <author>    		<time>       	<version >    		<desc>
@@ -23,26 +23,26 @@
 #include <asm/system.h>
 
 
-/* åˆ·æ–°æ ‡è®°ä½ */
-#define  CACHE_FLUSH_I_CACHE_REGION				0  /* æ¸…é™¤I-cacheä¸­ä»£è¡¨ä¸»å­˜ä¸­ä¸€å—åŒºåŸŸçš„cacheè¡Œ 			*/
-#define  CACHE_FLUSH_D_CACHE_REGION				1  /* æ¸…é™¤D-cacheä¸­ä»£è¡¨ä¸»å­˜ä¸­ä¸€å—åŒºåŸŸçš„cacheè¡Œ 			*/
-#define  CACHE_FLUSH_CACHE_REGION				2  /* æ¸…é™¤D-cacheå’ŒI-cacheä¸­ä»£è¡¨ä¸»å­˜ä¸­ä¸€å—åŒºåŸŸçš„cacheè¡Œ */
-#define  CACHE_CLEAN_D_CACHE_REGION				3  /* æ¸…ç†D-cacheä¸­ä»£è¡¨ä¸»å­˜ä¸­ä¸€å—åŒºåŸŸçš„cacheè¡Œ 			*/
-#define  CACHE_CLEAN_FLUSH_D_CACHE_REGION	 	4  /* æ¸…ç†å¹¶æ¸…é™¤D-cacheä¸­ä»£è¡¨ä¸»å­˜ä¸­ä¸€å—åŒºåŸŸçš„cacheè¡Œ 	*/
-#define  CACHE_CLEAN_FLUSH_CACHE_REGION			5  /* æ¸…ç†å¹¶æ¸…é™¤D-cacheï¼Œæ¥ä¸‹æ¥è§£é™¤I-cache 				*/
+/* Ë¢ĞÂ±ê¼ÇÎ» */
+#define  CACHE_FLUSH_I_CACHE_REGION				0  /* Çå³ıI-cacheÖĞ´ú±íÖ÷´æÖĞÒ»¿éÇøÓòµÄcacheĞĞ 			*/
+#define  CACHE_FLUSH_D_CACHE_REGION				1  /* Çå³ıD-cacheÖĞ´ú±íÖ÷´æÖĞÒ»¿éÇøÓòµÄcacheĞĞ 			*/
+#define  CACHE_FLUSH_CACHE_REGION				2  /* Çå³ıD-cacheºÍI-cacheÖĞ´ú±íÖ÷´æÖĞÒ»¿éÇøÓòµÄcacheĞĞ */
+#define  CACHE_CLEAN_D_CACHE_REGION				3  /* ÇåÀíD-cacheÖĞ´ú±íÖ÷´æÖĞÒ»¿éÇøÓòµÄcacheĞĞ 			*/
+#define  CACHE_CLEAN_FLUSH_D_CACHE_REGION	 	4  /* ÇåÀí²¢Çå³ıD-cacheÖĞ´ú±íÖ÷´æÖĞÒ»¿éÇøÓòµÄcacheĞĞ 	*/
+#define  CACHE_CLEAN_FLUSH_CACHE_REGION			5  /* ÇåÀí²¢Çå³ıD-cache£¬½ÓÏÂÀ´½â³ıI-cache 				*/
 
 /*
 *******************************************************************************
 *                     OSAL_CacheRangeFlush
 *
 * Description:
-*    Cacheæ“ä½œ
+*    Cache²Ù×÷
 *
 * Parameters:
-*    Address    :  è¦è¢«åˆ·æ–°çš„è™šæ‹Ÿèµ·å§‹åœ°å€
-*    Length     :  è¢«åˆ·æ–°çš„å¤§å°
-*    Flags      :  åˆ·æ–°æ ‡è®°ä½
-*
+*    Address    :  Òª±»Ë¢ĞÂµÄĞéÄâÆğÊ¼µØÖ·
+*    Length     :  ±»Ë¢ĞÂµÄ´óĞ¡
+*    Flags      :  Ë¢ĞÂ±ê¼ÇÎ»
+*    
 * Return value:
 *    void
 *
@@ -59,39 +59,42 @@ void OSAL_CacheRangeFlush(void*Address, __u32 Length, __u32 Flags)
         {
             return;
         }
-
+        
         switch(Flags)
         {
         case CACHE_FLUSH_I_CACHE_REGION:
-
+           
             break;
-
+            
         case CACHE_FLUSH_D_CACHE_REGION:
             //__cpuc_flush_dcache_area(phys_to_virt((phys_addr_t)Address), Length);
            // flush_cach
             break;
-
+            
         case CACHE_FLUSH_CACHE_REGION:
-
+            
             break;
-
+            
         case CACHE_CLEAN_D_CACHE_REGION:
             //clean_dcache_area((unsigned long)Address, Length);
             break;
-
+            
         case CACHE_CLEAN_FLUSH_D_CACHE_REGION:
             //__cpuc_flush_dcache_area(phys_to_virt((phys_addr_t)Address), Length);
             //smp_mb();
             //mb();
-            break;
-
+            break;        
+            
         case CACHE_CLEAN_FLUSH_CACHE_REGION:
-
+            
             break;
-
+            
         default:
-
+           
             break;
         }
         return;
 }
+
+
+

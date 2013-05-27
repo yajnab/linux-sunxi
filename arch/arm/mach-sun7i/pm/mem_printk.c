@@ -164,8 +164,8 @@ char *itoa(int value, char *string, int radix)
 	int  negative = 0;			//defualt is positive value
 	int  i;
 	int  j;
-	char digit_string[] = "0123456789ABCDEF";
-
+	char digit_string[] = "0123456789ABCDEF";	
+	
 	if(value == 0)
 	{
 		//zero
@@ -173,21 +173,21 @@ char *itoa(int value, char *string, int radix)
 		string[1] = '\0';
 		return string;
 	}
-
+	
 	if(value < 0)
 	{
 		//'value' is negative, convert to postive first
 		negative = 1;
 		value = -value ;
 	}
-
+	
 	for(i = 0; value > 0; ++i)
 	{
 		// characters in reverse order are put in 'stack'.
 		stack[i] = digit_string[value % radix];
 		value /= radix;
 	}
-
+	
 	//restore reversed order result to user string
     j = 0;
 	if(negative)
@@ -201,7 +201,7 @@ char *itoa(int value, char *string, int radix)
 	}
 	//must end with '\0'.
 	string[j] = '\0';
-
+	
 	return string;
 }
 
@@ -210,8 +210,8 @@ char *utoa(unsigned int value, char *string, int radix)
 	char stack[16];
 	int  i;
 	int  j;
-	char digit_string[] = "0123456789ABCDEF";
-
+	char digit_string[] = "0123456789ABCDEF";	
+	
 	if(value == 0)
 	{
 		//zero
@@ -219,14 +219,14 @@ char *utoa(unsigned int value, char *string, int radix)
 		string[1] = '\0';
 		return string;
 	}
-
+	
 	for(i = 0; value > 0; ++i)
 	{
 		// characters in reverse order are put in 'stack'.
 		stack[i] = digit_string[value % radix];
 		value /= radix;
 	}
-
+	
 	//restore reversed order result to user string
     for(--i, j = 0; i >= 0; --i, ++j)
 	{
@@ -234,7 +234,7 @@ char *utoa(unsigned int value, char *string, int radix)
 	}
 	//must end with '\0'.
 	string[j] = '\0';
-
+	
 	return string;
 }
 
@@ -267,10 +267,10 @@ __s32 printk(const char *format, ...)
 	char 	*psrc;
 	__s32 	align;
 	__s32		len = 0;
-
+	
 	//dump current timestemp
 	//print_current_time();
-
+	
 	pdest = debugger_buffer;
 	va_start(args, format);
 	while(*format)
@@ -300,7 +300,7 @@ __s32 printk(const char *format, ...)
                     pdest += len;
                     break;
 				}
-				case 'x':
+				case 'x': 
 				case 'p':
 				{
 					//hex
@@ -311,7 +311,7 @@ __s32 printk(const char *format, ...)
                     pdest += len;
                     break;
 				}
-				case 'u':
+				case 'u': 
 				{
 					//unsigned int
 					utoa(va_arg(args, int), string, 10);
@@ -321,7 +321,7 @@ __s32 printk(const char *format, ...)
 					pdest += len;
 					break;
 				}
-				case 'c':
+				case 'c': 
 				{
 					//charset, aligned by cpu word
 					*pdest = (char)va_arg(args, int);
@@ -335,7 +335,7 @@ __s32 printk(const char *format, ...)
 					pdest += strlen(psrc);
 					break;
 				}
-				default :
+				default : 
 				{
 					//no-conversion
 					*pdest++ = '%';
@@ -351,12 +351,12 @@ __s32 printk(const char *format, ...)
 		++format;
 	}
 	va_end(args);
-
+	
 	//must end with '\0'
 	*pdest = '\0';
 	pdest++;
 	serial_puts(debugger_buffer);
-
+	
 	return (pdest - debugger_buffer);
 }
 
@@ -384,10 +384,10 @@ __s32 printk_nommu(const char *format, ...)
 	char 	*psrc;
 	__s32 	align;
 	__s32		len = 0;
-
+	
 	//dump current timestemp
 	//print_current_time();
-
+	
 	pdest = debugger_buffer;
 	va_start(args, format);
 	while(*format)
@@ -417,7 +417,7 @@ __s32 printk_nommu(const char *format, ...)
                     pdest += len;
                     break;
 				}
-				case 'x':
+				case 'x': 
 				case 'p':
 				{
 					//hex
@@ -428,7 +428,7 @@ __s32 printk_nommu(const char *format, ...)
                     pdest += len;
                     break;
 				}
-				case 'u':
+				case 'u': 
 				{
 					//unsigned int
 					utoa(va_arg(args, int), string, 10);
@@ -438,7 +438,7 @@ __s32 printk_nommu(const char *format, ...)
 					pdest += len;
 					break;
 				}
-				case 'c':
+				case 'c': 
 				{
 					//charset, aligned by cpu word
 					*pdest = (char)va_arg(args, int);
@@ -452,7 +452,7 @@ __s32 printk_nommu(const char *format, ...)
 					pdest += strlen(psrc);
 					break;
 				}
-				default :
+				default : 
 				{
 					//no-conversion
 					*pdest++ = '%';
@@ -468,11 +468,12 @@ __s32 printk_nommu(const char *format, ...)
 		++format;
 	}
 	va_end(args);
-
+	
 	//must end with '\0'
 	*pdest = '\0';
 	pdest++;
 	serial_puts_nommu(debugger_buffer);
-
+	
 	return (pdest - debugger_buffer);
 }
+

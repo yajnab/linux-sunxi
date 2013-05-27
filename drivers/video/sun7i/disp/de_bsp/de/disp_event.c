@@ -20,14 +20,14 @@ __s32 BSP_disp_cmd_submit(__u32 sel)
 __s32 BSP_disp_cfg_start(__u32 sel)
 {
 	gdisp.screen[sel].cfg_cnt++;
-
+	
 	return DIS_SUCCESS;
 }
 
 __s32 BSP_disp_cfg_finish(__u32 sel)
 {
 	gdisp.screen[sel].cfg_cnt--;
-
+	
 	return DIS_SUCCESS;
 }
 
@@ -35,12 +35,12 @@ __s32 BSP_disp_cfg_finish(__u32 sel)
 __s32 BSP_disp_vsync_event_enable(__u32 sel, __bool enable)
 {
     gdisp.screen[sel].vsync_event_en = enable;
-
+    
     return DIS_SUCCESS;
 }
 
 void LCD_vbi_event_proc(__u32 sel, __u32 tcon_index)
-{
+{    
         __u32 cur_line = 0, start_delay = 0;
         __u32 i = 0;
 
@@ -49,9 +49,9 @@ void LCD_vbi_event_proc(__u32 sel, __u32 tcon_index)
         {
                 gdisp.init_para.vsync_event(sel);
         }
-
+        
 	Video_Operation_In_Vblanking(sel, tcon_index);
-
+        
         cur_line = LCDC_get_cur_line(sel, tcon_index);
         start_delay = LCDC_get_start_delay(sel, tcon_index);
         if(cur_line > start_delay-3)
@@ -62,10 +62,10 @@ void LCD_vbi_event_proc(__u32 sel, __u32 tcon_index)
 
         if(gdisp.screen[sel].LCD_CPUIF_ISR)
         {
-		(*gdisp.screen[sel].LCD_CPUIF_ISR)();
+        	(*gdisp.screen[sel].LCD_CPUIF_ISR)();
         }
 
-        if(gdisp.screen[sel].cache_flag == FALSE && gdisp.screen[sel].cfg_cnt == 0)
+        if(gdisp.screen[sel].cache_flag == FALSE )//&& gdisp.screen[sel].cfg_cnt == 0)
         {
                 for(i=0; i<2; i++)
                 {
@@ -83,14 +83,14 @@ void LCD_vbi_event_proc(__u32 sel, __u32 tcon_index)
                         }
                 }
                 DE_BE_Cfg_Ready(sel);
-		gdisp.screen[sel].have_cfg_reg = TRUE;
+        	gdisp.screen[sel].have_cfg_reg = TRUE;
         }
 #if 0
     cur_line = LCDC_get_cur_line(sel, tcon_index);
-
+    
 	if(cur_line > 5)
 	{
-	DE_INF("%d\n", cur_line);
+    	DE_INF("%d\n", cur_line);
     }
 #endif
 
@@ -98,9 +98,9 @@ void LCD_vbi_event_proc(__u32 sel, __u32 tcon_index)
 }
 
 void LCD_line_event_proc(__u32 sel)
-{
+{    
 	if(gdisp.screen[sel].have_cfg_reg)
-	{
+	{   
 	    gdisp.init_para.disp_int_process(sel);
 	    gdisp.screen[sel].have_cfg_reg = FALSE;
 	}

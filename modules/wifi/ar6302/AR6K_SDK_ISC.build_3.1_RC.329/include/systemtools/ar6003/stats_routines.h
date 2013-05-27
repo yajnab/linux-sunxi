@@ -13,3 +13,4 @@ void extractTxStats ( TX_STATS_TEMP_INFO *pStatsInfo, TX_STATS_STRUCT *txStats);
 void fillTxStats ( A_UINT32 devNum, A_UINT32 descAddress, A_UINT32 numDesc, A_UINT32 dataBodyLen, A_UINT32 txTime, TX_STATS_STRUCT *txStats);
 
 #endif
+

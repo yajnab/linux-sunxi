@@ -38,7 +38,7 @@ static int ap6xxx_module_power(int onoff)
 			regulator_put(wifi_ldo);
 			return ret;
 		}
-		first = 0;
+		first = 0; 
 	}
 
 	if (onoff) {
@@ -71,7 +71,7 @@ static int ap6xxx_module_power(int onoff)
 
 static int ap6xxx_gpio_ctrl(char* name, int level)
 {
-	int i = 0;
+	int i = 0;	
 	int ret = 0;
 	int gpio = 0;
 	unsigned long flags = 0;
@@ -107,7 +107,7 @@ static int ap6xxx_gpio_ctrl(char* name, int level)
 		gpio_free(gpio);
 		ap6xxx_msg("succeed to set gpio %s to %d !\n", name, level);
 	}
-
+    
 	return 0;
 }
 
@@ -123,7 +123,7 @@ void ap6xxx_power(int mode, int *updown)
         }
         ap6xxx_msg("sdio wifi power state: %s\n", *updown ? "on" : "off");
     }
-    return;
+    return;	
 }
 
 void ap6xxx_gpio_init(void)
@@ -142,13 +142,13 @@ void ap6xxx_gpio_init(void)
 	ap6xxx_msg("module power name %s\n", axp_name);
 
 	type = script_get_item(wifi_para, "ap6xxx_wl_regon", &val);
-	if (SCIRPT_ITEM_VALUE_TYPE_PIO!=type)
+	if (SCIRPT_ITEM_VALUE_TYPE_PIO!=type) 
 		ap6xxx_msg("get ap6xxx ap6xxx_wl_regon gpio failed\n");
 	else
 		ap6xxx_wl_regon = val.gpio.gpio;
 
 	type = script_get_item(wifi_para, "ap6xxx_bt_regon", &val);
-	if (SCIRPT_ITEM_VALUE_TYPE_PIO!=type)
+	if (SCIRPT_ITEM_VALUE_TYPE_PIO!=type) 
 		ap6xxx_msg("get ap6xxx ap6xxx_bt_regon gpio failed\n");
 	else
 		ap6xxx_bt_regon = val.gpio.gpio;

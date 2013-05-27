@@ -2,7 +2,7 @@
 // Copyright (c) 2004-2010 Atheros Communications Inc.
 // All rights reserved.
 //
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -153,13 +153,13 @@ static int btpal_send_frame(struct sk_buff *skb)
 			return 0;
 	}
 
-	if(loghci) {
+    	if(loghci) {
 		A_PRINTF(">>> Send HCI %s packet len: %d\n",
 				(type == HCI_COMMAND_TYPE) ? "COMMAND" : "ACL",
 				skb->len);
 		if (type == HCI_COMMAND_TYPE) {
 			A_PRINTF("HCI Command: OGF:0x%X OCF:0x%X \r\n",
-				(HCI_GET_OP_CODE(skb->data)) >> 10,
+				(HCI_GET_OP_CODE(skb->data)) >> 10, 
 				(HCI_GET_OP_CODE(skb->data)) & 0x3FF);
 		}
 		DebugDumpBytes(skb->data,skb->len,"BT HCI SEND Packet Dump");
@@ -403,7 +403,7 @@ A_BOOL ar6k_pal_recv_pkt(void *pHciPal, void *osbuf)
 		bt_cb(skb)->pkt_type = btType;
 		skb->dev = (void *)pHciPalInfo->hdev;
 
-		if(loghci) {
+    		if(loghci) {
 			AR_DEBUG_PRINTF(ATH_DEBUG_ANY,("<<< Recv HCI %s packet len:%d \n",
 						(btType == HCI_EVENT_TYPE) ? "EVENT" : "ACL",
 						skb->len));
@@ -438,7 +438,7 @@ A_STATUS ar6k_setup_hci_pal(void *ar_p)
 	ar6k_hci_pal_info_t *pHciPalInfo;
 	ar6k_pal_config_t ar6k_pal_config;
 	AR_SOFTC_DEV_T *ar = (AR_SOFTC_DEV_T *)ar_p;
-
+	
 	do {
 
 		pHciPalInfo = (ar6k_hci_pal_info_t *)A_MALLOC(sizeof(ar6k_hci_pal_info_t));

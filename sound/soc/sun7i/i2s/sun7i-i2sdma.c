@@ -111,7 +111,7 @@ static void sun7i_pcm_enqueue(struct snd_pcm_substream *substream)
 	dma_addr_t play_pos = 0, capture_pos = 0;
 	unsigned long play_len = 0, capture_len = 0;
 	unsigned int play_limit = 0, capture_limit = 0;
-
+	
 	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
 		play_prtd = substream->runtime->private_data;
 		play_pos = play_prtd->dma_pos;
@@ -121,7 +121,7 @@ static void sun7i_pcm_enqueue(struct snd_pcm_substream *substream)
 			if ((play_pos + play_len) > play_prtd->dma_end) {
 				play_len  = play_prtd->dma_end - play_pos;
 			}
-
+			
 			play_ret = sw_dma_enqueue(play_prtd->dma_hdl, play_pos, play_prtd->params->dma_addr, play_len);
 			if (play_ret == 0) {
 				play_prtd->dma_loaded++;
@@ -143,7 +143,7 @@ static void sun7i_pcm_enqueue(struct snd_pcm_substream *substream)
 			if ((capture_pos + capture_len) > capture_prtd->dma_end) {
 				capture_len  = capture_prtd->dma_end - capture_pos;
 			}
-
+			
 			capture_ret = sw_dma_enqueue(capture_prtd->dma_hdl, capture_prtd->params->dma_addr, capture_pos, capture_len);
 			if (capture_ret == 0) {
 			capture_prtd->dma_loaded++;
@@ -203,7 +203,7 @@ static snd_pcm_uframes_t sun7i_pcm_pointer(struct snd_pcm_substream *substream)
 	snd_pcm_uframes_t play_offset = 0;
 	struct snd_pcm_runtime *play_runtime = NULL;
 	struct snd_pcm_runtime *capture_runtime = NULL;
-
+	
     if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
 		play_prtd = substream->runtime->private_data;
 		play_runtime = substream->runtime;
@@ -211,14 +211,14 @@ static snd_pcm_uframes_t sun7i_pcm_pointer(struct snd_pcm_substream *substream)
 		sw_dma_getposition(play_prtd->dma_hdl, (dma_addr_t*)&play_dmasrc, (dma_addr_t*)&play_dmadst);
 		play_res = play_dmasrc + play_prtd->dma_period - play_prtd->dma_start;
 		play_offset = bytes_to_frames(play_runtime, play_res);
-
+		
 		spin_unlock(&play_prtd->lock);
 		if (play_offset >= substream->runtime->buffer_size) {
 			play_offset = 0;
 		}
 		return play_offset;
     } else {
-	/*pr_info("CAPTUR:sun7i_i2sdma.c::func:%s(line:%d)\n",__func__,__LINE__);*/
+    	/*pr_info("CAPTUR:sun7i_i2sdma.c::func:%s(line:%d)\n",__func__,__LINE__);*/
 		capture_prtd = substream->runtime->private_data;
 		spin_lock(&capture_prtd->lock);
 		sw_dma_getposition(capture_prtd->dma_hdl, (dma_addr_t*)&capture_dmasrc, (dma_addr_t*)&capture_dmadst);
@@ -246,7 +246,7 @@ static snd_pcm_uframes_t sun7i_pcm_pointer(struct snd_pcm_substream *substream)
 }
 static int sun7i_pcm_hw_params(struct snd_pcm_substream *substream,
 	struct snd_pcm_hw_params *params)
-{
+{	
 	/*pr_info("sun7i_i2sdma.c::func:%s(line:%d)\n",__func__,__LINE__);*/
     struct snd_pcm_runtime *play_runtime = NULL, *capture_runtime = NULL;
     struct sun7i_playback_runtime_data *play_prtd = NULL;
@@ -264,7 +264,7 @@ static int sun7i_pcm_hw_params(struct snd_pcm_substream *substream,
 		play_rtd = substream->private_data;
 		play_totbytes = params_buffer_bytes(params);
 		play_dma = snd_soc_dai_get_dma_data(play_rtd->cpu_dai, substream);
-
+		
 		if (!play_dma) {
 			return 0;
 		}
@@ -279,7 +279,7 @@ static int sun7i_pcm_hw_params(struct snd_pcm_substream *substream,
 			printk(KERN_ERR "failed to request spdif dma handle\n");
 			return -EINVAL;
 		}
-
+			
 	}
 
 	/*
@@ -296,7 +296,7 @@ static int sun7i_pcm_hw_params(struct snd_pcm_substream *substream,
 	}
 		snd_pcm_set_runtime_buffer(substream, &substream->dma_buffer);
 		play_runtime->dma_bytes = play_totbytes;
-
+		
 		spin_lock_irq(&play_prtd->lock);
 		play_prtd->dma_loaded = 0;
 		play_prtd->dma_limit = play_runtime->hw.periods_min;
@@ -306,20 +306,20 @@ static int sun7i_pcm_hw_params(struct snd_pcm_substream *substream,
 		play_prtd->dma_end = play_prtd->dma_start + play_totbytes;
 		spin_unlock_irq(&play_prtd->lock);
     } else if (substream->stream == SNDRV_PCM_STREAM_CAPTURE) {
-	pr_info("CAPTUR:sun7i_i2sdma.c::func:%s(line:%d)\n",__func__,__LINE__);
+    	pr_info("CAPTUR:sun7i_i2sdma.c::func:%s(line:%d)\n",__func__,__LINE__);
 		capture_runtime = substream->runtime;
 		capture_prtd = capture_runtime ->private_data;
 		capture_rtd = substream->private_data;
 		capture_totbytes = params_buffer_bytes(params);
 		capture_dma = snd_soc_dai_get_dma_data(capture_rtd->cpu_dai, substream);
-
+		
 		if (!capture_dma) {
 			return 0;
 		}
 
 		if (capture_prtd->params == NULL) {
 			capture_prtd->params = capture_dma;
-
+			
 				/*
 		 * requeset audio dma handle(we don't care about the channel!)
 		 */
@@ -344,7 +344,7 @@ static int sun7i_pcm_hw_params(struct snd_pcm_substream *substream,
 	}
 		snd_pcm_set_runtime_buffer(substream, &substream->dma_buffer);
 		capture_runtime->dma_bytes = capture_totbytes;
-
+		
 		spin_lock_irq(&capture_prtd->lock);
 		capture_prtd->dma_loaded = 0;
 		capture_prtd->dma_limit = capture_runtime->hw.periods_min;
@@ -364,18 +364,18 @@ static int sun7i_pcm_hw_free(struct snd_pcm_substream *substream)
 {
 	struct sun7i_playback_runtime_data *play_prtd = NULL;
 	struct sun7i_capture_runtime_data *capture_prtd = NULL;
-
+	
 	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
-		play_prtd = substream->runtime->private_data;
-		/* TODO - do we need to ensure DMA flushed */
+ 		play_prtd = substream->runtime->private_data;
+ 		/* TODO - do we need to ensure DMA flushed */
 		if (play_prtd->params) {
-
+	  	
 		}
-
+	
 		snd_pcm_set_runtime_buffer(substream, NULL);
 
 		if (play_prtd->params) {
-
+			
 				/*
 		 * stop play dma transfer
 		 */
@@ -392,18 +392,18 @@ static int sun7i_pcm_hw_free(struct snd_pcm_substream *substream)
 		play_prtd->dma_hdl = (dma_hdl_t)NULL;
 			play_prtd->params = NULL;
 		}
-	} else if (substream->stream == SNDRV_PCM_STREAM_CAPTURE) {
-
+   	} else if (substream->stream == SNDRV_PCM_STREAM_CAPTURE) {
+   
 		capture_prtd = substream->runtime->private_data;
-		/* TODO - do we need to ensure DMA flushed */
+   		/* TODO - do we need to ensure DMA flushed */
 		if (capture_prtd->params) {
-
+	  		
 		}
 
 		snd_pcm_set_runtime_buffer(substream, NULL);
 
 		if (capture_prtd->params) {
-
+		
 					/*
 		 * stop play dma transfer
 		 */
@@ -420,7 +420,7 @@ static int sun7i_pcm_hw_free(struct snd_pcm_substream *substream)
 		capture_prtd->dma_hdl = (dma_hdl_t)NULL;
 			capture_prtd->params = NULL;
 		}
-	} else {
+   	} else {
 		return -EINVAL;
 	}
 
@@ -428,8 +428,8 @@ static int sun7i_pcm_hw_free(struct snd_pcm_substream *substream)
 }
 
 static int sun7i_pcm_prepare(struct snd_pcm_substream *substream)
-{
-
+{	
+	
 	dma_config_t codec_play_dma_conf;
 	dma_config_t codec_capture_dma_conf;
 	int play_ret = 0, capture_ret = 0;
@@ -443,65 +443,65 @@ static int sun7i_pcm_prepare(struct snd_pcm_substream *substream)
 			}
 			/*pr_info("play:sun7i_i2sdma.c::func:%s(line:%d)\n",__func__,__LINE__);*/
 
-			memset(&codec_play_dma_conf, 0, sizeof(codec_play_dma_conf));
-			codec_play_dma_conf.xfer_type.src_data_width 	= DATA_WIDTH_16BIT;
-			codec_play_dma_conf.xfer_type.src_bst_len 	= DATA_BRST_1;
-			codec_play_dma_conf.xfer_type.dst_data_width 	= DATA_WIDTH_16BIT;
-			codec_play_dma_conf.xfer_type.dst_bst_len 	= DATA_BRST_1;
-			codec_play_dma_conf.address_type.src_addr_mode 	= NDMA_ADDR_INCREMENT;
-			codec_play_dma_conf.address_type.dst_addr_mode 	= NDMA_ADDR_NOCHANGE;
-			codec_play_dma_conf.src_drq_type 	= N_SRC_SDRAM;
-			codec_play_dma_conf.dst_drq_type 	= N_DST_IIS0_TX;
-			codec_play_dma_conf.bconti_mode 		= false;
-			codec_play_dma_conf.irq_spt 		=  CHAN_IRQ_FD;
+			memset(&codec_play_dma_conf, 0, sizeof(codec_play_dma_conf));		
+			codec_play_dma_conf.xfer_type.src_data_width 	= DATA_WIDTH_16BIT;		
+			codec_play_dma_conf.xfer_type.src_bst_len 	= DATA_BRST_1;		
+			codec_play_dma_conf.xfer_type.dst_data_width 	= DATA_WIDTH_16BIT;		
+			codec_play_dma_conf.xfer_type.dst_bst_len 	= DATA_BRST_1;		
+			codec_play_dma_conf.address_type.src_addr_mode 	= NDMA_ADDR_INCREMENT;		
+			codec_play_dma_conf.address_type.dst_addr_mode 	= NDMA_ADDR_NOCHANGE;		
+			codec_play_dma_conf.src_drq_type 	= N_SRC_SDRAM;		
+			codec_play_dma_conf.dst_drq_type 	= N_DST_IIS0_TX;	
+			codec_play_dma_conf.bconti_mode 		= false;		
+			codec_play_dma_conf.irq_spt 		=  CHAN_IRQ_FD;	
 			if(0 !=(play_ret = sw_dma_config(play_prtd->dma_hdl, &codec_play_dma_conf))) {
 				printk("err:%s,line:%d\n", __func__, __LINE__);
 				return -EINVAL;
 				}
-
+		
 
 		/* flush the DMA channel */
-
+		
 		play_prtd->dma_loaded = 0;
 		play_prtd->dma_pos = play_prtd->dma_start;
 		/* enqueue dma buffers */
 		sun7i_pcm_enqueue(substream);
-
+		
 		return play_ret;
 	} else {
 		capture_prtd = substream->runtime->private_data;
-
+		
 		if (!capture_prtd->params) {
 			return 0;
 		}
 		/*pr_info("CAPTUR:sun7i_i2sdma.c::func:%s(line:%d)\n",__func__,__LINE__);*/
-		memset(&codec_capture_dma_conf, 0, sizeof(codec_capture_dma_conf));
-		codec_capture_dma_conf.xfer_type.src_data_width 	= DATA_WIDTH_16BIT;
-		codec_capture_dma_conf.xfer_type.src_bst_len 	= DATA_BRST_1;
-		codec_capture_dma_conf.xfer_type.dst_data_width 	= DATA_WIDTH_16BIT;
-		codec_capture_dma_conf.xfer_type.dst_bst_len 	= DATA_BRST_1;
-		codec_capture_dma_conf.address_type.src_addr_mode 	= NDMA_ADDR_NOCHANGE;
-		codec_capture_dma_conf.address_type.dst_addr_mode 	= NDMA_ADDR_INCREMENT;
-		codec_capture_dma_conf.src_drq_type 	= N_SRC_IIS0_RX;
-		codec_capture_dma_conf.dst_drq_type 	= N_DST_SDRAM;
-		codec_capture_dma_conf.bconti_mode 		= false;
+		memset(&codec_capture_dma_conf, 0, sizeof(codec_capture_dma_conf));		
+		codec_capture_dma_conf.xfer_type.src_data_width 	= DATA_WIDTH_16BIT;		
+		codec_capture_dma_conf.xfer_type.src_bst_len 	= DATA_BRST_1;		
+		codec_capture_dma_conf.xfer_type.dst_data_width 	= DATA_WIDTH_16BIT;		
+		codec_capture_dma_conf.xfer_type.dst_bst_len 	= DATA_BRST_1;		
+		codec_capture_dma_conf.address_type.src_addr_mode 	= NDMA_ADDR_NOCHANGE;		
+		codec_capture_dma_conf.address_type.dst_addr_mode 	= NDMA_ADDR_INCREMENT;		
+		codec_capture_dma_conf.src_drq_type 	= N_SRC_IIS0_RX;		
+		codec_capture_dma_conf.dst_drq_type 	= N_DST_SDRAM;		
+		codec_capture_dma_conf.bconti_mode 		= false;		
 		codec_capture_dma_conf.irq_spt 		=  CHAN_IRQ_FD;
-
+		
 		//capture_ret = sw_dma_config(capture_dma_config->dma_hdl, &capture_dma_config);
 		if(0!=(capture_ret = sw_dma_config(capture_prtd->dma_hdl, &codec_capture_dma_conf))){
 		printk("err:%s,line:%d\n", __func__, __LINE__);
 			return -EINVAL;
 			}
-
+		
 
 		/* flush the DMA channel */
-
+		
 		capture_prtd->dma_loaded = 0;
 		capture_prtd->dma_pos = capture_prtd->dma_start;
-
+		
 		/* enqueue dma buffers */
 		sun7i_pcm_enqueue(substream);
-
+		
 		return capture_ret;
 }
 }
@@ -523,9 +523,9 @@ static int sun7i_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
 		case SNDRV_PCM_TRIGGER_START:
 		case SNDRV_PCM_TRIGGER_RESUME:
 		case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-			printk("play dma trigge start:sun7i-i2sdma.c::func:%s(line:%d)\n",__func__,__LINE__);
+			//printk("play dma trigge start:sun7i-i2sdma.c::func:%s(line:%d)\n",__func__,__LINE__);
 			//printk("[IIS] 0x01c22400+0x24 = %#x, line= %d\n", readl(0xf1c22400+0x24), __LINE__);
-
+			
 			 /*
 		* start dma transfer
 		*/
@@ -537,9 +537,9 @@ static int sun7i_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
 		case SNDRV_PCM_TRIGGER_SUSPEND:
 		case SNDRV_PCM_TRIGGER_STOP:
 		case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-	        pr_info("play dma stop:sun7i_i2sdma.c::func:%s(line:%d)\n",__func__,__LINE__);
+	        //pr_info("play dma stop:sun7i_i2sdma.c::func:%s(line:%d)\n",__func__,__LINE__);
 	        //printk("[IIS] 0x01c22400+0x24 = %#x, line= %d\n", readl(0xf1c22400+0x24), __LINE__);
-
+			
 			/*
 		* stop play dma transfer
 		*/
@@ -561,8 +561,8 @@ static int sun7i_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
 		case SNDRV_PCM_TRIGGER_START:
 		case SNDRV_PCM_TRIGGER_RESUME:
 		case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-
-			pr_info("CAPTUR dma start:sun7i_i2sdma.c::func:%s(line:%d)\n",__func__,__LINE__);
+			
+			//pr_info("CAPTUR dma start:sun7i_i2sdma.c::func:%s(line:%d)\n",__func__,__LINE__);
 				 /*
 		* start dma transfer
 		*/
@@ -574,9 +574,9 @@ static int sun7i_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
 		case SNDRV_PCM_TRIGGER_SUSPEND:
 		case SNDRV_PCM_TRIGGER_STOP:
 		case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-	        pr_info("CAPTUR dma stop:sun7i_i2sdma.c::func:%s(line:%d)\n",__func__,__LINE__);
+	       // pr_info("CAPTUR dma stop:sun7i_i2sdma.c::func:%s(line:%d)\n",__func__,__LINE__);
 	        //printk("[IIS] 0x01c22400+0x24 = %#x, line= %d\n", readl(0xf1c22400+0x24), __LINE__);
-
+		
 				/*
 		* stop play dma transfer
 		*/
@@ -607,7 +607,7 @@ static int sun7i_pcm_open(struct snd_pcm_substream *substream)
 		snd_pcm_hw_constraint_integer(play_runtime, SNDRV_PCM_HW_PARAM_PERIODS);
 		snd_soc_set_runtime_hwparams(substream, &sun7i_pcm_play_hardware);
 		play_prtd = kzalloc(sizeof(struct sun7i_playback_runtime_data), GFP_KERNEL);
-
+	
 		if (play_prtd == NULL) {
 			return -ENOMEM;
 		}
@@ -719,7 +719,7 @@ static void sun7i_pcm_free_dma_buffers(struct snd_pcm *pcm)
 	struct snd_pcm_substream *substream;
 	struct snd_dma_buffer *buf;
 	int stream;
-
+	
 	for (stream = 0; stream < 2; stream++) {
 		substream = pcm->streams[stream].substream;
 		if (!substream)
@@ -743,15 +743,15 @@ static int sun7i_pcm_new(struct snd_soc_pcm_runtime *rtd)
 {
 	struct snd_card *card = rtd->card->snd_card;
 	struct snd_pcm *pcm = rtd->pcm;
-
-	int ret = 0;
+	
+	int ret = 0;	
 	if (!card->dev->dma_mask)
 		card->dev->dma_mask = &sun7i_pcm_mask;
 	if (!card->dev->coherent_dma_mask)
 		card->dev->coherent_dma_mask = 0xffffffff;
 
-
-	if (pcm->streams[SNDRV_PCM_STREAM_PLAYBACK].substream) {
+	
+	if (pcm->streams[SNDRV_PCM_STREAM_PLAYBACK].substream) {		
 		ret = sun7i_pcm_preallocate_dma_buffer(pcm,
 			SNDRV_PCM_STREAM_PLAYBACK);
 		if (ret)
@@ -802,13 +802,13 @@ static struct platform_driver sun7i_i2s_pcm_driver = {
 
 static int __init sun7i_soc_platform_i2s_init(void)
 {
-	int err = 0;
+	int err = 0;	
 	if((err = platform_device_register(&sun7i_i2s_pcm_device)) < 0)
 		return err;
 
 	if ((err = platform_driver_register(&sun7i_i2s_pcm_driver)) < 0)
 		return err;
-	return 0;
+	return 0;	
 }
 module_init(sun7i_soc_platform_i2s_init);
 
@@ -821,3 +821,4 @@ module_exit(sun7i_soc_platform_i2s_exit);
 MODULE_AUTHOR("All winner");
 MODULE_DESCRIPTION("SUN7I PCM DMA module");
 MODULE_LICENSE("GPL");
+

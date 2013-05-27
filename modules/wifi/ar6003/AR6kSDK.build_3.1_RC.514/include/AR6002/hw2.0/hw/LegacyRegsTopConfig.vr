@@ -11,7 +11,7 @@ class LegacyRegsTopConfig extends AveTopConfig {
   virtual function rvm_data allocate();
   virtual function rvm_data copy(rvm_data cpy = null);
   virtual function AveData GetDutConfig();
-  virtual task SetDutConfig(AveData dutConfig);
+  virtual task SetDutConfig(AveData dutConfig); 
 }
 
 task LegacyRegsTopConfig::new(rvm_log log = null, string name="LegacyRegsTopConfig", string instance="class") {
@@ -43,3 +43,4 @@ function AveData LegacyRegsTopConfig::GetDutConfig() {
 
 task LegacyRegsTopConfig::SetDutConfig(AveData dutConfig) {
 }
+

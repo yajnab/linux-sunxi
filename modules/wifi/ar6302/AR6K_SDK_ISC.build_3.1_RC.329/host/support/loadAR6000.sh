@@ -70,27 +70,27 @@ loadar6konly=""
 #
 # SPECIAL Atheros SDIO stack modes for FPGA operation
 #
-# For AR6002_REV4 FPGA
+# For AR6002_REV4 FPGA 
 # Note: Bus clock setting is set "optimistically" at 12.5 Mhz for FPGA testing because
-#       some STD host add-in cards report an incorrect SDIO bus clock capability.
+#       some STD host add-in cards report an incorrect SDIO bus clock capability.  
 #       For example when 12Mhz is requests we get 6.25 Mhz instead. Requesting 12.5 will
-#       actually get us 12Mhz.
+#       actually get us 12Mhz. 
 # ATH_BUS_DRIVER_OPTIONS="DefaultOperClock=12500000"
 #
 # Alternatively:
 #     To operate the FPGA at 25 (24 mhz) the Atheros bus driver needs to run in a non-standard bus mode.
-#     This mode enables the SD/SDIO-HS (high-speed) clock logic (card and host) and allows operation at
+#     This mode enables the SD/SDIO-HS (high-speed) clock logic (card and host) and allows operation at 
 #     SDIO 1.1 rates with this logic enabled.
 #     This is only known to work with the ENE STD host (standard host controller with SD 2.0 support).
-#
+# 
 # ATH_BUS_DRIVER_OPTIONS="DefaultOperClock=25000000 ConfigFlags=2"
 #
-
+	
 echo "Platform set to $ATH_PLATFORM"
 
 if [ ! -z "$HOST_PLAT_SETUP_SCRIPT" ]; then
 	# user set platform setup script externally
-	if [ ! -e "$HOST_PLAT_SETUP_SCRIPT" ]; then
+	if [ ! -e "$HOST_PLAT_SETUP_SCRIPT" ]; then		
 		echo "Platform Setup Script not found! Script Path : $HOST_PLAT_SETUP_SCRIPT"
 		echo "Please check HOST_PLAT_SETUP_SCRIPT env setting"
 		exit -1
@@ -98,7 +98,7 @@ if [ ! -z "$HOST_PLAT_SETUP_SCRIPT" ]; then
 else
 	# user did not specify one, use the default location...
 	HOST_PLAT_SETUP_SCRIPT=$WORKAREA/host/support/platformscripts/plat_$ATH_PLATFORM.sh
-	if [ ! -e "$HOST_PLAT_SETUP_SCRIPT" ]; then
+	if [ ! -e "$HOST_PLAT_SETUP_SCRIPT" ]; then		
 		echo "Platform Setup Script not found! : $HOST_PLAT_SETUP_SCRIPT"
 		echo "Please check ATH_PLATFORM env setting"
 		exit -1
@@ -139,7 +139,7 @@ case $1 in
         -m|--mode )
         shift
         ar6000args="$ar6000args devmode=$1"
-        echo $ar6000args
+        echo $ar6000args 
         shift
         ;;
         -s|--submode )
@@ -258,7 +258,7 @@ case $1 in
         --macaddrmode )
         shift
         ar6000args="$ar6000args mac_addr_method=$1"
-        echo $ar6000args
+        echo $ar6000args 
         shift
         ;;
         * )
@@ -285,13 +285,13 @@ done
 #        ar6000args="$ar6000args fwmode=1"
 #        ;;
 #esac
-
+	
 export IMAGEPATH=${IMAGEPATH:-$WORKAREA/host/.output/$ATH_PLATFORM/image}
 export AR6K_MODULE_NAME=ar6000
 
 echo "Image path: $IMAGEPATH"
 echo "Mac address: $macaddr"
-
+	
 # If "targonly" was specified on the command line, then don't
 # load (or unload) the host driver.  Skip to target-side setup.
 if [ "$TARGET_ONLY" = "FALSE" ]; then # {
@@ -347,7 +347,7 @@ if [ "$bmi_enable" != "yes" ]; then # {
         save_dbg=`cat ${PARAMETERS}/debugdriver`
         echo 0 > ${PARAMETERS}/debugdriver
     fi
-
+    
     if [ "$TARGET_TYPE" = "" ]; then
         # Determine TARGET_TYPE
         eval export `$IMAGEPATH/bmiloader -i $NETIF --quiet --info | grep TARGET_TYPE`
@@ -383,7 +383,7 @@ if [ "$bmi_enable" != "yes" ]; then # {
         $IMAGEPATH/bmiloader -i $NETIF --quiet --set --address=0x1c284 --param=0xF9104001
         # Run at 80/88MHz by default.
         $IMAGEPATH/bmiloader -i $NETIF --quiet --set --address=0x4020 --param=1
-    else
+    else 
         # Run at 40/44MHz by default.
         $IMAGEPATH/bmiloader -i $NETIF --quiet --set --address=0x4020 --param=0
     fi
@@ -444,7 +444,7 @@ if [ "$bmi_enable" != "yes" ]; then # {
             RAMFW=""
         fi
         if [ "$TARGET_VERSION" = "$AR6003_VERSION_REV3" ]; then
-            # Comment segmented files till it is verified
+            # Comment segmented files till it is verified 
             # RAMFW=${RAMFW-$WORKAREA/target/AR6003/fpga/bin/ram.fw.bin}
             RAMFW=""
         fi
@@ -646,11 +646,11 @@ if [ "$bmi_enable" != "yes" ]; then # {
         fi
 
         if [ "$ATH_ENABLE_CLI" = "yes" ]; then
-            # enable console
+            # enable console 
             $IMAGEPATH/bmiloader -i $NETIF --set --address=$(($host_intr_addr + 0xc4)) --param=0x80000000
         fi
     fi
-    # } end platform-specific setup
+    # } end platform-specific setup 
 
     # Restore System Sleep
     if [ "$TARGET_TYPE" = "MCKINLEY" ]; then

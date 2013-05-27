@@ -368,3 +368,4 @@ u32 sunxi_mem_get_rest_size(void)
 	return ret;
 }
 EXPORT_SYMBOL(sunxi_mem_get_rest_size);
+

@@ -98,3 +98,4 @@ int sw_get_chip_id(struct sw_chip_id *chip_id)
 	return 0;
 }
 EXPORT_SYMBOL(sw_get_chip_id);
+

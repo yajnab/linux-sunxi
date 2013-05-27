@@ -1,5 +1,5 @@
 // Copyright (c) 2007 Atheros Communications Inc.
-//
+// 
 "//"
 
 "//"
@@ -27,7 +27,7 @@
 "//"
 
 "//"
- Portions of this code were developed with information supplied from the
+ Portions of this code were developed with information supplied from the 
 "//"
  SD Card Association Simplified Specifications. The following conditions and disclaimers may apply:
 "//"
@@ -35,29 +35,29 @@
 "//"
   The following conditions apply to the release of the SD simplified specification (“Simplified
 "//"
-  Specification”) by the SD Card Association. The Simplified Specification is a subset of the complete
+  Specification”) by the SD Card Association. The Simplified Specification is a subset of the complete 
 "//"
-  SD Specification which is owned by the SD Card Association. This Simplified Specification is provided
+  SD Specification which is owned by the SD Card Association. This Simplified Specification is provided 
 "//"
-  on a non-confidential basis subject to the disclaimers below. Any implementation of the Simplified
+  on a non-confidential basis subject to the disclaimers below. Any implementation of the Simplified 
 "//"
   Specification may require a license from the SD Card Association or other third parties.
 "//"
   Disclaimers:
 "//"
-  The information contained in the Simplified Specification is presented only as a standard
+  The information contained in the Simplified Specification is presented only as a standard 
 "//"
-  specification for SD Cards and SD Host/Ancillary products and is provided "AS-IS" without any
+  specification for SD Cards and SD Host/Ancillary products and is provided "AS-IS" without any 
 "//"
-  representations or warranties of any kind. No responsibility is assumed by the SD Card Association for
+  representations or warranties of any kind. No responsibility is assumed by the SD Card Association for 
 "//"
-  any damages, any infringements of patents or other right of the SD Card Association or any third
+  any damages, any infringements of patents or other right of the SD Card Association or any third 
 "//"
-  parties, which may result from its use. No license is granted by implication, estoppel or otherwise
+  parties, which may result from its use. No license is granted by implication, estoppel or otherwise 
 "//"
-  under any patent or other rights of the SD Card Association or any third party. Nothing herein shall
+  under any patent or other rights of the SD Card Association or any third party. Nothing herein shall 
 "//"
-  be construed as an obligation by the SD Card Association to disclose or distribute any technical
+  be construed as an obligation by the SD Card Association to disclose or distribute any technical 
 "//"
   information, know-how or other confidential information to any third party.
 "//"
@@ -88,11 +88,11 @@ General Notes:
 -  Supports Tokyo Electron Ellen II MMC8 bus widths.
 -  Card detect via slot mechanical switch
 -  Configurable idle bus clock rate
-
+    
 Linux Notes:
 
 Module Parameters:
-
+   
     "debug" =  set module debug level (default = 4).
     Module Debug Level:      Description of Kernel Prints:
            7                   Setup/Initialization
@@ -102,11 +102,11 @@ Module Parameters:
           11                   Configuration Requests.
           12                   SDIO controller IRQ processing
           13                   Clock Control
-          14                   SDIO Card Interrupt
+          14                   SDIO Card Interrupt  
 
 
-    "IdleBusClockRate" - idle bus clock rate in Hz (active when 4-bit interrupt detection is required)
+    "IdleBusClockRate" - idle bus clock rate in Hz (active when 4-bit interrupt detection is required) 
                          Lower values will reduce power at the cost of higher interrupt detection
-                         latency.  Typical values are 2000000 (2Mhz), 4000000 (4 Mhz)
+                         latency.  Typical values are 2000000 (2Mhz), 4000000 (4 Mhz) 
     "CommonBufferDMASize" - common buffer size if host controller is DMA capable. Default is set to
                             0 (common buffer DMA disabled).

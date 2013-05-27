@@ -2,7 +2,7 @@
 // Copyright (c) 2004-2010 Atheros Communications Inc.
 // All rights reserved.
 //
-//
+// 
 // The software source and binaries included in this development package are
 // licensed, not sold. You, or your company, received the package under one
 // or more license agreements. The rights granted to you are specifically
@@ -12,7 +12,7 @@
 // portion of this package must be in strict compliance with the license
 // agreement(s) terms.
 // </copyright>
-//
+// 
 // <summary>
 // 	Wifi driver for AR6002
 // </summary>
@@ -40,8 +40,8 @@ extern "C" {
 /*
  * Host side Test Command support
  * Note: when HCI SDIO is enabled, a low stack IRQ or statck overflow is
- *       hit on FC10. So with HCI SDIO, minimize the stack allocation by
- *       mutually exclude TCMD_SUPPORT, which allocates large buffers
+ *       hit on FC10. So with HCI SDIO, minimize the stack allocation by 
+ *       mutually exclude TCMD_SUPPORT, which allocates large buffers 
  *       in AR_TCMD_RESP in AR_SOFTC_T
  *
  */

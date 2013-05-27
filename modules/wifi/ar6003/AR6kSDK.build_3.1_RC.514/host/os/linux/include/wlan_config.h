@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -25,34 +25,34 @@
 #define _HOST_WLAN_CONFIG_H_
 
 /* Include definitions here that can be used to tune the WLAN module behavior.
- * Different customers can tune the behavior as per their needs, here.
+ * Different customers can tune the behavior as per their needs, here. 
  */
 
-/* This configuration item when defined will consider the barker preamble
- * mentioned in the ERP IE of the beacons from the AP to determine the short
+/* This configuration item when defined will consider the barker preamble 
+ * mentioned in the ERP IE of the beacons from the AP to determine the short 
  * preamble support sent in the (Re)Assoc request frames.
  */
 #define WLAN_CONFIG_DONOT_IGNORE_BARKER_IN_ERP 0
 
 /* This config item when defined will not send the power module state transition
- * failure events that happen during scan, to the host.
+ * failure events that happen during scan, to the host. 
  */
 #define WLAN_CONFIG_IGNORE_POWER_SAVE_FAIL_EVENT_DURING_SCAN 0
 
-/* This config item disables sending a DisAssoc frame prior to sending a
+/* This config item disables sending a DisAssoc frame prior to sending a 
  * DeAuth frame.
  */
 #define WLAN_CONFIG_NO_DISASSOC_UPON_DEAUTH 0
 
 /*
  * This configuration item enable/disable keepalive support.
- * Keepalive support: In the absence of any data traffic to AP, null
+ * Keepalive support: In the absence of any data traffic to AP, null 
  * frames will be sent to the AP at periodic interval, to keep the association
  * active. This configuration item defines the periodic interval.
  * Use value of zero to disable keepalive support
  * Default: 60 seconds
  */
-#define WLAN_CONFIG_KEEP_ALIVE_INTERVAL 60
+#define WLAN_CONFIG_KEEP_ALIVE_INTERVAL 60 
 
 /*
  * This configuration item sets the value of disconnect timeout
@@ -65,7 +65,7 @@
 #define WLAN_CONFIG_DISCONNECT_TIMEOUT 3
 #else
 #define WLAN_CONFIG_DISCONNECT_TIMEOUT 10
-#endif /* ANDROID_ENV */
+#endif /* ANDROID_ENV */ 
 
 /*
  * This configuration item enable BT clock sharing support
@@ -79,10 +79,10 @@
  * 0 - CUT_POWER
  * 1 - DEEP_SLEEP (Default)
  */
-#define WLAN_CONFIG_WLAN_OFF               0
+#define WLAN_CONFIG_WLAN_OFF               0 
 
 /*
- * This configuration item disables 11n support.
+ * This configuration item disables 11n support. 
  * 0 - Enable
  * 1 - Disable
  */
@@ -107,9 +107,9 @@
  */
 #define WLAN_CONFIG_PM_WOW2                 0
 
-/*
- * Define GPIO number for WoW in your platform other than zero
- * Wake lock will be called when GPIO asserted.
+/* 
+ * Define GPIO number for WoW in your platform other than zero 
+ * Wake lock will be called when GPIO asserted. 
  */
 #define PLAT_WOW_GPIO_PIN                  0
 
@@ -120,7 +120,7 @@
  */
 #define WLAN_CONFIG_SIMPLE_WOW_AP_MODE      0
 
-/*
+/* 
  * Define the GPIO number for WLAN CHIP_PWD PIN other than zero
  * Only use when you define plat_setup_power as plat_setup_power_stub
  */
@@ -131,18 +131,18 @@
  * Platform specific function to power ON/OFF AR6000 with CHIP_PWD PIN
  * and enable/disable SDIO card detection
  *
- * Either implement wlan CHIP_PWD PIN and power GPIO control into
- * plat_setup_power_stub(..) place holder in ar6000_pm.c
- * or redefine plat_setup_power(..) into your export funciton.
+ * Either implement wlan CHIP_PWD PIN and power GPIO control into 
+ * plat_setup_power_stub(..) place holder in ar6000_pm.c 
+ * or redefine plat_setup_power(..) into your export funciton. 
  */
 
 #if PLAT_WLAN_CHIP_PWD_PIN
-extern void plat_setup_power_stub(struct ar6_softc *ar, int on, int detect);
+extern void plat_setup_power_stub(struct ar6_softc *ar, int on, int detect); 
 #define plat_setup_power(ar, on, detect) plat_setup_power_stub(ar, on, detect)
 #else
 extern int wlan_power_ctrl(unsigned char isPowerON);
 //#define plat_setup_power(ar, on, detect)  wlan_power_ctrl(on)/* define as your function */
 #define plat_setup_power(ar, on, detect)  /* define as your function */
-#endif
+#endif 
 
 #endif /* _HOST_WLAN_CONFIG_H_ */

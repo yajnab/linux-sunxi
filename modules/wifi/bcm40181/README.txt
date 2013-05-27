@@ -9,7 +9,7 @@ firmware/  -- firmware dongle images (rtecdc.bin file) for download device
 apps/      -- tools for dongle download (bcmdl) and runtime WLAN commands(wl)
 
 Source code for rebuilding the host wl driver or application is also provided.
-There are three sub-packages in the form of .tar.gz file. Unzip them with tar
+There are three sub-packages in the form of .tar.gz file. Unzip them with tar 
 or gzip utility.
 
 1. srcwldriver-fc6u-nodebug-native-apdef-stadef.tar.gz:

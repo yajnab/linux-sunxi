@@ -98,3 +98,4 @@ int ar100_cb_register(ar100_cb_t *func, void *para);
  * func:  call-back function which need be unregister;
  */
 void ar100_cb_unregister(ar100_cb_t *func);
+

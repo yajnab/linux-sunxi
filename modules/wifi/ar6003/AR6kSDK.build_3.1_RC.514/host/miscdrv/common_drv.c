@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="common_drv.c" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -83,7 +83,7 @@ ar6000_WriteRegDiag(HIF_DEVICE *hifDevice, A_UINT32 *address, A_UINT32 *data)
 {
     return HIFDiagWriteAccess(hifDevice, *address, *data);
 }
-
+    
 A_STATUS
 ar6000_ReadDataDiag(HIF_DEVICE *hifDevice, A_UINT32 address,
                     A_UCHAR *data, A_UINT32 length)
@@ -124,11 +124,11 @@ ar6000_WriteDataDiag(HIF_DEVICE *hifDevice, A_UINT32 address,
 
 /* TODO : for message based interfaces there are no HOST registers. These are just
  * stub functions for now */
-
+ 
 A_STATUS
 ar6k_ReadTargetRegister(HIF_DEVICE *hifDevice, int regsel, A_UINT32 *regval)
 {
-
+   
         /* TODO */
     return A_ERROR;
 }
@@ -212,8 +212,8 @@ A_STATUS ar6000_reset_device(HIF_DEVICE *hifDevice, A_UINT32 TargetType, A_BOOL 
     do {
 // Workaround BEGIN
         // address = RESET_CONTROL_ADDRESS;
-
-	if (coldReset) {
+    	
+    	if (coldReset) {
             data = WLAN_RESET_CONTROL_COLD_RST_MASK;
             /* Hardcode the address of RESET_CONTROL_ADDRESS based on the target type */
             if (TargetType == TARGET_TYPE_AR6002) {
@@ -225,8 +225,8 @@ A_STATUS ar6000_reset_device(HIF_DEVICE *hifDevice, A_UINT32 TargetType, A_BOOL 
             } else {
                 A_ASSERT(0);
             }
-	}
-	else {
+    	}
+    	else {
             data = RESET_CONTROL_MBOX_RST_MASK;
             /* Hardcode the address of RESET_CONTROL_ADDRESS based on the target type */
             if (TargetType == TARGET_TYPE_AR6002) {
@@ -317,7 +317,7 @@ ar6000_copy_cust_data_from_target(HIF_DEVICE *hifDevice, A_UINT32 TargetType)
             if (BMIReadSOCRegister(hifDevice, eepHeaderAddr, (A_UINT32 *)&MCKINLEYCustDataShadow[i])!= A_OK) {
                 AR_DEBUG_PRINTF(ATH_DEBUG_ERR, ("BMIReadSOCRegister () failed \n"));
                 return ;
-            }
+            }  
             eepHeaderAddr +=4;
         }
 
@@ -332,7 +332,7 @@ ar6000_copy_cust_data_from_target(HIF_DEVICE *hifDevice, A_UINT32 TargetType)
             if (BMIReadSOCRegister(hifDevice, eepHeaderAddr, (A_UINT32 *)&AR6003CustDataShadow[i])!= A_OK) {
                 AR_DEBUG_PRINTF(ATH_DEBUG_ERR, ("BMIReadSOCRegister () failed \n"));
                 return ;
-            }
+            }  
             eepHeaderAddr +=4;
         }
 
@@ -346,7 +346,7 @@ ar6000_copy_cust_data_from_target(HIF_DEVICE *hifDevice, A_UINT32 TargetType)
             if (BMIReadSOCRegister(hifDevice, eepHeaderAddr, (A_UINT32 *)&custDataAR6002[i])!= A_OK) {
                 AR_DEBUG_PRINTF(ATH_DEBUG_ERR, ("BMIReadSOCRegister () failed \n"));
                 return ;
-            }
+            }  
             eepHeaderAddr +=4;
         }
     }
@@ -879,3 +879,4 @@ A_STATUS ar6000_set_hci_bridge_flags(HIF_DEVICE *hifDevice,
 
     return status;
 }
+

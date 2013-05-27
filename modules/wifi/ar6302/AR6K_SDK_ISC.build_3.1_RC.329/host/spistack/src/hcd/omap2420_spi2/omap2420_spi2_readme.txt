@@ -9,9 +9,9 @@ General Notes:
 -  Atheros SPI 2 Protocol.
 -  Uses OMAP DMA controller for all DMA read/write operations that are properly aligned.
 -  Atheros Module Interrupt detection (GPIO16 pin).
-
+    
 Linux Notes:
-
+    
 Module Parameters:
 
 	"base_clock" = the base clock rate (in Hz) of the module system clock, default is 12Mhz.
@@ -21,9 +21,9 @@ Module Parameters:
 	                 1000 milliseconds.
     "MaxBytesPerDMARequest" = max number of bytes allowed in a DMA transfer, default is 4K.
     "gpiodebug" = special GPIO pin assertion, do not use unless GPIO pins are properly
-                  assigned for debug.
+                  assigned for debug.              
     "debuglevel" =  set module debug level (default = 4).
-
+    
     "spimodule" = sets which spi module block in the OMAP controller, use only 1. Defaults to 1
     "spichan"   = sets which channel in the spi module block to use, defaults to 2
     "d0swap"    = swap spi module D0 functionality with D1, default: D0 is RX and D1 is TX.
@@ -37,11 +37,15 @@ Module Parameters:
                                 as GPIO98
     "reset_spi_on_shutdown" = reset Atheros module spi interface on shutdown
     "dump_state"            = dump Atheros module spi state
-
-    Module Debug Level:      Description of Kernel Prints (each level is cummalative):
-		8					     SPI module interrupts
-        9                        SPI request processing
+    
+    Module Debug Level:      Description of Kernel Prints (each level is cummalative):                  
+  		8					     SPI module interrupts 
+        9                        SPI request processing  
        10                        SPI request with DATA
        11                        SPI request DATA dumps
        12                        OMAP-SPI DMA info
        13                        OMAP-SPI transactions (very verbose).
+
+
+          
+

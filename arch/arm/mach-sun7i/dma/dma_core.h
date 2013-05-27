@@ -25,3 +25,4 @@ void dma_dump_chain(dma_channel_t *pchan);
 u32 dma_hdl_irq_fd(dma_channel_t *pchan);
 
 #endif  /* __DMA_CORE_H */
+

@@ -5,7 +5,7 @@
  *  code.
  *  This is really work-in-progress. For now we just want to get McKinley built. We don't really care
  *  what's in the bb_lc_reg.h which may have equivalent in McKinley.
- *  In that case, there are several options.
+ *  In that case, there are several options. 
  *  Option 1: mCal uses ART/MDK defined registers, which are mapped to the hw headers. This is basically
  *  the current ART/MDK code, which has its flaws. For example, mapping is wrong and it takes time to
  *  detect.

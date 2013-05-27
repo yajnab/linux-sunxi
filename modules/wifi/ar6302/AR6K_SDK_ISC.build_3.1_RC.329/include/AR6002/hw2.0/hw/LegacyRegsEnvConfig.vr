@@ -39,3 +39,4 @@ task LegacyRegsEnvConfig::SetTopConfig(AveTopConfig topConfig) {
     rvm_fatal(log, "Cannot set topConfig to non-LegacyRegsTopConfig instance");
   }
 }
+

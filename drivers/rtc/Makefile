@@ -1,7 +1,7 @@
 #
 # Makefile for RTC class/drivers.
 #
-
+ 
 ccflags-$(CONFIG_RTC_DEBUG)	:= -DDEBUG
 
 obj-$(CONFIG_RTC_LIB)		+= rtc-lib.o

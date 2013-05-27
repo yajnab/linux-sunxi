@@ -65,7 +65,7 @@
 #ifdef BLUE_SLEEP_DBG
 #define BT_SLEEP_DBG(fmt, arg...)  printk(KERN_ERR "[+++BLUESLEEP+++]%s: " fmt "\n" , __func__ , ## arg)
 #else
-#define BT_SLEEP_DBG(fmt, arg...)
+#define BT_SLEEP_DBG(fmt, arg...) 
 #endif
 
 
@@ -349,7 +349,7 @@ static irqreturn_t bluesleep_hostwake_isr(int irq, void *dev_id)
 unsigned int bt_irq_handle(void *para)
 {
 	bluesleep_hostwake_isr(0, NULL);
-	return 0;
+	return 0;	
 }
 
 /**
@@ -383,8 +383,8 @@ static int bluesleep_start(void)
 
 	/* assert BT_WAKE */
 	__gpio_set_value(bsi->ext_wake, 1);
-
-#if 0
+		
+#if 0	
 	retval = request_irq(bsi->host_wake_irq, bluesleep_hostwake_isr,
 				IRQF_DISABLED | IRQF_TRIGGER_FALLING|IRQF_TRIGGER_RISING,
 				"bluetooth hostwake", NULL);
@@ -404,7 +404,7 @@ static int bluesleep_start(void)
 						 bt_irq_handle, NULL);
 
 	if (irq_handle == 0) {
-		BT_ERR("Couldn't acquire bt_host_wake IRQ or enable it");
+		BT_ERR("Couldn't acquire bt_host_wake IRQ or enable it");	
 		goto fail;
 	}
 #endif
@@ -446,7 +446,7 @@ static void bluesleep_stop(void)
 	atomic_inc(&open_count);
 
 	spin_unlock_irqrestore(&rw_lock, irq_flags);
-#if 0
+#if 0	
 	if (disable_irq_wake(bsi->host_wake_irq))
 		BT_ERR("Couldn't disable hostwake IRQ wakeup mode\n");
 	free_irq(bsi->host_wake_irq, NULL);
@@ -622,17 +622,17 @@ static int __init bluesleep_probe(struct platform_device *pdev)
 
 	//get bt_wake & bt_host_wake from sys_config.fex
 	type = script_get_item("wifi_para", "ap6xxx_bt_wake", &val);
-	if (SCIRPT_ITEM_VALUE_TYPE_PIO!=type)
+	if (SCIRPT_ITEM_VALUE_TYPE_PIO!=type) 
 		BT_ERR("get ap6xxx ap6xxx_bt_wake gpio failed\n");
 	else
-		host_wake = val.gpio.gpio;
-
+		host_wake = val.gpio.gpio;	
+	
 	type = script_get_item("wifi_para", "ap6xxx_bt_host_wake", &val);
-	if (SCIRPT_ITEM_VALUE_TYPE_PIO!=type)
+	if (SCIRPT_ITEM_VALUE_TYPE_PIO!=type) 
 		BT_ERR("get ap6xxx ap6xxx_bt_host_wake gpio failed\n");
 	else
-		bt_host_wake = val.gpio.gpio;
-
+		bt_host_wake = val.gpio.gpio;		
+	
 	//1.get bt_host_wake gpio number
 	bsi->host_wake = bt_host_wake;
 	wake_lock_init(&bsi->wake_lock, WAKE_LOCK_SUSPEND, "bluesleep");
@@ -643,17 +643,17 @@ static int __init bluesleep_probe(struct platform_device *pdev)
 		BT_ERR("couldn't set bt_host_wake as input function\n");
 		goto 	free_bt_host_wake;
 	}
-
+	
 	//3.get bt_wake gpio number
 	bsi->ext_wake = host_wake;
-
+	
 	//4.set bt_wake as output and the level is 1, assert bt wake
 	ret = gpio_request_one(bsi->ext_wake, GPIOF_OUT_INIT_HIGH, NULL);
 	if (ret != 0) {
 		BT_ERR("couldn't set bt_wake as output function\n");
 		goto free_bt_ext_wake;
-	}
-
+	} 
+	
 	//5.get bt_host_wake gpio irq
 	bsi->host_wake_irq = __gpio_to_irq(bsi->host_wake);
 	if (bsi->host_wake_irq == -ENXIO) {
@@ -661,7 +661,7 @@ static int __init bluesleep_probe(struct platform_device *pdev)
 		ret = -ENODEV;
 		goto free_bt_ext_wake;
 	}
-
+	
 	return 0;
 
 free_bt_ext_wake:
@@ -677,7 +677,7 @@ static int bluesleep_remove(struct platform_device *pdev)
 	/* assert bt wake */
 	__gpio_set_value(bsi->ext_wake, 1);
 	if (test_bit(BT_PROTO, &flags)) {
-#if 0
+#if 0		
 		if (disable_irq_wake(bsi->host_wake_irq))
 			BT_ERR("Couldn't disable hostwake IRQ wakeup mode \n");
 		free_irq(bsi->host_wake_irq, NULL);

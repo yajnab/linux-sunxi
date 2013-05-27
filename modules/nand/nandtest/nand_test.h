@@ -1,6 +1,6 @@
 /*
 **********************************************************************************************************************
-*                                                    Test
+*                                                    Test 
 *                                          software test for drivers
 *                                              Test Sub-System
 *
@@ -9,12 +9,12 @@
 *
 * Moudle  : test driver
 * File    : nand_test.h
-* Purpose : test driver of nand driver in Linux
+* Purpose : test driver of nand driver in Linux 
 *
 * By      : Grace Miao
 * Version : v1.0
 * Date    : 2011-3-16
-* history :
+* history : 
              2011-3-16     build the file     Grace Miao
 **********************************************************************************************************************
 */
@@ -26,7 +26,7 @@
 
 
 
-#define  INIT_NAND_IN_TESTDRIVER
+#define  INIT_NAND_IN_TESTDRIVER 
 //#define   NAND_CACHE_RW
 
 #define REPEAT_TIMES    500000

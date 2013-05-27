@@ -10,7 +10,7 @@
 *
 * Author 		: javen
 *
-* Description 	: æ¿çº§æ§åˆ¶
+* Description 	: °å¼¶¿ØÖÆ
 *
 * Notes         :
 *
@@ -29,7 +29,7 @@
 #define  USB_CLOCK_BASE				0x01C20000
 #define  USB_PIO_BASE	            0x01c20800
 
-/* i/o ä¿¡æ¯ */
+/* i/o ĞÅÏ¢ */
 typedef struct sw_hcd_io{
 	struct resource	*usb_base_res;   	/* USB  resources 		*/
 	struct resource	*usb_base_req;   	/* USB  resources 		*/
@@ -54,11 +54,13 @@ typedef struct sw_hcd_io{
 	struct clk	*sie_clk;				/* SIE clock handle 	*/
 	struct clk	*phy_clk;				/* PHY gate 			*/
 	struct clk	*phy0_clk;				/* PHY reset 			*/
-
+	
 	unsigned drv_vbus_valid;
 	script_item_u drv_vbus_gpio_set;
-	__u32 host_init_state;				/* usb æ§åˆ¶å™¨çš„åˆå§‹åŒ–çŠ¶æ€ã€‚0 : ä¸å·¥ä½œ. 1 : å·¥ä½œ */
+	__u32 host_init_state;				/* usb ¿ØÖÆÆ÷µÄ³õÊ¼»¯×´Ì¬¡£0 : ²»¹¤×÷. 1 : ¹¤×÷ */
 	__u32 usb_enable;
 }sw_hcd_io_t;
 
 #endif   //__SW_HCD_BOARD_H__
+
+

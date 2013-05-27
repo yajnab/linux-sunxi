@@ -30,7 +30,7 @@ if [ ! -x "$LOADAR6000" ]; then
 fi
 
 BMILOADER=${BMILOADER:-$WORKAREA/host/.output/$ATH_PLATFORM/image/bmiloader}
-if [ ! -x "$BMILOADER" ];
+if [ ! -x "$BMILOADER" ]; 
 then
 	echo "Loader application '$BMILOADER' not found"
 	exit
@@ -38,7 +38,7 @@ fi
 
 echo "Loading BMI only"
 if [ "$TARGET_TYPE" = "AR6003" ]; then
-$LOADAR6000 hostonly enableuartprint
+$LOADAR6000 hostonly enableuartprint 
 else
 $LOADAR6000 hostonly
 fi
@@ -85,7 +85,7 @@ then
 		           break;
 		        fi
 		    done
-
+		   
 		    if [ "$result" == "0x0" ]
 		    then
 		        echo "MEMORY TEST($PATTERN_MSG) PASSED"
@@ -102,7 +102,7 @@ then
     else
     if [ "$TARGET_VERSION" = "$AR6003_VERSION_REV2" ]; then
         export wlanapp=$WORKAREA/target/AR6003/hw2.0/bin/device.bin
-    else
+    else 
     if [ "$TARGET_VERSION" = "$AR6003_VERSION_REV3" ]; then
         export wlanapp=$WORKAREA/target/AR6003/hw2.1.1/bin/device.bin
     else # venus2.0 fpga
@@ -119,7 +119,7 @@ do
 		Help
 		;;
        * )
-	echo "Unsupported argument"
+      	echo "Unsupported argument"
             Help
 		exit -1
 		shift
@@ -128,9 +128,9 @@ done
 
 echo "Loading ART target"
 if [ "$TARGET_TYPE" = "AR6003" ]; then
-$LOADAR6000 targonly enableuartprint noresetok nostart bypasswmi
+$LOADAR6000 targonly enableuartprint noresetok nostart bypasswmi 
 else
-$LOADAR6000 targonly noresetok nostart bypasswmi
+$LOADAR6000 targonly noresetok nostart bypasswmi 
 fi
 
 if [ "$TARGET_TYPE" = "AR6002" ]
@@ -161,3 +161,4 @@ fi
 
 
 sleep 1
+

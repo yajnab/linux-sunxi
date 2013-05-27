@@ -82,32 +82,33 @@ typedef signed char           __bool;
 #undef  __hdle
 typedef unsigned int        __hdle;
 
-/* è®¾ç½®æŸä¸ªbitä½ä¸º1 */
+/* ÉèÖÃÄ³¸öbitÎ»Îª1 */
 #undef  x_set_bit
 #define x_set_bit( value, bit )      		( (value) |=  ( 1U << (bit) ) )
 
-/* æŠŠæŸä¸ªbitä½æ¸…é›¶ */
+/* °ÑÄ³¸öbitÎ»ÇåÁã */
 #undef  x_clear_bit
 #define x_clear_bit( value, bit )    		( (value) &= ~( 1U << (bit) ) )
 
-/* æŠŠæŸä¸ªbitä½çš„å€¼å–å */
+/* °ÑÄ³¸öbitÎ»µÄÖµÈ¡·´ */
 #undef  x_reverse_bit
 #define x_reverse_bit( value, bit )  		( (value) ^=  ( 1U << (bit) ) )
 
-/* åˆ¤æ–­æŸä¸ªbitä½æ˜¯å¦ä¸º1 */
+/* ÅĞ¶ÏÄ³¸öbitÎ»ÊÇ·ñÎª1 */
 #undef  x_test_bit
 #define x_test_bit( value, bit )     		( (value)  &  ( 1U << (bit) ) )
 
-/* å–æœ€å°å€¼ */
+/* È¡×îĞ¡Öµ */
 #undef  x_min
 #define x_min( x, y )          				( (x) < (y) ? (x) : (y) )
 
-/* å–æœ€å¤§å€¼ */
+/* È¡×î´óÖµ */
 #undef  x_max
 #define x_max( x, y )          				( (x) > (y) ? (x) : (y) )
 
-/* å–ç»å¯¹å€¼ */
+/* È¡¾ø¶ÔÖµ */
 #undef  x_absolute
 #define x_absolute(p)        				((p) > 0 ? (p) : -(p))
 
 #endif   //__SW_USB_TYPEDEF_H__
+

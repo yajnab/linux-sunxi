@@ -10,10 +10,10 @@
 
 
 #define AR6000_EMULATION_MAJOR_REV0	0
-#define AR6000_EMULATION_MINOR_REV0	0
+#define AR6000_EMULATION_MINOR_REV0	0  
 #define AR6000_MAJOR_REV0	6
-#define AR6000_MINOR_REV0	0
-#define AR6000_MINOR_REV1	1
+#define AR6000_MINOR_REV0	0  
+#define AR6000_MINOR_REV1	1  
 #define REV_MIN_W 4
 #define REV_MAJ_W 4
 #define REV_MIN_S 0
@@ -21,7 +21,7 @@
 #define REV_MIN_M 0xf
 #define REV_MAJ_M 0xf0
 
-#define AR6000_WMAC0_BASE_ADDRESS           0xafff0000
+#define AR6000_WMAC0_BASE_ADDRESS           0xafff0000 
 
 #include "hw/rtc_reg.h"
 #include "hw/apb_map.h"
@@ -32,3 +32,4 @@
 
 
 #endif
+

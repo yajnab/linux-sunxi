@@ -33,7 +33,7 @@ static int cmd_ca_get_version(struct sigma_dut *dut, struct sigma_conn *conn,
 
 
 int cmd_device_get_info(struct sigma_dut *dut, dutCommand_t *command,
-					      dutCmdResponse_t *resp)
+                        		      dutCmdResponse_t *resp)
 {
 	const char *model = "N/A";
 	char local_resp[200];
@@ -102,5 +102,5 @@ void basic_register_cmds(void)
 	sigma_dut_reg_cmd("device_list_interfaces",
 			  check_device_list_interfaces,
 			  cmd_device_list_interfaces);
-#endif
+#endif    
 }

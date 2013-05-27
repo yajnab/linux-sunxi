@@ -39,7 +39,7 @@ typedef struct anwiClientInfo_ {
 	anwiFullResourceInfo resInfo;
 	anwiIntrDesc intrDesc;
 	anwiEventQueue isrEventQ;
-	anwiEventQueue trigeredEventQ;
+	anwiEventQueue trigeredEventQ;	
 	PKSPIN_LOCK sLock; // Pointer to the allocated spinlock for the IRQL
 	PDEVICE_OBJECT pDevObj;	// Pointer to the device object for this client
 	ULONG32 valid;

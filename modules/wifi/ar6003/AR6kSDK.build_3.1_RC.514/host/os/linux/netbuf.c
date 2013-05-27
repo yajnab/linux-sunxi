@@ -2,7 +2,7 @@
 // Copyright (c) 2004-2010 Atheros Communications Inc.
 // All rights reserved.
 //
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -72,7 +72,7 @@ a_netbuf_alloc(int size)
     size += 2 * (A_GET_CACHE_LINE_BYTES()); /* add some cacheline space at front and back of buffer */
     skb = dev_alloc_skb(AR6000_DATA_OFFSET + sizeof(HTC_PACKET) + size);
     if (skb) {
-        skb_reserve(skb, AR6000_DATA_OFFSET + sizeof(HTC_PACKET) + A_GET_CACHE_LINE_BYTES());
+        skb_reserve(skb, AR6000_DATA_OFFSET + sizeof(HTC_PACKET) + A_GET_CACHE_LINE_BYTES());    
 #ifdef AR6K_ALLOC_DEBUG
         __a_meminfo_add(skb, size, func, lineno);
 #endif
@@ -176,7 +176,7 @@ a_netbuf_put_data(void *bufPtr, char *srcPtr, A_INT32 len)
 
 
 /*
- * Trim the network buffer pointed to by bufPtr to len # of bytes
+ * Trim the network buffer pointed to by bufPtr to len # of bytes 
  */
 A_STATUS
 a_netbuf_setlen(void *bufPtr, A_INT32 len)
@@ -205,7 +205,7 @@ a_netbuf_trim_data(void *bufPtr, char *dstPtr, A_INT32 len)
 {
     char *start = (char*)(((struct sk_buff *)bufPtr)->data +
         (((struct sk_buff *)bufPtr)->len - len));
-
+    
     A_MEMCPY(dstPtr, start, len);
     skb_trim((struct sk_buff *)bufPtr, ((struct sk_buff *)bufPtr)->len - len);
 
@@ -252,10 +252,10 @@ void a_netbuf_check(void *bufPtr, const char *func, int lineno)
 {
     struct sk_buff *skb = (struct sk_buff *)bufPtr;
     A_UINT32 len;
-    A_BOOL found = FALSE;
-    found = a_meminfo_find(skb);
+    A_BOOL found = FALSE; 
+    found = a_meminfo_find(skb); 
 
-    if (found == FALSE)
+    if (found == FALSE) 
     {
         len = A_NETBUF_LEN(skb);
         __a_meminfo_add(skb, len, func, lineno);

@@ -5,7 +5,7 @@
 // Copyright (c) 2004-2010 Atheros Communications Inc.
 // All rights reserved.
 //
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -117,7 +117,7 @@ A_BOOL a_meminfo_find(void *ptr);
 extern unsigned int enablelogcat;
 extern int android_logger_lv(void* module, int mask);
 enum logidx { LOG_MAIN_IDX = 0 };
-extern int logger_write(const enum logidx idx,
+extern int logger_write(const enum logidx idx, 
                 const unsigned char prio,
                 const char __kernel * const tag,
                 const char __kernel * const fmt,
@@ -132,7 +132,7 @@ extern int logger_write(const enum logidx idx,
 #define A_LOGGER_MODULE_NAME(x) #x
 #define A_LOGGER(mask, mod, args...) \
     A_ANDROID_PRINTF(mask, &GET_ATH_MODULE_DEBUG_VAR_NAME(mod), "ar6k_" A_LOGGER_MODULE_NAME(mod), args);
-#endif
+#endif 
 #define A_PRINTF(args...) A_ANDROID_PRINTF(ATH_DEBUG_INFO, NULL, "ar6k_driver", args)
 #else
 #define A_LOGGER(mask, mod, args...)    printk(KERN_ALERT args)
@@ -179,7 +179,7 @@ typedef struct timer_list               A_TIMER;
 } while (0)
 
 /*
- * Cancel the Timer.
+ * Cancel the Timer. 
  */
 #define A_UNTIMEOUT(pTimer) do {                                \
     del_timer((pTimer));                                        \
@@ -253,7 +253,7 @@ void android_release_firmware(const struct firmware *firmware);
 #else
 #define A_REQUEST_FIRMWARE(_ppf, _pfile, _dev) request_firmware(_ppf, _pfile, _dev)
 #define A_RELEASE_FIRMWARE(_pf) release_firmware(_pf)
-#endif
+#endif 
 
 /*
  * Initialization of the network buffer subsystem
@@ -316,19 +316,19 @@ typedef struct sk_buff_head A_NETBUF_QUEUE_T;
 
 /* Add data to end of a buffer  */
 #define A_NETBUF_PUT_DATA(bufPtr, srcPtr,  len) \
-    a_netbuf_put_data(bufPtr, srcPtr, len)
+    a_netbuf_put_data(bufPtr, srcPtr, len) 
 
 /* Add data to start of the  buffer */
 #define A_NETBUF_PUSH_DATA(bufPtr, srcPtr,  len) \
-    a_netbuf_push_data(bufPtr, srcPtr, len)
+    a_netbuf_push_data(bufPtr, srcPtr, len) 
 
 /* Remove data at start of the buffer */
 #define A_NETBUF_PULL_DATA(bufPtr, dstPtr, len) \
-    a_netbuf_pull_data(bufPtr, dstPtr, len)
+    a_netbuf_pull_data(bufPtr, dstPtr, len) 
 
 /* Remove data from the end of the buffer */
 #define A_NETBUF_TRIM_DATA(bufPtr, dstPtr, len) \
-    a_netbuf_trim_data(bufPtr, dstPtr, len)
+    a_netbuf_trim_data(bufPtr, dstPtr, len) 
 
 /* View data as "size" contiguous bytes of type "t" */
 #define A_NETBUF_VIEW_DATA(bufPtr, t, size) \
@@ -337,14 +337,14 @@ typedef struct sk_buff_head A_NETBUF_QUEUE_T;
 /* return the beginning of the headroom for the buffer */
 #define A_NETBUF_HEAD(bufPtr) \
         ((((struct sk_buff *)(bufPtr))->head))
-
+    
 /*
  * OS specific network buffer access routines
  */
 #ifdef AR6K_ALLOC_DEBUG
 void *a_netbuf_alloc(int size, const char *func, int lineno);
 void *a_netbuf_alloc_raw(int size, const char *func, int lineno);
-void a_netbuf_check(void *bufPtr, const char *func, int lineno);
+void a_netbuf_check(void *bufPtr, const char *func, int lineno); 
 #else
 void *a_netbuf_alloc(int size);
 void *a_netbuf_alloc_raw(int size);
@@ -378,16 +378,16 @@ A_UINT32 a_copy_from_user(void *to, const void *from, A_UINT32 n);
 
 /* In linux, WLAN Rx and Tx run in different contexts, so no need to check
  * for any commands/data queued for WLAN */
-#define A_CHECK_DRV_TX()
-
+#define A_CHECK_DRV_TX()   
+             
 #define A_GET_CACHE_LINE_BYTES()    L1_CACHE_BYTES
 
 #define A_CACHE_LINE_PAD            128
 
-static inline void *A_ALIGN_TO_CACHE_LINE(void *ptr) {
+static inline void *A_ALIGN_TO_CACHE_LINE(void *ptr) {   
     return (void *)L1_CACHE_ALIGN((unsigned long)ptr);
 }
-
+   
 #else /* __KERNEL__ */
 
 #ifdef __GNUC__

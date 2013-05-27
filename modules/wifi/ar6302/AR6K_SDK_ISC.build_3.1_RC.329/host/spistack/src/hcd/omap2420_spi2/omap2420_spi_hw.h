@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="omap2420_spi_hw.h" company="Atheros">
 //    Copyright (c) 2007-2008 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -30,10 +30,10 @@
 
 
 struct _OMAP_DMA_REGS {
-    UINT32 CCR;
-    UINT32 CLNK_CTRL;
+    UINT32 CCR;  
+    UINT32 CLNK_CTRL;         
     UINT32 CICR;
-    UINT32 CSR;
+    UINT32 CSR; 
     UINT32 CSDP;
     UINT32 CEN;
     UINT32 CFN;
@@ -118,9 +118,9 @@ typedef struct _OMAP_DMA_REGS *POMAP_DMA_REGS;
 #define OMAP_SPI_CHCON_D1_RX             (1 << 18)
 #define OMAP_SPI_CHCON_D0_RX             0
 #define OMAP_SPI_CHCON_D1_NO_TX          (1 << 17)
-#define OMAP_SPI_CHCON_D1_TX             0
-#define OMAP_SPI_CHCON_D0_NO_TX          (1 << 16)
-#define OMAP_SPI_CHCON_D0_TX             0
+#define OMAP_SPI_CHCON_D1_TX             0             
+#define OMAP_SPI_CHCON_D0_NO_TX          (1 << 16) 
+#define OMAP_SPI_CHCON_D0_TX             0 
 #define OMAP_SPI_CHCON_DMA_READ          (1 << 15)
 #define OMAP_SPI_CHCON_DMA_WRITE         (1 << 14)
 #define OMAP_SPI_CHCON_TRM_RX_TX         0x0

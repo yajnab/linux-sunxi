@@ -2,7 +2,7 @@
 #define _WFA_PORTALL_H_
 
 /* The fixed definition for the device interface name */
-/* For different OSes or your platforms, you may not  */
+/* For different OSes or your platforms, you may not  */ 
 /* need to use fixed definition                       */
 #define WFA_STAUT_IF        "wlan0"
 
@@ -85,13 +85,13 @@
                            memset(memp, val, size)
 
 #define wFREE(memp)      \
-                           free(memp);
+                           free(memp); 
 
 #define wGETTIMEOFDAY(tmval, zone) \
-                           gettimeofday(tmval, zone)
+                           gettimeofday(tmval, zone) 
 
 #define wSETTIMEOFDAY(tmval, zone) \
-                           settimeofday(tmval, zone)
+                           settimeofday(tmval, zone) 
 
 #define wSIGNAL(signum, sighandler) \
                            signal(signum, sighandler)
@@ -125,7 +125,7 @@
                            pthread_attr_init(ptattr)
 
 #define wPT_ATTR_SETSCH(ptattr, policy) \
-                           pthread_attr_setschedpolicy(ptattr, policy)
+                           pthread_attr_setschedpolicy(ptattr, policy)   
 
 #define wPT_ATTR_SETSCHPARAM(ptattr, param) \
                            pthread_attr_setschedparam(ptattr, param)

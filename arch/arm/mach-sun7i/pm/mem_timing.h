@@ -8,7 +8,7 @@
 *                                             All Rights Reserved
 *
 * File    : mem_timing.h
-* By      :
+* By      : 
 * Version : v1.0
 * Date    : 2012-5-31 14:34
 * Descript:
@@ -32,3 +32,4 @@ void set_event_counter(enum counter_type_e type);
 int get_event_counter(enum counter_type_e type);
 
 #endif  /* __MEM_TIMING_H__ */
+

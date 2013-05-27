@@ -17,7 +17,7 @@ $bindir/mboxping $flags -i $NETIF -t 3 -r 3 -s $length  -p 3 -d $1  &
 
 }
 
-perfping()
+perfping() 
 {
 flags="-s 1522 -p 16 -d $1"
 $bindir/mboxping -q -i $NETIF  -t 0  -r 0 $flags
@@ -60,7 +60,7 @@ perfrxsingle 3 $length2 4
 
 perftx()
 {
-perftxsingle 0 $length2  4
+perftxsingle 0 $length2  4 
 perftxsingle 1 $length2  4
 perftxsingle 2 $length2  4
 perftxsingle 3 $length2  4
@@ -148,11 +148,17 @@ testfooter
 testheader "testing with final pings ...."
 pingsimple 0 0 1500
 pingsimple 0 0 200
-pingsimple 1 1 1500
+pingsimple 1 1 1500 
 pingsimple 2 2 1500
 pingsimple 3 3 1500
 testfooter
-
+ 
 echo "*************************************"
 echo "****** HTC Regression Test Done *****"
 echo "*************************************"
+
+
+
+
+
+

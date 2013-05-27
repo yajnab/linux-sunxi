@@ -3,13 +3,13 @@
  * Basically selected code segments from usb-cdc.c and usb-rndis.c
  *
  * Copyright (C) 1999-2011, Broadcom Corporation
- *
+ * 
  *         Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- *
+ * 
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -17,7 +17,7 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- *
+ * 
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
@@ -71,13 +71,13 @@
 
 #ifdef FW_PATH_AUTO_SELECT
 extern void dhd_bus_select_firmware_name_by_chip(struct dhd_bus *bus, char *dst, char *src);
-#define COPY_FW_PATH_BY_CHIP( bus, dst, src)	dhd_bus_select_firmware_name_by_chip( bus, dst, src);
+#define COPY_FW_PATH_BY_CHIP( bus, dst, src)	dhd_bus_select_firmware_name_by_chip( bus, dst, src);	
 #else
 #define COPY_FW_PATH_BY_CHIP( bus, dst, src)	strcpy(dst, src)
 #endif
 
 static int module_insert = 0;
-int module_remove = 0;
+int module_remove = 0; 
 
 #ifdef WLMEDIA_HTSF
 #include <linux/time.h>
@@ -784,13 +784,13 @@ dhd_bssidx2bssid(dhd_pub_t *dhdp, int idx)
 }
 
 
-void
+void 
 dhd_state_set_flags(dhd_pub_t *dhdp, dhd_attach_states_t flags, int add)
 {
 	dhd_info_t *dhd = (dhd_info_t *)dhdp->info;
 
         ASSERT(dhd);
-
+	
 	if (add) {
 		DHD_INFO(("%s: add flags %x to dhd_state(%x).\n", __FUNCTION__, flags, dhd->dhd_state));
 		dhd->dhd_state |= flags;
@@ -1059,7 +1059,7 @@ dhd_op_if(dhd_if_t *ifp)
 		if (ifp->net != NULL) {
 			DHD_TRACE(("\n%s: got 'WLC_E_IF_DEL' state\n", __FUNCTION__));
 #ifdef WL_CFG80211
-			if (!ap_fw_loaded)
+			if (!ap_fw_loaded) 
 				wl_cfg80211_ifdel_ops(ifp->net);
 #endif
 			netif_stop_queue(ifp->net);
@@ -1081,7 +1081,7 @@ dhd_op_if(dhd_if_t *ifp)
 		dhd->iflist[ifp->idx] = NULL;
 #ifdef WL_CFG80211
 		if ((dhd->dhd_state & DHD_ATTACH_STATE_CFG80211) &&
-			!(ap_fw_loaded || (dhd->dhd_state & DHD_ATTACH_STATE_SOFTAP))) {
+        		!(ap_fw_loaded || (dhd->dhd_state & DHD_ATTACH_STATE_SOFTAP))) {
 			wl_cfg80211_notify_ifdel(ifp->net);
 		}
 #endif
@@ -1665,7 +1665,7 @@ dhd_get_stats(struct net_device *net)
 	if (dhd->pub.up) {
 		if (module_remove) {
 			printf("%s: module removed. return old value. ifp=%p, dhd=%p\n", __FUNCTION__, ifp, dhd);
-		} else
+		} else 
 			/* Use the protocol to get dongle stats */
 			dhd_prot_dstats(&dhd->pub);
 	}
@@ -2376,10 +2376,10 @@ dhd_stop(struct net_device *net)
 	dhd_prot_stop(&dhd->pub);
 
 /* anthony: we don't need this due to WEXT priv enabled */
-#if defined(WL_CFG80211) && 0
+#if defined(WL_CFG80211) && 0  
 	if (ifidx == 0)
 		wl_android_wifi_off(net);
-#endif
+#endif 
 	dhd->pub.hang_was_sent = 0;
 	dhd->pub.rxcnt_timeout = 0;
 	dhd->pub.txcnt_timeout = 0;
@@ -2422,7 +2422,7 @@ dhd_open(struct net_device *net)
 	 * This should be removed in the future
 	 */
 	wl_control_wl_start(net);
-#endif
+#endif 
 
 	ifidx = dhd_net2idx(dhd, net);
 	DHD_TRACE(("%s: ifidx %d\n", __FUNCTION__, ifidx));
@@ -2443,7 +2443,7 @@ dhd_open(struct net_device *net)
 #if defined(WL_CFG80211) && 0
 		DHD_ERROR(("\n%s\n", dhd_version));
 		wl_android_wifi_on(net);
-#endif
+#endif 
 
 		if (dhd->pub.busstate != DHD_BUS_DATA) {
 			int ret;
@@ -2581,7 +2581,7 @@ dhd_attach(osl_t *osh, struct dhd_bus *bus, uint bus_hdrlen)
 	if ((firmware_path != NULL) && (firmware_path[0] != '\0'))
 		COPY_FW_PATH_BY_CHIP(bus, fw_path, firmware_path);
 	 printk(">>>>>>> firmware_path %s, nvram_path %s\n", firmware_path, nvram_path);
-
+	
 	if ((nvram_path != NULL) && (nvram_path[0] != '\0'))
 		strcpy(nv_path, nvram_path);
 
@@ -3001,7 +3001,7 @@ dhd_preinit_ioctls(dhd_pub_t *dhd)
 			dhd_pkt_filter_enable = FALSE;
 		}
 	}
-#endif
+#endif 
 
 #if !defined(AP) && defined(WL_CFG80211)
 	/* Check if firmware with HostAPD support used */
@@ -3019,7 +3019,7 @@ dhd_preinit_ioctls(dhd_pub_t *dhd)
 				dhd_pkt_filter_enable = FALSE;
 			}
 	}
-#endif
+#endif 
 
 	if ((dhd->op_mode != WFD_MASK) && (dhd->op_mode != HOSTAPD_MASK)) {
 		/* STA only operation mode */
@@ -3046,27 +3046,27 @@ dhd_preinit_ioctls(dhd_pub_t *dhd)
 	if ((ret = dhd_wl_ioctl_cmd(dhd, WLC_SET_VAR, iovbuf, sizeof(iovbuf), TRUE, 0)) < 0)
 		DHD_ERROR(("%s assoc_listen failed %d\n", __FUNCTION__, ret));
 
-#ifdef SOFTAP
-		/* change some parameters when apsta enabled */
+#ifdef SOFTAP	
+		/* change some parameters when apsta enabled */ 
 		if ( dhd_apsta ){
 #ifndef AP
 			uint mpc = 0;
 #endif
 			uint dtim = 1;
-
+	
 			DHD_ERROR(("APSTA enabling...\n"));
-
+			
 			power_mode = 0;
-
+		
 			/* enable apsta mode */
 #ifndef AP
 			bcm_mkiovar("apsta", (char *)&dhd_apsta, 4, iovbuf, sizeof(iovbuf));
 			dhd_wl_ioctl_cmd(dhd, WLC_SET_VAR, iovbuf, sizeof(iovbuf), TRUE, 0);
-
+	
 			bcm_mkiovar("mpc", (char *)&mpc, 4, iovbuf, sizeof(iovbuf));
 			dhd_wl_ioctl_cmd(dhd, WLC_SET_VAR, iovbuf, sizeof(iovbuf), TRUE, 0);
 #endif
-
+	
 			dhd_wl_ioctl_cmd(dhd, WLC_SET_DTIMPRD, (char *)&dtim, sizeof(dtim), TRUE, 0);
 		}
 #endif
@@ -3102,7 +3102,7 @@ dhd_preinit_ioctls(dhd_pub_t *dhd)
 		bcm_mkiovar("wme", (char *)&wme, 4, iovbuf, sizeof(iovbuf));
 		dhd_wl_ioctl_cmd(dhd, WLC_SET_VAR, iovbuf, sizeof(iovbuf), TRUE, 0);
 	}
-#endif
+#endif 
 
 #if defined(KEEP_ALIVE)
 	{
@@ -3111,7 +3111,7 @@ dhd_preinit_ioctls(dhd_pub_t *dhd)
 
 #if defined(SOFTAP)
 	if (ap_fw_loaded == FALSE)
-#endif
+#endif 
 		if ((res = dhd_keep_alive_onoff(dhd)) < 0)
 			DHD_ERROR(("%s set keeplive failed %d\n",
 			__FUNCTION__, res));
@@ -3187,7 +3187,7 @@ dhd_preinit_ioctls(dhd_pub_t *dhd)
 	if (arpoe && !ap_fw_loaded) {
 #else
 	if (arpoe) {
-#endif
+#endif 
 		dhd_arp_offload_set(dhd, dhd_arp_mode);
 		dhd_arp_offload_enable(dhd, arpoe);
 	} else {
@@ -3214,7 +3214,7 @@ dhd_preinit_ioctls(dhd_pub_t *dhd)
 	}
 #endif /* defined(SOFTAP) */
 #endif /* PKT_FILTER_SUPPORT */
-
+	
 	msleep(100);
 	/* Force STA UP */
 	if ((ret = dhd_wl_ioctl_cmd(dhd, WLC_UP, (char *)&up, sizeof(up), TRUE, 0)) < 0) {
@@ -3518,7 +3518,7 @@ dhd_net_attach(dhd_pub_t *dhdp, int ifidx)
 	memcpy(net->dev_addr, temp_addr, ETHER_ADDR_LEN);
 	memset(net->name, 0, sizeof(net->name));
 	strcpy(net->name, "wlan0");
-
+	
 	if ((err = register_netdev(net)) != 0) {
 		DHD_ERROR(("couldn't register the net device, err %d\n", err));
 		goto fail;
@@ -3735,7 +3735,7 @@ dhd_module_cleanup(void)
 	DHD_TRACE(("%s: Enter\n", __FUNCTION__));
 
 	disable_dev_wlc_ioctl();
-	module_remove = 1;
+	module_remove = 1; 
 	module_insert = 0;
 	msleep(300);
 
@@ -3784,7 +3784,7 @@ init_retry:
 #if defined(CONFIG_WIFI_CONTROL_FUNC)
 	if (wl_android_wifictrl_func_add() < 0)
 		goto fail_1;
-#endif
+#endif 
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 27))
 		sema_init(&dhd_registration_sem, 0);
@@ -3823,7 +3823,7 @@ fail_2:
 fail_1:
 #if defined(CONFIG_WIFI_CONTROL_FUNC)
 	wl_android_wifictrl_func_del();
-#endif
+#endif 
 
 	/* Call customer gpio to turn off power with WL_REG_ON signal */
 	dhd_customer_gpio_wlan_ctrl(WLAN_POWER_OFF);

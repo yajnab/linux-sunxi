@@ -242,11 +242,11 @@ MALI_EXPORT mali_bool _mali_fbdump_is_requested(mali_frame_builder* fbuilder)
 
 MALI_EXPORT mali_err_code _mali_fbdump_setup_callbacks( struct mali_frame_builder* frame_builder)
 {
-	u32 i;
+	u32 i; 
 
 	MALI_DEBUG_ASSERT_POINTER(frame_builder);
 
-	/* early out if no colorbuffer capture is enabled or dumping not requested */
+	/* early out if no colorbuffer capture is enabled or dumping not requested */	
 	if (MALI_FALSE == _mali_base_get_setting(MALI_SETTING_COLORBUFFER_CAPTURE_ENABLED)) return MALI_ERR_NO_ERROR;
 	if (MALI_FALSE == _mali_fbdump_is_requested(frame_builder)) return MALI_ERR_NO_ERROR;
 
@@ -254,9 +254,9 @@ MALI_EXPORT mali_err_code _mali_fbdump_setup_callbacks( struct mali_frame_builde
 	{
 		u32 usage;
 		mali_err_code err;
-		mali_surface* surface;
+		mali_surface* surface; 
 
-		surface = _mali_frame_builder_get_output(frame_builder, i, &usage);
+		surface = _mali_frame_builder_get_output(frame_builder, i, &usage); 
 		if (NULL == surface) continue;
 
 		/*

@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="athspi_stream.c" company="Atheros">
 //    Copyright (c) 2008 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -27,7 +27,7 @@
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
-#define DBG_DECLARE 7;
+#define DBG_DECLARE 7; 
 #include <ctsystem.h>
 #include <sdio_busdriver.h>
 #include "ath_spi_hcd_if.h"
@@ -46,64 +46,64 @@ BOOL DllEntry(HINSTANCE  hInstance,
               ULONG      Reason,
               LPVOID     pReserved)
 {
-
+   
     if (Reason == DLL_PROCESS_ATTACH) { /* init std host core */
-        DisableThreadLibraryCalls((HMODULE)hInstance);
+        DisableThreadLibraryCalls((HMODULE)hInstance);    
     }
 
     if (Reason == DLL_PROCESS_DETACH) {
     }
 
     return TRUE;
-}
+} 
 
 BOOL STREAM_PREFIX(PreDeinit)(DWORD DeviceContext)
 {
-
-    return TRUE;
+    
+    return TRUE;   
 }
 
 DWORD STREAM_PREFIX(Init)(DWORD InitContext)
 {
     SDHCD_HW_DEVICE *pHWDevice = NULL;
-
+     
     DBG_PRINT(SDDBG_TRACE,("_Init called  dc:0x%X \n",InitContext));
-
+    
     do {
-
+         
         if (!SDIO_LibraryInit()) {
-            break;
+            break;    
         }
-
+        
         if (!SDIO_BusInit()) {
             SDIO_LibraryDeinit();
             DBG_PRINT(SDDBG_ERROR,("SDIO BusInit failed! \n"));
-            break;
+            break;  
         }
-
-        pHWDevice = InitializeSPIHW((PTSTR)InitContext);
-
+        
+        pHWDevice = InitializeSPIHW((PTSTR)InitContext); 
+        
         if (NULL == pHWDevice) {
-            SDIO_BusDeinit();
-            SDIO_LibraryDeinit();
+            SDIO_BusDeinit();   
+            SDIO_LibraryDeinit(); 
             break;
         }
-
+        
             /* notify that SPI module is installed */
         SDIO_HandleHcdEvent(&pHWDevice->pDevice->Hcd, EVENT_HCD_ATTACH);
-
+        
         SDIO_BusLoadClients();
-
+        
     } while (FALSE);
-
-    return (DWORD)pHWDevice;
+        
+    return (DWORD)pHWDevice;   
 }
 
 BOOL STREAM_PREFIX(Deinit)(DWORD DeviceContext)
 {
 
     DBG_PRINT(SDDBG_TRACE,("_Deinit called  dc:0x%X \n",DeviceContext));
-
+       
         /* unload any attached clients first */
     SDIO_BusUnloadClients();
         /* cleanup SPI HW layer, this de-registers the host controller */
@@ -111,10 +111,10 @@ BOOL STREAM_PREFIX(Deinit)(DWORD DeviceContext)
     SDIO_BusDeinit();
     SDIO_LibraryDeinit();
     return TRUE;
-}
+}    
 
 BOOL STREAM_PREFIX(PreClose)(DWORD OpenContext)
-{
+{ 
     return TRUE;
 }
 
@@ -127,8 +127,8 @@ DWORD STREAM_PREFIX(Open)(DWORD    DeviceContext,
 
 BOOL STREAM_PREFIX(Close)(DWORD OpenContext)
 {
-
-    return FALSE;
+   
+    return FALSE;   
 }
 
 BOOL STREAM_PREFIX(IOControl)(
@@ -139,20 +139,20 @@ BOOL STREAM_PREFIX(IOControl)(
                    PBYTE   pBufOut,
                    DWORD   dwLenOut,
                    PDWORD  pdwActualOut)
-{
+{   
     switch (dwCode) {
-
+        
         case SPI_HOST_IOCTL_SLOT_OFF:
             /* TODO, reset module, poweroff slot */
             break;
-
+            
         case SPI_HOST_IOCTL_SLOT_ON:
             /* TODO reset module poweroff slot */
-            break;
+            break; 
         default:
-            return FALSE;
+            return FALSE;    
     }
-
+    
     return TRUE;
 }
 
@@ -168,7 +168,7 @@ DWORD STREAM_PREFIX(Read)(DWORD    OpenContext,
                           LPVOID   pBuffer,
                           DWORD    Count)
 {
-    return -1;
+    return -1;   
 }
 
 DWORD STREAM_PREFIX(Seek)(DWORD    OpenContext,
@@ -185,5 +185,8 @@ VOID STREAM_PREFIX(PowerDown)(DWORD DeviceContext)
 
 VOID STREAM_PREFIX(PowerUp)(DWORD DeviceContext)
 {
-
+	
 }
+
+
+

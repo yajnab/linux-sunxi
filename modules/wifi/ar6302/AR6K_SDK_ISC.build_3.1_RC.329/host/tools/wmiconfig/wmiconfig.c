@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2004-2009 Atheros Communications Inc.
  * All rights reserved.
- *
- *
+ * 
+ * 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -951,7 +951,7 @@ main (int argc, char **argv)
             {"removesta", 0, NULL, WMI_AP_SET_MLME},        /* AP mode */
             {"dtim", 0, NULL, WMI_AP_SET_DTIM},             /* AP mode */
             {"intrabss", 0, NULL, WMI_AP_INTRA_BSS},        /* AP mode */
-            {"interbss", 0, NULL, WMI_AP_INTER_BSS},        /* AP mode */
+            {"interbss", 0, NULL, WMI_AP_INTER_BSS},        /* AP mode */            
             {"ip", 1, NULL, WMI_GET_IP},
             {"setMcastFilter", 1, NULL, WMI_SET_MCAST_FILTER},
             {"delMcastFilter", 1, NULL, WMI_DEL_MCAST_FILTER},
@@ -997,13 +997,13 @@ main (int argc, char **argv)
             {"acsdisablehichannels", 0, NULL, WMI_AP_ACS_DISABLE_HI_CHANNELS},
             {"setdivparam", 1, NULL, WMI_SET_DIVERSITY_PARAM},
             {"setexcesstxretrythres", 1, NULL, WMI_SET_EXCESS_TX_RETRY_THRES},
-            {"forceAssert", 0, NULL, WMI_FORCE_ASSERT},
+            {"forceAssert", 0, NULL, WMI_FORCE_ASSERT},            
             {"gnumsta", 0, NULL, WMI_AP_SET_GNUM_STA},        /* AP mode */
             {"getgnumsta", 0, NULL, WMI_AP_GET_GNUM_STA},     /* AP mode */
-            {"getnumsta", 0, NULL, WMI_AP_GET_NUM_STA},       /* AP mode */
-            {"suspend", 0, NULL, WMI_SUSPEND_DRIVER},
-            {"resume", 0, NULL, WMI_RESUME_DRIVER},
-            {"scanprobedssid", 1, NULL, WMI_SCAN_PROBED_SSID},
+            {"getnumsta", 0, NULL, WMI_AP_GET_NUM_STA},       /* AP mode */            
+            {"suspend", 0, NULL, WMI_SUSPEND_DRIVER},                
+            {"resume", 0, NULL, WMI_RESUME_DRIVER},                 
+            {"scanprobedssid", 1, NULL, WMI_SCAN_PROBED_SSID},  
             {"ap_apsd", 0, NULL, WMI_AP_SET_APSD},    /* AP mode */
             {0, 0, 0, 0}
         };
@@ -1302,7 +1302,7 @@ main (int argc, char **argv)
             {
                 printf("BMISS time out of range\n");
                 cmd = 0;
-            }
+            } 
             break;
         case 'M':
             cmd = WMI_SET_BMISS_TIME;
@@ -2232,7 +2232,7 @@ main (int argc, char **argv)
             break;
         case WMI_RESUME_DRIVER:
             cmd = WMI_RESUME_DRIVER;
-            break;
+            break;				
         case WMI_SETUP_AGGR:
         {
             A_UINT8 aid;
@@ -2482,7 +2482,7 @@ main (int argc, char **argv)
                 set_txsgiparam->sgiMask[1] = (unsigned long) (val>>32);
             }
             break;
-
+       
 
        case WMI_PER_SGI:
             {set_txsgiparam->sgiPERThreshold = atoi(optarg);
@@ -2501,13 +2501,13 @@ main (int argc, char **argv)
        case WMI_SET_DIVERSITY_PARAM:
             cmd = WMI_SET_DIVERSITY_PARAM;
             index = optind-1;
-
+            
             pDiversity->divIdleTime = atoi(argv[index++]);
             pDiversity->antRssiThresh = atoi(argv[index++]);
             pDiversity->divEnable = atoi(argv[index++]);
             pDiversity->active_treshold_rate = atoi(argv[index++]);
             break;
-
+       
        case WMI_SCAN_PROBED_SSID:
             cmd = WMI_SCAN_PROBED_SSID;
             ssid = (A_UCHAR *)optarg;
@@ -2517,7 +2517,7 @@ main (int argc, char **argv)
             cmd = WMI_AP_SET_APSD;
             pApApsd->enable = atoi(argv[optind]);
             break;
-
+      
        default:
             usage();
             break;
@@ -3009,7 +3009,7 @@ main (int argc, char **argv)
         if (ioctl(s, AR6000_IOCTL_EXTENDED, &ifr) < 0)
         {
             err(1, "%s", ifr.ifr_name);
-        }
+        }    
         printf("WLAN state is %s\n", (ifr.ifr_ifru.ifru_ivalue == WLAN_ENABLED) ? "enabled" : "disabled");
         break;
     case WMI_GET_ROAM_DATA:
@@ -3276,14 +3276,14 @@ main (int argc, char **argv)
             if(REGCODE_IS_CC_BITSET(*rd))
             {
                 COUNTRY_CODE_MAP *reg;
-                void *endTable = (void *)allCountries + sizeof(allCountries);
+                void *endTable = (void *)allCountries + sizeof(allCountries);				
                 for (reg = &allCountries[0]; (void *)reg < endTable; reg++)
                 {
                     if (reg->countryCode == REGCODE_GET_CODE(*rd))
                     {
                         break;
                     }
-                }
+                }            
                 printf("CountryCode (%s) = ",reg->isoName);
             }
             else if(REGCODE_IS_WWR_BITSET(*rd))
@@ -3543,7 +3543,7 @@ main (int argc, char **argv)
                         break;
                 }
                 printf("%-7s ", str);
-
+                
                 switch (pGetSta->sta[i].keymgmt) {
                     case WPA_PSK_AUTH:
                         str = "WPA-PSK";
@@ -3596,7 +3596,7 @@ main (int argc, char **argv)
                         str = "11NA";
                         break;
                     case MODE_11NG_HT20:
-                    case MODE_11NG_HT40:
+                    case MODE_11NG_HT40:                    
                         str = "11NG";
                         break;
                     case MODE_UNKNOWN:
@@ -3641,7 +3641,7 @@ main (int argc, char **argv)
         if(pNumSta->num_sta == 0xFF)
             printf("NUM_STA=NA\n");
         else
-            printf("NUM_STA=%d\n", pNumSta->num_sta);
+            printf("NUM_STA=%d\n", pNumSta->num_sta);       
         break;
 
     case WMI_AP_SET_DFS:
@@ -3810,18 +3810,18 @@ main (int argc, char **argv)
             printf("incorrect number of params\n");
             break;
         }
-
-        if(strlen(argv[index]) == strlen("g") &&
+        
+        if(strlen(argv[index]) == strlen("g") && 
             strcmp(argv[index], "g") == 0) {
             pHtCap->band = 0;
-        }else if(strlen(argv[index]) == strlen("a") &&
+        }else if(strlen(argv[index]) == strlen("a") && 
             strcmp(argv[index], "a") == 0) {
             pHtCap->band = 1;
         }else{
             printf("bad band param. Use 'a' OR 'g' NOT %s\n", argv[index]);
             break;
         }
-
+        
         pHtCap->enable = (atoi(argv[++index]) == 1);
         pHtCap->chan_width_40M_supported = (atoi(argv[++index]) == 1);
         pHtCap->short_GI_20MHz = (atoi(argv[++index]) == 1);
@@ -4132,7 +4132,7 @@ main (int argc, char **argv)
 
      case WMI_SET_TX_SGI_PARAM:
      {
-
+     
           ((int *)buf)[0] = AR6000_XIOCTL_WMI_SET_TX_SGI_PARAM;
           ((int *)buf)[1] = set_txsgiparam->sgiMask[0];
           ((int *)buf)[2] = set_txsgiparam->sgiMask[1];
@@ -4171,7 +4171,7 @@ main (int argc, char **argv)
             err(1, "%s", ifr.ifr_name);
         }
         break;
-
+    
     case WMI_AP_ACS_DISABLE_HI_CHANNELS:
         ((int *)buf)[0] = AR6000_XIOCTL_AP_ACS_DISABLE_HI_CHANNELS;
         ifr.ifr_data = buf;
@@ -4222,8 +4222,8 @@ main (int argc, char **argv)
         if (ioctl(s, AR6000_IOCTL_EXTENDED, &ifr) < 0) {
             err(1, "%s", ifr.ifr_name);
         }
-        break;
-
+        break;	
+   
      case WMI_SCAN_PROBED_SSID:
         send_scan_probedssid_cmd(s, ifname, ssid);
         break;
@@ -4235,7 +4235,7 @@ main (int argc, char **argv)
             err(1, "%s", ifr.ifr_name);
         }
         break;
-
+    
      default:
         usage();
     }
@@ -4799,7 +4799,7 @@ static A_INT8 getPhyMode(char *pArg)
                      {"a",WMI_11A_MODE},
                      {"b",WMI_11B_MODE},
                      {"g",WMI_11G_MODE},
-                     {"gonly",WMI_11GONLY_MODE},
+                     {"gonly",WMI_11GONLY_MODE},                     
                      {NULL}
                     };
     int i, j;
@@ -4981,7 +4981,7 @@ static int send_connect_cmd(int sock, char *ifname, profile_t *cp)
                        IW_AUTH_KEY_MGMT, IW_AUTH_KEY_MGMT_PSK);
 
         if(cp->psk_type == KEYTYPE_PHRASE) {
-            ret = wmiconfig_set_passphrase(sock, ifname, cp->psk,
+            ret = wmiconfig_set_passphrase(sock, ifname, cp->psk, 
                                            strlen(cp->psk), cp->ssid,
                                            cp->ssid_len);
         } else if(cp->psk_type == KEYTYPE_PSK) {
@@ -5030,7 +5030,7 @@ static int send_scan_probedssid_cmd(int sock, char *ifname, char *ssid)
             return ret;
         }else if ((strcmp((char *)ssid, "off") == 0) || ((strcmp((char *)ssid, "any") == 0))) {
               iwr.u.essid.pointer = &scanreq;
-              iwr.u.essid.length = sizeof(struct iw_scan_req);
+              iwr.u.essid.length = sizeof(struct iw_scan_req); 
         } else {
               iwr.u.essid.flags = IW_SCAN_THIS_ESSID;
               iwr.u.essid.pointer = &scanreq;

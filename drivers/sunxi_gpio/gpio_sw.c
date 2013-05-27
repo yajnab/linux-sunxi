@@ -92,10 +92,10 @@ int get_gpio_member_value( u32 gpio_hd , char *name , int member_name )
 		case mul_sel_1:
 		ret = gpio_info->mul_sel;
 		break;
-		case pull_2:
+		case pull_2:	
 		ret = gpio_info->pull;
 		break;
-		case drv_level_3:
+		case drv_level_3:		
 		ret = gpio_info->drv_level;
 		break;
 		case data_4:
@@ -106,7 +106,7 @@ int get_gpio_member_value( u32 gpio_hd , char *name , int member_name )
 		break;
 		case port_num_6:
 		ret = gpio_info->port_num;
-		break;
+		break;	
 		}
 	return ret;
 

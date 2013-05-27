@@ -10,7 +10,7 @@
 *
 * Author 		: javen
 *
-* Description 	: ä¸»æœºæ§åˆ¶å™¨çš„ç›¸å…³æ“ä½œ
+* Description 	: Ö÷»ú¿ØÖÆÆ÷µÄÏà¹Ø²Ù×÷
 *
 * History 		:
 *      <author>    		<time>       	<version >    		<desc>
@@ -63,7 +63,7 @@ static void sw_hcd_ep_program(struct sw_hcd *sw_hcd,
 *    void
 *
 * Parameters:
-*    ep : input. ç‰©ç† ep çš„ä¿¡æ¯
+*    ep : input. ÎïÀí ep µÄĞÅÏ¢
 *
 * Return value:
 *    void
@@ -117,7 +117,7 @@ static void sw_hcd_h_ep0_flush_fifo(struct sw_hcd_hw_ep *ep)
 *    Clear TX fifo. Needed to avoid BABBLE errors.
 *
 * Parameters:
-*    ep : input. ç‰©ç† ep çš„ä¿¡æ¯
+*    ep : input. ÎïÀí ep µÄĞÅÏ¢
 *
 * Return value:
 *    void
@@ -134,7 +134,7 @@ static void sw_hcd_h_tx_flush_fifo(struct sw_hcd_hw_ep *ep)
 	u16  lastcsr = 0;
 	int  retries = 1000;
 
-	/* å¦‚æœæ£€æµ‹åˆ° fifo ä¸ç©ºï¼Œé‚£ä¹ˆå°±åˆ· fifo */
+	/* Èç¹û¼ì²âµ½ fifo ²»¿Õ£¬ÄÇÃ´¾ÍË¢ fifo */
 	csr = USBC_Readw(USBC_REG_TXCSR(usbc_base));
 	while (csr & (1 << USBC_BP_TXCSR_H_FIFO_NOT_EMPTY)) {
 	    if (csr != lastcsr){
@@ -166,8 +166,8 @@ static void sw_hcd_h_tx_flush_fifo(struct sw_hcd_hw_ep *ep)
 *    void
 *
 * Parameters:
-*    hw_ep  :  input.  ç‰©ç† ep çš„ä¿¡æ¯
-*    csr    :  input.  rxçŠ¶æ€å¯„å­˜å™¨çš„å€¼
+*    hw_ep  :  input.  ÎïÀí ep µÄĞÅÏ¢
+*    csr    :  input.  rx×´Ì¬¼Ä´æÆ÷µÄÖµ
 *
 * Return value:
 *    void
@@ -206,7 +206,7 @@ static u16 sw_hcd_h_rx_flush_fifo(struct sw_hcd_hw_ep *hw_ep, u16 csr)
 *    void
 *
 * Parameters:
-*    ep : input. ç‰©ç† ep çš„ä¿¡æ¯
+*    ep : input. ÎïÀí ep µÄĞÅÏ¢
 *
 * Return value:
 *    void
@@ -266,7 +266,7 @@ static void sw_hcd_h_ep0_flush_fifo(struct sw_hcd_hw_ep *ep)
 *    Clear TX fifo. Needed to avoid BABBLE errors.
 *
 * Parameters:
-*    ep : input. ç‰©ç† ep çš„ä¿¡æ¯
+*    ep : input. ÎïÀí ep µÄĞÅÏ¢
 *
 * Return value:
 *    void
@@ -283,7 +283,7 @@ static void sw_hcd_h_tx_flush_fifo(struct sw_hcd_hw_ep *ep)
 	u16  lastcsr = 0;
 	int  retries = 1000;
 
-	/* å¦‚æœæ£€æµ‹åˆ° fifo ä¸ç©ºï¼Œé‚£ä¹ˆå°±åˆ· fifo */
+	/* Èç¹û¼ì²âµ½ fifo ²»¿Õ£¬ÄÇÃ´¾ÍË¢ fifo */
 	csr = USBC_Readw(USBC_REG_TXCSR(usbc_base));
 	while (csr & (1 << USBC_BP_TXCSR_H_FIFO_NOT_EMPTY)) {
 	    if (csr != lastcsr){
@@ -316,8 +316,8 @@ static void sw_hcd_h_tx_flush_fifo(struct sw_hcd_hw_ep *ep)
 *    void
 *
 * Parameters:
-*    hw_ep  :  input.  ç‰©ç† ep çš„ä¿¡æ¯
-*    csr    :  input.  rxçŠ¶æ€å¯„å­˜å™¨çš„å€¼
+*    hw_ep  :  input.  ÎïÀí ep µÄĞÅÏ¢
+*    csr    :  input.  rx×´Ì¬¼Ä´æÆ÷µÄÖµ
 *
 * Return value:
 *    void
@@ -358,7 +358,7 @@ static u16 sw_hcd_h_rx_flush_fifo(struct sw_hcd_hw_ep *hw_ep, u16 csr)
 * sw_hcd must be locked.
 *
 * Parameters:
-*    ep : input. ç‰©ç† ep çš„ä¿¡æ¯
+*    ep : input. ÎïÀí ep µÄĞÅÏ¢
 *
 * Return value:
 *    void
@@ -397,7 +397,7 @@ static inline void sw_hcd_h_tx_start(struct sw_hcd_hw_ep *ep)
 *                     sw_hcd_clean_dma_status
 *
 * Description:
-*    æ¸…ç©ºepå…³äºDMAçš„æ‰€æœ‰çŠ¶æ€, ä¸€èˆ¬åœ¨DMAå¼‚å¸¸çš„æ—¶é—´è°ƒç”¨
+*    Çå¿Õep¹ØÓÚDMAµÄËùÓĞ×´Ì¬, Ò»°ãÔÚDMAÒì³£µÄÊ±¼äµ÷ÓÃ
 *
 * Parameters:
 *    qh  :  input.
@@ -446,7 +446,7 @@ static void sw_hcd_clean_ep_dma_status(struct sw_hcd_qh *qh)
 *              sw_hcd_clean_ep_dma_status_and_flush_fifo
 *
 * Description:
-*    æ¸…ç©ºepå…³äºDMAçš„æ‰€æœ‰çŠ¶æ€, ä¸€èˆ¬åœ¨DMAå¼‚å¸¸çš„æ—¶é—´è°ƒç”¨
+*    Çå¿Õep¹ØÓÚDMAµÄËùÓĞ×´Ì¬, Ò»°ãÔÚDMAÒì³£µÄÊ±¼äµ÷ÓÃ
 *
 * Parameters:
 *    qh  :  input.
@@ -510,7 +510,7 @@ void sw_hcd_clean_ep_dma_status_and_flush_fifo(struct sw_hcd_qh *qh)
 *    void
 *
 * Parameters:
-*    ep : input. ç‰©ç† ep çš„ä¿¡æ¯
+*    ep : input. ÎïÀí ep µÄĞÅÏ¢
 *
 * Return value:
 *    void
@@ -529,7 +529,7 @@ static inline void sw_hcd_h_tx_dma_start(struct sw_hcd_hw_ep *ep, struct sw_hcd_
 	old_ep_index = USBC_GetActiveEp(qh->hw_ep->sw_hcd->sw_hcd_io->usb_bsp_hdle);
 	USBC_SelectActiveEp(qh->hw_ep->sw_hcd->sw_hcd_io->usb_bsp_hdle, qh->hw_ep->epnum);
 
-	/* ä½8ä½, clear timeout, stall error */
+	/* µÍ8Î», clear timeout, stall error */
 	txcsr = USBC_Readb(USBC_REG_TXCSR(usbc_base));
 	txcsr |= USBC_TXCSR_H_WZC_BITS;
 	USBC_Writeb(txcsr, USBC_REG_TXCSR(usbc_base));
@@ -626,9 +626,9 @@ static bool sw_hcd_tx_dma_program(struct sw_hcd_hw_ep *hw_ep,
 * Context: controller locked, irqs blocked
 *
 * Parameters:
-*    sw_hcd   :  input.  USBæ§åˆ¶å™¨
-*    is_in  :  input.  flag. æ˜¯å¦æ˜¯ in epï¼Ÿ
-*    qh     :  output. ep çš„è°ƒåº¦ä¿¡æ¯
+*    sw_hcd   :  input.  USB¿ØÖÆÆ÷
+*    is_in  :  input.  flag. ÊÇ·ñÊÇ in ep£¿
+*    qh     :  output. ep µÄµ÷¶ÈĞÅÏ¢
 *
 * Return value:
 *    void
@@ -684,28 +684,28 @@ static void sw_hcd_start_urb(struct sw_hcd *sw_hcd, int is_in, struct sw_hcd_qh 
 	switch (qh->type) {
 	    case USB_ENDPOINT_XFER_CONTROL:
 	    {
-		/* control transfers always start with SETUP */
-		is_in = 0;
-		hw_ep->out_qh = qh;
-		sw_hcd->ep0_stage = SW_HCD_EP0_START;
-		buf = urb->setup_packet;
-		len = 8;
+    		/* control transfers always start with SETUP */
+    		is_in = 0;
+    		hw_ep->out_qh = qh;
+    		sw_hcd->ep0_stage = SW_HCD_EP0_START;
+    		buf = urb->setup_packet;
+    		len = 8;
 	    }
 	    break;
 
 	    case USB_ENDPOINT_XFER_ISOC:
 	    {
-		qh->iso_idx = 0;
-		qh->frame = 0;
-		offset = urb->iso_frame_desc[0].offset;
-		len = urb->iso_frame_desc[0].length;
+    		qh->iso_idx = 0;
+    		qh->frame = 0;
+    		offset = urb->iso_frame_desc[0].offset;
+    		len = urb->iso_frame_desc[0].length;
 	    }
 		break;
 
 	    default:  /* bulk, interrupt */
-		/* actual_length may be nonzero on retry paths */
-		buf = urb->transfer_buffer + urb->actual_length;
-		len = urb->transfer_buffer_length - urb->actual_length;
+    		/* actual_length may be nonzero on retry paths */
+    		buf = urb->transfer_buffer + urb->actual_length;
+    		len = urb->transfer_buffer_length - urb->actual_length;
 	}
 
 	DMSG_DBG_HCD("sw_hcd_start_urb: qh 0x%p urb %p dev%d ep%d%s%s, epnum %d, %p/%d\n",
@@ -736,45 +736,45 @@ static void sw_hcd_start_urb(struct sw_hcd *sw_hcd, int is_in, struct sw_hcd_qh 
 
     /* determine if the time is right for a periodic transfer */
 	switch (qh->type) {
-	case USB_ENDPOINT_XFER_ISOC:
-	case USB_ENDPOINT_XFER_INT:
-	{
-	    DMSG_DBG_HCD("check whether there's still time for periodic Tx\n");
+    	case USB_ENDPOINT_XFER_ISOC:
+    	case USB_ENDPOINT_XFER_INT:
+    	{
+    	    DMSG_DBG_HCD("check whether there's still time for periodic Tx\n");
 
-	    frame = USBC_Readw(USBC_REG_FRNUM(usbc_base));
+    	    frame = USBC_Readw(USBC_REG_FRNUM(usbc_base));
 
-	    /* FIXME this doesn't implement that scheduling policy ...
-		 * or handle framecounter wrapping
-		 */
-	    if ((urb->transfer_flags & URB_ISO_ASAP)
+    	    /* FIXME this doesn't implement that scheduling policy ...
+    		 * or handle framecounter wrapping
+    		 */
+    	    if ((urb->transfer_flags & URB_ISO_ASAP)
 				|| (frame >= urb->start_frame)) {
-			/* REVISIT the SOF irq handler shouldn't duplicate
-			 * this code; and we don't init urb->start_frame...
-			 */
-			qh->frame = 0;
-			goto start;
-		} else {
-			qh->frame = urb->start_frame;
+    			/* REVISIT the SOF irq handler shouldn't duplicate
+    			 * this code; and we don't init urb->start_frame...
+    			 */
+    			qh->frame = 0;
+    			goto start;
+    		} else {
+    			qh->frame = urb->start_frame;
 
-			/* enable SOF interrupt so we can count down */
-			DMSG_DBG_HCD("SOF for %d\n", epnum);
+    			/* enable SOF interrupt so we can count down */
+    			DMSG_DBG_HCD("SOF for %d\n", epnum);
 
-			USBC_Writeb(0xff, USBC_REG_INTUSBE(usbc_base));
-		}
-	}
+    			USBC_Writeb(0xff, USBC_REG_INTUSBE(usbc_base));
+    		}
+    	}
 		break;
 
         default:
 start:
-		if(is_sw_hcd_dma_capable(sw_hcd->usbc_no, len, qh->maxpacket, epnum)){
-			DMSG_DBG_HCD("Start TX%d %s\n", epnum, "dma");
+    		if(is_sw_hcd_dma_capable(sw_hcd->usbc_no, len, qh->maxpacket, epnum)){
+	    		DMSG_DBG_HCD("Start TX%d %s\n", epnum, "dma");
 
-			sw_hcd_h_tx_dma_start(hw_ep, qh);
-		}else{
-			DMSG_DBG_HCD("Start TX%d %s\n", epnum, "pio");
+    			sw_hcd_h_tx_dma_start(hw_ep, qh);
+    		}else{
+	    		DMSG_DBG_HCD("Start TX%d %s\n", epnum, "pio");
 
-			sw_hcd_h_tx_start(hw_ep);
-		}
+    			sw_hcd_h_tx_start(hw_ep);
+    		}
     }
 
     return;
@@ -788,9 +788,9 @@ start:
 *    caller owns controller lock, irqs are blocked.
 *
 * Parameters:
-*    sw_hcd   :  input.  USB æ§åˆ¶å™¨
-*    urb    :  input.  USB è¯·æ±‚åŒ…
-*    status :  input.  urb çš„çŠ¶æ€
+*    sw_hcd   :  input.  USB ¿ØÖÆÆ÷
+*    urb    :  input.  USB ÇëÇó°ü
+*    status :  input.  urb µÄ×´Ì¬
 *
 * Return value:
 *    void
@@ -836,9 +836,9 @@ __acquires(sw_hcd->lock)
 *    for bulk/interrupt endpoints only
 *
 * Parameters:
-*    ep     :  output. ç‰©ç† ep çš„ä¿¡æ¯
-*    is_in  :  input.  flag. æ˜¯å¦æ˜¯ in epï¼Ÿ
-*    urb    :  input.  USB è¯·æ±‚åŒ…
+*    ep     :  output. ÎïÀí ep µÄĞÅÏ¢
+*    is_in  :  input.  flag. ÊÇ·ñÊÇ in ep£¿
+*    urb    :  input.  USB ÇëÇó°ü
 *
 * Return value:
 *    void
@@ -893,9 +893,9 @@ static inline void sw_hcd_save_toggle(struct sw_hcd_hw_ep *ep, int is_in, struct
 *    caller owns controller lock, irqs are blocked.
 *
 * Parameters:
-*    qh     :  input. ep çš„è°ƒåº¦ä¿¡æ¯
-*    urb    :  input.  USB è¯·æ±‚åŒ…
-*    status :  input.  urb çš„çŠ¶æ€
+*    qh     :  input. ep µÄµ÷¶ÈĞÅÏ¢
+*    urb    :  input.  USB ÇëÇó°ü
+*    status :  input.  urb µÄ×´Ì¬
 *
 * Return value:
 *    void
@@ -931,15 +931,15 @@ static struct sw_hcd_qh *sw_hcd_giveback(struct sw_hcd_qh *qh, struct urb *urb, 
 
 	/* save toggle eagerly, for paranoia */
 	switch (qh->type) {
-	case USB_ENDPOINT_XFER_BULK:
-	case USB_ENDPOINT_XFER_INT:
-		sw_hcd_save_toggle(ep, is_in, urb);
+    	case USB_ENDPOINT_XFER_BULK:
+    	case USB_ENDPOINT_XFER_INT:
+    		sw_hcd_save_toggle(ep, is_in, urb);
         break;
 
-	case USB_ENDPOINT_XFER_ISOC:
-		if(status == 0 && urb->error_count){
-			status = -EXDEV;
-		}
+    	case USB_ENDPOINT_XFER_ISOC:
+    		if(status == 0 && urb->error_count){
+    			status = -EXDEV;
+    		}
         break;
 
         default:
@@ -973,30 +973,30 @@ static struct sw_hcd_qh *sw_hcd_giveback(struct sw_hcd_qh *qh, struct urb *urb, 
 		qh->hep->hcpriv = NULL;
 
         switch (qh->type) {
-		case USB_ENDPOINT_XFER_CONTROL:
-		case USB_ENDPOINT_XFER_BULK:
-		    /* fifo policy for these lists, except that NAKing
-			 * should rotate a qh to the end (for fairness).
-			 */
-		    if (qh->mux == 1) {
-				head = qh->ring.prev;
-				list_del(&qh->ring);
-				kfree(qh);
-				qh = first_qh(head);
-			}else{
-				kfree(qh);
-				qh = NULL;
-			}
-		break;
+    		case USB_ENDPOINT_XFER_CONTROL:
+    		case USB_ENDPOINT_XFER_BULK:
+    		    /* fifo policy for these lists, except that NAKing
+    			 * should rotate a qh to the end (for fairness).
+    			 */
+    		    if (qh->mux == 1) {
+    				head = qh->ring.prev;
+    				list_del(&qh->ring);
+    				kfree(qh);
+    				qh = first_qh(head);
+    			}else{
+    				kfree(qh);
+    				qh = NULL;
+    			}
+    		break;
 
-		case USB_ENDPOINT_XFER_ISOC:
+    		case USB_ENDPOINT_XFER_ISOC:
 		    case USB_ENDPOINT_XFER_INT:
-			/* this is where periodic bandwidth should be
-			 * de-allocated if it's tracked and allocated;
-			 * and where we'd update the schedule tree...
-			 */
-			kfree(qh);
-			qh = NULL;
+    			/* this is where periodic bandwidth should be
+    			 * de-allocated if it's tracked and allocated;
+    			 * and where we'd update the schedule tree...
+    			 */
+    			kfree(qh);
+    			qh = NULL;
 			break;
         }
     }
@@ -1012,10 +1012,10 @@ static struct sw_hcd_qh *sw_hcd_giveback(struct sw_hcd_qh *qh, struct urb *urb, 
 *    void
 *
 * Parameters:
-*    sw_hcd   :  input.  USBæ§åˆ¶å™¨
-*    urb    :  input.  USB è¯·æ±‚åŒ…
-*    hw_ep  :  input.  ç‰©ç† ep çš„ä¿¡æ¯
-*    is_in  :  input.  flag. æ˜¯å¦æ˜¯ in epï¼Ÿ
+*    sw_hcd   :  input.  USB¿ØÖÆÆ÷
+*    urb    :  input.  USB ÇëÇó°ü
+*    hw_ep  :  input.  ÎïÀí ep µÄĞÅÏ¢
+*    is_in  :  input.  flag. ÊÇ·ñÊÇ in ep£¿
 *
 * Return value:
 *    void
@@ -1072,8 +1072,8 @@ static void sw_hcd_advance_schedule(struct sw_hcd *sw_hcd,
 *    void
 *
 * Parameters:
-*    sw_hcd       :  input.  USBæ§åˆ¶å™¨
-*    urb        :  input.  USB è¯·æ±‚åŒ…
+*    sw_hcd       :  input.  USB¿ØÖÆÆ÷
+*    urb        :  input.  USB ÇëÇó°ü
 *    epnum      :  input.  ep index
 *    iso_err    :  input.  flag. is iso error?
 *
@@ -1211,9 +1211,9 @@ static bool sw_hcd_host_packet_rx(struct sw_hcd *sw_hcd, struct urb *urb, u8 epn
 *    void
 *
 * Parameters:
-*    sw_hcd	:  input.  USBæ§åˆ¶å™¨
-*    qh    	:  input.  ep çš„è°ƒåº¦ä¿¡æ¯
-*    ep     :  input.  ç‰©ç† ep çš„ä¿¡æ¯
+*    sw_hcd	:  input.  USB¿ØÖÆÆ÷
+*    qh    	:  input.  ep µÄµ÷¶ÈĞÅÏ¢
+*    ep     :  input.  ÎïÀí ep µÄĞÅÏ¢
 *
 * Return value:
 *    void
@@ -1357,11 +1357,11 @@ static void sw_hcd_ep_program(struct sw_hcd *sw_hcd,
 
 	DMSG_DBG_HCD("sw_hcd_ep_program: %s hw%d urb %p spd%d dev%d ep%d%s "
 				"h_addr%02x h_port%02x bytes %d\n",
-			is_out ? "-->" : "<--",
-			epnum, urb, urb->dev->speed,
-			qh->addr_reg, qh->epnum, is_out ? "out" : "in",
-			qh->h_addr_reg, qh->h_port_reg,
-			len);
+    			is_out ? "-->" : "<--",
+    			epnum, urb, urb->dev->speed,
+    			qh->addr_reg, qh->epnum, is_out ? "out" : "in",
+    			qh->h_addr_reg, qh->h_port_reg,
+    			len);
 
     old_ep_index = USBC_GetActiveEp(sw_hcd->sw_hcd_io->usb_bsp_hdle);
     sw_hcd_ep_select(usbc_base, epnum);
@@ -1579,67 +1579,67 @@ static bool sw_hcd_h_ep0_continue(struct sw_hcd *sw_hcd, u16 len, struct urb *ur
     switch (sw_hcd->ep0_stage) {
 	    case SW_HCD_EP0_IN:
         {
-		fifo_dest  = urb->transfer_buffer + urb->actual_length;
-		fifo_count = min_t(size_t, len, urb->transfer_buffer_length - urb->actual_length);
-		if (fifo_count < len){
-			urb->status = -EOVERFLOW;
+    		fifo_dest  = urb->transfer_buffer + urb->actual_length;
+    		fifo_count = min_t(size_t, len, urb->transfer_buffer_length - urb->actual_length);
+    		if (fifo_count < len){
+    			urb->status = -EOVERFLOW;
             }
 
-		sw_hcd_read_fifo(hw_ep, fifo_count, fifo_dest);
+    		sw_hcd_read_fifo(hw_ep, fifo_count, fifo_dest);
 
-		urb->actual_length += fifo_count;
-		if (len < qh->maxpacket) {
-			/* always terminate on short read; it's
-			 * rarely reported as an error.
-			 */
-			USBC_Host_ReadDataStatus(sw_hcd->sw_hcd_io->usb_bsp_hdle, USBC_EP_TYPE_EP0, 1);
-		} else if (urb->actual_length < urb->transfer_buffer_length){
-			more = true;
-			USBC_Host_ReadDataStatus(sw_hcd->sw_hcd_io->usb_bsp_hdle, USBC_EP_TYPE_EP0, 0);
-		}
+    		urb->actual_length += fifo_count;
+    		if (len < qh->maxpacket) {
+    			/* always terminate on short read; it's
+    			 * rarely reported as an error.
+    			 */
+    			USBC_Host_ReadDataStatus(sw_hcd->sw_hcd_io->usb_bsp_hdle, USBC_EP_TYPE_EP0, 1);
+    		} else if (urb->actual_length < urb->transfer_buffer_length){
+    			more = true;
+    			USBC_Host_ReadDataStatus(sw_hcd->sw_hcd_io->usb_bsp_hdle, USBC_EP_TYPE_EP0, 0);
+    		}
 		}
 		break;
 
 	    case SW_HCD_EP0_START:
-		request = (struct usb_ctrlrequest *) urb->setup_packet;
+    		request = (struct usb_ctrlrequest *) urb->setup_packet;
 
-		if (!request->wLength) {
-			DMSG_DBG_HCD("start no-DATA\n");
+    		if (!request->wLength) {
+    			DMSG_DBG_HCD("start no-DATA\n");
 
-			break;
-		} else if (request->bRequestType & USB_DIR_IN) {
-			DMSG_DBG_HCD("start IN-DATA\n");
+    			break;
+    		} else if (request->bRequestType & USB_DIR_IN) {
+    			DMSG_DBG_HCD("start IN-DATA\n");
 
-			sw_hcd->ep0_stage = SW_HCD_EP0_IN;
-			more = true;
-			break;
-		} else {
-			DMSG_DBG_HCD("start OUT-DATA\n");
+    			sw_hcd->ep0_stage = SW_HCD_EP0_IN;
+    			more = true;
+    			break;
+    		} else {
+    			DMSG_DBG_HCD("start OUT-DATA\n");
 
-			sw_hcd->ep0_stage = SW_HCD_EP0_OUT;
-			more = true;
-		}
+    			sw_hcd->ep0_stage = SW_HCD_EP0_OUT;
+    			more = true;
+    		}
 		/* FALLTHROUGH */
 	    case SW_HCD_EP0_OUT:
-		fifo_count = min_t(size_t, qh->maxpacket, urb->transfer_buffer_length - urb->actual_length);
+    		fifo_count = min_t(size_t, qh->maxpacket, urb->transfer_buffer_length - urb->actual_length);
 
 			DMSG_DBG_HCD("Sending %d byte to ep0 fifo, urb(0x%p, %d, %d)\n",
 						fifo_count,
 						urb, urb->transfer_buffer_length, urb->actual_length);
 
-		if (fifo_count) {
-			fifo_dest = (u8 *) (urb->transfer_buffer + urb->actual_length);
+    		if (fifo_count) {
+    			fifo_dest = (u8 *) (urb->transfer_buffer + urb->actual_length);
 
-			sw_hcd_write_fifo(hw_ep, fifo_count, fifo_dest);
+    			sw_hcd_write_fifo(hw_ep, fifo_count, fifo_dest);
 
-			urb->actual_length += fifo_count;
-			more = true;
-		}
+    			urb->actual_length += fifo_count;
+    			more = true;
+    		}
 		break;
 
-	default:
-		DMSG_PANIC("ERR: bogus ep0 stage %d\n", sw_hcd->ep0_stage);
-		break;
+    	default:
+    		DMSG_PANIC("ERR: bogus ep0 stage %d\n", sw_hcd->ep0_stage);
+    		break;
     }
 
     return more;
@@ -1654,7 +1654,7 @@ static bool sw_hcd_h_ep0_continue(struct sw_hcd *sw_hcd, u16 len, struct urb *ur
 * from sw_hcd_interrupt().
 *
 * Parameters:
-*    sw_hcd   :  input.  USB æ§åˆ¶å™¨
+*    sw_hcd   :  input.  USB ¿ØÖÆÆ÷
 *
 * Return value:
 *    void
@@ -1818,7 +1818,7 @@ EXPORT_SYMBOL(sw_hcd_h_ep0_irq);
 *    Service a Tx-Available or dma completion irq for the endpoint
 *
 * Parameters:
-*    sw_hcd   :  input.  USB æ§åˆ¶å™¨
+*    sw_hcd   :  input.  USB ¿ØÖÆÆ÷
 *    epnum  :  input.  ep index
 *
 * Return value:
@@ -1951,10 +1951,10 @@ void sw_hcd_host_tx(struct sw_hcd *sw_hcd, u8 epnum)
 
 	if (is_sw_hcd_dma_capable(sw_hcd->usbc_no, qh->segsize, qh->maxpacket, epnum)
 		&& !status) {
-		/* dmaä¸­æ–­äº§ç”Ÿä»¥åï¼ŒUSBè®¾å¤‡ä¸ä¼šé©¬ä¸Šå–èµ°FIFOä¸­çš„æ•°æ®,
-		 * è¿™é‡Œæ£€æµ‹TX_READYï¼Œä¸€ç›´åˆ°æ•°æ®è¢«å–èµ°ä¸ºæ­¢ã€‚
+		/* dmaÖĞ¶Ï²úÉúÒÔºó£¬USBÉè±¸²»»áÂíÉÏÈ¡×ßFIFOÖĞµÄÊı¾İ,
+		 * ÕâÀï¼ì²âTX_READY£¬Ò»Ö±µ½Êı¾İ±»È¡×ßÎªÖ¹¡£
 		 *
-		 * æ­£å¸¸æƒ…å†µä¸‹, dmaä¼ è¾“æ•°æ®å®Œæˆä»¥å, ä¼šcallback, ä¸ä¼šç›´æ¥returnã€‚
+		 * Õı³£Çé¿öÏÂ, dma´«ÊäÊı¾İÍê³ÉÒÔºó, »ácallback, ²»»áÖ±½Óreturn¡£
 		 */
 		if (tx_csr & ((1 << USBC_BP_TXCSR_H_FIFO_NOT_EMPTY) | (1 << USBC_BP_TXCSR_H_TX_READY))) {
 			__u32 cmt = 0xfff;
@@ -1998,8 +1998,8 @@ void sw_hcd_host_tx(struct sw_hcd *sw_hcd, u8 epnum)
 		if (tx_csr & ((1 << USBC_BP_TXCSR_H_FIFO_NOT_EMPTY) | (1 << USBC_BP_TXCSR_H_TX_READY))) {
 			DMSG_ERR("ERR: sw_hcd_host_tx, DMA complete but packet still in FIFO, "
 					 "CSR(%04x), RP_Count(%d), qh(0x%p), urb(0x%p, %d, %d)\n",
-					 tx_csr, USBC_Readw(USBC_REG_RPCOUNTx(usbc_base, hw_ep->epnum)),
-					 qh, urb, urb->transfer_buffer_length, urb->actual_length);
+				  	 tx_csr, USBC_Readw(USBC_REG_RPCOUNTx(usbc_base, hw_ep->epnum)),
+				  	 qh, urb, urb->transfer_buffer_length, urb->actual_length);
 
 			return;
 		}
@@ -2385,10 +2385,10 @@ void sw_hcd_host_rx(struct sw_hcd *sw_hcd, u8 epnum)
 	if (is_sw_hcd_dma_capable(sw_hcd->usbc_no, qh->segsize, qh->maxpacket, epnum) && (rx_csr & (1 << USBC_BP_RXCSR_H_DMA_REQ_EN))) {
 		/* during dma, if usb receive short packet, then rx irq come */
 
-		/* æŸ¥è¯¢å½“å‰DMAä¼ è¾“çš„å­—èŠ‚æ•° */
+		/* ²éÑ¯µ±Ç°DMA´«ÊäµÄ×Ö½ÚÊı */
 		xfer_len = sw_hcd_dma_transmit_length(qh, is_direction_in(qh), (urb->transfer_dma + urb->actual_length));
 
-		/* åœæ­¢DMAä¼ è¾“ */
+		/* Í£Ö¹DMA´«Êä */
 		if(sw_hcd_dma_is_busy(qh)){
 			DMSG_WRN("WRN: during dma phase, rx irq come\n");
 			sw_hcd_dma_stop(qh);
@@ -2461,10 +2461,10 @@ void sw_hcd_host_rx(struct sw_hcd *sw_hcd, u8 epnum)
 			rx_count = USBC_Readw(USBC_REG_RXCOUNT(usbc_base));
 
 			DMSG_DBG_DMA("ERR: sw_hcd_host_rx, RX%d count %d, buffer 0x%x len %d/%d\n",
-					epnum, rx_count,
-					urb->transfer_dma + urb->actual_length,
-					qh->offset,
-					urb->transfer_buffer_length);
+    					epnum, rx_count,
+    					urb->transfer_dma + urb->actual_length,
+    					qh->offset,
+    					urb->transfer_buffer_length);
 
 			if (usb_pipeisoc(pipe)) {
 				int status = 0;
@@ -2553,7 +2553,7 @@ void sw_hcd_host_rx(struct sw_hcd *sw_hcd, u8 epnum)
 		    sw_hcd_dma_set_config(qh, buf, length);
 			sw_hcd_dma_start(qh, (u32)hw_ep->fifo, buf, length);
 
-			DMSG_DBG_DMA("RXCSR%d := %04x\n", epnum, val);
+ 			DMSG_DBG_DMA("RXCSR%d := %04x\n", epnum, val);
        }
 
         if (!is_sw_hcd_dma_capable(sw_hcd->usbc_no, qh->segsize, qh->maxpacket, epnum)) {
@@ -2804,7 +2804,7 @@ int sw_hcd_urb_enqueue(struct usb_hcd *hcd, struct urb *urb, gfp_t mem_flags)
 	    DMSG_WRN("ERR: sw_hcd_urb_enqueue, qh(0x%p) is not null, ret(%d)\n", qh, ret);
 
 		if(qh){
-		DMSG_WRN("ERR: sw_hcd_urb_enqueue, qh(0x%p, %d, %d) is not null\n",
+	    	DMSG_WRN("ERR: sw_hcd_urb_enqueue, qh(0x%p, %d, %d) is not null\n",
 				       qh, qh->epnum, qh->type);
 		}
 
@@ -2848,52 +2848,52 @@ int sw_hcd_urb_enqueue(struct usb_hcd *hcd, struct urb *urb, gfp_t mem_flags)
 	/* precompute rxtype/txtype/type0 register */
 	type_reg = (qh->type << 4) | qh->epnum;
 	switch (urb->dev->speed) {
-	case USB_SPEED_LOW:
-		type_reg |= 0xc0;
-	break;
+    	case USB_SPEED_LOW:
+    		type_reg |= 0xc0;
+    	break;
 
-	case USB_SPEED_FULL:
-		type_reg |= 0x80;
-	break;
+    	case USB_SPEED_FULL:
+    		type_reg |= 0x80;
+    	break;
 
-	default:
-		type_reg |= 0x40;
+    	default:
+    		type_reg |= 0x40;
 	}
 	qh->type_reg = type_reg;
 
 	/* Precompute RXINTERVAL/TXINTERVAL register */
 	switch (qh->type) {
 	    case USB_ENDPOINT_XFER_INT:
-		/*
-		 * Full/low speeds use the  linear encoding,
-		 * high speed uses the logarithmic encoding.
-		 */
-		if (urb->dev->speed <= USB_SPEED_FULL) {
-			interval = max_t(u8, epd->bInterval, 1);
-			break;
-		}
+    		/*
+    		 * Full/low speeds use the  linear encoding,
+    		 * high speed uses the logarithmic encoding.
+    		 */
+    		if (urb->dev->speed <= USB_SPEED_FULL) {
+    			interval = max_t(u8, epd->bInterval, 1);
+    			break;
+    		}
 		/* FALLTHROUGH */
 	    case USB_ENDPOINT_XFER_ISOC:
-		/* ISO always uses logarithmic encoding */
-		interval = min_t(u8, epd->bInterval, 16);
+    		/* ISO always uses logarithmic encoding */
+    		interval = min_t(u8, epd->bInterval, 16);
 		break;
 
-	default:
-		/* REVISIT we actually want to use NAK limits, hinting to the
-		 * transfer scheduling logic to try some other qh, e.g. try
-		 * for 2 msec first:
-		 *
-		 * interval = (USB_SPEED_HIGH == urb->dev->speed) ? 16 : 2;
-		 *
-		 * The downside of disabling this is that transfer scheduling
-		 * gets VERY unfair for nonperiodic transfers; a misbehaving
-		 * peripheral could make that hurt.  That's perfectly normal
-		 * for reads from network or serial adapters ... so we have
-		 * partial NAKlimit support for bulk RX.
-		 *
-		 * The upside of disabling it is simpler transfer scheduling.
-		 */
-		interval = 0;
+    	default:
+    		/* REVISIT we actually want to use NAK limits, hinting to the
+    		 * transfer scheduling logic to try some other qh, e.g. try
+    		 * for 2 msec first:
+    		 *
+    		 * interval = (USB_SPEED_HIGH == urb->dev->speed) ? 16 : 2;
+    		 *
+    		 * The downside of disabling this is that transfer scheduling
+    		 * gets VERY unfair for nonperiodic transfers; a misbehaving
+    		 * peripheral could make that hurt.  That's perfectly normal
+    		 * for reads from network or serial adapters ... so we have
+    		 * partial NAKlimit support for bulk RX.
+    		 *
+    		 * The upside of disabling it is simpler transfer scheduling.
+    		 */
+    		interval = 0;
 	}
 	qh->intv_reg = interval;
 
@@ -3093,11 +3093,11 @@ int sw_hcd_urb_dequeue(struct usb_hcd *hcd, struct urb *urb, int status)
 
 	DMSG_INFO("[sw_hcd]: sw_hcd_urb_dequeue, sw_hcd(%p, 0x%d, 0x%x),"
 		      "urb(%p, %d, %d), dev = %d, ep = %d, dir = %s\n",
-				sw_hcd, sw_hcd->ep0_stage, sw_hcd->epmask,
-				urb, urb->transfer_buffer_length, urb->actual_length,
-				usb_pipedevice(urb->pipe),
-				usb_pipeendpoint(urb->pipe),
-				usb_pipein(urb->pipe) ? "in" : "out");
+		      		sw_hcd, sw_hcd->ep0_stage, sw_hcd->epmask,
+		         	urb, urb->transfer_buffer_length, urb->actual_length,
+        			usb_pipedevice(urb->pipe),
+        			usb_pipeendpoint(urb->pipe),
+        			usb_pipein(urb->pipe) ? "in" : "out");
 
 	ret = usb_hcd_check_unlink_urb(hcd, urb, status);
 	if (ret){
@@ -3139,16 +3139,16 @@ int sw_hcd_urb_dequeue(struct usb_hcd *hcd, struct urb *urb, int status)
 			}
             break;
 
-		default:
-		    DMSG_PANIC("ERR: not support type(%d)\n", qh->type);
+    		default:
+    		    DMSG_PANIC("ERR: not support type(%d)\n", qh->type);
 
-			/* REVISIT when we get a schedule tree, periodic
-			 * transfers won't always be at the head of a
-			 * singleton queue...
-			 */
-			sched = NULL;
+    			/* REVISIT when we get a schedule tree, periodic
+    			 * transfers won't always be at the head of a
+    			 * singleton queue...
+    			 */
+    			sched = NULL;
 
-			break;
+    			break;
 		}
 	}
 
@@ -3234,23 +3234,23 @@ void sw_hcd_h_disable(struct usb_hcd *hcd, struct usb_host_endpoint *hep)
 		break;
 
 	    case USB_ENDPOINT_XFER_BULK:
-		if (qh->mux == 1) {
-			if (is_in)
-				sched = &sw_hcd->in_bulk;
-			else
-				sched = &sw_hcd->out_bulk;
+    		if (qh->mux == 1) {
+    			if (is_in)
+    				sched = &sw_hcd->in_bulk;
+    			else
+    				sched = &sw_hcd->out_bulk;
 
-		}
+    		}
 		break;
 
-	default:
-	    DMSG_PANIC("ERR: not support type(%d)\n", qh->type);
+    	default:
+    	    DMSG_PANIC("ERR: not support type(%d)\n", qh->type);
 
-		/* REVISIT when we get a schedule tree, periodic transfers
-		 * won't always be at the head of a singleton queue...
-		 */
-		sched = NULL;
-		break;
+    		/* REVISIT when we get a schedule tree, periodic transfers
+    		 * won't always be at the head of a singleton queue...
+    		 */
+    		sched = NULL;
+    		break;
 	}
 
 	/* NOTE:  qh is invalid unless !list_empty(&hep->urb_list) */
@@ -3454,3 +3454,18 @@ int sw_hcd_bus_resume(struct usb_hcd *hcd)
 	return 0;
 }
 EXPORT_SYMBOL(sw_hcd_bus_resume);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

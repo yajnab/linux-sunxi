@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="abtfilt_utils.c" company="Atheros">
 //    Copyright (c) 2008 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -183,7 +183,7 @@ int dump_console = 0;
 
 void A_DBG_SET_OUTPUT_TO_CONSOLE(void)
 {
-    dump_console = 1;
+    dump_console = 1;    
 }
 
 
@@ -202,10 +202,10 @@ A_DBG_INIT(const char *ident, const char *message, ...)
 static void dump_to_console(const char *format, va_list args)
 {
     char buffer[384];
-
+    
     vsprintf(buffer,format,args);
-    printf("%s", buffer);
-
+    printf("%s", buffer);    
+    
 }
 
 INLINE void
@@ -222,7 +222,7 @@ A_DEBUG(const char *format, ...)
     } else {
         A_VSYSLOG(A_LOG_DEBUG, format, ap);
     }
-
+    
     va_end(ap);
 }
 
@@ -268,7 +268,7 @@ A_DBG_DEINIT(void)
     closelog();
 }
 
-void
+void 
 A_DUMP_BUFFER(A_UCHAR *buffer, int length, char *pDescription)
 {
     A_CHAR    stream[60];
@@ -276,9 +276,9 @@ A_DUMP_BUFFER(A_UCHAR *buffer, int length, char *pDescription)
     int       offset, count;
 
     if (!debug_enabled) {
-        return;
+        return;    
     }
-
+    
     A_DEBUG("<---------Dumping %d Bytes : %s ------>\n", length, pDescription);
 
     count = 0;
@@ -299,7 +299,7 @@ A_DUMP_BUFFER(A_UCHAR *buffer, int length, char *pDescription)
     if (offset != 0) {
         A_DEBUG("[H]: %s\n", stream);
     }
-
+    
     A_DEBUG("<------------------------------------------------->\n");
 }
 #endif /* ABF_DEBUG */

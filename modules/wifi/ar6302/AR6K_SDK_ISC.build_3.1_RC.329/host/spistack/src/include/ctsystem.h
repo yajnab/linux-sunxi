@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="ctsystem.h" company="Atheros">
 //    Copyright (c) 2007-2008 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -35,14 +35,14 @@
 #define SDIO_STATUS_DEVICE_NOT_FOUND   -4
 #define SDIO_STATUS_DEVICE_ERROR       -5
 #define SDIO_STATUS_INTERRUPTED        -6
-#define SDIO_STATUS_NO_RESOURCES       -7
-#define SDIO_STATUS_CANCELED           -8
+#define SDIO_STATUS_NO_RESOURCES       -7  
+#define SDIO_STATUS_CANCELED           -8  
 #define SDIO_STATUS_BUFFER_TOO_SMALL   -9
 #define SDIO_STATUS_NO_MORE_MESSAGES   -10
 #define SDIO_STATUS_IO_TIMEOUT         -11
 #define SDIO_STATUS_BUS_READ_ERROR     -22   /* readfailed */
 #define SDIO_STATUS_BUS_WRITE_ERROR    -23   /* write failed */
-#define SDIO_STATUS_SDREQ_QUEUE_FAILED   -34 /* request failed to insert into queue */
+#define SDIO_STATUS_SDREQ_QUEUE_FAILED   -34 /* request failed to insert into queue */ 
 #define SDIO_STATUS_UNSUPPORTED          -36  /* not supported  */
 
 #ifdef VXWORKS
@@ -85,10 +85,10 @@
 #define CONTAINING_STRUCT(address, struct_type, field_name)\
             ((struct_type *)((ULONG_PTR)(address) - (ULONG_PTR)(&((struct_type *)0)->field_name)))
 
-#define ZERO_OBJECT(obj) memset(&(obj),0,sizeof(obj))
-#define ZERO_POBJECT(pObj) memset((pObj),0,sizeof(*(pObj)))
-
-
+#define ZERO_OBJECT(obj) memset(&(obj),0,sizeof(obj))    
+#define ZERO_POBJECT(pObj) memset((pObj),0,sizeof(*(pObj)))  
+    
+    
 /* bit field support functions */
 static INLINE void SetBit(PULONG pField, UINT position) {
     *pField |= 1 << position;
@@ -104,7 +104,7 @@ static INLINE INT FirstClearBit(PULONG pField) {
     for(ii = 0; ii < sizeof(ULONG)*8; ii++) {
         if (!IsBitSet(pField, ii)) {
             return ii;
-        }
+        }  
     }
     /* no clear bits found */
     return -1;

@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // Copyright (c) 2009-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -364,7 +364,7 @@ static A_STATUS AR3KEnableTLPM(AR3K_CONFIG_INFO *pConfig)
                                0x1};
     A_UINT8   *pEvent = NULL;
     A_UINT8   *pBufferToFree = NULL;
-
+    
     if (0 != pConfig->IdleTimeout) {
         A_UINT8 idle_lsb = pConfig->IdleTimeout & 0xFF;
         A_UINT8 idle_msb = (pConfig->IdleTimeout & 0xFF00) >> 8;
@@ -382,13 +382,13 @@ static A_STATUS AR3KEnableTLPM(AR3K_CONFIG_INFO *pConfig)
                                                &pEvent,
                                                &pBufferToFree);
     if (pBufferToFree != NULL) {
-        A_FREE(pBufferToFree);
+        A_FREE(pBufferToFree);    
     }
     if (A_FAILED(status)) {
-        AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("HostWakeup Config Failed! \n"));
+        AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("HostWakeup Config Failed! \n"));    
         return status;
     }
-
+    
     pEvent = NULL;
     pBufferToFree = NULL;
     status = SendHCICommandWaitCommandComplete(pConfig,
@@ -397,10 +397,10 @@ static A_STATUS AR3KEnableTLPM(AR3K_CONFIG_INFO *pConfig)
                                                &pEvent,
                                                &pBufferToFree);
     if (pBufferToFree != NULL) {
-        A_FREE(pBufferToFree);
+        A_FREE(pBufferToFree);    
     }
     if (A_FAILED(status)) {
-        AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Target Wakeup Config Failed! \n"));
+        AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Target Wakeup Config Failed! \n"));    
         return status;
     }
 
@@ -412,10 +412,10 @@ static A_STATUS AR3KEnableTLPM(AR3K_CONFIG_INFO *pConfig)
                                                &pEvent,
                                                &pBufferToFree);
     if (pBufferToFree != NULL) {
-        A_FREE(pBufferToFree);
+        A_FREE(pBufferToFree);    
     }
     if (A_FAILED(status)) {
-        AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("HostWakeup Enable Failed! \n"));
+        AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("HostWakeup Enable Failed! \n"));    
         return status;
     }
 
@@ -427,10 +427,10 @@ static A_STATUS AR3KEnableTLPM(AR3K_CONFIG_INFO *pConfig)
                                                &pEvent,
                                                &pBufferToFree);
     if (pBufferToFree != NULL) {
-        A_FREE(pBufferToFree);
+        A_FREE(pBufferToFree);    
     }
     if (A_FAILED(status)) {
-        AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Target Wakeup Enable Failed! \n"));
+        AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Target Wakeup Enable Failed! \n"));    
         return status;
     }
 
@@ -442,15 +442,15 @@ static A_STATUS AR3KEnableTLPM(AR3K_CONFIG_INFO *pConfig)
                                                &pEvent,
                                                &pBufferToFree);
     if (pBufferToFree != NULL) {
-        A_FREE(pBufferToFree);
+        A_FREE(pBufferToFree);    
     }
     if (A_FAILED(status)) {
-        AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Sleep Enable Failed! \n"));
+        AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Sleep Enable Failed! \n"));    
     }
-
+    
     AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("AR3K Config: Enable TLPM Completed (status = %d) \n",status));
 
-    return status;
+    return status;                                              
 }
 
 A_STATUS AR3KConfigure(AR3K_CONFIG_INFO *pConfig)
@@ -500,7 +500,7 @@ A_STATUS AR3KConfigure(AR3K_CONFIG_INFO *pConfig)
             A_MDELAY(200);
             AR3KEnableTLPM(pConfig);
         }
-
+               
         if (pConfig->Flags &
                 (AR3K_CONFIG_FLAG_SET_AR3K_BAUD | AR3K_CONFIG_FLAG_SET_AR6K_SCALE_STEP)) {
             status = AR3KConfigureHCIBaud(pConfig);
@@ -566,3 +566,4 @@ A_STATUS AR3KConfigureExit(void *config)
 
     return status;
 }
+

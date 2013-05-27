@@ -1,9 +1,9 @@
 /*
  * Copyright (C) 2011-2012 ARM Limited. All rights reserved.
- *
+ * 
  * This program is free software and is provided to you under the terms of the GNU General Public License version 2
  * as published by the Free Software Foundation, and any use by you of this program is subject to the terms of such GNU licence.
- *
+ * 
  * A copy of the licence is included with the program, and can also be obtained from Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
@@ -16,9 +16,9 @@
 #include <base/mali_dependency_system.h>
 
 /**
- * This file provides a structure holding all information about the PLBU heap.
+ * This file provides a structure holding all information about the PLBU heap.  
  *
- * In its simplest form, the PLBU heap is simply a memory block.
+ * In its simplest form, the PLBU heap is simply a memory block. 
  *
  */
 
@@ -36,10 +36,10 @@ struct mali_plbuheap
 };
 
 /**
- * Allocate a new PLBU heap.
- * The heap will be allocated holding MALI_PLBUHEAP_SIZE_INIT number of bytes.
+ * Allocate a new PLBU heap. 
+ * The heap will be allocated holding MALI_PLBUHEAP_SIZE_INIT number of bytes. 
  *
- * @param base_ctx            The current base context
+ * @param base_ctx            The current base context 
  * @param owner               for frame_builder
  * @param bHwLimitation       set when it is only for the hw limitation case
  * @return                    A new PLBU heap object
@@ -48,18 +48,18 @@ MALI_CHECK_RESULT mali_plbuheap* _mali_plbuheap_alloc( mali_base_ctx_handle base
 
 /**
  * Free an allocated PLBU heap
- * This function will assert that the usecount is 0 when freeing.
+ * This function will assert that the usecount is 0 when freeing. 
  *
- * This function will free the heap object unquestionably.
+ * This function will free the heap object unquestionably. 
  *
- * @param heap     The heap to free
+ * @param heap     The heap to free  
  */
 void _mali_plbuheap_free( mali_plbuheap* heap );
 
 /**
  * Add the use_count when heap is in use.
  *
- * @param heap     The heap used
+ * @param heap     The heap used 
 */
 void _mali_plbuheap_add_usecount(mali_plbuheap* heap);
 
@@ -71,3 +71,4 @@ void _mali_plbuheap_add_usecount(mali_plbuheap* heap);
 void _mali_plbuheap_dec_usecount(mali_plbuheap* heap);
 
 #endif /* _M200_PLBUHEAP_H_ */
+

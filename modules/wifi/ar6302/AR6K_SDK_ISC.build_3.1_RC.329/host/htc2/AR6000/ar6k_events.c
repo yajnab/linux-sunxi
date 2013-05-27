@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="ar6k_events.c" company="Atheros">
 //    Copyright (c) 2007-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -50,12 +50,12 @@ A_STATUS DevRWCompletionHandler(void *context, A_STATUS status)
                 ("+DevRWCompletionHandler (Pkt:0x%lX) , Status: %d \n",
                 (unsigned long)pPacket,
                 status));
-
+                
     COMPLETE_HTC_PACKET(pPacket,status);
 
     AR_DEBUG_PRINTF(ATH_DEBUG_RECV,
                 ("-DevRWCompletionHandler\n"));
-
+                
     return A_OK;
 }
 
@@ -253,7 +253,7 @@ static A_STATUS DevServiceDebugInterrupt(AR6K_DEVICE *pDev)
     if (pDev->TargetFailureCallback != NULL) {
         pDev->TargetFailureCallback(pDev->HTCContext);
     }
-
+    
     if (pDev->GMboxEnabled) {
         DevNotifyGMboxTargetFailure(pDev);
     }
@@ -287,7 +287,7 @@ static A_STATUS DevServiceCounterInterrupt(AR6K_DEVICE *pDev)
 
         /* Check if the debug interrupt is pending
          * NOTE: other modules like GMBOX may use the counter interrupt for
-         * credit flow control on other counters, we only need to check for the debug assertion
+         * credit flow control on other counters, we only need to check for the debug assertion 
          * counter interrupt */
     if (counter_int_status & AR6K_TARGET_DEBUG_INTR_MASK) {
         return DevServiceDebugInterrupt(pDev);
@@ -361,18 +361,18 @@ static void DevGetEventAsyncHandler(void *Context, HTC_PACKET *pPacket)
         } else {
             int      fetched = 0;
             A_STATUS status;
-
+            
             AR_DEBUG_PRINTF(ATH_DEBUG_IRQ,
                     (" DevGetEventAsyncHandler : detected another message, lookahead :0x%X \n",
                     lookAhead));
                 /* lookahead is non-zero and there are no other interrupts to service,
                  * go get the next message */
             status = pDev->MessagePendingCallback(pDev->HTCContext, &lookAhead, 1, NULL, &fetched);
-
+            
             if (A_SUCCESS(status) && !fetched) {
-                    /* HTC layer could not pull out messages due to lack of resources, stop IRQ processing */
+                    /* HTC layer could not pull out messages due to lack of resources, stop IRQ processing */    
                 AR_DEBUG_PRINTF(ATH_DEBUG_IRQ,("MessagePendingCallback did not pull any messages, force-ack \n"));
-                DevAsyncIrqProcessComplete(pDev);
+                DevAsyncIrqProcessComplete(pDev); 
             }
         }
 
@@ -404,7 +404,7 @@ A_STATUS DevCheckPendingRecvMsgsAsync(void *context)
                  * synchronously  */
             break;
         }
-
+        
             /* an optimization to bypass reading the IRQ status registers unecessarily which can re-wake
              * the target, if upper layers determine that we are in a low-throughput mode, we can
              * rely on taking another interrupt rather than re-checking the status registers which can
@@ -413,9 +413,9 @@ A_STATUS DevCheckPendingRecvMsgsAsync(void *context)
             AR_DEBUG_PRINTF(ATH_DEBUG_IRQ,("Bypassing IRQ Status re-check, re-acking HIF interrupts\n"));
                 /* ack interrupt */
             HIFAckInterrupt(pDev->HIFDevice);
-            break;
+            break;   
         }
-
+    
             /* first allocate one of our HTC packets we created for async I/O
              * we reuse HTC packet definitions so that we can use the completion mechanism
              * in DevRWCompletionHandler() */
@@ -458,7 +458,7 @@ A_STATUS DevCheckPendingRecvMsgsAsync(void *context)
 }
 
 void DevAsyncIrqProcessComplete(AR6K_DEVICE *pDev)
-{
+{  
     AR_DEBUG_PRINTF(ATH_DEBUG_IRQ,("DevAsyncIrqProcessComplete - forcing HIF IRQ ACK \n"));
     HIFAckInterrupt(pDev->HIFDevice);
 }
@@ -483,9 +483,9 @@ static A_STATUS ProcessPendingIRQs(AR6K_DEVICE *pDev, A_BOOL *pDone, A_BOOL *pAS
             /* interrupt enables have been cleared, do not try to process any pending interrupts that
              * may result in more bus transactions.  The target may be unresponsive at this
              * point. */
-             break;
+             break;    
         }
-
+        
         if (pDev->GetPendingEventsFunc != NULL) {
             HIF_PENDING_EVENTS_INFO events;
 
@@ -573,8 +573,8 @@ static A_STATUS ProcessPendingIRQs(AR6K_DEVICE *pDev, A_BOOL *pDone, A_BOOL *pAS
 
         if (pDev->GMboxEnabled) {
                 /*call GMBOX layer to process any interrupts of interest */
-            status = DevCheckGMboxInterrupts(pDev);
-        }
+            status = DevCheckGMboxInterrupts(pDev);  
+        } 
 
     } while (FALSE);
 
@@ -594,7 +594,7 @@ static A_STATUS ProcessPendingIRQs(AR6K_DEVICE *pDev, A_BOOL *pDone, A_BOOL *pAS
 
         if (lookAhead != 0) {
             int fetched = 0;
-
+            
             AR_DEBUG_PRINTF(ATH_DEBUG_IRQ,("Pending mailbox message, LookAhead: 0x%X\n",lookAhead));
                 /* Mailbox Interrupt, the HTC layer may issue async requests to empty the
                  * mailbox...
@@ -605,12 +605,12 @@ static A_STATUS ProcessPendingIRQs(AR6K_DEVICE *pDev, A_BOOL *pDone, A_BOOL *pAS
             if (A_FAILED(status)) {
                 break;
             }
-
+            
             if (!fetched) {
                     /* HTC could not pull any messages out due to lack of resources */
                     /* force DSR handler to ack the interrupt */
-                *pASyncProcessing = FALSE;
-                pDev->RecheckIRQStatusCnt = 0;
+                *pASyncProcessing = FALSE; 
+                pDev->RecheckIRQStatusCnt = 0;  
             }
         }
 
@@ -649,7 +649,7 @@ static A_STATUS ProcessPendingIRQs(AR6K_DEVICE *pDev, A_BOOL *pDone, A_BOOL *pAS
          * the target, if upper layers determine that we are in a low-throughput mode, we can
          * rely on taking another interrupt rather than re-checking the status registers which can
          * re-wake the target.
-         *
+         * 
          * NOTE : for host interfaces that use the special GetPendingEventsFunc, this optimization cannot
          * be used due to possible side-effects.  For example, SPI requires the host to drain all
          * messages from the mailbox before exiting the ISR routine. */
@@ -657,7 +657,7 @@ static A_STATUS ProcessPendingIRQs(AR6K_DEVICE *pDev, A_BOOL *pDone, A_BOOL *pAS
         AR_DEBUG_PRINTF(ATH_DEBUG_IRQ,("Bypassing IRQ Status re-check, forcing done \n"));
         *pDone = TRUE;
     }
-
+ 
     AR_DEBUG_PRINTF(ATH_DEBUG_IRQ,("-ProcessPendingIRQs: (done:%d, async:%d) status=%d \n",
                 *pDone, *pASyncProcessing, status));
 
@@ -679,7 +679,7 @@ A_STATUS DevDsrHandler(void *context)
     pDev->CurrentDSRRecvCount = 0;
         /* reset counter used to flag a re-scan of IRQ status registers on the target */
     pDev->RecheckIRQStatusCnt = 0;
-
+    
     while (!done) {
         status = ProcessPendingIRQs(pDev, &done, &asyncProc);
         if (A_FAILED(status)) {
@@ -693,11 +693,11 @@ A_STATUS DevDsrHandler(void *context)
              * this has a nice side effect of blocking us until all async read requests are completed.
              * This behavior is required on some HIF implementations that do not allow ASYNC
              * processing in interrupt handlers (like Windows CE) */
-
+            
             if (pDev->DSRCanYield && DEV_CHECK_RECV_YIELD(pDev)) {
                 /* ProcessPendingIRQs() pulled enough recv messages to satisfy the yield count, stop
                  * checking for more messages and return */
-                break;
+                break;    
             }
         }
 
@@ -714,13 +714,13 @@ A_STATUS DevDsrHandler(void *context)
             /* Ack the interrupt only if :
              *  1. we did not get any errors in processing interrupts
              *  2. there are no outstanding async processing requests */
-        if (pDev->DSRCanYield) {
+        if (pDev->DSRCanYield) {           
                 /* if the DSR can yield do not ACK the interrupt, there could be more pending messages.
-                 * The HIF layer must ACK the interrupt on behalf of HTC */
+                 * The HIF layer must ACK the interrupt on behalf of HTC */ 
             AR_DEBUG_PRINTF(ATH_DEBUG_IRQ,(" Yield in effect (cur RX count: %d) \n", pDev->CurrentDSRRecvCount));
         } else {
             AR_DEBUG_PRINTF(ATH_DEBUG_IRQ,(" Acking interrupt from DevDsrHandler \n"));
-            HIFAckInterrupt(pDev->HIFDevice);
+            HIFAckInterrupt(pDev->HIFDevice);            
         }
     }
 
@@ -738,7 +738,7 @@ void DumpAR6KDevState(AR6K_DEVICE *pDev)
         /* copy into our temp area */
     A_MEMCPY(&regs,&pDev->IrqEnableRegisters,AR6K_IRQ_ENABLE_REGS_SIZE);
     UNLOCK_AR6K(pDev);
-
+    
         /* load the register table from the device */
     status = HIFReadWrite(pDev->HIFDevice,
                           HOST_INT_STATUS_ADDRESS,
@@ -752,14 +752,16 @@ void DumpAR6KDevState(AR6K_DEVICE *pDev)
             ("DumpAR6KDevState : Failed to read register table (%d) \n",status));
         return;
     }
-
+            
     DevDumpRegisters(pDev,&procRegs,&regs);
-
+    
     if (pDev->GMboxInfo.pStateDumpCallback != NULL) {
-        pDev->GMboxInfo.pStateDumpCallback(pDev->GMboxInfo.pProtocolContext);
+        pDev->GMboxInfo.pStateDumpCallback(pDev->GMboxInfo.pProtocolContext);        
     }
-
+    
         /* dump any bus state at the HIF layer */
     HIFConfigureDevice(pDev->HIFDevice,HIF_DEVICE_DEBUG_BUS_STATE,NULL,0);
-
+            
 }
+
+

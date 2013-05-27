@@ -10,7 +10,7 @@
 *
 * Author 		: javen
 *
-* Description 	: USB æ£€æµ‹
+* Description 	: USB ¼ì²â
 *
 * History 		:
 *      <author>    		<time>       	<version >    		<desc>
@@ -51,6 +51,8 @@ typedef struct usb_scan_info{
 
     u32                     device_insmod_delay;    /* debounce time            */
     u32                     host_insmod_delay;    	/* debounce time            */
+
+    u32                     ac_enable;
 }usb_scan_info_t;
 
 void usb_hw_scan(struct usb_cfg *cfg);
@@ -59,3 +61,4 @@ __s32 usb_hw_scan_init(struct usb_cfg *cfg);
 __s32 usb_hw_scan_exit(struct usb_cfg *cfg);
 
 #endif   //__USB_HW_SCAN_H__
+

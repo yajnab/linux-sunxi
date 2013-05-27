@@ -29,3 +29,4 @@ struct timer_test_para {
 };
 
 #endif /* __SUNXI_TIMER_TEST_H */
+

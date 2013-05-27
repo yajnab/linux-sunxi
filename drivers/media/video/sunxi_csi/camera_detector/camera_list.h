@@ -29,18 +29,18 @@ typedef __s32 (*__camera_detect_f)(__u32 /* list index */, struct i2c_adapter *)
 
 typedef struct {
     __u8                *name;
-
+    
     __u32               i2c_addr;
     __u32               REG_ADDR_STEP;
     __u32               REG_DATA_STEP;
-
+    
     __u32               CSI_STBY_ON;
     __u32               CSI_STBY_OFF;
     __u32               CSI_RST_ON;
     __u32               CSI_RST_OFF;
     __u32               CSI_PWR_ON;
     __u32               CSI_PWR_OFF;
-
+    
     __bool              need_detect;
     __camera_power_f    pwr_on;
     __camera_power_f    pwr_off;

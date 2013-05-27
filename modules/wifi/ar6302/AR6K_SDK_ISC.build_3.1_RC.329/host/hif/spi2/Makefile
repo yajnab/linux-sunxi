@@ -1,6 +1,6 @@
 #
 # SPI HIF makefile using atheros SDIO stack in RAW mode
-#
+#  
 # Copyright (c) 2004-2006 Atheros Communications Inc.
 #
 # $ATH_LICENSE_HOSTSDK0_MK$
@@ -12,7 +12,7 @@
 ifneq ($(ATH_OS_SUB_TYPE),linux_2_4)
 KMOD_EXTENSION :=ko
 endif
-
+            
 ifeq ($(ATH_OS_SUB_TYPE),linux_2_4)
 KMOD_EXTENSION :=o
 endif
@@ -27,7 +27,7 @@ ifeq ($(_SDIO_STACK), YES)
     # SDIO stack is part of the kit and will need to be compiled
 ATH_SDIO_STACK_BASE := $(ATH_SRC_BASE)/spistack
 endif
-endif
+endif 
 
 ifeq ($(_SDIO_STACK), YES)
     # Pass and translate build variables to the SDIO stack makefile
@@ -51,11 +51,11 @@ EXTRA_CFLAGS += -DSPI2
 ifeq ($(ATH_OS_SUB_TYPE),linux_2_4)
 obj-y += $(ATH_SRC_BASE)/hif/spi2/linux_athspi/hif.o
 endif
-
+ 
 ifneq ($(ATH_OS_SUB_TYPE),linux_2_4)
 ar6000-objs := ../../hif/spi2/linux_athspi/hif.o
 endif
-
+                               
 
 
 all:

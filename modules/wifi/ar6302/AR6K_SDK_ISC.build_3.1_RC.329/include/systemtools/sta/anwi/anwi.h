@@ -5,8 +5,8 @@
 /*
  * The main communication interface structures definition
  * for the anwi interface. The IOCTL'definition are in the
- * anwiIoctls.h.
- *
+ * anwiIoctls.h. 
+ *  
  *  Revisions:
  */
 
@@ -34,21 +34,21 @@
 #define MAX_BARS	6
 
 // 2 MB memory for frames and descriptors
-#define MEM_SIZE	(2048*1024)
+#define MEM_SIZE	(2048*1024) 
 
 #define MAX_REG_OFFSET (64 * 1024)
 
-typedef enum resourceType_
-{
+typedef enum resourceType_ 
+{ 
 	RES_NONE=0,
-	RES_INTERRUPT=1,
-	RES_MEMORY=2,
-	RES_IO=3,
+	RES_INTERRUPT=1, 
+	RES_MEMORY=2, 
+	RES_IO=3, 
 } resourceType, *pResourceType;
 
 /*
  * This is the structure used to query the anwi driver regarding
- * PCI resources of the device, while use the value of
+ * PCI resources of the device, while use the value of 
  * WhichPCIInfo selects the structure in use inside the union
  */
 typedef struct anwiPartialResourceInfo_ {
@@ -58,7 +58,7 @@ typedef struct anwiPartialResourceInfo_ {
 			PULONG32 mappedAddress; // Mapped Address
 			ULONG32 nBytes;  // address range
 		} Mem;
-
+        
 		struct { // ITEM_IO
 			PULONG32 bAddr;  // beginning of io address
 			ULONG32 nBytes; // IO range
@@ -86,12 +86,12 @@ typedef struct anwiAddrDesc_ {
 	ULONG32 valid;
 	PVOID physAddr;// physical address of the allocated memory
 	PVOID kerVirAddr; // Virtual address of the allocated memory in kernel space
-	PVOID usrVirAddr; // Virtual address of the allocated memory in user space
-			// if mapped to user space
+	PVOID usrVirAddr; // Virtual address of the allocated memory in user space 
+    		  	// if mapped to user space
 	PMDL pMdl;
-	ULONG32 range;	// size of the allocation
+    	ULONG32 range;	// size of the allocation
         resourceType res_type;
-} anwiAddrDesc, *pAnwiAddrDesc;
+} anwiAddrDesc, *pAnwiAddrDesc; 
 
 typedef struct anwiIntrDesc_ {
 	PKINTERRUPT pIntObj; // Pointer to the Interrupt object of this device

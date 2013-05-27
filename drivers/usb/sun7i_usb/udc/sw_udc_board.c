@@ -10,7 +10,7 @@
 *
 * Author 		: javen
 *
-* Description 	: æ¿çº§æŽ§åˆ¶
+* Description 	: °å¼¶¿ØÖÆ
 *
 * Notes         :
 *
@@ -41,7 +41,7 @@
 #include  "sw_udc_board.h"
 
 //---------------------------------------------------------------
-//  å® å®šä¹‰
+//  ºê ¶¨Òå
 //---------------------------------------------------------------
 
 #define res_size(_r) (((_r)->end - (_r)->start) + 1)
@@ -67,10 +67,10 @@
 */
 u32  open_usb_clock(sw_udc_io_t *sw_udc_io)
 {
-	DMSG_INFO_UDC("open_usb_clock\n");
+ 	DMSG_INFO_UDC("open_usb_clock\n");
 
 	if(sw_udc_io->sie_clk && sw_udc_io->phy_clk && sw_udc_io->phy0_clk && !sw_udc_io->clk_is_open){
-		clk_enable(sw_udc_io->sie_clk);
+	   	clk_enable(sw_udc_io->sie_clk);
 		mdelay(10);
 
 	    clk_enable(sw_udc_io->phy_clk);
@@ -138,7 +138,7 @@ u32 close_usb_clock(sw_udc_io_t *sw_udc_io)
 	return 0;
 }
 
-
+#ifdef CONFIG_AW_FPGA_PLATFORM
 static void clear_usb_reg(__u32 usb_base)
 {
 	__u32 reg_val = 0;
@@ -146,7 +146,7 @@ static void clear_usb_reg(__u32 usb_base)
 
 	/* global control and status */
 	reg_val = readl(USBC_REG_EX_USB_GCS(usb_base));
-	reg_val = 0x00;
+	reg_val = 0x00;	
 	writel(reg_val, USBC_REG_EX_USB_GCS(usb_base));
 
 	/* endpoint interrupt flag */
@@ -210,6 +210,7 @@ static void clear_usb_reg(__u32 usb_base)
 
 	return;
 }
+#endif
 
 /*
 *******************************************************************************
@@ -232,7 +233,7 @@ static void clear_usb_reg(__u32 usb_base)
 __s32 sw_udc_bsp_init(__u32 usbc_no, sw_udc_io_t *sw_udc_io)
 {
 	sw_udc_io->usbc.usbc_info[usbc_no].num = usbc_no;
-	sw_udc_io->usbc.usbc_info[usbc_no].base = (u32)sw_udc_io->usb_vbase;
+   	sw_udc_io->usbc.usbc_info[usbc_no].base = (u32)sw_udc_io->usb_vbase;
 	sw_udc_io->usbc.sram_base = (u32)sw_udc_io->sram_vbase;
 
 //	USBC_init(&sw_udc_io->usbc);
@@ -416,3 +417,8 @@ __s32 sw_udc_io_exit(__u32 usbc_no, struct platform_device *pdev, sw_udc_io_t *s
 
 	return 0;
 }
+
+
+
+
+

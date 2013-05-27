@@ -237,6 +237,8 @@
 #define AW_IRQ_HSTIMER2  	(AW_IRQ_GIC_START + 83)    /* hr-timer2 */
 #define AW_IRQ_HSTIMER3  	(AW_IRQ_GIC_START + 84)    /* hr-timer3 */
 #define AW_IRQ_GMAC       	(AW_IRQ_GIC_START + 85)    /* GMAC  */
+#define AW_IRQ_TWI3       	(AW_IRQ_GIC_START + 88 )   /* TWI3   */
+#define AW_IRQ_TWI4       	(AW_IRQ_GIC_START + 89)    /* TWI4   */
 #else
 #error "ERROR: please select a valid platform\n"
 #endif

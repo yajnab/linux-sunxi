@@ -1,5 +1,5 @@
 // Copyright (c) 2004-2006 Atheros Communications Inc.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -13,22 +13,22 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
-// Portions of this code were developed with information supplied from the
+// Portions of this code were developed with information supplied from the 
 // SD Card Association Simplified Specifications. The following conditions and disclaimers may apply:
 //
 //  The following conditions apply to the release of the SD simplified specification (“Simplified
-//  Specification”) by the SD Card Association. The Simplified Specification is a subset of the complete
-//  SD Specification which is owned by the SD Card Association. This Simplified Specification is provided
-//  on a non-confidential basis subject to the disclaimers below. Any implementation of the Simplified
+//  Specification”) by the SD Card Association. The Simplified Specification is a subset of the complete 
+//  SD Specification which is owned by the SD Card Association. This Simplified Specification is provided 
+//  on a non-confidential basis subject to the disclaimers below. Any implementation of the Simplified 
 //  Specification may require a license from the SD Card Association or other third parties.
 //  Disclaimers:
-//  The information contained in the Simplified Specification is presented only as a standard
-//  specification for SD Cards and SD Host/Ancillary products and is provided "AS-IS" without any
-//  representations or warranties of any kind. No responsibility is assumed by the SD Card Association for
-//  any damages, any infringements of patents or other right of the SD Card Association or any third
-//  parties, which may result from its use. No license is granted by implication, estoppel or otherwise
-//  under any patent or other rights of the SD Card Association or any third party. Nothing herein shall
-//  be construed as an obligation by the SD Card Association to disclose or distribute any technical
+//  The information contained in the Simplified Specification is presented only as a standard 
+//  specification for SD Cards and SD Host/Ancillary products and is provided "AS-IS" without any 
+//  representations or warranties of any kind. No responsibility is assumed by the SD Card Association for 
+//  any damages, any infringements of patents or other right of the SD Card Association or any third 
+//  parties, which may result from its use. No license is granted by implication, estoppel or otherwise 
+//  under any patent or other rights of the SD Card Association or any third party. Nothing herein shall 
+//  be construed as an obligation by the SD Card Association to disclose or distribute any technical 
 //  information, know-how or other confidential information to any third party.
 //
 //
@@ -42,7 +42,7 @@
 @file: mmc_defs.h
 
 @abstract: MMC definitions not already defined in _sdio_defs.h
-
+ 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 #ifndef ___MMC_DEFS_H___
 #define ___MMC_DEFS_H___
@@ -68,17 +68,17 @@
 #define MMC_SWITCH_WRITE_BYTE 3
 #define MMC_SWITCH_CMD_SET0   0
 #define MMC_SWITCH_BUILD_ARG(cmdset,access,index,value) \
-     (((cmdset) & 0x07) | (((access) & 0x03) << 24) | (((index) & 0xFF) << 16) | (((value) & 0xFF) << 8))
+     (((cmdset) & 0x07) | (((access) & 0x03) << 24) | (((index) & 0xFF) << 16) | (((value) & 0xFF) << 8)) 
 
 #define MMC_EXT_CSD_SIZE                     512
 
 #define MMC_EXT_S_CMD_SET_OFFSET             504
-#define MMC_EXT_MIN_PERF_W_8_52_OFFSET       210
+#define MMC_EXT_MIN_PERF_W_8_52_OFFSET       210  
 #define MMC_EXT_MIN_PERF_R_8_52_OFFSET       209
 #define MMC_EXT_MIN_PERF_W_8_26_4_52_OFFSET  208
 #define MMC_EXT_MIN_PERF_R_8_26_4_52_OFFSET  207
 #define MMC_EXT_MIN_PERF_W_4_26_OFFSET       206
-#define MMC_EXT_MIN_PERF_R_4_56_OFFSET       205
+#define MMC_EXT_MIN_PERF_R_4_56_OFFSET       205  
 #define MMC_EXT_PWR_CL_26_360_OFFSET         203
 #define MMC_EXT_PWR_CL_52_360_OFFSET         202
 #define MMC_EXT_PWR_CL_26_195_OFFSET         201

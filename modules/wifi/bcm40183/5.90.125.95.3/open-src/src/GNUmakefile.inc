@@ -1,8 +1,8 @@
 #  Top level GNUmakefile for windows builds
 #
 #  It includes makefiles/*.mk for windows buildtype rules
-#  and sources(windows style makefile). it doesn't depend on
-#  Makerules.env except to get SRCBASE if not yet defined.
+#  and sources(windows style makefile). it doesn't depend on 
+#  Makerules.env except to get SRCBASE if not yet defined. 
 #
 #  $Id: GNUmakefile.inc,v 1.105 2009-04-16 00:20:28 $
 
@@ -28,7 +28,7 @@ endif # ECLOUD_BUILD_ID
 ifndef SRCBASE
     ifneq ($(wildcard ../Makerules.env), )
 	SRCBASE	= ../
-    else
+    else	
 	ifneq ($(wildcard ../../Makerules.env), )
 		SRCBASE	= ../..
 	else
@@ -49,7 +49,7 @@ ifndef SRCBASE
 	    endif
 	endif
     endif
-endif # ifndef SRCBASE
+endif # ifndef SRCBASE 
 
 ifeq ($(strip $(SRCBASE)), )
     ERRORS += "SRCBASE is not defined!"
@@ -113,7 +113,7 @@ endif # USE_SRCRULES
 retail free ::
 	$(MAKE) -f $(SRCBASE)/GNUmakefile.inc TTYPE=OPT all
 
-debug checked ::
+debug checked :: 
 	$(MAKE) -f $(SRCBASE)/GNUmakefile.inc TTYPE=DBG all
 
 %GNUmakefile.inc :
@@ -122,10 +122,10 @@ debug checked ::
 GNUmakefile :
 	echo making $@
 
-clean :
+clean : 
 	$(MAKE) -f $(SRCBASE)/GNUmakefile.inc TTYPE=DBG MAKECMDGOALS=$@ $@
 
-## This catch-all generic rule breaks make targets defined in module which
+## This catch-all generic rule breaks make targets defined in module which 
 ## call this makefile.
 ## % : FORCE
 ## 	$(MAKE) -f $(SRCBASE)/GNUmakefile.inc TTYPE=DBG MAKECMDGOALS=$@ $@
@@ -133,7 +133,7 @@ clean :
 .PHONY: all release free checked retail debug clean FORCE
 
 
-### if TTYPE is defined,
+### if TTYPE is defined, 
 ###   define commands, tools and compile rules
 ###   include $(SRCFILE)
 ###   build all :: target ::
@@ -141,7 +141,7 @@ else # TTYPE is defined
 
 # Define default command for printing errors and warnings.  This will
 # be redefined at the end of this makefile if any errors or warnings
-# are encountered.
+# are encountered.  
 #
 define print-errors
 endef
@@ -232,7 +232,7 @@ LD  = link
 LIBCMD = lib
 MTL = midl
 
-# Ignore any include path and lib paths that the user imports from
+# Ignore any include path and lib paths that the user imports from 
 # the environment.
 #
 INCLUDE =
@@ -291,7 +291,7 @@ ifdef USE_DEPENDENCIES
 
 # MAKECMDGOALS is not supported until gnumake version 3.76 so we hack
 # it by explicitly setting MAKECMDGOALS in the clean rule at the top
-# of this file.
+# of this file.  
 #
 ifneq ($(MAKECMDGOALS),clean)
 
@@ -310,7 +310,7 @@ endif  # MAKECMDGOALS != clean
 
 endif  # ifdef USE_DEPENDENCIES
 
-SI_FLAGS = -translate:always,source,package
+SI_FLAGS = -translate:always,source,package 
 
 
 
@@ -324,7 +324,7 @@ WLCFGDIR        ?= $(SRCBASE)/wl/config
 WLTUNEFILE      ?= wltunable_sample.h
 
 # Create target directory if necessary.
-$(OUTDIR_$(TTYPE))/NUL :
+$(OUTDIR_$(TTYPE))/NUL : 
 	[ -d "$(@D)" ] || mkdir -p $(@D)
 ifeq ($(WLCONF_GEN),true)
 	@if [ ! -f "$(@D)/wlconf.h" ]; then \
@@ -354,11 +354,11 @@ DOS_DEPS= $(shell echo $(filter-out %.tlb %.TLB %.h %.H %.def %.DEF,$^) | sed 's
 
 $(OUTDIR_$(TTYPE))/%.i :  %.c
 	@echo "Compiling $(notdir $<) -> $(notdir $@)"
-	$(CC) -E -P $(C$(TTYPE)FLAGS) $(CPPFLAGS) $(F$(TTYPE)) $< >$@
+	$(CC) -E -P $(C$(TTYPE)FLAGS) $(CPPFLAGS) $(F$(TTYPE)) $< >$@ 
 
 $(OUTDIR_$(TTYPE))/%.i :  %.cpp
 	@echo "Compiling $(notdir $<) -> $(notdir $@)"
-	$(CC) -E -P $(C$(TTYPE)FLAGS) $(CPPFLAGS) $(F$(TTYPE)) $< >$@
+	$(CC) -E -P $(C$(TTYPE)FLAGS) $(CPPFLAGS) $(F$(TTYPE)) $< >$@ 
 
 $(OUTDIR_$(TTYPE))/%.d :  %.c
 	@echo "Compiling $(notdir $<) -> $(notdir $@)"
@@ -418,7 +418,7 @@ $(OUTDIR_$(TTYPE))/%.obj: %.asm
 	@echo "Compiling $(notdir $<) -> $(notdir $@)"
 	$(asm-obj-command)
 
-FORCE:
+FORCE: 
 
 clean ::
 	rm -rf $(OUTDIR_CHECKED) $(OUTDIR_FREE) $(SRCRULES)
@@ -433,12 +433,12 @@ ifeq  ("$(DRIVERTYPE)", "WDM2600")
 else
     include $(SRCBASE)/makefiles/driver.mk
 endif
-endif
-endif
+endif 
+endif 
 
 ifeq  ("$(TARGETTYPE)", "VXD")
 include $(SRCBASE)/makefiles/vxd.mk
-endif
+endif 
 
 ifneq ($(findstring x$(TARGETTYPE)x, "xDLLx xDYNLINKx"), )
 ifneq ($(findstring x$(HOSTOS)x, "xwincex"), )
@@ -446,15 +446,15 @@ include $(SRCBASE)/makefiles/dllce.mk
 else
 include $(SRCBASE)/makefiles/dll.mk
 endif
-endif
+endif 
 
 ifneq ($(findstring $(TARGETTYPE)x, "DLL16x"), )
 include $(SRCBASE)/makefiles/dll16.mk
-endif
+endif 
 
 ifneq ($(findstring $(TARGETTYPE)x, "EXE16x"), )
 include $(SRCBASE)/makefiles/exe16.mk
-endif
+endif 
 
 ifneq ($(findstring $(TARGETTYPE), "LIB"), )
 ifneq ($(findstring x$(HOSTOS)x, "xwincex"), )
@@ -470,7 +470,7 @@ include $(SRCBASE)/makefiles/exece.mk
 else
 include $(SRCBASE)/makefiles/exe.mk
 endif
-endif
+endif 
 
 ifneq ($(findstring x$(TARGETTYPE)x, "xDOSEXEx"), )
 include $(SRCBASE)/makefiles/dosexe.mk
@@ -485,8 +485,8 @@ endif
 # makefile(s).
 include $(SRCBASE)/makefiles/env.mk
 
-#
-# Add some rules so that our target depends on any libraries we are going
+# 
+# Add some rules so that our target depends on any libraries we are going 
 # to link against.
 #
 #target :: $(LIBS)
@@ -506,7 +506,7 @@ endif
 target :: $(NTTARGETFILES)
 
 
-target ::
+target :: 
 	@echo Finished compiling $@
 	@echo ""
 
@@ -514,7 +514,7 @@ post-build-target ::
 
 release: all
 
-.PHONY: all target release clean $(OUTDIR_$(TTYPE))/.depends
+.PHONY: all target release clean $(OUTDIR_$(TTYPE))/.depends 
 
 ifneq ($(wildcard $(SRCRULES)), )
 include $(SRCRULES)
@@ -531,7 +531,7 @@ endif
 #
 ifneq ($(strip $(SOURCES.D)),)
 include $(patsubst %,$(OUTDIR_$(TTYPE))/%,$(SOURCES.D))
-include $(OUTDIR_$(TTYPE))/NUL
+include $(OUTDIR_$(TTYPE))/NUL 
 endif
 
 define calculate_dependencies
@@ -552,11 +552,11 @@ vpath %.lib $(LIBVPATH)
 
 export PATH:=$(subst $(space),:,$(strip $(NEWPATH))):$(PATH)
 
-foo:
+foo: 
 	@echo _SDKROOT=$(_SDKROOT)
 	@echo NEWPATH=$(NEWPATH)
 
-endif
+endif 
 ###  end of ifeq ($(origin TTYPE), undefined)
 
 printenv:

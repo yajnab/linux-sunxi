@@ -49,3 +49,4 @@ swctrlmap_2g=0x0c050c05,0x0a030a03,0x0a030a03,0x0,0x1ff
 triso2g=1
 RAW1=4a 0b ff ff 20 04 d0 02 62 a9
 otpimagesize=76
+

@@ -49,7 +49,7 @@
 #ifdef WLTEST
 #define	EPI_VERSION_STR		"1.28.23.1 (r WLTEST)"
 #else
-#define	EPI_VERSION_STR		"1.28.23.1 (r)"
+#define	EPI_VERSION_STR		"1.28.23.2 (r)"
 #endif
 #endif /* BCMINTERNAL */
 

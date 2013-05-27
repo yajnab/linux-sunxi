@@ -5,21 +5,21 @@ set -e
 generate_rootfs()
 {
     if [ -d skel ] ; then
-	(cd skel; find . | fakeroot cpio -o -Hnewc | gzip > ../"$1")
+    	(cd skel; find . | fakeroot cpio -o -Hnewc | gzip > ../"$1")
     else
-	echo "skel not exist"
-	exit 1
+    	echo "skel not exist"
+    	exit 1
     fi
 }
 
 extract_rootfs()
 {
     if [ -f "$1" ] ; then
-	rm -rf skel && mkdir skel
-	gzip -dc $1 | (cd skel; fakeroot cpio -i)
+    	rm -rf skel && mkdir skel
+    	gzip -dc $1 | (cd skel; fakeroot cpio -i)
     else
-	echo "$1 not exist"
-	exit 1
+    	echo "$1 not exist"
+    	exit 1
     fi
 }
 
@@ -40,3 +40,4 @@ else
 	echo "Wrong arguments"
 	exit 1
 fi
+

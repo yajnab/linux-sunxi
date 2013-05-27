@@ -1,5 +1,5 @@
 #if !defined(_CMDPROCESSINGSM_H)
-#define  _CMDPROCESSINGSM_H
+#define  _CMDPROCESSINGSM_H 
 
 #if defined(_HOST_SIM_TESTING)
 #define A_TIMER  int
@@ -22,16 +22,16 @@ typedef enum {
 } _CMDPROC_RC;
 
 typedef enum {                         // STATE :
-    CMD_PROCESSING_STATE = 0, //0
+    CMD_PROCESSING_STATE = 0, //0 
     RX_SYNC_STATE,            //1
-    TX_STATE,                 //2
-    RX_STATE,                 //3
-    CAL_OR_CHAR_STATE,        //4
-    WAIT_4_CAL_DATA_STATE,    //5
-    SAME_STATE,               // 6: size, SAME_STATE doesn't have an entry in the STATE table
+    TX_STATE,                 //2       
+    RX_STATE,                 //3              
+    CAL_OR_CHAR_STATE,        //4             
+    WAIT_4_CAL_DATA_STATE,    //5            
+    SAME_STATE,               // 6: size, SAME_STATE doesn't have an entry in the STATE table               
 
     NULL_STATE = SAME_STATE,   // also functions as the size of the STATE table
-    LAST_STATE = NULL_STATE,
+    LAST_STATE = NULL_STATE, 
     STATE_MAX  = LAST_STATE,
 } _CMDPROC_STATE;
 
@@ -57,8 +57,8 @@ typedef enum {              // EVENT
     EVT_RX_CMD,                //12
     EVT_CAL_CMD,               //13
     EVT_CAL_DONE_CMD,          //14
-
-    EVT_NULL,                  //15
+ 
+    EVT_NULL,                  //15 
     EVT_CMDPROC_LAST_EVENT = EVT_NULL,    //15
     CMDPROC_EVT_MAX = EVT_CMDPROC_LAST_EVENT,
 
@@ -137,14 +137,14 @@ typedef struct _mapOpcode2StateEvt {
 
 
 #if 0
-//
+// 
 // Map data rate to power/gain
 //
 #define RATE_MASK_ROW_MAX    2
 #define RATE_MASK_BIT_MAX    32
 #define PWRGAIN_ROW_MAX      ((RATE_MASK_ROW_MAX * RATE_MASK_BIT_MAX) / 4)
 #define PWRGAIN_MASK                  0xFF
-#define PWRGAIN_MASK_SIGN_BIT_MASK    0x80
+#define PWRGAIN_MASK_SIGN_BIT_MASK    0x80  
 #define NEGATE(x) (((x) & (PWRGAIN_MASK_SIGN_BIT_MASK)) ? ((x) = 128 - (x)) : (x))
 #define PWRGAIN_PER_PWRGAIN_ROW      4
 #define PWRGAIN_PER_MASK_ROW         8
@@ -181,7 +181,8 @@ extern void txNotify(void *pInput, void *pReturn);
 extern void rxNotifyReg(void *pInput);
 extern void createTimers(void);
 
-extern _UTF_CMDPROCESS_SM_TABLE CmdProcSM[STATE_MAX];
+extern _UTF_CMDPROCESS_SM_TABLE CmdProcSM[STATE_MAX]; 
 extern _CMDPROC_RC evtCmdHandler(_CMDPROC_STATE_INFO *pCmdStateInfo);
 
 #endif //#if !defined(_CMDPROCESSINGSM_H)
+

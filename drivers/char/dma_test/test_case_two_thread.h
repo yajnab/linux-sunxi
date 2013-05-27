@@ -26,3 +26,4 @@
 u32 __dtc_two_thread(void);
 
 #endif /* __TEST_CASE_TWO_THREAD_H */
+

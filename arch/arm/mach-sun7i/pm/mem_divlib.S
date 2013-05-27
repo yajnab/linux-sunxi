@@ -16,7 +16,7 @@
 	mov	\divisor, \divisor, lsl \result
 	mov	\curbit, \curbit, lsl \result
 	mov	\result, #0
-
+	
 	@ Division loop
 1:	cmp	\dividend, \divisor
 	subhs	\dividend, \dividend, \divisor

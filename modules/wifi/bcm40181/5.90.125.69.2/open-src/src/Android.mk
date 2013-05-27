@@ -39,7 +39,7 @@ LOCAL_MODULE_TAGS := debug tests
 
 include $(BUILD_EXECUTABLE)
 
-#ifeq ($(ESTA_POSTMOGRIFY_REMOVAL), true)
+#ifeq ($(ESTA_POSTMOGRIFY_REMOVAL), true) 
 
 # Build WL Utility
 include $(CLEAR_VARS)

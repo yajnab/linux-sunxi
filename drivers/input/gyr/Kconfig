@@ -17,5 +17,5 @@ config GYR_L3GD20
         depends on I2C
         help
           Say Y here to enable the gyroscope.
-
+       
 endif

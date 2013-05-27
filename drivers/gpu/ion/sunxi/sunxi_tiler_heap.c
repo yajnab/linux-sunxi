@@ -44,7 +44,7 @@ static int sunxi_tiler_heap_allocate(struct ion_heap *heap,
 	return -EINVAL;
 }
 
-struct sunxi_tiler_info
+struct sunxi_tiler_info 
 {
 	bool lump;			/* true for a single lump allocation */
 	u32 n_phys_pages;		/* number of physical pages */
@@ -72,7 +72,7 @@ int sunxi_tiler_alloc(struct ion_heap *heap,
 	}
 
     align_w = (((data->w) + (32) - 1L) & ~((32) - 1L));
-
+    
 	if(data->fmt == TILER_PIXEL_FMT_16BIT)
 	{
 	    size_temp = align_w * data->h * 2;
@@ -93,16 +93,16 @@ int sunxi_tiler_alloc(struct ion_heap *heap,
 
 	info->n_phys_pages = n_phys_pages;
 	info->phys_addrs = (u32 *)(info + 1);
-
+    
 	addr = ion_carveout_allocate(heap, n_phys_pages*PAGE_SIZE, 0);
     //printk("%s, line %d, n_phys_pages %d, addr %x\n", __func__, __LINE__, n_phys_pages, addr);
-	if (addr == ION_CARVEOUT_ALLOCATE_FAIL)
+	if (addr == ION_CARVEOUT_ALLOCATE_FAIL) 
     {
-		for (i = 0; i < n_phys_pages; i++)
+		for (i = 0; i < n_phys_pages; i++) 
         {
 			addr = ion_carveout_allocate(heap, PAGE_SIZE, 0);
 
-			if (addr == ION_CARVEOUT_ALLOCATE_FAIL)
+			if (addr == ION_CARVEOUT_ALLOCATE_FAIL) 
             {
 				ret = -ENOMEM;
 				pr_err("%s: failed to allocate pages to back "
@@ -111,8 +111,8 @@ int sunxi_tiler_alloc(struct ion_heap *heap,
 			}
 			info->phys_addrs[i] = addr;
 		}
-	}
-    else
+	} 
+    else 
     {
 		info->lump = true;
 		for (i = 0; i < n_phys_pages; i++)
@@ -125,7 +125,7 @@ int sunxi_tiler_alloc(struct ion_heap *heap,
 
 	/* create an ion handle  for the allocation */
 	handle = ion_alloc(client, 0, 0, 1 << SUNXI_ION_HEAP_TYPE_TILER);
-	if (IS_ERR_OR_NULL(handle))
+	if (IS_ERR_OR_NULL(handle)) 
     {
 		ret = PTR_ERR(handle);
 		pr_err("%s: failure to allocate handle to manage tiler"
@@ -138,7 +138,7 @@ int sunxi_tiler_alloc(struct ion_heap *heap,
 	buffer->priv_virt = info;
 	data->handle = handle;
 	return 0;
-
+    
 err:
 	if (info->lump)
 		ion_carveout_free(heap, addr, n_phys_pages * PAGE_SIZE);
@@ -155,12 +155,12 @@ void sunxi_tiler_heap_free(struct ion_buffer *buffer)
 	struct sunxi_tiler_info *info = buffer->priv_virt;
 
     //printk("%s, line %d, buffer 0x%08x\n", __func__, __LINE__, (u32)buffer);
-	if (info->lump)
+	if (info->lump) 
     {
 		ion_carveout_free(buffer->heap, info->phys_addrs[0],
 				  info->n_phys_pages*PAGE_SIZE);
-	}
-    else
+	} 
+    else 
     {
 		int i;
 		for (i = 0; i < info->n_phys_pages; i++)
@@ -247,3 +247,4 @@ void sunxi_tiler_heap_destroy(struct ion_heap *heap)
 {
 	kfree(heap);
 }
+

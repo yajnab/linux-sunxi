@@ -2,7 +2,7 @@
 // Copyright (c) 2004-2010 Atheros Communications Inc.
 // All rights reserved.
 //
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -305,7 +305,7 @@ ar6k_cfg80211_connect(struct wiphy *wiphy, struct net_device *dev,
         }
     }
     up(&ar->arSem);
-
+    
     if(down_interruptible(&ar->arSem)) {
         AR_DEBUG_PRINTF(ATH_DEBUG_ERR, ("%s: busy, couldn't get access\n", __func__));
         return -ERESTARTSYS;
@@ -318,7 +318,7 @@ ar6k_cfg80211_connect(struct wiphy *wiphy, struct net_device *dev,
         status = wmi_reconnect_cmd(arPriv->arWmi,
                                    arSta->arReqBssid,
                                    arPriv->arChannelHint);
-
+        
         if (status != A_OK) {
             AR_DEBUG_PRINTF(ATH_DEBUG_ERR, ("%s: wmi_reconnect_cmd failed\n", __func__));
             return -EIO;
@@ -1046,7 +1046,7 @@ ar6k_cfg80211_set_default_mgmt_key(struct wiphy *wiphy, struct net_device *ndev,
 {
     AR_SOFTC_DEV_T *arPriv = (AR_SOFTC_DEV_T *)ar6k_priv(ndev);
     AR_SOFTC_T     *ar     = arPriv->arSoftc;
-
+    
     AR_DEBUG_PRINTF(ATH_DEBUG_INFO, ("%s: index %d\n", __func__, key_index));
 
     if(ar->arWmiReady == FALSE) {
@@ -1256,8 +1256,8 @@ ar6k_cfg80211_set_power_mgmt(struct wiphy *wiphy,
 
 static int
 ar6k_cfg80211_add_virtual_intf(struct wiphy *wiphy, char *name,
-					    enum nl80211_iftype type, u32 *flags,
-					    struct vif_params *params)
+            				    enum nl80211_iftype type, u32 *flags,
+            				    struct vif_params *params)
 {
 
     AR_DEBUG_PRINTF(ATH_DEBUG_INFO, ("%s: not supported\n", __func__));
@@ -1506,7 +1506,7 @@ void
 ar6k_cfg80211_deinit(AR_SOFTC_DEV_T *arPriv)
 {
     struct wireless_dev *wdev = arPriv->wdev;
-
+    
 
     AR_DEBUG_PRINTF(ATH_DEBUG_INFO, ("%s: \n", __func__));
 
@@ -1522,3 +1522,10 @@ ar6k_cfg80211_deinit(AR_SOFTC_DEV_T *arPriv)
     wiphy_free(wdev->wiphy);
     kfree(wdev);
 }
+
+
+
+
+
+
+

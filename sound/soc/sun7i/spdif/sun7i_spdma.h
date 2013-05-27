@@ -17,25 +17,25 @@
 
 #undef HX_NEW_DMA
 #define HX_NEW_DMA
-#ifdef HX_NEW_DMA
+#ifdef HX_NEW_DMA 
 	struct sun7i_dma_params {
-		char *name;
-		dma_addr_t dma_addr;
+		char *name;		
+		dma_addr_t dma_addr;	
 	};
-
+	
 #else
 	#define ST_RUNNING    (1<<0)
 	#define ST_OPENED     (1<<1)
-
+	
 	struct sun7i_dma_params {
 		struct sw_dma_client *client;	/* stream identifier */
 		unsigned int channel;				/* Channel ID */
 		dma_addr_t dma_addr;
 		int dma_size;			/* Size of the DMA transfer */
 	};
-
+	
 	#define SUN7I_DAI_SPDIF			1
-
+	
 	enum sun7idma_buffresult {
 		SUN7I_RES_OK,
 		SUN7I_RES_ERR,

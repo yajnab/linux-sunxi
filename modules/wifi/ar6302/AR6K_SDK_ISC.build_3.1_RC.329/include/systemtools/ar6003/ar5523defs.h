@@ -8,8 +8,8 @@
 
 
 #define WMAC0_INTERRUPT_A      0
-#define AR5523_WMAC0_BASE_ADDRESS           0xa0900000
-#define AR5523_USB_BASE_ADDRESS             0xa0A00000
+#define AR5523_WMAC0_BASE_ADDRESS           0xa0900000 
+#define AR5523_USB_BASE_ADDRESS             0xa0A00000  
 #define AR5523_UART0_BASE_ADDRESS           0xa0B00000
 #define AR5523_GPIO_BASE_ADDRESS            0xa0B10000
 #define AR5523_APB_DMA_BASE_ADDRESS         0xa0B20000
@@ -50,10 +50,10 @@
 
 
 #define AR5523_EMULATION_MAJOR_REV0	5
-#define AR5523_EMULATION_MINOR_REV0	1
+#define AR5523_EMULATION_MINOR_REV0	1  
 #define AR5523_MAJOR_REV0	6
-#define AR5523_MINOR_REV0	0
-#define AR5523_MINOR_REV1	1
+#define AR5523_MINOR_REV0	0  
+#define AR5523_MINOR_REV1	1  
 
 #define REV_MIN_W 4
 #define REV_MAJ_W 4
@@ -70,8 +70,8 @@
 #define     EEPROM_STS   (AR5523_FLASH_CONTROL_BASE_ADDRESS + 0x0018)
 #define EEPROM_WRITE_ERROR   _SET_ONE_(6)
 #define     EEPROM_CFG   (AR5523_FLASH_CONTROL_BASE_ADDRESS + 0x001c)
-#define     MAC_EEPROM_WRITE_ACK    _SET_ONE_(14)
-#define     MAC_EEPROM_ADDR_HIT_TRACK   _SET_ONE_(15)
+#define     MAC_EEPROM_WRITE_ACK    _SET_ONE_(14)   
+#define     MAC_EEPROM_ADDR_HIT_TRACK   _SET_ONE_(15)   
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -131,3 +131,6 @@
 #define NEXFLASH_P10_DEVICE_ID  0x10
 #define NEXFLASH_P20_DEVICE_ID  0x11
 #define NEXFLASH_P40_DEVICE_ID  0x12
+
+
+

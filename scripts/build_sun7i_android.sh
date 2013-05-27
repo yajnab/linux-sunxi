@@ -54,7 +54,7 @@ build_nand_lib()
     echo "build nand library ${NAND_ROOT}/lib"
     if [ -d ${NAND_ROOT}/lib ]; then
         echo "build nand library now"
-        make -C modules/nand/lib clean 2> /dev/null
+        make -C modules/nand/lib clean 2> /dev/null 
         make -C modules/nand/lib lib install
     else
         echo "build nand with existing library"
@@ -101,9 +101,6 @@ build_modules()
     fi
 
     make -C modules/example LICHEE_MOD_DIR=${LICHEE_MOD_DIR} LICHEE_KDIR=${LICHEE_KDIR} \
-        install
-
-    make -C modules/axp_gpio_test LICHEE_MOD_DIR=${LICHEE_MOD_DIR} LICHEE_KDIR=${LICHEE_KDIR} \
         install
 
     build_nand_lib
@@ -159,7 +156,7 @@ clean_modules()
 {
     echo "Cleaning modules"
     make -C modules/example LICHEE_MOD_DIR=${LICHEE_MOD_DIR} LICHEE_KDIR=${LICHEE_KDIR} clean
-
+    
     (
     export LANG=en_US.UTF-8
     unset LANGUAGE
@@ -208,3 +205,4 @@ case "$1" in
         gen_output
         ;;
 esac
+

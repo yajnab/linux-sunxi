@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="addrs.h" company="Atheros">
 //    Copyright (c) 2004-2009 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -24,7 +24,7 @@
 #ifndef __ADDRS_H__
 #define __ADDRS_H__
 
-/*
+/* 
  * Special AR6000 Addresses that may be needed by special
  * applications (e.g. ART) on the Host as well as Target.
  * Note that these are all uncached addresses.

@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2011, Broadcom Corporation
  * All Rights Reserved.
- *
+ * 
  * This is UNPUBLISHED PROPRIETARY SOURCE CODE of Broadcom Corporation;
  * the contents of this file may not be disclosed to third parties, copied
  * or duplicated in any form, in whole or in part, without the prior
@@ -54,7 +54,7 @@
 #include <trxhdr.h>
 #include <usbrdl.h>
 #include <bcmendian.h>
-#endif
+#endif 
 
 #ifdef WL_FW_DECOMP
 #include <trxhdr.h>
@@ -183,8 +183,8 @@ extern int defvarslen;
 #else
 char mfgsromvars[VARS_MAX];
 int defvarslen = 0;
-#endif
-#endif
+#endif 
+#endif 
 
 
 static void  dbus_flowctrl_tx(dbus_info_t *dbus_info, bool on);
@@ -207,7 +207,7 @@ static void *dbus_probe(void *arg, const char *desc, uint32 bustype, uint32 hdrl
 extern char * dngl_firmware;
 extern unsigned int dngl_fwlen;
 static int dbus_get_nvram(dbus_info_t *dbus_info);
-#endif
+#endif 
 
 #if (defined(BCM_DNGL_EMBEDIMAGE) || defined(BCMEMBEDIMAGE)) && defined(WL_FW_DECOMP)
 static int dbus_zlib_decomp(dbus_info_t *dbus_info);
@@ -629,7 +629,7 @@ dbus_get_nvram(dbus_info_t *dbus_info)
 	}
 	return DBUS_OK;
 }
-#endif
+#endif 
 
 static int
 dbus_do_download(dbus_info_t *dbus_info)
@@ -727,7 +727,7 @@ dbus_do_download(dbus_info_t *dbus_info)
 		DBUSERR(("dbus_do_download: fail to get nvram %d\n", err));
 		return err;
 	}
-#endif
+#endif 
 #endif /* defined(BCM_DNGL_EMBEDIMAGE) */
 
 	if (dbus_info->drvintf->dlstart && dbus_info->drvintf->dlrun) {
@@ -748,7 +748,7 @@ dbus_do_download(dbus_info_t *dbus_info)
 		dbus_info->image = dbus_info->fw;
 		dbus_info->image_len = (uint32)dbus_info->fwlen;
 	}
-#endif
+#endif 
 
 #ifdef WL_FW_DECOMP
 	if ((!decomp_override) && dbus_info->orig_fw)
@@ -804,7 +804,7 @@ dbus_if_send_irb_complete(void *handle, dbus_irb_tx_t *txirb, int status)
 
 	dbus_tx_timer_stop(dbus_info);
 
-	/* re-queue BEFORE calling send_complete which will assume that this irb
+	/* re-queue BEFORE calling send_complete which will assume that this irb 
 	   is now available.
 	 */
 	pktinfo = txirb->info;
@@ -1179,7 +1179,7 @@ dbus_attach(osl_t *osh, int rxsize, int nrxq, int ntxq, void *cbarg,
 #if defined(BCMEMBEDIMAGE)
 	dbus_info->fw = (uint8 *) dlarray;
 	dbus_info->fwlen = sizeof(dlarray);
-#endif /* BCMEMBEDIMAGE */
+#endif /* BCMEMBEDIMAGE */	
 
 #if defined(BCM_DNGL_EMBEDIMAGE) || defined(BCMEMBEDIMAGE)
 	if (dbus_info->drvintf->dlneeded) {
@@ -1653,7 +1653,7 @@ dbus_get_revinfo(const dbus_pub_t *pub, uint32 *chipid, uint32 *chiprev)
 /* store the global osh handle */
 static osl_t *osl_handle = NULL;
 
-/* this function is a combination of trx.c and bcmdl.c plus dbus adaptation */
+/* this function is a combination of trx.c and bcmdl.c plus dbus adaptation */ 
 static int
 dbus_zlib_decomp(dbus_info_t *dbus_info)
 {

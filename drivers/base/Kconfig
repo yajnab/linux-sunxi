@@ -188,7 +188,7 @@ config DMA_SHARED_BUFFER
 	  multiple drivers. A buffer is associated with a file using driver
 	  APIs extension; the file's descriptor can then be passed on to other
 	  driver.
-
+	
 config SYNC
 	bool "Synchronization framework"
 	default y

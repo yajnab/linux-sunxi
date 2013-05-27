@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="sdio_hcd_defs.h" company="Atheros">
 //    Copyright (c) 2007-2008 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -57,40 +57,40 @@ typedef struct _SDCONFIG_SDIO_INT_CTRL_DATA  {
   @function: Get a pointer to the current bus request for a host controller
 
   @function name: GET_CURRENT_REQUEST
-  @prototype: PSDREQUEST GET_CURRENT_REQUEST (PSDHCD pHcd)
+  @prototype: PSDREQUEST GET_CURRENT_REQUEST (PSDHCD pHcd) 
   @category: HD_Reference
-
+ 
   @input:  pHcd - host structure
-
+           
   @return: current SD/SDIO bus request being worked on
-
+ 
   @notes: Implemented as a macro. This macro returns the current SD request that is
           being worked on.
-
-  @example: getting the current request:
+           
+  @example: getting the current request: 
           pReq = GET_CURRENT_REQUEST(&pHct->Hcd);
-
+        
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-#define GET_CURRENT_REQUEST(pHcd)     (pHcd)->pCurrentRequest
+#define GET_CURRENT_REQUEST(pHcd)     (pHcd)->pCurrentRequest 
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  @function: Get host controller's current operational bus clock
-
+  @function: Get host controller's current operational bus clock 
+  
   @function name: SDHCD_GET_OPER_CLOCK
   @prototype: SD_BUSCLOCK_RATE SDHCD_GET_OPER_CLOCK(PSDHCD pHcd)
   @category: HD_Reference
-
+  
   @input:  pHcd   - the registered host structure
-
+ 
   @output: none
 
   @return: clock rate
-
-  @notes: Implemented as a macro. Returns the current bus clock rate.
-
+ 
+  @notes: Implemented as a macro. Returns the current bus clock rate. 
+         
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 #define SDHCD_GET_OPER_CLOCK(pHcd)      (pHcd)->CardProperties.OperBusClock
-
+ 
 /* prototypes */
 /* for HCD use */
 SDIO_STATUS SDIO_RegisterHostController(PSDHCD pHcd);
@@ -98,5 +98,5 @@ SDIO_STATUS SDIO_UnregisterHostController(PSDHCD pHcd);
 SDIO_STATUS SDIO_HandleHcdEvent(PSDHCD pHcd, HCD_EVENT Event);
 SDIO_STATUS SDIO_BusAddOSDevice(PSDDMA_DESCRIPTION pDma, POS_PNPDRIVER pDriver, POS_PNPDEVICE pDevice);
 void SDIO_BusRemoveOSDevice(POS_PNPDRIVER pDriver, POS_PNPDEVICE pDevice);
-
+ 
 #endif /* __SDIO_BUSDRIVER_H___ */

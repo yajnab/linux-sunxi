@@ -135,3 +135,4 @@ void __init aw_clksrc_init(void);
 void aw_clkevt_init(void);
 
 #endif  /* #ifndef __AW_CLOCKSRC_H__ */
+

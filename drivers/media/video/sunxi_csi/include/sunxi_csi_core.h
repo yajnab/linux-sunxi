@@ -14,15 +14,15 @@
 #include <mach/sys_config.h>
 
 //for internel driver debug
-#define DBG_EN   		0
+#define DBG_EN   		0 	
 //debug level 0~3
 #define DBG_LEVEL 	3
 
 //for internel driver debug
-#if(DBG_EN==1)
+#if(DBG_EN==1)		
 #define csi_dbg(l,x,arg...) if(l <= DBG_LEVEL) printk("[CSI_DEBUG]"x,##arg)
 #else
-#define csi_dbg(l,x,arg...)
+#define csi_dbg(l,x,arg...) 
 #endif
 
 //print when error happens
@@ -84,13 +84,13 @@ typedef enum tag_CSI_OUTPUT_FMT
     CSI_UV_CB_YUV420=5,
     CSI_MB_YUV422=8,
     CSI_MB_YUV420=9,
-
+    
     /* only when input is yuv444 */
     CSI_FIELD_PLANAR_YUV444 			 = 0,         /* parse a field(odd or even) into planar yuv444 */
     CSI_FIELD_UV_CB_YUV444_YUV422 = 1,         /* parse a field(odd or even) into planar yuv422 */
-    CSI_FRAME_PLANAR_YUV444 			 = 2,
+    CSI_FRAME_PLANAR_YUV444 			 = 2,				
     CSI_FRAME_UV_CB_YUV444_YUV422 = 3,
-
+    
 }__csi_output_fmt_t;
 
 /*
@@ -161,7 +161,7 @@ typedef struct tag_CSI_CONF
 
 typedef enum tag_CSI_BUF
 {
-    CSI_BUF_0_A,    /* FIFO for Y address A */
+    CSI_BUF_0_A,    /* FIFO for Y address A */  
     CSI_BUF_0_B,    /* FIFO for Y address B */
     CSI_BUF_1_A,    /* FIFO for Cb address A */
     CSI_BUF_1_B,    /* FIFO for Cb address B */
@@ -174,8 +174,8 @@ typedef enum tag_CSI_BUF
  */
 typedef struct tag_CSI_CAPTURE_STATUS
 {
-    _Bool picture_in_progress;
-    _Bool video_in_progress;
+    _Bool picture_in_progress;  
+    _Bool video_in_progress;    
 }__csi_capture_status;
 
 
@@ -184,7 +184,7 @@ typedef struct tag_CSI_CAPTURE_STATUS
  */
 typedef enum tag_CSI_DOUBLE_BUF
 {
-    CSI_BUF_A,
+    CSI_BUF_A,  
     CSI_BUF_B,
 }__csi_double_buf_t;
 
@@ -247,8 +247,8 @@ typedef struct tag_CSI_SUBDEV_INFO
     __csi_ref_t        vref;        /* input vref signal polarity */
     __csi_ref_t        href;        /* input href signal polarity */
     __csi_clk_t        clock;       /* input data valid of the input clock edge type */
-    int								 iocfg;				/*0 for csi back , 1 for csi front*/
-    int 							 stby_mode;
+    int								 iocfg;				/*0 for csi back , 1 for csi front*/				
+    int 							 stby_mode;			
 }__csi_subdev_info_t;
 
 struct csi_buf_addr {
@@ -263,8 +263,8 @@ struct csi_fmt {
 	enum v4l2_mbus_pixelcode		ccm_fmt;//linux-3.0
 	u32   											fourcc;          /* v4l2 format id */
 	enum v4l2_field							field;
-	__csi_input_fmt_t						input_fmt;
-	__csi_output_fmt_t 					output_fmt;
+	__csi_input_fmt_t						input_fmt;	
+	__csi_output_fmt_t 					output_fmt;	
 	__csi_field_sel_t						csi_field;
 	int   				depth;
 	u16	  				planes_cnt;
@@ -283,7 +283,7 @@ struct csi_buffer {
 
 struct csi_dmaqueue {
 	struct list_head active;
-
+	
 	/* Counters to control fps rate */
 	int frame;
 	int ini_jiffies;
@@ -302,7 +302,7 @@ struct ccm_config {
 	int hflip;
 	int stby_mode;
 	int interface;
-	int flash_pol;
+	int flash_pol;		
 //	user_gpio_set_t reset_io;
 //	user_gpio_set_t standby_io;
 //	user_gpio_set_t power_io;
@@ -314,17 +314,17 @@ struct ccm_config {
 	struct gpio_config power_io;
 	struct gpio_config flash_io;
 	struct gpio_config af_power_io;
-
+	
 	struct regulator 	 *iovdd;		  /*interface voltage source of sensor module*/
 	struct regulator 	 *avdd;			/*anlog voltage source of sensor module*/
 	struct regulator 	 *dvdd;			/*core voltage source of sensor module*/
 
-    //add by heyihang.Jan 15, 2013
+    //add by heyihang.Jan 15, 2013	
 	uint vol_iovdd;
 	uint vol_avdd;
 	uint vol_dvdd;
-
-	__csi_subdev_info_t ccm_info;
+	
+	__csi_subdev_info_t ccm_info;  
 	struct v4l2_subdev			*sd;
 };
 
@@ -335,7 +335,7 @@ struct csi_dev {
 	struct platform_device	*pdev;
 
 	int						id;
-
+	
 	spinlock_t              slock;
 
 	/* various device info */
@@ -357,7 +357,7 @@ struct csi_dev {
 	unsigned int						frame_size;
 	struct videobuf_queue   vb_vidq;
 	unsigned int 						capture_mode;
-
+	
 	/*working state*/
 	unsigned long 		   	generating;
 	int						opened;
@@ -368,7 +368,7 @@ struct csi_dev {
     //add by heyihang.Jan 17, 2013
     script_item_u     *csi_pin_list;
 	int               csi_pin_cnt;
-
+    
 	struct clk				*csi_clk_src;
 	struct clk				*csi_ahb_clk;
 	struct clk				*csi_module_clk;
@@ -378,9 +378,9 @@ struct csi_dev {
 	int						irq;
 	void __iomem			*regs;
 	struct resource			*regs_res;
-
+	
 	/*power issue*/
-
+	
 	int								 stby_mode;
 	struct regulator 	 *iovdd;		  /*interface voltage source of sensor module*/
   struct regulator 	 *avdd;			/*anlog voltage source of sensor module*/
@@ -390,13 +390,13 @@ struct csi_dev {
     uint vol_iovdd;
 	uint vol_avdd;
 	uint vol_dvdd;
-
+    
 	/* attribution */
 	int interface;
 	int vflip;
 	int hflip;
 	int flash_pol;
-
+	
 	/* csi io */
 //	user_gpio_set_t reset_io;
 //	user_gpio_set_t standby_io;
@@ -409,11 +409,11 @@ struct csi_dev {
 	struct gpio_config power_io;
 	struct gpio_config flash_io;
 	struct gpio_config af_power_io;
-
+	
 	/*parameters*/
 	__csi_conf_t			csi_mode;
 	struct csi_buf_addr		csi_buf_addr;
-
+	
 	/* ccm config */
   int dev_qty;
 	int module_flag;

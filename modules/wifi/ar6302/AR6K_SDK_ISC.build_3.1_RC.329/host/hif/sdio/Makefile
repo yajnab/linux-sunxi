@@ -1,7 +1,7 @@
 #------------------------------------------------------------------------------
 # <copyright file="makefile" company="Atheros">
 #    Copyright (c) 2005-2008 Atheros Corporation.  All rights reserved.
-#
+# 
 #
 # Permission to use, copy, modify, and/or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -23,7 +23,7 @@
 
 #
 #SDIO HIF makefile for atheros SDIO stack
-#
+#  
 
 # Check for SDIO stack
 ifdef ATH_SDIO_STACK_BASE
@@ -37,7 +37,7 @@ ifeq ($(_SDIO_STACK), YES)
     # SDIO stack is part of the kit and will need to be compiled
 ATH_SDIO_STACK_BASE := $(ATH_SRC_BASE)/sdiostack
 endif
-endif
+endif 
 
 ifeq ($(ATH_BUS_SUBTYPE),linux_sdio)
 _HIF_SUB_TYPE = linux_sdio

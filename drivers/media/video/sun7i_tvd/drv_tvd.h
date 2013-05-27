@@ -64,7 +64,7 @@ typedef enum
 struct fmt {
         u8              name[32];
         __u32           fourcc;          /* v4l2 format id */
-        tvd_fmt_t       output_fmt;
+        tvd_fmt_t       output_fmt;	
         int   	        depth;
         __u32           width;
         __u32           height;
@@ -220,7 +220,7 @@ struct tvd_dev {
 	struct platform_device	*pdev;
 
 	int			id;
-
+	
 	spinlock_t              slock;
 
 	/* various device info */
@@ -249,7 +249,7 @@ struct tvd_dev {
 	unsigned int            row;
 	unsigned int            column;
 	//unsigned int channel_en[4];
-	unsigned int            channel_index[4];
+	unsigned int            channel_index[4];	
 	unsigned int            channel_offset_y[4];
 	unsigned int            channel_offset_c[4];
 	unsigned int            channel_irq;
@@ -267,10 +267,10 @@ struct tvd_dev {
 	int			irq;
 	void __iomem		*regs;
 	struct resource		*regs_res; //??
-
+	
 	struct buf_addr		buf_addr;
 
-        //luma contrast saturation hue
+        //luma contrast saturation hue 
         unsigned int            luma;
         unsigned int            contrast;
         unsigned int            saturation;
@@ -279,5 +279,6 @@ struct tvd_dev {
         unsigned int            uv_swap;
         //fps
         struct v4l2_fract       fps;
-
+        
 };
+

@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // Copyright (c) 2009-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -201,7 +201,7 @@ static A_STATUS p2p_parse_p2p_ie(const A_UINT8 *data, A_UINT8 len, struct p2p_ie
         if (pos + 3 + attr_len > end) {
             return A_ERROR;
         }
-        if ((status = p2p_parse_subelement(pos[0], pos + 3, attr_len, msg)) !=
+        if ((status = p2p_parse_subelement(pos[0], pos + 3, attr_len, msg)) != 
                               A_OK) {
             return A_ERROR;
         }
@@ -606,7 +606,7 @@ static A_STATUS p2p_parse_ies(const A_UINT8 *data, A_UINT32 len, struct p2p_ie *
 }
 
 /* This function prunes the frame depending on its type to point the data ptr to
- * the IEs portion of the frame & calls the p2p_parse_ies() to parse the P2P &
+ * the IEs portion of the frame & calls the p2p_parse_ies() to parse the P2P & 
  * WPS IEs.
  */
 static A_STATUS p2p_parse(WMI_BI_FTYPE fType, const A_UINT8 *data, A_UINT32 len, struct p2p_ie *p2p_ie)
@@ -615,7 +615,7 @@ static A_STATUS p2p_parse(WMI_BI_FTYPE fType, const A_UINT8 *data, A_UINT32 len,
 
     switch(fType) {
     case BEACON_FTYPE:
-    case PROBERESP_FTYPE:
+    case PROBERESP_FTYPE: 
     /*
      * beacon/probe response frame format
      *  [8] time stamp
@@ -625,7 +625,7 @@ static A_STATUS p2p_parse(WMI_BI_FTYPE fType, const A_UINT8 *data, A_UINT32 len,
      */
         data += 12;
         len -= 12;
-        break;
+        break; 
     case ACTION_MGMT_FTYPE:
     /* Action frame format:
      *   [1] Category code
@@ -767,7 +767,7 @@ static void p2p_copy_client_info(struct host_p2p_dev *dev,
 //        }
 //        pos += 2 + pos[1];
 //    }
-//
+//    
 //    if (ie == NULL) {
 //        *buflen = 0;
 //        return A_OK; /* No specified vendor IE found */
@@ -1093,7 +1093,7 @@ void *p2p_init(void *dev)
     /* Allocate the device specific P2P context.
      */
     p2p_dev_ctx = (struct p2p_dev_ctx *)
-                       A_MALLOC_NOWAIT(sizeof(struct p2p_dev_ctx));
+                       A_MALLOC_NOWAIT(sizeof(struct p2p_dev_ctx));    
     if (!p2p_dev_ctx) {
         return NULL;
     }
@@ -1128,7 +1128,7 @@ void *p2p_bssinfo_rx(void *ctx, WMI_BI_FTYPE fType, A_UINT8 *addr, A_UINT16 chan
     } else {
         if (fType == BEACON_FTYPE || fType == PROBERESP_FTYPE) {
             /* If the bssinfo msg is of Beacon|Probe-resp type check if
-             * the device address or device id is present in the msg. if
+             * the device address or device id is present in the msg. if 
              * not ignore scan data without p2p device info or device id.
              */
             if (msg.p2p_device_addr) {
@@ -1194,7 +1194,7 @@ void *p2p_bssinfo_rx(void *ctx, WMI_BI_FTYPE fType, A_UINT8 *addr, A_UINT16 chan
                             continue;
                         }
 
-                        dev = p2p_get_device(p2p_dev_ctx, cli->p2p_device_addr);
+                        dev = p2p_get_device(p2p_dev_ctx, cli->p2p_device_addr);                        
                         if (dev) {
                             bss_t *bss=NULL;
                             /* Update device details if what is present is not got directly from the
@@ -1315,7 +1315,7 @@ void p2p_go_neg_req_rx(void *ctx, const A_UINT8 *datap, A_UINT8 len)
 
     /* The P2P/WPS IEs from the req buffer are copied to the resp. buffer.
      */
-
+    
     /* Send WMI_P2P_GO_NEG_REQ_RSP_CMD with the user result
      * , WPS method to use, go_intent to use.
      */
@@ -1324,7 +1324,7 @@ send_rsp:
         p2p_cmn_ctx->go_intent, peer->dev.wps_method, peer->dev.listen_freq,
             ev->wps_buf, ev->wps_buflen, ev->p2p_buf, ev->p2p_buflen,
                 ev->dialog_token);
-
+    
     return;
 }
 
@@ -1348,7 +1348,7 @@ void p2p_invite_req_rx(void *ctx, const A_UINT8 *datap, A_UINT8 len)
         status = P2P_SC_FAIL_INFO_CURRENTLY_UNAVAILABLE;
     } else {
     /* if the peer device is present in our dev list, check if the user has
-     * authorized to accept an invitation from this peer to join an active
+     * authorized to accept an invitation from this peer to join an active 
      * group.
      */
         if (!inv_req_ev->is_persistent) {
@@ -1389,7 +1389,7 @@ void p2p_prov_disc_req_rx(void *ctx, const A_UINT8 *datap, A_UINT8 len)
      * ev that the firmware would have sent prior to this event).
      */
     peer = p2p_get_device(p2p_dev_ctx, prov_disc_req_ev->sa);
-
+    
     /* Set up the WPS method in use by the peer in the device context.
      */
     if (peer) {
@@ -1404,8 +1404,8 @@ void p2p_prov_disc_req_rx(void *ctx, const A_UINT8 *datap, A_UINT8 len)
             peer->dev.flags |= P2P_DEV_PD_PEER_DISPLAY;
         }
     }
-
-    /* Report PD request event to the Supplicant so that the user App can
+    
+    /* Report PD request event to the Supplicant so that the user App can 
      * be prompted for any necessary inputs.
      */
 
@@ -1451,8 +1451,8 @@ void p2p_prov_disc_resp_rx(void *ctx, const A_UINT8 *datap, A_UINT8 len)
             peer->dev.flags |= P2P_DEV_PD_PEER_DISPLAY;
         }
     }
-
-    /* Report PD request event to the Supplicant so that the user App can
+    
+    /* Report PD request event to the Supplicant so that the user App can 
      * be prompted for any necessary inputs.
      */
     A_WMI_P2P_PROV_DISC_RESP_EVENT(p2p_dev_ctx->dev, prov_disc_resp_ev->peer,
@@ -1486,7 +1486,7 @@ A_STATUS p2p_auth_go_neg(void *ctx, WMI_P2P_GO_NEG_START_CMD *auth_go_neg_param)
     if (peer == NULL) {
         /* Unknown peer device.
          */
-        status = A_ERROR;
+        status = A_ERROR;    
     } else {
         /* Mark the peer as authorized by the user & ready for GO Negotiation.
          */
@@ -1511,7 +1511,7 @@ A_STATUS p2p_peer_reject(void *ctx, A_UINT8 *peer_addr)
     if (peer == NULL) {
         /* Unknown peer device.
          */
-        status = A_ERROR;
+        status = A_ERROR;    
     } else {
         peer->dev.flags |= P2P_DEV_USER_REJECTED;
     }
@@ -1532,7 +1532,7 @@ A_STATUS p2p_go_neg_start(void *ctx, WMI_P2P_GO_NEG_START_CMD *go_neg_param)
     if (peer == NULL) {
         /* Unknown peer device.
          */
-        return A_ERROR;
+        return A_ERROR;    
     }
 
     /* Monotonically increasing per device dialog tokens - generated from host
@@ -1599,7 +1599,7 @@ A_STATUS p2p_invite_cmd(void *ctx, WMI_P2P_INVITE_CMD *invite_param)
     if (peer == NULL) {
         /* Unknown peer device.
          */
-        return A_ERROR;
+        return A_ERROR;    
     }
 
     /* Monotonically increasing per device dialog tokens - generated from host
@@ -1629,7 +1629,7 @@ A_STATUS p2p_prov_disc_req(void *ctx, WMI_P2P_PROV_DISC_REQ_CMD *prov_disc_req)
     if (peer == NULL) {
         /* Unknown peer device.
          */
-        return A_ERROR;
+        return A_ERROR;    
     }
 
     /* Set up the PD Request cmd params.
@@ -1671,7 +1671,7 @@ void p2p_device_free(void *peer_dev)
 {
     struct host_p2p_dev *peer = (struct host_p2p_dev *)peer_dev;
 
-    /* decrement the ref count & free up the node if the ref. cnt becomes
+    /* decrement the ref count & free up the node if the ref. cnt becomes 
      * zero.
      */
     if (--peer->ref_cnt == 0) {
@@ -1718,9 +1718,9 @@ A_STATUS p2p_get_ifaddr (void *ctx, A_UINT8 *dev_addr)
     } else {
          status = A_DEVICE_NOT_FOUND;
     }
-
+    
     return status;
-
+    
 }
 
 A_STATUS p2p_get_devaddr (void *ctx, A_UINT8 *intf_addr)
@@ -1737,9 +1737,9 @@ A_STATUS p2p_get_devaddr (void *ctx, A_UINT8 *intf_addr)
     } else {
          status = A_DEVICE_NOT_FOUND;
     }
-
+    
     return status;
-
+    
 }
 
 A_STATUS wmi_p2p_get_go_params(void *ctx, A_UINT8 *go_dev_addr,

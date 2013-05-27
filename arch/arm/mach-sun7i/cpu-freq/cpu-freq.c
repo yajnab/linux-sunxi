@@ -35,6 +35,8 @@
 #include <linux/regulator/consumer.h>
 #include <mach/includes.h>
 
+#define AHB_APB_CLK_ASYNC
+
 static struct sunxi_cpu_freq_t  cpu_cur;    /* current cpu frequency configuration  */
 static unsigned int last_target = ~0;       /* backup last target frequency         */
 
@@ -43,6 +45,9 @@ static struct clk *clk_cpu; /* cpu clock handler */
 static struct clk *clk_axi; /* axi clock handler */
 static struct clk *clk_ahb; /* ahb clock handler */
 static struct clk *clk_apb; /* apb clock handler */
+#ifdef AHB_APB_CLK_ASYNC
+static struct clk *clk_sata_pll; /* apb clock handler */
+#endif
 
 static DEFINE_MUTEX(sunxi_cpu_lock);
 
@@ -66,12 +71,14 @@ struct cpufreq_dvfs {
     unsigned int    volt;   /* voltage for the frequency    */
 };
 static struct cpufreq_dvfs dvfs_table[] = {
-    {.freq = 1056000000, .volt = 1500}, /* core vdd is 1.50v if cpu frequency is (1008Mhz, xxxxMhz] */
-    {.freq = 1008000000, .volt = 1400}, /* core vdd is 1.40v if cpu frequency is (912Mhz,  1008Mhz] */
-    {.freq = 912000000,  .volt = 1350}, /* core vdd is 1.35v if cpu frequency is (864Mhz,   912Mhz] */
-    {.freq = 864000000,  .volt = 1300}, /* core vdd is 1.30v if cpu frequency is (624Mhz,   864Mhz] */
-    {.freq = 624000000,  .volt = 1250}, /* core vdd is 1.25v if cpu frequency is (60Mhz,    624Mhz] */
-    {.freq = 0,          .volt = 1000}, /* end of cpu dvfs table                                    */
+    {.freq = 1008000000, .volt = 1450}, /* core vdd is 1.40v if cpu frequency is (912Mhz,  1008Mhz] */
+    {.freq = 912000000,  .volt = 1400}, /* core vdd is 1.40v if cpu frequency is (864Mhz,   912Mhz] */
+    {.freq = 864000000,  .volt = 1300}, /* core vdd is 1.30v if cpu frequency is (720Mhz,   864Mhz] */
+    {.freq = 720000000,  .volt = 1200}, /* core vdd is 1.20v if cpu frequency is (528Mhz,   720Mhz] */
+    {.freq = 528000000,  .volt = 1100}, /* core vdd is 1.10v if cpu frequency is (336Mhz,   528Mhz] */
+    {.freq = 312000000,  .volt = 1000}, /* core vdd is 1.00v if cpu frequency is (144Mhz,   312Mhz] */
+    {.freq = 144000000,  .volt = 900},  /* core vdd is 0.90v if cpu frequency is (  0Mhz,   144Mhz] */
+    {.freq = 0,          .volt = 900},  /* end of cpu dvfs table                                    */
 };
 static struct cpufreq_dvfs dvfs_table_syscfg[TABLE_LENGTH];
 static unsigned int table_length_syscfg = 0;
@@ -94,8 +101,12 @@ static int sunxi_cpufreq_verify(struct cpufreq_policy *policy)
  */
 static void sunxi_cpufreq_show(const char *pfx, struct sunxi_cpu_freq_t *cfg)
 {
+#ifndef AHB_APB_CLK_ASYNC
 	CPUFREQ_DBG("%s: pll=%u, cpudiv=%u, axidiv=%u, ahbdiv=%u, apb=%u\n",
         pfx, cfg->pll, cfg->div.cpu_div, cfg->div.axi_div, cfg->div.ahb_div, cfg->div.apb_div);
+#else
+    CPUFREQ_DBG("%s: pll=%u, cpudiv=%u, axidiv=%u\n", pfx, cfg->pll, cfg->div.cpu_div, cfg->div.axi_div);
+#endif
 }
 
 
@@ -264,12 +275,14 @@ static inline int __set_cpufreq_hw(struct sunxi_cpu_freq_t *freq)
     /* try to adjuxt axi frequency */
     frequency /= freq->div.axi_div;
     ret |= clk_set_rate(clk_axi, frequency);
+#ifndef AHB_APB_CLK_ASYNC
     /* try to adjust ahb frequency */
     frequency /= freq->div.ahb_div;
     ret |= clk_set_rate(clk_ahb, frequency);
     /* try to adjust apb frequency */
     frequency /= freq->div.apb_div;
     ret |= clk_set_rate(clk_apb, frequency);
+#endif
 
     return ret;
 }
@@ -319,20 +332,26 @@ static int __set_cpufreq_target(struct sunxi_cpu_freq_t *old, struct sunxi_cpu_f
             old_freq.pll = 204000000;
             old_freq.div.cpu_div = 1;
             old_freq.div.axi_div = 1;
+#ifndef AHB_APB_CLK_ASYNC
             old_freq.div.ahb_div = 1;
             old_freq.div.apb_div = 2;
+#endif
             ret |= __set_cpufreq_hw(&old_freq);
+#ifndef AHB_APB_CLK_ASYNC
             /* set to 204Mhz (1:1:2:2) */
             old_freq.div.ahb_div = 2;
             ret |= __set_cpufreq_hw(&old_freq);
+#endif
         }
         if((old_freq.pll <= 408000000) && (new_freq.pll >= 408000000)) {
             /* set to 408Mhz (1:1:2:2) */
             old_freq.pll = 408000000;
             old_freq.div.cpu_div = 1;
             old_freq.div.axi_div = 1;
+#ifndef AHB_APB_CLK_ASYNC
             old_freq.div.ahb_div = 2;
             old_freq.div.apb_div = 2;
+#endif
             ret |= __set_cpufreq_hw(&old_freq);
             /* set to 408Mhz (1:2:2:2) */
             old_freq.div.axi_div = 2;
@@ -343,8 +362,10 @@ static int __set_cpufreq_target(struct sunxi_cpu_freq_t *old, struct sunxi_cpu_f
             old_freq.pll = 816000000;
             old_freq.div.cpu_div = 1;
             old_freq.div.axi_div = 2;
+#ifndef AHB_APB_CLK_ASYNC
             old_freq.div.ahb_div = 2;
             old_freq.div.apb_div = 2;
+#endif
             ret |= __set_cpufreq_hw(&old_freq);
             /* set to 816Mhz (1:3:2:2) */
             old_freq.div.axi_div = 3;
@@ -355,8 +376,10 @@ static int __set_cpufreq_target(struct sunxi_cpu_freq_t *old, struct sunxi_cpu_f
             old_freq.pll = 1200000000;
             old_freq.div.cpu_div = 1;
             old_freq.div.axi_div = 3;
+#ifndef AHB_APB_CLK_ASYNC
             old_freq.div.ahb_div = 2;
             old_freq.div.apb_div = 2;
+#endif
             ret |= __set_cpufreq_hw(&old_freq);
             /* set to 1200Mhz (1:4:2:2) */
             old_freq.div.axi_div = 4;
@@ -372,8 +395,10 @@ static int __set_cpufreq_target(struct sunxi_cpu_freq_t *old, struct sunxi_cpu_f
             old_freq.pll = 1200000000;
             old_freq.div.cpu_div = 1;
             old_freq.div.axi_div = 3;
+#ifndef AHB_APB_CLK_ASYNC
             old_freq.div.ahb_div = 2;
             old_freq.div.apb_div = 2;
+#endif
             ret |= __set_cpufreq_hw(&old_freq);
         }
         if((old_freq.pll > 816000000) && (new_freq.pll <= 816000000)) {
@@ -381,8 +406,10 @@ static int __set_cpufreq_target(struct sunxi_cpu_freq_t *old, struct sunxi_cpu_f
             old_freq.pll = 816000000;
             old_freq.div.cpu_div = 1;
             old_freq.div.axi_div = 3;
+#ifndef AHB_APB_CLK_ASYNC
             old_freq.div.ahb_div = 2;
             old_freq.div.apb_div = 2;
+#endif
             ret |= __set_cpufreq_hw(&old_freq);
             /* set to 816Mhz (1:2:2:2) */
             old_freq.div.axi_div = 2;
@@ -393,8 +420,10 @@ static int __set_cpufreq_target(struct sunxi_cpu_freq_t *old, struct sunxi_cpu_f
             old_freq.pll = 408000000;
             old_freq.div.cpu_div = 1;
             old_freq.div.axi_div = 2;
+#ifndef AHB_APB_CLK_ASYNC
             old_freq.div.ahb_div = 2;
             old_freq.div.apb_div = 2;
+#endif
             ret |= __set_cpufreq_hw(&old_freq);
             /* set to 816Mhz (1:1:2:2) */
             old_freq.div.axi_div = 1;
@@ -405,12 +434,16 @@ static int __set_cpufreq_target(struct sunxi_cpu_freq_t *old, struct sunxi_cpu_f
             old_freq.pll = 204000000;
             old_freq.div.cpu_div = 1;
             old_freq.div.axi_div = 1;
+#ifndef AHB_APB_CLK_ASYNC
             old_freq.div.ahb_div = 2;
             old_freq.div.apb_div = 2;
+#endif
             ret |= __set_cpufreq_hw(&old_freq);
             /* set to 204Mhz (1:1:1:2) */
+#ifndef AHB_APB_CLK_ASYNC
             old_freq.div.ahb_div = 1;
             ret |= __set_cpufreq_hw(&old_freq);
+#endif
         }
 
         /* adjust to target frequency */
@@ -426,20 +459,24 @@ static int __set_cpufreq_target(struct sunxi_cpu_freq_t *old, struct sunxi_cpu_f
         frequency = clk_get_rate(clk_cpu);
         frequency /= 4;
         clk_set_rate(clk_axi, frequency);
+#ifndef AHB_APB_CLK_ASYNC
         frequency /= 2;
         clk_set_rate(clk_ahb, frequency);
         frequency /= 2;
         clk_set_rate(clk_apb, frequency);
+#endif
 
         clk_set_rate(clk_pll, old->pll);
         frequency = old->pll / old->div.cpu_div;
         clk_set_rate(clk_cpu, frequency);
         frequency /= old->div.axi_div;
         clk_set_rate(clk_axi, frequency);
+#ifndef AHB_APB_CLK_ASYNC
         frequency /= old->div.ahb_div;
         clk_set_rate(clk_ahb, frequency);
         frequency /= old->div.apb_div;
         clk_set_rate(clk_apb, frequency);
+#endif
 
         CPUFREQ_ERR(KERN_ERR "no compatible settings cpu freq for %d\n", new_freq.pll);
         return -1;
@@ -507,7 +544,7 @@ static int sunxi_cpufreq_settarget(struct cpufreq_policy *policy, struct sunxi_c
             CPUFREQ_INF("try to set voltage failed!\n");
 
             /* notify everyone that clock transition finish */
-	    if (policy) {
+    	    if (policy) {
                 freqs.cpu = policy->cpu;
 	            freqs.old = freqs.new;
 	            freqs.new = cpu_cur.pll / 1000;
@@ -533,7 +570,7 @@ static int sunxi_cpufreq_settarget(struct cpufreq_policy *policy, struct sunxi_c
         #endif
 
         /* notify everyone that clock transition finish */
-	if (policy) {
+    	if (policy) {
             freqs.cpu = policy->cpu;
 	        freqs.old = freqs.new;
 	        freqs.new = cpu_cur.pll / 1000;
@@ -793,6 +830,8 @@ static int sunxi_cpufreq_init(struct cpufreq_policy *policy)
     policy->cur = sunxi_cpufreq_get(0);
     policy->min = policy->cpuinfo.min_freq = cpu_freq_min;
     policy->max = policy->cpuinfo.max_freq = cpu_freq_max;
+    policy->cpuinfo.max_freq = SUNXI_CPUFREQ_MAX / 1000;
+    policy->cpuinfo.min_freq = SUNXI_CPUFREQ_MIN / 1000;
     policy->governor = CPUFREQ_DEFAULT_GOVERNOR;
 
     /* feed the latency information from the cpu driver */
@@ -834,10 +873,12 @@ static int sunxi_cpufreq_getcur(struct sunxi_cpu_freq_t *cfg)
     cfg->div.cpu_div = cfg->pll / freq;
     freq0 = clk_get_rate(clk_axi);
     cfg->div.axi_div = freq / freq0;
+#ifndef AHB_APB_CLK_ASYNC
     freq = clk_get_rate(clk_ahb);
     cfg->div.ahb_div = freq0 / freq;
     freq0 = clk_get_rate(clk_apb);
     cfg->div.apb_div = freq /freq0;
+#endif
 
 	return 0;
 }
@@ -875,16 +916,16 @@ static int sunxi_cpufreq_resume(struct cpufreq_policy *policy)
 
 static ssize_t show_debug_mask(struct cpufreq_policy *policy, char *buf)
 {
-	return sprintf(buf, "%u\n", setgetfreq_debug);
+	return sprintf(buf, "%u\n", setgetfreq_debug);	
 }
-static ssize_t store_debug_mask	(struct cpufreq_policy *policy, const char *buf, size_t count)
-{
-	unsigned int ret = -EINVAL;
+static ssize_t store_debug_mask	(struct cpufreq_policy *policy, const char *buf, size_t count)		
+{									
+	unsigned int ret = -EINVAL;	
     int debug_mask = 0;
-
+									
 	ret = sscanf(buf, "%u", &debug_mask);
-	if (ret != 1)
-		return -EINVAL;
+	if (ret != 1)	
+		return -EINVAL;	
 	setgetfreq_debug = debug_mask;
 	return ret ? ret : count;
 }
@@ -927,6 +968,18 @@ static int __init sunxi_cpufreq_initcall(void)
 		CPUFREQ_INF(KERN_ERR "%s: could not get clock(s)\n", __func__);
 		return -ENOENT;
 	}
+
+#ifdef AHB_APB_CLK_ASYNC
+    CPUFREQ_INF("set ahb apb clock async\n");
+    clk_sata_pll = clk_get(NULL, "sata_pll");
+    if (IS_ERR(clk_sata_pll)) {
+        CPUFREQ_INF(KERN_ERR "%s: could not get clock(s)\n", __func__);
+		return -ENOENT;
+    }
+    clk_set_parent(clk_ahb, clk_sata_pll);
+    clk_set_rate(clk_ahb, 150000000);
+    clk_set_rate(clk_apb,  75000000);
+#endif
 
 	CPUFREQ_INF("%s: clocks pll=%lu,cpu=%lu,axi=%lu,ahp=%lu,apb=%lu\n", __func__,
 	       clk_get_rate(clk_pll), clk_get_rate(clk_cpu), clk_get_rate(clk_axi),
@@ -979,7 +1032,10 @@ static void __exit sunxi_cpufreq_exitcall(void)
     clk_put(clk_axi);
     clk_put(clk_ahb);
     clk_put(clk_apb);
-
+#ifdef AHB_APB_CLK_ASYNC
+    clk_put(clk_sata_pll);
+#endif
+    
 #ifdef CONFIG_CPU_FREQ_DVFS
     if(corevdd == NULL) {
     regulator_put(corevdd);
@@ -994,3 +1050,4 @@ MODULE_DESCRIPTION("cpufreq driver for sunxi SOCs");
 MODULE_LICENSE("GPL");
 module_init(sunxi_cpufreq_initcall);
 module_exit(sunxi_cpufreq_exitcall);
+

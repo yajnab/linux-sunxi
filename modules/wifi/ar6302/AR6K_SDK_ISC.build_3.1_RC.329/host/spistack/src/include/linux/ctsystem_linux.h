@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="ctsystem_linux.h" company="Atheros">
 //    Copyright (c) 2007-2008 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -22,7 +22,7 @@
 //==============================================================================
 #ifndef __CPSYSTEM_LINUX_H___
 #define __CPSYSTEM_LINUX_H___
-
+ 
 /* #define DBG_TIMESTAMP 1 */
 #define SD_TRACK_REQ 1
 
@@ -55,24 +55,24 @@
 #include <linux/interrupt.h>
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,9)
 #include <linux/pnp.h>
-#include <asm/hardirq.h>
+#include <asm/hardirq.h> 
 #endif
 #include <asm/semaphore.h>
 #include <asm/io.h>
-#include <asm/scatterlist.h>
+#include <asm/scatterlist.h> 
 #ifdef DBG_TIMESTAMP
-#include <asm/timex.h>
+#include <asm/timex.h>  
 #endif /* DBG_TIMESTAMP */
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,9)
-#ifndef in_atomic
+#ifndef in_atomic 
     /* released version of 2.6.9 */
-#include <linux/hardirq.h>
+#include <linux/hardirq.h> 
 #endif
 #endif
 #include <linux/delay.h>
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,0)
 #include <linux/device.h>
-#endif
+#endif 
 
 
 /* generic types */
@@ -106,9 +106,9 @@ typedef    unsigned int*    PEVENT_TYPE;
 typedef    struct semaphore OS_SEMAPHORE;
 typedef    struct semaphore* POS_SEMAPHORE;
 typedef    struct semaphore  OS_SIGNAL;    /* OS signals are just semaphores */
-typedef    struct semaphore* POS_SIGNAL;
+typedef    struct semaphore* POS_SIGNAL;  
 typedef    spinlock_t OS_CRITICALSECTION;
-typedef    spinlock_t *POS_CRITICALSECTION;
+typedef    spinlock_t *POS_CRITICALSECTION;  
 typedef    int              SDPOWER_STATE;
 typedef    unsigned long    ATOMIC_FLAGS;
 typedef    INT              THREAD_RETURN;
@@ -125,7 +125,7 @@ typedef    struct pnp_dev   OS_PNPDEVICE;
 typedef    struct pnp_dev*  POS_PNPDEVICE;
 typedef    struct module*   POS_MODULE;
 #else
-/* 2.4 */
+/* 2.4 */ 
 typedef    int              PKERNEL_TASK;
 typedef    PVOID            OS_DRIVER;
 typedef    PVOID*           POS_DRIVER;
@@ -178,18 +178,18 @@ typedef struct scatterlist SDDMA_DESCRIPTOR, *PSDDMA_DESCRIPTOR;
 #ifdef DEBUG
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @function: Evaluation the expression and throw an assertion if false.
-
+  
   @function name: DBG_ASSERT
   @prototype: void DBG_ASSERT(test)
   @category: Support_Reference
   @input:  test   - boolean expression
-
+ 
   @output: none
 
-  @return:
-
+  @return: 
+ 
   @notes: This function can be conditionally compiled using the c-define DEBUG.
-
+                
   @see also: DBG_PRINT
   @example: Assert test:
         count--;
@@ -223,19 +223,19 @@ extern cycles_t g_lasttimestamp;
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @function: Print a string to the debugger or console
-
+  
   @function name: DBG_PRINT
   @prototype: void DBG_PRINT(INT Level, string)
   @category: Support_Reference
   @input:  Level - debug level for the print
-
+ 
   @output: none
 
-  @return:
-
+  @return: 
+ 
   @notes: If Level is less than the current debug level, the print will be
           issued.  This function can be conditionally compiled using the c-define DEBUG.
-  @see also: REL_PRINT
+  @see also: REL_PRINT              
   @example: DBG_PRINT(MY_DBG_LEVEL, ("Return Status: %d\r\n",status));
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
@@ -275,30 +275,30 @@ extern CT_DEBUG_LEVEL debuglevel;
 #define DBG_SET_DEBUG_LEVEL(v) debuglevel = (v)
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @function: Print a string to the debugger or console
-
+  
   @function name: REL_PRINT
   @prototype: void REL_PRINT(INT Level, string)
   @category: Support_Reference
   @input:  Level - debug level for the print
-
+ 
   @output: none
 
-  @return:
-
+  @return: 
+ 
   @notes: If Level is less than the current debug level, the print will be
           issued. This print cannot be conditionally compiled.
-  @see also: DBG_PRINT
-
+  @see also: DBG_PRINT              
+ 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 #define REL_PRINT(lvl, args)\
     {if (lvl <= DBG_GET_DEBUG_LEVEL())\
         printk(SDDBG_KERNEL_PRINT_LEVEL _DBG_PRINTX_ARG args);\
     }
 /* debug output levels, this must be order low number to higher */
-#define SDDBG_ERROR 3
-#define SDDBG_WARN  4
-#define SDDBG_DEBUG 6
-#define SDDBG_TRACE 7
+#define SDDBG_ERROR 3  
+#define SDDBG_WARN  4  
+#define SDDBG_DEBUG 6  
+#define SDDBG_TRACE 7  
 
 #ifdef DBG_CRIT_SECTION_RECURSE
    /* this macro thows an exception if the lock is recursively taken
@@ -329,7 +329,7 @@ extern CT_DEBUG_LEVEL debuglevel;
 #define call_spin_lock(s) spin_lock_bh(s)
 #define call_spin_lock_irqsave(s,isc) spin_lock_irqsave(s,isc)
 #endif
-
+ 
 #define call_spin_unlock(s) spin_unlock_bh((s))
 #define call_spin_unlock_irqrestore(s,isc) spin_unlock_irqrestore(s,isc)
 
@@ -340,19 +340,19 @@ extern CT_DEBUG_LEVEL debuglevel;
 #endif
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @function: Initialize a critical section object.
-
+  
   @function name: CriticalSectionInit
   @prototype: SDIO_STATUS CriticalSectionInit(POS_CRITICALSECTION pCrit)
   @category: Support_Reference
   @output: pCrit - pointer to critical section to initialize
 
   @return: SDIO_STATUS_SUCCESS on success.
-
+ 
   @notes:  CriticalSectionDelete() must be called to cleanup any resources
            associated with the critical section.
 
-  @see also: CriticalSectionDelete, CriticalSectionAcquire, CriticalSectionRelease
-  @example: To initialize a critical section:
+  @see also: CriticalSectionDelete, CriticalSectionAcquire, CriticalSectionRelease 
+  @example: To initialize a critical section:        
         status = CriticalSectionInit(&pDevice->ListLock);
         if (!SDIO_SUCCESS(status)) {
                 .. failed
@@ -362,34 +362,34 @@ extern CT_DEBUG_LEVEL debuglevel;
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 static inline SDIO_STATUS CriticalSectionInit(POS_CRITICALSECTION pCrit) {
     spin_lock_init(pCrit);
-    return SDIO_STATUS_SUCCESS;
+    return SDIO_STATUS_SUCCESS;     
 }
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  @function: Acquire a critical section lock.
-
+  @function: Acquire a critical section lock. 
+  
   @function name: CriticalSectionAcquire
   @prototype: SDIO_STATUS CriticalSectionAcquire(POS_CRITICALSECTION pCrit)
   @category: Support_Reference
-
+  
   @input: pCrit - pointer to critical section that was initialized
 
   @return: SDIO_STATUS_SUCCESS on success.
-
-  @notes:  The critical section lock is acquired when this function returns
+ 
+  @notes:  The critical section lock is acquired when this function returns 
            SDIO_STATUS_SUCCESS.  Use CriticalSectionRelease() to release
            the critical section lock.
 
-  @see also: CriticalSectionRelease
+  @see also: CriticalSectionRelease            
 
-  @example: To acquire a critical section lock:
+  @example: To acquire a critical section lock:        
         status = CriticalSectionAcquire(&pDevice->ListLock);
         if (!SDIO_SUCCESS(status)) {
                 .. failed
             return status;
         }
         ... access protected data
-            // unlock
+            // unlock         
         status = CriticalSectionRelease(&pDevice->ListLock);
         if (!SDIO_SUCCESS(status)) {
                 .. failed
@@ -399,15 +399,15 @@ static inline SDIO_STATUS CriticalSectionInit(POS_CRITICALSECTION pCrit) {
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 static inline SDIO_STATUS CriticalSectionAcquire(POS_CRITICALSECTION pCrit) {
     call_spin_lock(pCrit);
-    return SDIO_STATUS_SUCCESS;
+    return SDIO_STATUS_SUCCESS; 
 }
 
 // macro-tized versions
 #define CriticalSectionAcquire_M(pCrit) \
-    SDIO_STATUS_SUCCESS; call_spin_lock(pCrit)
+    SDIO_STATUS_SUCCESS; call_spin_lock(pCrit) 
 #define CriticalSectionRelease_M(pCrit) \
     SDIO_STATUS_SUCCESS; call_spin_unlock(pCrit)
-
+    
 #define CT_DECLARE_IRQ_SYNC_CONTEXT() unsigned long _ctSyncFlags
 
 #define CriticalSectionAcquireSyncIrq(pCrit) \
@@ -417,59 +417,59 @@ static inline SDIO_STATUS CriticalSectionAcquire(POS_CRITICALSECTION pCrit) {
     SDIO_STATUS_SUCCESS; call_spin_unlock_irqrestore(pCrit,_ctSyncFlags)
 
 
-
+     
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  @function: Release a critical section lock.
-
+  @function: Release a critical section lock. 
+  
   @function name: CriticalSectionRelease
   @prototype: SDIO_STATUS CriticalSectionRelease(POS_CRITICALSECTION pCrit)
   @category: Support_Reference
-
+ 
   @input: pCrit - pointer to critical section that was initialized
 
   @return: SDIO_STATUS_SUCCESS on success.
+ 
+  @notes:  The critical section lock is released when this function returns 
+           SDIO_STATUS_SUCCESS. 
 
-  @notes:  The critical section lock is released when this function returns
-           SDIO_STATUS_SUCCESS.
-
-  @see also: CriticalSectionAcquire
-
+  @see also: CriticalSectionAcquire       
+  
   @example: see CriticalSectionAcquire
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 static inline SDIO_STATUS CriticalSectionRelease(POS_CRITICALSECTION pCrit) {
-    call_spin_unlock(pCrit);
-    return SDIO_STATUS_SUCCESS;
+    call_spin_unlock(pCrit); 
+    return SDIO_STATUS_SUCCESS; 
 }
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @function: Cleanup a critical section object
-
+  
   @function name: CriticalSectionDelete
   @prototype: void CriticalSectionDelete(POS_CRITICALSECTION pCrit)
   @category: Support_Reference
-
+  
   @input: pCrit - an initialized critical section object
 
   @return: SDIO_STATUS_SUCCESS on success.
+ 
+  @notes: 
 
-  @notes:
-
-  @see also: CriticalSectionInit, CriticalSectionAcquire, CriticalSectionRelease
+  @see also: CriticalSectionInit, CriticalSectionAcquire, CriticalSectionRelease            
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 static inline void CriticalSectionDelete(POS_CRITICALSECTION pCrit) {
-    return;
+    return; 
 }
 
 /* internal use */
 static inline SDIO_STATUS SignalInitialize(POS_SIGNAL pSignal) {
-    sema_init(pSignal, 0);
+    sema_init(pSignal, 0);       
     return SDIO_STATUS_SUCCESS;
 }
 /* internal use */
 static inline void SignalDelete(POS_SIGNAL pSignal) {
-    return;
+    return;  
 }
 /* internal use */
 static inline SDIO_STATUS SignalWaitInterruptible(POS_SIGNAL pSignal) {
@@ -495,23 +495,23 @@ static inline SDIO_STATUS SignalSet(POS_SIGNAL pSignal) {
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @function: Initialize a semaphore object.
-
+  
   @function name: SemaphoreInitialize
   @prototype: SDIO_STATUS SemaphoreInitialize(POS_SEMAPHORE pSem, UINT value)
   @category: Support_Reference
-
+  
   @input:  value - initial value of the semaphore
 
   @output: pSem - pointer to a semaphore object to initialize
 
   @return: SDIO_STATUS_SUCCESS on success.
-
+ 
   @notes:  SemaphoreDelete() must be called to cleanup any resources
            associated with the semaphore
 
   @see also: SemaphoreDelete, SemaphorePend, SemaphorePendInterruptable
-
-  @example: To initialize a semaphore:
+  
+  @example: To initialize a semaphore:        
         status = SemaphoreInitialize(&pDevice->ResourceSem,1);
         if (!SDIO_SUCCESS(status)) {
                 .. failed
@@ -525,46 +525,46 @@ static inline SDIO_STATUS SemaphoreInitialize(POS_SEMAPHORE pSem, UINT value) {
 }
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @function: Cleanup a semaphore object.
-
+  
   @function name: SemaphoreDelete
   @prototype: void SemaphoreDelete(POS_SEMAPHORE pSem)
   @category: Support_Reference
-
+  
   @input: pSem - pointer to a semaphore object to cleanup
 
   @return:
+ 
+  @notes:  
 
-  @notes:
-
-  @see also: SemaphoreInitialize
+  @see also: SemaphoreInitialize            
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 static inline void SemaphoreDelete(POS_SEMAPHORE pSem) {
     return;
 }
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @function: Acquire the semaphore or pend if the resource is not available
-
+  
   @function name: SemaphorePend
   @prototype: SDIO_STATUS SemaphorePend(POS_SEMAPHORE pSem)
   @category: Support_Reference
-
+  
   @input: pSem - pointer to an initialized semaphore object
 
   @return: SDIO_STATUS_SUCCESS on success.
-
+ 
   @notes: If the semaphore count is zero this function blocks until the count
-          becomes non-zero, otherwise the count is decremented and execution
-          continues. While waiting, the task/thread cannot be interrupted.
+          becomes non-zero, otherwise the count is decremented and execution 
+          continues. While waiting, the task/thread cannot be interrupted. 
           If the task or thread should be interruptible, use SemaphorePendInterruptible.
           On some OSes SemaphorePend and SemaphorePendInterruptible behave the same.
 
-  @see also: SemaphorePendInterruptable, SemaphorePost
-  @example: To wait for a resource using a semaphore:
+  @see also: SemaphorePendInterruptable, SemaphorePost          
+  @example: To wait for a resource using a semaphore:        
         status = SemaphorePend(&pDevice->ResourceSem);
         if (!SDIO_SUCCESS(status)) {
                 .. failed
             return status;
-        }
+        }     
         ... resource acquired
         SemaphorePost(&pDevice->ResourceSem);
 
@@ -576,27 +576,27 @@ static inline SDIO_STATUS SemaphorePend(POS_SEMAPHORE pSem) {
 }
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @function: Acquire the semaphore or pend if the resource is not available
-
+  
   @function name: SemaphorePendInterruptable
   @prototype: SDIO_STATUS SemaphorePendInterruptable(POS_SEMAPHORE pSem)
   @category: Support_Reference
-
+  
   @input: pSem - pointer to an initialized semaphore object
 
   @return: SDIO_STATUS_SUCCESS on success.
-
+ 
   @notes: If the semaphore count is zero this function blocks until the count
-          becomes non-zero, otherwise the count is decremented and execution
-          continues. While waiting, the task/thread can be interrupted.
+          becomes non-zero, otherwise the count is decremented and execution 
+          continues. While waiting, the task/thread can be interrupted. 
           If the task or thread should not be interruptible, use SemaphorePend.
 
-  @see also: SemaphorePend, SemaphorePost
-  @example: To wait for a resource using a semaphore:
+  @see also: SemaphorePend, SemaphorePost          
+  @example: To wait for a resource using a semaphore:        
         status = SemaphorePendInterruptable(&pDevice->ResourceSem);
         if (!SDIO_SUCCESS(status)) {
                 .. failed, could have been interrupted
             return status;
-        }
+        }  
         ... resource acquired
         SemaphorePost(&pDevice->ResourceSem);
 
@@ -611,24 +611,24 @@ static inline SDIO_STATUS SemaphorePendInterruptable(POS_SEMAPHORE pSem) {
 }
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @function: Post a semaphore.
-
+  
   @function name: SemaphorePost
   @prototype: SDIO_STATUS SemaphorePost(POS_SEMAPHORE pSem)
   @category: Support_Reference
-
+ 
   @input: pSem - pointer to an initialized semaphore object
 
   @return: SDIO_STATUS_SUCCESS on success.
-
+ 
   @notes: This function increments the semaphore count.
 
-  @see also: SemaphorePend, SemaphorePendInterruptable.
-  @example: Posting a semaphore:
+  @see also: SemaphorePend, SemaphorePendInterruptable.          
+  @example: Posting a semaphore:        
         status = SemaphorePendInterruptable(&pDevice->ResourceSem);
         if (!SDIO_SUCCESS(status)) {
                 .. failed, could have been interrupted
             return status;
-        }
+        }  
         ... resource acquired
             // post the semaphore
         SemaphorePost(&pDevice->ResourceSem);
@@ -643,29 +643,29 @@ static inline SDIO_STATUS SemaphorePost(POS_SEMAPHORE pSem) {
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @function: Allocate a block of kernel accessible memory
-
+  
   @function name: KernelAlloc
   @prototype: PVOID KernelAlloc(UINT size)
   @category: Support_Reference
-
+  
   @input: size - size of memory block to allocate
 
   @return: pointer to the allocated memory, NULL if allocation failed
-
+ 
   @notes: For operating systems that use paging, the allocated memory is always
           non-paged memory.  Caller should only use KernelFree() to release the
           block of memory.  This call can potentially block and should only be called
           from a schedulable context.  Use KernelAllocIrqSafe() if the allocation
           must be made from a non-schedulable context.
 
-  @see also: KernelFree, KernelAllocIrqSafe
-  @example: allocating memory:
+  @see also: KernelFree, KernelAllocIrqSafe         
+  @example: allocating memory:        
         pBlock = KernelAlloc(1024);
         if (pBlock == NULL) {
                 .. failed, no memory
             return SDIO_STATUS_INSUFFICIENT_RESOURCES;
-        }
-
+        }   
+        
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 static inline PVOID KernelAlloc(UINT size) {
     PVOID pMem = kmalloc(size, GFP_KERNEL);
@@ -674,21 +674,21 @@ static inline PVOID KernelAlloc(UINT size) {
 }
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @function: Free a block of kernel accessible memory.
-
+  
   @function name: KernelFree
   @prototype: void KernelFree(PVOID ptr)
   @category: Support_Reference
-
+  
   @input: ptr - pointer to memory allocated with KernelAlloc()
 
-  @return:
-
+  @return: 
+ 
   @notes: Caller should only use KernelFree() to release memory that was allocated
           with KernelAlloc().
 
-  @see also: KernelAlloc
+  @see also: KernelAlloc        
   @example: KernelFree(pBlock);
-
+        
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 static inline void KernelFree(PVOID ptr) {
     kfree(ptr);
@@ -696,29 +696,29 @@ static inline void KernelFree(PVOID ptr) {
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @function: Allocate a block of kernel accessible memory in an IRQ-safe manner
-
+  
   @function name: KernelAllocIrqSafe
   @prototype: PVOID KernelAllocIrqSafe(UINT size)
   @category: Support_Reference
-
+  
   @input: size - size of memory block to allocate
 
   @return: pointer to the allocated memory, NULL if allocation failed
-
+ 
   @notes: This variant of KernelAlloc allows the allocation of small blocks of
           memory from an ISR or from a context where scheduling has been disabled.
           The allocations should be small as the memory is typically allocated
-          from a critical heap. The caller should only use KernelFreeIrqSafe()
+          from a critical heap. The caller should only use KernelFreeIrqSafe() 
           to release the block of memory.
 
-  @see also: KernelAlloc, KernelFreeIrqSafe
-  @example: allocating memory:
+  @see also: KernelAlloc, KernelFreeIrqSafe     
+  @example: allocating memory:        
         pBlock = KernelAllocIrqSafe(16);
         if (pBlock == NULL) {
                 .. failed, no memory
             return SDIO_STATUS_INSUFFICIENT_RESOURCES;
-        }
-
+        }   
+        
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 static inline PVOID KernelAllocIrqSafe(UINT size) {
     return kmalloc(size, GFP_ATOMIC);
@@ -726,21 +726,21 @@ static inline PVOID KernelAllocIrqSafe(UINT size) {
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @function: Free a block of kernel accessible memory.
-
+  
   @function name: KernelFreeIrqSafe
   @prototype: void KernelFreeIrqSafe(PVOID ptr)
   @category: Support_Reference
-
+  
   @input: ptr - pointer to memory allocated with KernelAllocIrqSafe()
 
-  @return:
-
+  @return: 
+ 
   @notes: Caller should only use KernelFreeIrqSafe() to release memory that was allocated
           with KernelAllocIrqSafe().
 
-  @see also: KernelAllocIrqSafe
+  @see also: KernelAllocIrqSafe         
   @example: KernelFreeIrqSafe(pBlock);
-
+        
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 static inline void KernelFreeIrqSafe(PVOID ptr) {
     kfree(ptr);
@@ -749,7 +749,7 @@ static inline void KernelFreeIrqSafe(PVOID ptr) {
 /* error status conversions */
 static inline SYSTEM_STATUS SDIOErrorToOSError(SDIO_STATUS status) {
     switch (status) {
-        case SDIO_STATUS_SUCCESS:
+        case SDIO_STATUS_SUCCESS: 
             return 0;
         case SDIO_STATUS_INVALID_PARAMETER:
             return -EINVAL;
@@ -763,7 +763,7 @@ static inline SYSTEM_STATUS SDIOErrorToOSError(SDIO_STATUS status) {
             return -EINTR;
         case SDIO_STATUS_NO_RESOURCES:
             return -ENOMEM;
-        case SDIO_STATUS_ERROR:
+        case SDIO_STATUS_ERROR:    
         default:
             return -EFAULT;
     }
@@ -773,7 +773,7 @@ static inline SDIO_STATUS OSErrorToSDIOError(SYSTEM_STATUS status) {
         return SDIO_STATUS_SUCCESS;
     }
     switch (status) {
-        case -EINVAL:
+        case -EINVAL: 
             return SDIO_STATUS_INVALID_PARAMETER;
         case -ENXIO:
             return SDIO_STATUS_DEVICE_NOT_FOUND;
@@ -792,19 +792,19 @@ static inline SDIO_STATUS OSErrorToSDIOError(SYSTEM_STATUS status) {
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @function: Sleep or delay the execution context for a number of milliseconds.
-
+  
   @function name: OSSleep
   @prototype: SDIO_STATUS OSSleep(INT SleepInterval)
   @category: Support_Reference
-
+  
   @input: SleepInterval - time in milliseconds to put the execution context to sleep
 
   @return: SDIO_STATUS_SUCCESS if sleep succeeded.
+ 
+  @notes: Caller should be in a context that allows it to sleep or block.  The 
+  minimum duration of sleep may be greater than 1 MS on some platforms and OSes.   
 
-  @notes: Caller should be in a context that allows it to sleep or block.  The
-  minimum duration of sleep may be greater than 1 MS on some platforms and OSes.
-
-  @see also: OSSleep
+  @see also: OSSleep         
   @example: Using sleep to delay
         EnableSlotPower(pSlot);
             // wait for power to settle
@@ -813,51 +813,51 @@ static inline SDIO_STATUS OSErrorToSDIOError(SYSTEM_STATUS status) {
             // failed..
         }
 
-
+        
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 static inline SDIO_STATUS OSSleep(INT SleepInterval) {
-    UINT32 delta;
+    UINT32 delta; 
 
     DBG_ASSERT_WITH_MSG(!NonSchedulable(),"OSSleep not allowed\n");
         /* convert timeout to ticks */
     delta = (SleepInterval * HZ)/1000;
     if (delta == 0) {
-        delta = 1;
+        delta = 1;  
     }
     set_current_state(TASK_INTERRUPTIBLE);
     if (schedule_timeout(delta) != 0) {
-        return SDIO_STATUS_INTERRUPTED;
+        return SDIO_STATUS_INTERRUPTED;    
     }
     return SDIO_STATUS_SUCCESS;
-}
+} 
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @function: get the OSs device object
-
+  
   @function name: SD_GET_OS_DEVICE
   @prototype: POS_DEVICE SD_GET_OS_DEVICE(PSDDEVICE pDevice)
   @category: Support_Reference
-
+  
   @input: pDevice - the device on the HCD
 
   @return: pointer to the OSs device
 
-  @see also:
+  @see also:         
   @example: obtain low level device
-        pFunctionContext->GpsDevice.Port.dev = SD_GET_OS_DEVICE(pDevice);
+        pFunctionContext->GpsDevice.Port.dev = SD_GET_OS_DEVICE(pDevice); 
 
-
+        
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 #define SD_GET_OS_DEVICE(pDevice) &((pDevice)->Device.dev)
 
 
-#ifdef __iomem
+#ifdef __iomem 
     /* new type checking in 2.6.9 */
     /* I/O Access macros */
 #define _READ_DWORD_REG(reg)  \
         readl((const volatile void __iomem *)(reg))
 #define _READ_WORD_REG(reg)  \
-        readw((const volatile void __iomem *)(reg))
+        readw((const volatile void __iomem *)(reg)) 
 #define _READ_BYTE_REG(reg)  \
         readb((const volatile void __iomem *)(reg))
 #define _WRITE_DWORD_REG(reg,value)  \
@@ -880,14 +880,14 @@ static inline SDIO_STATUS OSSleep(INT SleepInterval) {
         writew((value),(reg))
 #define _WRITE_BYTE_REG(reg,value)  \
         writeb((value),(reg))
-#endif
+#endif        
     /* atomic operators */
 static inline ATOMIC_FLAGS AtomicTest_Set(volatile ATOMIC_FLAGS *pValue, INT BitNo) {
-    return test_and_set_bit(BitNo,(ATOMIC_FLAGS *)pValue);
-}
+    return test_and_set_bit(BitNo,(ATOMIC_FLAGS *)pValue);    
+}   
 static inline ATOMIC_FLAGS AtomicTest_Clear(volatile ATOMIC_FLAGS *pValue, INT BitNo) {
-    return test_and_clear_bit(BitNo,(ATOMIC_FLAGS *)pValue);
-}
+    return test_and_clear_bit(BitNo,(ATOMIC_FLAGS *)pValue);    
+}  
 
 struct _OSKERNEL_HELPER;
 
@@ -897,70 +897,70 @@ typedef struct _OSKERNEL_HELPER {
     PKERNEL_TASK            pTask;
     BOOL                    ShutDown;
     OS_SIGNAL               WakeSignal;
-    struct completion       Completion;
+    struct completion       Completion; 
     PVOID                   pContext;
     PHELPER_FUNCTION        pHelperFunc;
 }OSKERNEL_HELPER, *POSKERNEL_HELPER;
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @function: Wake the helper thread
-
+  
   @function name: SD_WAKE_OS_HELPER
   @prototype: SD_WAKE_OS_HELPER(POSKERNEL_HELPER pOSHelper)
   @category: Support_Reference
-
+  
   @input: pOSHelper - the OS helper object
 
-  @return: SDIO_STATUS
+  @return: SDIO_STATUS 
 
   @see also: SDLIB_OSCreateHelper
-
+         
   @example: Waking up a helper thread
-        status = SD_WAKE_OS_HELPER(&pInstance->OSHelper);
+        status = SD_WAKE_OS_HELPER(&pInstance->OSHelper); 
 
-
+        
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 #define SD_WAKE_OS_HELPER(p)        SignalSet(&(p)->WakeSignal)
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @function: Obtains the context for the helper function
-
+  
   @function name: SD_GET_OS_HELPER_CONTEXT
   @prototype: SD_GET_OS_HELPER_CONTEXT(POSKERNEL_HELPER pOSHelper)
   @category: Support_Reference
-
+  
   @input: pOSHelper - the OS helper object
 
-  @return: helper specific context
-
+  @return: helper specific context  
+  
   @notes: This macro should only be called by the function associated with
           the helper object.
-
+          
   @see also: SDLIB_OSCreateHelper
-
+         
   @example: Getting the helper specific context
-        PMYCONTEXT pContext = (PMYCONTEXT)SD_GET_OS_HELPER_CONTEXT(pHelper);
+        PMYCONTEXT pContext = (PMYCONTEXT)SD_GET_OS_HELPER_CONTEXT(pHelper); 
 
-
+        
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 #define SD_GET_OS_HELPER_CONTEXT(p)     (p)->pContext
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @function: Check helper function shut down flag.
-
+  
   @function name: SD_IS_HELPER_SHUTTING_DOWN
   @prototype: SD_IS_HELPER_SHUTTING_DOWN(POSKERNEL_HELPER pOSHelper)
   @category: Support_Reference
-
+  
   @input: pOSHelper - the OS helper object
 
-  @return: TRUE if shutting down, else FALSE
-
+  @return: TRUE if shutting down, else FALSE 
+  
   @notes: This macro should only be called by the function associated with
           the helper object.  The function should call this macro when it
-          unblocks from the call to SD_WAIT_FOR_WAKEUP().  If this function
-          returns TRUE, the function should clean up and exit.
-
+          unblocks from the call to SD_WAIT_FOR_WAKEUP().  If this function 
+          returns TRUE, the function should clean up and exit. 
+          
   @see also: SDLIB_OSCreateHelper , SD_WAIT_FOR_WAKEUP
-
+         
   @example: Checking for shutdown
         while(1) {
               status = SD_WAIT_FOR_WAKEUP(pHelper);
@@ -972,27 +972,27 @@ typedef struct _OSKERNEL_HELPER {
                   break;
               }
         }
-
+        
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 #define SD_IS_HELPER_SHUTTING_DOWN(p)   (p)->ShutDown
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @function: Suspend and wait for wakeup signal
-
+  
   @function name: SD_WAIT_FOR_WAKEUP
   @prototype: SD_WAIT_FOR_WAKEUP(POSKERNEL_HELPER pOSHelper)
   @category: Support_Reference
-
+  
   @input: pOSHelper - the OS helper object
 
   @return: SDIO_STATUS
-
+  
   @notes: This macro should only be called by the function associated with
           the helper object.  The function should call this function to suspend (block)
-          itself and wait for a wake up signal. The function should always check
+          itself and wait for a wake up signal. The function should always check 
           whether the function should exit by calling SD_IS_HELPER_SHUTTING_DOWN.
-
+          
   @see also: SDLIB_OSCreateHelper , SD_IS_HELPER_SHUTTING_DOWN
-
+         
   @example: block on the wake signal
         while(1) {
               status = SD_WAIT_FOR_WAKEUP(pHelper);
@@ -1004,10 +1004,10 @@ typedef struct _OSKERNEL_HELPER {
                   break;
               }
         }
-
+        
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-#define SD_WAIT_FOR_WAKEUP(p)   SignalWait(&(p)->WakeSignal);
-
+#define SD_WAIT_FOR_WAKEUP(p)   SignalWait(&(p)->WakeSignal); 
+ 
 #define CT_LE16_TO_CPU_ENDIAN(x) __le16_to_cpu(x)
 #define CT_LE32_TO_CPU_ENDIAN(x) __le32_to_cpu(x)
 #define CT_CPU_ENDIAN_TO_LE16(x) __cpu_to_le16(x)
@@ -1018,3 +1018,4 @@ typedef struct _OSKERNEL_HELPER {
 #define CT_BE16_TO_CPU_ENDIAN(x) __be16_to_cpu(x)
 #define CT_BE32_TO_CPU_ENDIAN(x) __be32_to_cpu(x)
 #endif /* __CPSYSTEM_LINUX_H___ */
+

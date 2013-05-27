@@ -10,3 +10,5 @@ resume0_bin_start:
 	.globl	resume0_bin_end
 resume0_bin_end:
 	.align	4
+	
+	

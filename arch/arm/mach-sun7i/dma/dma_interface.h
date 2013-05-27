@@ -19,3 +19,4 @@
 bool dma_handle_is_valid(dma_hdl_t dma_hdl);
 
 #endif  /* __DMA_INTERFACE_H */
+

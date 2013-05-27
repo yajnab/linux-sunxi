@@ -23,7 +23,7 @@ typedef enum
 #define IDTOHAND(ID)  ((ID) + 100)
 
 
-#define DISP_IO_NUM     8
+#define DISP_IO_NUM     8 
 #define DISP_IO_SCALER0 0
 #define DISP_IO_SCALER1 1
 #define DISP_IO_IMAGE0  2

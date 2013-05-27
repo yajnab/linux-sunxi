@@ -10,7 +10,7 @@
 *
 * Author 		: javen
 *
-* Description 	: è™šæ‹Ÿ hub
+* Description 	: ÐéÄâ hub
 *
 * History 		:
 *      <author>    		<time>       	<version >    		<desc>
@@ -41,7 +41,7 @@
 *    only suspend USB port
 *
 * Parameters:
-*    sw_hcd        :  input.  USBæŽ§åˆ¶å™¨
+*    sw_hcd        :  input.  USB¿ØÖÆÆ÷
 *
 * Return value:
 *    void
@@ -55,11 +55,11 @@ void sw_hcd_port_suspend_ex(struct sw_hcd *sw_hcd)
 {
     /* if peripheral connect, suspend the device */
     if (sw_hcd->is_active) {
-	/* suspend usb port */
-	USBC_Host_SuspendPort(sw_hcd->sw_hcd_io->usb_bsp_hdle);
+    	/* suspend usb port */
+    	USBC_Host_SuspendPort(sw_hcd->sw_hcd_io->usb_bsp_hdle);
 
-	/* delay for 1000ms */
-	mdelay(1000);
+    	/* delay for 1000ms */
+    	mdelay(1000);
     }
 
 	return;
@@ -73,7 +73,7 @@ void sw_hcd_port_suspend_ex(struct sw_hcd *sw_hcd)
 *    only resume USB port
 *
 * Parameters:
-*    sw_hcd        :  input.  USBæŽ§åˆ¶å™¨
+*    sw_hcd        :  input.  USB¿ØÖÆÆ÷
 *
 * Return value:
 *    void
@@ -101,7 +101,7 @@ void sw_hcd_port_resume_ex(struct sw_hcd *sw_hcd)
 *    only reset USB port
 *
 * Parameters:
-*    sw_hcd        :  input.  USBæŽ§åˆ¶å™¨
+*    sw_hcd        :  input.  USB¿ØÖÆÆ÷
 *
 * Return value:
 *    void
@@ -133,7 +133,7 @@ void sw_hcd_port_reset_ex(struct sw_hcd *sw_hcd)
 *    suspend USB port
 *
 * Parameters:
-*    sw_hcd        :  input.  USBæŽ§åˆ¶å™¨
+*    sw_hcd        :  input.  USB¿ØÖÆÆ÷
 *    do_suspend  :  input.  flag. is suspend USB port or not?
 *
 * Return value:
@@ -207,7 +207,7 @@ static void sw_hcd_port_suspend(struct sw_hcd *sw_hcd, bool do_suspend)
 *    reset USB port
 *
 * Parameters:
-*    sw_hcd       :  input.  USBæŽ§åˆ¶å™¨
+*    sw_hcd       :  input.  USB¿ØÖÆÆ÷
 *    do_reset   :  input.  flag. is reset USB port or not?
 *
 * Return value:
@@ -314,10 +314,10 @@ static void sw_hcd_port_reset(struct sw_hcd *sw_hcd, bool do_reset)
 *                     sw_hcd_root_disconnect
 *
 * Description:
-*    æ–­å¼€è¿žæŽ¥
+*    ¶Ï¿ªÁ¬½Ó
 *
 * Parameters:
-*    sw_hcd       :  input.  USBæŽ§åˆ¶å™¨
+*    sw_hcd       :  input.  USB¿ØÖÆÆ÷
 *
 * Return value:
 *    void
@@ -425,67 +425,67 @@ int sw_hcd_hub_control(struct usb_hcd	*hcd,
 	 */
 	switch (typeReq) {
         case ClearHubFeature:
-	case SetHubFeature:
-		switch (wValue) {
-			case C_HUB_OVER_CURRENT:
-			case C_HUB_LOCAL_POWER:
-				break;
+    	case SetHubFeature:
+    		switch (wValue) {
+        		case C_HUB_OVER_CURRENT:
+        		case C_HUB_LOCAL_POWER:
+        			break;
 
-			default:
-				goto error;
-		}
+        		default:
+        			goto error;
+    		}
         break;
 
-	case ClearPortFeature:
-		if ((wIndex & 0xff) != 1){
-		    goto error;
-		}
+    	case ClearPortFeature:
+    		if ((wIndex & 0xff) != 1){
+    		    goto error;
+    		}
 
-		switch (wValue) {
-			case USB_PORT_FEAT_ENABLE:
-		    break;
+    		switch (wValue) {
+        		case USB_PORT_FEAT_ENABLE:
+        	    break;
 
-		    case USB_PORT_FEAT_SUSPEND:
-			    sw_hcd_port_suspend(sw_hcd, false);
-			break;
+    		    case USB_PORT_FEAT_SUSPEND:
+    			    sw_hcd_port_suspend(sw_hcd, false);
+    			break;
 
-		    case USB_PORT_FEAT_POWER:
+    		    case USB_PORT_FEAT_POWER:
 					/* fixme */
 				    sw_hcd_set_vbus(sw_hcd, 0);
-			break;
+    			break;
 
-			case USB_PORT_FEAT_C_CONNECTION:
-			case USB_PORT_FEAT_C_ENABLE:
-			case USB_PORT_FEAT_C_OVER_CURRENT:
-			case USB_PORT_FEAT_C_RESET:
-			case USB_PORT_FEAT_C_SUSPEND:
-			break;
+        		case USB_PORT_FEAT_C_CONNECTION:
+        		case USB_PORT_FEAT_C_ENABLE:
+        		case USB_PORT_FEAT_C_OVER_CURRENT:
+        		case USB_PORT_FEAT_C_RESET:
+        		case USB_PORT_FEAT_C_SUSPEND:
+    			break;
 
-			default:
-				goto error;
-		}
+        		default:
+        			goto error;
+    		}
 
-		DMSG_DBG_HCD("DBG: clear feature %d\n", wValue);
-		sw_hcd->port1_status &= ~(1 << wValue);
+    		DMSG_DBG_HCD("DBG: clear feature %d\n", wValue);
+    		sw_hcd->port1_status &= ~(1 << wValue);
         break;
 
-	case GetHubDescriptor:
+    	case GetHubDescriptor:
         {
-		struct usb_hub_descriptor *desc = (void *)buf;
+    		struct usb_hub_descriptor *desc = (void *)buf;
 
-		desc->bDescLength = 9;
-		desc->bDescriptorType = 0x29;
-		desc->bNbrPorts = 1;
-		desc->wHubCharacteristics = cpu_to_le16(
-				  0x0001	/* per-port power switching */
-				| 0x0010	/* no overcurrent reporting */
-				);
-		desc->bPwrOn2PwrGood = 5;	/* msec/2 */
-		desc->bHubContrCurrent = 0;
+    		desc->bDescLength = 9;
+    		desc->bDescriptorType = 0x29;
+    		desc->bNbrPorts = 1;
+    		desc->wHubCharacteristics = cpu_to_le16(
+    				  0x0001	/* per-port power switching */
+    				| 0x0010	/* no overcurrent reporting */
+    				);
+    		desc->bPwrOn2PwrGood = 5;	/* msec/2 */
+    		desc->bHubContrCurrent = 0;
 
-		/* workaround bogus struct definition */
-		desc->u.hs.DeviceRemovable[0] = 0x02;	/* port 1 */
-		desc->u.hs.DeviceRemovable[1] = 0xff;
+    		/* workaround bogus struct definition */
+    		desc->u.hs.DeviceRemovable[0] = 0x02;	/* port 1 */
+    		desc->u.hs.DeviceRemovable[1] = 0xff;
         }
 		break;
 
@@ -496,141 +496,141 @@ int sw_hcd_hub_control(struct usb_hcd	*hcd,
 
 	    case GetPortStatus:
 	    {
-		if (wIndex != 1){
-		    DMSG_PANIC("ERR: GetPortStatus parameter wIndex is not 1.\n");
-		    goto error;
-		}
+    		if (wIndex != 1){
+    		    DMSG_PANIC("ERR: GetPortStatus parameter wIndex is not 1.\n");
+    		    goto error;
+    		}
 
-		/* finish RESET signaling? */
-		if ((sw_hcd->port1_status & USB_PORT_STAT_RESET)
-				&& time_after_eq(jiffies, sw_hcd->rh_timer)){
-			sw_hcd_port_reset(sw_hcd, false);
-		}
+    		/* finish RESET signaling? */
+    		if ((sw_hcd->port1_status & USB_PORT_STAT_RESET)
+    				&& time_after_eq(jiffies, sw_hcd->rh_timer)){
+    			sw_hcd_port_reset(sw_hcd, false);
+    		}
 
-		/* finish RESUME signaling? */
-		if ((sw_hcd->port1_status & SW_HCD_PORT_STAT_RESUME)
-				&& time_after_eq(jiffies, sw_hcd->rh_timer)) {
-			u8 power = 0;
+    		/* finish RESUME signaling? */
+    		if ((sw_hcd->port1_status & SW_HCD_PORT_STAT_RESUME)
+    				&& time_after_eq(jiffies, sw_hcd->rh_timer)) {
+    			u8 power = 0;
 
-			power = USBC_Readb(USBC_REG_PCTL(usbc_base));
+    			power = USBC_Readb(USBC_REG_PCTL(usbc_base));
 				power &= ~(1 << USBC_BP_POWER_H_RESUME);
-			USBC_Writeb(power, USBC_REG_PCTL(usbc_base));
+    			USBC_Writeb(power, USBC_REG_PCTL(usbc_base));
 
-			DMSG_DBG_HCD("DBG: root port resume stopped, power %02x\n", power);
+    			DMSG_DBG_HCD("DBG: root port resume stopped, power %02x\n", power);
 
-			/* ISSUE:  DaVinci (RTL 1.300) disconnects after
-			 * resume of high speed peripherals (but not full
-			 * speed ones).
-			 */
+    			/* ISSUE:  DaVinci (RTL 1.300) disconnects after
+    			 * resume of high speed peripherals (but not full
+    			 * speed ones).
+    			 */
 
-			sw_hcd->is_active = 1;
-			sw_hcd->port1_status &= ~(USB_PORT_STAT_SUSPEND
-					| SW_HCD_PORT_STAT_RESUME);
-			sw_hcd->port1_status |= USB_PORT_STAT_C_SUSPEND << 16;
+    			sw_hcd->is_active = 1;
+    			sw_hcd->port1_status &= ~(USB_PORT_STAT_SUSPEND
+    					| SW_HCD_PORT_STAT_RESUME);
+    			sw_hcd->port1_status |= USB_PORT_STAT_C_SUSPEND << 16;
 
-			usb_hcd_poll_rh_status(sw_hcd_to_hcd(sw_hcd));
-		}
+    			usb_hcd_poll_rh_status(sw_hcd_to_hcd(sw_hcd));
+    		}
 
-		put_unaligned(cpu_to_le32(sw_hcd->port1_status
-					& ~SW_HCD_PORT_STAT_RESUME),
-				(__le32 *) buf);
+    		put_unaligned(cpu_to_le32(sw_hcd->port1_status
+    					& ~SW_HCD_PORT_STAT_RESUME),
+    				(__le32 *) buf);
 
-		/* port change status is more interesting */
-		DMSG_DBG_HCD("DBG: port status %08x\n", sw_hcd->port1_status);
-	}
+    		/* port change status is more interesting */
+    		DMSG_DBG_HCD("DBG: port status %08x\n", sw_hcd->port1_status);
+    	}
 		break;
 
 	    case SetPortFeature:
 	    {
-		if ((wIndex & 0xff) != 1){
-		    goto error;
-		}
+    		if ((wIndex & 0xff) != 1){
+    		    goto error;
+    		}
 
-		switch (wValue) {
-		    case USB_PORT_FEAT_POWER:
-				/* NOTE: this controller has a strange state machine
-				 * that involves "requesting sessions" according to
-				 * magic side effects from incompletely-described
-				 * rules about startup...
-				 *
-				 * This call is what really starts the host mode; be
-				 * very careful about side effects if you reorder any
-				 * initialization logic, e.g. for OTG, or change any
-				 * logic relating to VBUS power-up.
-				 */
+    		switch (wValue) {
+    		    case USB_PORT_FEAT_POWER:
+        			/* NOTE: this controller has a strange state machine
+        			 * that involves "requesting sessions" according to
+        			 * magic side effects from incompletely-described
+        			 * rules about startup...
+        			 *
+        			 * This call is what really starts the host mode; be
+        			 * very careful about side effects if you reorder any
+        			 * initialization logic, e.g. for OTG, or change any
+        			 * logic relating to VBUS power-up.
+        			 */
 
-				sw_hcd_start(sw_hcd);
+        			sw_hcd_start(sw_hcd);
 
-			break;
+    			break;
 
-		    case USB_PORT_FEAT_RESET:
-			    sw_hcd_port_reset(sw_hcd, true);
-			break;
+    		    case USB_PORT_FEAT_RESET:
+    			    sw_hcd_port_reset(sw_hcd, true);
+    			break;
 
-		    case USB_PORT_FEAT_SUSPEND:
-			    sw_hcd_port_suspend(sw_hcd, true);
-			break;
+    		    case USB_PORT_FEAT_SUSPEND:
+    			    sw_hcd_port_suspend(sw_hcd, true);
+    			break;
 
-		    case USB_PORT_FEAT_TEST:
-		    {
-			    if (unlikely(is_host_active(sw_hcd))){
-			        DMSG_PANIC("ERR: usb host is not active\n");
-				    goto error;
-				}
+    		    case USB_PORT_FEAT_TEST:
+    		    {
+    			    if (unlikely(is_host_active(sw_hcd))){
+    			        DMSG_PANIC("ERR: usb host is not active\n");
+    				    goto error;
+    				}
 
-			    wIndex >>= 8;
-				switch (wIndex) {
-				case 1:
-					DMSG_DBG_HCD("TEST_J\n");
-					temp =  1 << USBC_BP_TMCTL_TEST_J;
-					break;
+    			    wIndex >>= 8;
+        			switch (wIndex) {
+            			case 1:
+            				DMSG_DBG_HCD("TEST_J\n");
+            				temp =  1 << USBC_BP_TMCTL_TEST_J;
+        				break;
 
-				case 2:
-					DMSG_DBG_HCD("TEST_K\n");
-					temp = 1 << USBC_BP_TMCTL_TEST_K;
-					break;
+            			case 2:
+            				DMSG_DBG_HCD("TEST_K\n");
+            				temp = 1 << USBC_BP_TMCTL_TEST_K;
+        				break;
 
-				case 3:
-					DMSG_DBG_HCD("TEST_SE0_NAK\n");
-					temp = 1 << USBC_BP_TMCTL_TEST_SE0_NAK;
-					break;
+            			case 3:
+            				DMSG_DBG_HCD("TEST_SE0_NAK\n");
+            				temp = 1 << USBC_BP_TMCTL_TEST_SE0_NAK;
+        				break;
 
-				case 4:
-					DMSG_DBG_HCD("TEST_PACKET\n");
-					temp = 1 << USBC_BP_TMCTL_TEST_PACKET;
-					sw_hcd_load_testpacket(sw_hcd);
-					break;
+            			case 4:
+            				DMSG_DBG_HCD("TEST_PACKET\n");
+            				temp = 1 << USBC_BP_TMCTL_TEST_PACKET;
+            				sw_hcd_load_testpacket(sw_hcd);
+        				break;
 
-				case 5:
-					DMSG_DBG_HCD("TEST_FORCE_ENABLE\n");
-					temp = (1 << USBC_BP_TMCTL_FORCE_HOST)
-						| (1 << USBC_BP_TMCTL_FORCE_HS);
+            			case 5:
+            				DMSG_DBG_HCD("TEST_FORCE_ENABLE\n");
+            				temp = (1 << USBC_BP_TMCTL_FORCE_HOST)
+            					| (1 << USBC_BP_TMCTL_FORCE_HS);
 
-				    USBC_REG_set_bit_b(USBC_BP_DEVCTL_SESSION, USBC_REG_DEVCTL(usbc_base));
-					break;
+            			    USBC_REG_set_bit_b(USBC_BP_DEVCTL_SESSION, USBC_REG_DEVCTL(usbc_base));
+        				break;
 
-				case 6:
-					DMSG_DBG_HCD("TEST_FIFO_ACCESS\n");
-					temp = 1 << USBC_BP_TMCTL_FIFO_ACCESS;
-					break;
+            			case 6:
+            				DMSG_DBG_HCD("TEST_FIFO_ACCESS\n");
+            				temp = 1 << USBC_BP_TMCTL_FIFO_ACCESS;
+        				break;
 
-				    default:
-					    DMSG_PANIC("ERR: unkown SetPortFeature USB_PORT_FEAT_TEST wIndex(%d)\n", wIndex);
-			            goto error;
-				}
+        			    default:
+        				    DMSG_PANIC("ERR: unkown SetPortFeature USB_PORT_FEAT_TEST wIndex(%d)\n", wIndex);
+    			            goto error;
+        			}
 
-			    USBC_Writeb(temp, USBC_REG_TMCTL(usbc_base));
-			}
-			break;
+    			    USBC_Writeb(temp, USBC_REG_TMCTL(usbc_base));
+    			}
+    			break;
 
-		    default:{
-		        DMSG_PANIC("ERR: unkown SetPortFeature wValue(%d)\n", wValue);
-			    goto error;
-			}
-		}
+    		    default:{
+    		        DMSG_PANIC("ERR: unkown SetPortFeature wValue(%d)\n", wValue);
+    			    goto error;
+    			}
+    		}
 
-		DMSG_DBG_HCD("DBG: set feature %d\n", wValue);
-		sw_hcd->port1_status |= 1 << wValue;
+    		DMSG_DBG_HCD("DBG: set feature %d\n", wValue);
+    		sw_hcd->port1_status |= 1 << wValue;
 	    }
 		break;
 
@@ -647,3 +647,18 @@ error:
     return retval;
 }
 EXPORT_SYMBOL(sw_hcd_hub_control);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
- *
+ *                                        
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -44,22 +44,22 @@ void dump_chip_info(HAL_VERSION	ChipVersion)
 		DBG_871X("Chip Version Info: CHIP_8188E_");
 	}
 
-	DBG_871X("%s_",IS_NORMAL_CHIP(ChipVersion)?"Normal_Chip":"Test_Chip");
+	DBG_871X("%s_",IS_NORMAL_CHIP(ChipVersion)?"Normal_Chip":"Test_Chip");	
 	DBG_871X("%s_",IS_CHIP_VENDOR_TSMC(ChipVersion)?"TSMC":"UMC");
-	if(IS_A_CUT(ChipVersion)) DBG_871X("A_CUT_");
-	else if(IS_B_CUT(ChipVersion)) DBG_871X("B_CUT_");
-	else if(IS_C_CUT(ChipVersion)) DBG_871X("C_CUT_");
-	else if(IS_D_CUT(ChipVersion)) DBG_871X("D_CUT_");
-	else if(IS_E_CUT(ChipVersion)) DBG_871X("E_CUT_");
+	if(IS_A_CUT(ChipVersion)) DBG_871X("A_CUT_");	
+	else if(IS_B_CUT(ChipVersion)) DBG_871X("B_CUT_");	
+	else if(IS_C_CUT(ChipVersion)) DBG_871X("C_CUT_");	
+	else if(IS_D_CUT(ChipVersion)) DBG_871X("D_CUT_");	
+	else if(IS_E_CUT(ChipVersion)) DBG_871X("E_CUT_");	
 	else DBG_871X("UNKNOWN_CUT(%d)_",ChipVersion.CUTVersion);
-
-	if(IS_1T1R(ChipVersion))	DBG_871X("1T1R_");
-	else if(IS_1T2R(ChipVersion))	DBG_871X("1T2R_");
+	
+	if(IS_1T1R(ChipVersion))	DBG_871X("1T1R_");	
+	else if(IS_1T2R(ChipVersion))	DBG_871X("1T2R_");	
 	else if(IS_2T2R(ChipVersion))	DBG_871X("2T2R_");
 	else DBG_871X("UNKNOWN_RFTYPE(%d)_",ChipVersion.RFType);
 
-
-	DBG_871X("RomVer(%d)\n",ChipVersion.ROMVer);
+	
+	DBG_871X("RomVer(%d)\n",ChipVersion.ROMVer);	
 }
 
 
@@ -100,7 +100,7 @@ hal_com_get_channel_plan(
 u8	MRateToHwRate(u8 rate)
 {
 	u8	ret = DESC_RATE1M;
-
+		
 	switch(rate)
 	{
 		// CCK and OFDM non-HT rates
@@ -144,9 +144,9 @@ void	HalSetBrateCfg(
 	{
 		is_brate = mBratesOS[i] & IEEE80211_BASIC_RATE_MASK;
 		brate = mBratesOS[i] & 0x7f;
-
+		
 		if( is_brate )
-		{
+		{		
 			switch(brate)
 			{
 				case IEEE80211_CCK_RATE_1MB:	*pBrateCfg |= RATE_1M;	break;
@@ -177,7 +177,7 @@ _OneOutPipeMapping(
 	pdvobjpriv->Queue2Pipe[1] = pdvobjpriv->RtOutPipe[0];//VI
 	pdvobjpriv->Queue2Pipe[2] = pdvobjpriv->RtOutPipe[0];//BE
 	pdvobjpriv->Queue2Pipe[3] = pdvobjpriv->RtOutPipe[0];//BK
-
+	
 	pdvobjpriv->Queue2Pipe[4] = pdvobjpriv->RtOutPipe[0];//BCN
 	pdvobjpriv->Queue2Pipe[5] = pdvobjpriv->RtOutPipe[0];//MGT
 	pdvobjpriv->Queue2Pipe[6] = pdvobjpriv->RtOutPipe[0];//HIGH
@@ -193,41 +193,41 @@ _TwoOutPipeMapping(
 	struct dvobj_priv	*pdvobjpriv = adapter_to_dvobj(pAdapter);
 
 	if(bWIFICfg){ //WMM
-
-		//	BK, 	BE, 	VI, 	VO, 	BCN,	CMD,MGT,HIGH,HCCA
+		
+		//	BK, 	BE, 	VI, 	VO, 	BCN,	CMD,MGT,HIGH,HCCA 
 		//{  0, 	1, 	0, 	1, 	0, 	0, 	0, 	0, 		0	};
-		//0:H, 1:L
-
+		//0:H, 1:L 
+		
 		pdvobjpriv->Queue2Pipe[0] = pdvobjpriv->RtOutPipe[1];//VO
 		pdvobjpriv->Queue2Pipe[1] = pdvobjpriv->RtOutPipe[0];//VI
 		pdvobjpriv->Queue2Pipe[2] = pdvobjpriv->RtOutPipe[1];//BE
 		pdvobjpriv->Queue2Pipe[3] = pdvobjpriv->RtOutPipe[0];//BK
-
+		
 		pdvobjpriv->Queue2Pipe[4] = pdvobjpriv->RtOutPipe[0];//BCN
 		pdvobjpriv->Queue2Pipe[5] = pdvobjpriv->RtOutPipe[0];//MGT
 		pdvobjpriv->Queue2Pipe[6] = pdvobjpriv->RtOutPipe[0];//HIGH
 		pdvobjpriv->Queue2Pipe[7] = pdvobjpriv->RtOutPipe[0];//TXCMD
-
+		
 	}
 	else{//typical setting
 
-
-		//BK, 	BE, 	VI, 	VO, 	BCN,	CMD,MGT,HIGH,HCCA
-		//{  1, 	1, 	0, 	0, 	0, 	0, 	0, 	0, 		0	};
-		//0:H, 1:L
-
+		
+		//BK, 	BE, 	VI, 	VO, 	BCN,	CMD,MGT,HIGH,HCCA 
+		//{  1, 	1, 	0, 	0, 	0, 	0, 	0, 	0, 		0	};			
+		//0:H, 1:L 
+		
 		pdvobjpriv->Queue2Pipe[0] = pdvobjpriv->RtOutPipe[0];//VO
 		pdvobjpriv->Queue2Pipe[1] = pdvobjpriv->RtOutPipe[0];//VI
 		pdvobjpriv->Queue2Pipe[2] = pdvobjpriv->RtOutPipe[1];//BE
 		pdvobjpriv->Queue2Pipe[3] = pdvobjpriv->RtOutPipe[1];//BK
-
+		
 		pdvobjpriv->Queue2Pipe[4] = pdvobjpriv->RtOutPipe[0];//BCN
 		pdvobjpriv->Queue2Pipe[5] = pdvobjpriv->RtOutPipe[0];//MGT
 		pdvobjpriv->Queue2Pipe[6] = pdvobjpriv->RtOutPipe[0];//HIGH
-		pdvobjpriv->Queue2Pipe[7] = pdvobjpriv->RtOutPipe[0];//TXCMD
-
+		pdvobjpriv->Queue2Pipe[7] = pdvobjpriv->RtOutPipe[0];//TXCMD	
+		
 	}
-
+	
 }
 
 static VOID _ThreeOutPipeMapping(
@@ -238,38 +238,38 @@ static VOID _ThreeOutPipeMapping(
 	struct dvobj_priv	*pdvobjpriv = adapter_to_dvobj(pAdapter);
 
 	if(bWIFICfg){//for WMM
-
-		//	BK, 	BE, 	VI, 	VO, 	BCN,	CMD,MGT,HIGH,HCCA
+		
+		//	BK, 	BE, 	VI, 	VO, 	BCN,	CMD,MGT,HIGH,HCCA 
 		//{  1, 	2, 	1, 	0, 	0, 	0, 	0, 	0, 		0	};
-		//0:H, 1:N, 2:L
-
+		//0:H, 1:N, 2:L 
+		
 		pdvobjpriv->Queue2Pipe[0] = pdvobjpriv->RtOutPipe[0];//VO
 		pdvobjpriv->Queue2Pipe[1] = pdvobjpriv->RtOutPipe[1];//VI
 		pdvobjpriv->Queue2Pipe[2] = pdvobjpriv->RtOutPipe[2];//BE
 		pdvobjpriv->Queue2Pipe[3] = pdvobjpriv->RtOutPipe[1];//BK
-
+		
 		pdvobjpriv->Queue2Pipe[4] = pdvobjpriv->RtOutPipe[0];//BCN
 		pdvobjpriv->Queue2Pipe[5] = pdvobjpriv->RtOutPipe[0];//MGT
 		pdvobjpriv->Queue2Pipe[6] = pdvobjpriv->RtOutPipe[0];//HIGH
 		pdvobjpriv->Queue2Pipe[7] = pdvobjpriv->RtOutPipe[0];//TXCMD
-
+		
 	}
 	else{//typical setting
 
-
-		//	BK, 	BE, 	VI, 	VO, 	BCN,	CMD,MGT,HIGH,HCCA
-		//{  2, 	2, 	1, 	0, 	0, 	0, 	0, 	0, 		0	};
-		//0:H, 1:N, 2:L
-
+		
+		//	BK, 	BE, 	VI, 	VO, 	BCN,	CMD,MGT,HIGH,HCCA 
+		//{  2, 	2, 	1, 	0, 	0, 	0, 	0, 	0, 		0	};			
+		//0:H, 1:N, 2:L 
+		
 		pdvobjpriv->Queue2Pipe[0] = pdvobjpriv->RtOutPipe[0];//VO
 		pdvobjpriv->Queue2Pipe[1] = pdvobjpriv->RtOutPipe[1];//VI
 		pdvobjpriv->Queue2Pipe[2] = pdvobjpriv->RtOutPipe[2];//BE
 		pdvobjpriv->Queue2Pipe[3] = pdvobjpriv->RtOutPipe[2];//BK
-
+		
 		pdvobjpriv->Queue2Pipe[4] = pdvobjpriv->RtOutPipe[0];//BCN
 		pdvobjpriv->Queue2Pipe[5] = pdvobjpriv->RtOutPipe[0];//MGT
 		pdvobjpriv->Queue2Pipe[6] = pdvobjpriv->RtOutPipe[0];//HIGH
-		pdvobjpriv->Queue2Pipe[7] = pdvobjpriv->RtOutPipe[0];//TXCMD
+		pdvobjpriv->Queue2Pipe[7] = pdvobjpriv->RtOutPipe[0];//TXCMD	
 	}
 
 }
@@ -283,7 +283,7 @@ Hal_MappingOutPipe(
 	struct registry_priv *pregistrypriv = &pAdapter->registrypriv;
 
 	BOOLEAN	 bWIFICfg = (pregistrypriv->wifi_spec) ?_TRUE:_FALSE;
-
+	
 	BOOLEAN result = _TRUE;
 
 	switch(NumOutPipe)
@@ -303,7 +303,7 @@ Hal_MappingOutPipe(
 	}
 
 	return result;
-
+	
 }
 
 void hal_init_macaddr(_adapter *adapter)
@@ -314,3 +314,4 @@ void hal_init_macaddr(_adapter *adapter)
 		rtw_hal_set_hwreg(adapter->pbuddy_adapter, HW_VAR_MAC_ADDR, adapter->pbuddy_adapter->eeprompriv.mac_addr);
 #endif
 }
+

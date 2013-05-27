@@ -2,7 +2,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="abfilt_wlan.c" company="Atheros">
 //    Copyright (c) 2007 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -31,20 +31,20 @@
 #include "abtfilt_int.h"
 #ifdef ANDROID
 #include "cutils/properties.h"
-#endif
+#endif 
 
 /* Definitions */
 #define WLAN_EVENT_SIZE_MAX            1024
 #define IW_HEADER_TYPE_POINT           8
 
 /* Function Prototypes */
-static void NewLinkEvent(ATH_BT_FILTER_INSTANCE *pInstance,
+static void NewLinkEvent(ATH_BT_FILTER_INSTANCE *pInstance, 
                          struct nlmsghdr *h, int len);
-static void DelLinkEvent(ATH_BT_FILTER_INSTANCE *pInstance,
+static void DelLinkEvent(ATH_BT_FILTER_INSTANCE *pInstance, 
                          struct nlmsghdr *h, int len);
-static void WirelessEvent(ATH_BT_FILTER_INSTANCE *pInstance,
+static void WirelessEvent(ATH_BT_FILTER_INSTANCE *pInstance, 
                           char *data, int len);
-static A_STATUS WirelessCustomEvent(ATH_BT_FILTER_INSTANCE *pInstance,
+static A_STATUS WirelessCustomEvent(ATH_BT_FILTER_INSTANCE *pInstance, 
                                     char *buf, int len);
 static A_STATUS AcquireWlanAdapter(ABF_WLAN_INFO *pAbfWlanInfo);
 static void ReleaseWlanAdapter(ABF_WLAN_INFO *pAbfWlanInfo);
@@ -98,7 +98,7 @@ Abf_WlanStackNotificationDeInit(ATH_BT_FILTER_INSTANCE *pInstance)
     A_MUTEX_LOCK(&pAbfWlanInfo->hWaitEventLock);
     if (pAbfWlanInfo->Loop) {
         pAbfWlanInfo->Loop = FALSE;
-        A_COND_WAIT(&pAbfWlanInfo->hWaitEvent, &pAbfWlanInfo->hWaitEventLock,
+        A_COND_WAIT(&pAbfWlanInfo->hWaitEvent, &pAbfWlanInfo->hWaitEventLock, 
                     WAITFOREVER);
     }
     A_MUTEX_UNLOCK(&pAbfWlanInfo->hWaitEventLock);
@@ -115,7 +115,7 @@ Abf_WlanStackNotificationDeInit(ATH_BT_FILTER_INSTANCE *pInstance)
 }
 
 A_STATUS
-Abf_WlanDispatchIO(ATHBT_FILTER_INFO *pInfo, unsigned long int req,
+Abf_WlanDispatchIO(ATHBT_FILTER_INFO *pInfo, unsigned long int req, 
                    void *data, int size)
 {
     int ret;
@@ -123,7 +123,7 @@ Abf_WlanDispatchIO(ATHBT_FILTER_INFO *pInfo, unsigned long int req,
     char ifname[IFNAMSIZ], *ethIf;
     ABF_WLAN_INFO *pAbfWlanInfo = pInfo->pWlanInfo;
     ATH_BT_FILTER_INSTANCE *pInstance = pInfo->pInstance;
-
+ 
     if (!pAbfWlanInfo->Handle) {
         /* No adapter to issue ioctl on */
         return A_DEVICE_NOT_FOUND;
@@ -143,7 +143,7 @@ Abf_WlanDispatchIO(ATHBT_FILTER_INFO *pInfo, unsigned long int req,
     strncpy(ifr.ifr_name, ifname, sizeof(ifr.ifr_name));
     ifr.ifr_data = (void *)data;
     if ((ret = ioctl(pAbfWlanInfo->Handle, req, &ifr)) < 0) {
-        A_ERR("[%s] [%s] IOCTL (req:0x%X, data: 0x%X size:%d) call failed!: %d\n",
+        A_ERR("[%s] [%s] IOCTL (req:0x%X, data: 0x%X size:%d) call failed!: %d\n", 
             __FUNCTION__, ifr.ifr_name, req, (A_UINT32)ifr.ifr_data, size, ret);
         return A_ERROR;
     }
@@ -165,13 +165,13 @@ WlanEventThread(void *arg)
     ATHBT_FILTER_INFO *pInfo = pAbfWlanInfo->pInfo;
     ATH_BT_FILTER_INSTANCE *pInstance = pInfo->pInstance;
     A_STATUS status;
-
+    
     A_INFO("Starting the WLAN Event Handler task\n");
 
     A_INFO("Checking WLAN adapter on startup .. \n");
-
+    
     status = AcquireWlanAdapter(pAbfWlanInfo);
-
+ 
     if (A_FAILED(status)) {
         A_INFO("No WLAN adapter on startup (OKAY) \n");
     }else {
@@ -184,7 +184,7 @@ WlanEventThread(void *arg)
     do {
         sd = socket(PF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
         if (sd < 0) {
-            A_ERR("[%s] socket(PF_NETLINK,SOCK_RAW,NETLINK_ROUTE): %d\n",
+            A_ERR("[%s] socket(PF_NETLINK,SOCK_RAW,NETLINK_ROUTE): %d\n", 
                   __FUNCTION__, sd);
             break;
         }
@@ -232,9 +232,9 @@ WlanEventThread(void *arg)
                         continue;
                     }
 
-                    //A_DEBUG("RTM Message Type: %s\n",
-                    //        ((h->nlmsg_type == RTM_NEWLINK) ?
-                    //         "RTM_NEWLINK" : ((h->nlmsg_type == RTM_DELLINK) ?
+                    //A_DEBUG("RTM Message Type: %s\n", 
+                    //        ((h->nlmsg_type == RTM_NEWLINK) ? 
+                    //         "RTM_NEWLINK" : ((h->nlmsg_type == RTM_DELLINK) ? 
                     //         "RTM_DELLINK" : "RTM_OTHER")));
                     switch (h->nlmsg_type) {
                     case RTM_NEWLINK:
@@ -396,21 +396,21 @@ NewLinkEvent(ATH_BT_FILTER_INSTANCE *pInstance, struct nlmsghdr *h, int len)
     rta_len = RTA_ALIGN(sizeof(struct rtattr));
     while (RTA_OK(attr, attrlen)) {
         if (attr->rta_type == IFLA_WIRELESS) {
-            /*
-             * We need to ensure that the event is from the WLAN instance
-             * that we are interested in TODO
+            /* 
+             * We need to ensure that the event is from the WLAN instance 
+             * that we are interested in TODO 
              */
-            WirelessEvent(pInstance, ((char*)attr) + rta_len,
+            WirelessEvent(pInstance, ((char*)attr) + rta_len, 
                           attr->rta_len - rta_len);
         } else if (attr->rta_type == IFLA_IFNAME) {
-            /*
-             * Shall be used to get the socket descriptor. Also we should do
-             * it only until we get the adapter we are interested in
+            /* 
+             * Shall be used to get the socket descriptor. Also we should do 
+             * it only until we get the adapter we are interested in 
              */
             if (!pAbfWlanInfo->Handle) {
-                A_DEBUG("WLAN Adapter Interface: %s, Len: %d\n",
+                A_DEBUG("WLAN Adapter Interface: %s, Len: %d\n", 
                         (((char *)attr) + rta_len), attr->rta_len - rta_len);
-                A_MEMCPY(pAbfWlanInfo->IfName, ((char *)attr + rta_len),
+                A_MEMCPY(pAbfWlanInfo->IfName, ((char *)attr + rta_len), 
                          attr->rta_len - rta_len);
             }
         }
@@ -451,9 +451,9 @@ DelLinkEvent(ATH_BT_FILTER_INSTANCE *pInstance, struct nlmsghdr *h, int len)
     found = FALSE;
     while (RTA_OK(attr, attrlen)) {
         if (attr->rta_type == IFLA_IFNAME) {
-            /*
-             * Shall be used to get the socket descriptor. Also we should do
-             * it only until we get the adapter we are interested in
+            /* 
+             * Shall be used to get the socket descriptor. Also we should do 
+             * it only until we get the adapter we are interested in 
              */
             if (!(strcmp(pAbfWlanInfo->IfName, ((char *)attr + rta_len)))) {
                 found = TRUE;
@@ -490,9 +490,9 @@ WirelessEvent(ATH_BT_FILTER_INSTANCE *pInstance, char *data, int len)
     end = data + len;
 
     while ((pos + IW_EV_LCP_PK_LEN <= end) && (status == A_OK)) {
-        /*
-         * Event data may be unaligned, so make a local, aligned copy
-         * before processing
+        /* 
+         * Event data may be unaligned, so make a local, aligned copy 
+         * before processing 
          */
         A_MEMCPY((char *)iwe, pos, IW_EV_LCP_PK_LEN);
         //A_DEBUG("Wireless Event: cmd=0x%x len=%d\n", iwe->cmd, iwe->len);
@@ -501,10 +501,10 @@ WirelessEvent(ATH_BT_FILTER_INSTANCE *pInstance, char *data, int len)
             break;
         }
 
-        /*
-         * Get the type and length of that event. We will assume it
-         * instead of deriving it since its a lengthy process. May be
-         * some day ... TODO
+        /* 
+         * Get the type and length of that event. We will assume it 
+         * instead of deriving it since its a lengthy process. May be 
+         * some day ... TODO 
          */
         event_type = IW_HEADER_TYPE_POINT;
         event_len = IW_EV_POINT_PK_LEN;
@@ -586,12 +586,12 @@ WirelessCustomEvent(ATH_BT_FILTER_INSTANCE *pInstance, char *buf, int len)
             ev1 = (WMI_READY_EVENT *)ptr;
             A_MEMCPY(pAbfWlanInfo->AdapterName, ev1->macaddr, ATH_MAC_LEN);
             pAbfWlanInfo->PhyCapability = ev1->phyCapability;
-            A_DEBUG("WMI READY: Capability: %d, Address: %2.2X:%2.2X:%2.2X:%2.2X:%2.2X:%2.2X\n",
-                    pAbfWlanInfo->PhyCapability,
-                    (pAbfWlanInfo->AdapterName[0]),
+            A_DEBUG("WMI READY: Capability: %d, Address: %2.2X:%2.2X:%2.2X:%2.2X:%2.2X:%2.2X\n", 
+                    pAbfWlanInfo->PhyCapability, 
+                    (pAbfWlanInfo->AdapterName[0]), 
                     (pAbfWlanInfo->AdapterName[1]),
                     (pAbfWlanInfo->AdapterName[2]),
-                    (pAbfWlanInfo->AdapterName[3]),
+                    (pAbfWlanInfo->AdapterName[3]), 
                     (pAbfWlanInfo->AdapterName[4]),
                     (pAbfWlanInfo->AdapterName[5]));
 
@@ -605,7 +605,7 @@ WirelessCustomEvent(ATH_BT_FILTER_INSTANCE *pInstance, char *buf, int len)
             /* Communicate this to the Filter task */
             HandleAdapterEvent(pInfo, ATH_ADAPTER_ARRIVED);
             A_INFO("WLAN Adapter Added\n");
-            break;
+            break;    
         case (WMI_CONNECT_EVENTID):
             if (length < sizeof(WMI_CONNECT_EVENT)) {
                 A_ERR("[%s:%d] Check Failed\n", __FUNCTION__, __LINE__);
@@ -659,9 +659,9 @@ AcquireWlanAdapter(ABF_WLAN_INFO *pAbfWlanInfo)
     A_STATUS status;
 
     if (pAbfWlanInfo->Handle != 0) {
-        return A_OK;
+        return A_OK;    
     }
-
+    
     if ((sd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
         A_ERR("[%s] Error creating socket: %d\n", __FUNCTION__, sd);
         return A_ERROR;
@@ -678,7 +678,7 @@ AcquireWlanAdapter(ABF_WLAN_INFO *pAbfWlanInfo)
         /* Try to get RTS to determinate that wlan is enabled */
         A_UCHAR buf[sizeof(int)+sizeof(WMI_SET_RTS_CMD)];
         ((int *)buf)[0] = AR6000_XIOCTL_AP_GET_RTS;
-        status = Abf_WlanDispatchIO(pAbfWlanInfo->pInfo, AR6000_IOCTL_EXTENDED,
+        status = Abf_WlanDispatchIO(pAbfWlanInfo->pInfo, AR6000_IOCTL_EXTENDED, 
                                 (void *)buf, sizeof(buf));
         if (A_FAILED(status)) {
             A_INFO("WMI is ready but wlan is disabled.\n");
@@ -699,12 +699,12 @@ GetAdapterInfo(ABF_WLAN_INFO *pAbfWlanInfo)
 
     if (revinfo == NULL) {
         A_ERR("[%s] Failed to alloc WLAN revision info\n", __FUNCTION__);
-        return A_ERROR;
+        return A_ERROR;    
     }
 
-
+ 
     /* Get the revision info */
-    status = Abf_WlanDispatchIO(pAbfWlanInfo->pInfo, AR6000_IOCTL_WMI_GETREV,
+    status = Abf_WlanDispatchIO(pAbfWlanInfo->pInfo, AR6000_IOCTL_WMI_GETREV, 
                                 (void *)revinfo, sizeof(struct ar6000_version));
     if (A_FAILED(status)) {
         A_ERR("[%s] Failed to get WLAN revision\n", __FUNCTION__);
@@ -742,7 +742,7 @@ ReleaseWlanAdapter(ABF_WLAN_INFO *pAbfWlanInfo)
 void Abf_WlanCheckSettings(A_CHAR *wifname, A_UINT32 *btfiltFlags)
 {
     int sd;
-#ifdef ANDROID
+#ifdef ANDROID 
     char ifprop[PROPERTY_VALUE_MAX];
     if (wifname[0] == '\0' && property_get("wifi.interface", ifprop, NULL)) {
         strcpy(wifname, ifprop);
@@ -785,15 +785,15 @@ void Abf_WlanCheckSettings(A_CHAR *wifname, A_UINT32 *btfiltFlags)
         strncpy(ifr.ifr_name, wifname, sizeof(ifr.ifr_name));
         ifr.ifr_data = (void *)&revinfo;
         if (ioctl(sd, AR6000_IOCTL_WMI_GETREV, &ifr) < 0) {
-            break;
-        }
+            break;              
+        }                       
         if ( (revinfo.target_ver & 0xff000000)==0x30000000) {
             *btfiltFlags |= ABF_WIFI_CHIP_IS_VENUS;
         } else {
             *btfiltFlags &= ~ABF_WIFI_CHIP_IS_VENUS;
         }
         if (*btfiltFlags != flags) {
-            A_DEBUG("Change btfilt flags from %u to %u isVenus %d\n", flags, *btfiltFlags,
+            A_DEBUG("Change btfilt flags from %u to %u isVenus %d\n", flags, *btfiltFlags, 
                         (*btfiltFlags & ABF_WIFI_CHIP_IS_VENUS) ? "yes" : "no");
         }
     } while (0);

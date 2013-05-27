@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="abtfilt_int.h" company="Atheros">
 //    Copyright (c) 2008 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -23,9 +23,9 @@
 
 /*
  * Bluetooth filter internal definitions
- *
+ * 
  */
-
+ 
 
 #ifndef ABTFILT_INT_H_
 #define ABTFILT_INT_H_
@@ -84,7 +84,7 @@ struct _ABF_WLAN_INFO;
 #define A_FILE_HANDLE           FILE *
 
 /* Function Prototypes */
-INLINE A_STATUS A_TASK_CREATE(A_TASK_HANDLE *handle,
+INLINE A_STATUS A_TASK_CREATE(A_TASK_HANDLE *handle, 
                               void *(*func)(void *), void *arg);
 INLINE A_STATUS A_TASK_JOIN(A_TASK_HANDLE *handle);
 INLINE void A_TASK_CLEANUP(void);
@@ -95,7 +95,7 @@ INLINE void A_MUTEX_UNLOCK(A_MUTEX_OBJECT *mutex);
 INLINE void A_MUTEX_DEINIT(A_MUTEX_OBJECT *mutex);
 
 INLINE A_STATUS A_COND_INIT(A_COND_OBJECT *cond);
-INLINE A_STATUS A_COND_WAIT(A_COND_OBJECT *cond,
+INLINE A_STATUS A_COND_WAIT(A_COND_OBJECT *cond, 
                             A_MUTEX_OBJECT *mutex, int timeout);
 INLINE void A_COND_SIGNAL(A_COND_OBJECT *cond);
 INLINE void A_COND_DEINIT(A_COND_OBJECT *cond);
@@ -113,14 +113,14 @@ INLINE void A_DBG_DEINIT(void);
 void A_DUMP_BUFFER(A_UCHAR *buffer, int length, char *pDescription);
 void A_DBG_SET_OUTPUT_TO_CONSOLE(void);
 #else
-#define A_DBG_INIT(args...)
+#define A_DBG_INIT(args...) 
 #define A_DEBUG(args...)
 #define A_INFO(args...)
 #define A_ERR(args...)
 #define A_SET_DEBUG(arg)
 #define A_DBG_DEINIT()
 #define A_DUMP_BUFFER(buffer, length, pDescription)
-#define A_DBG_SET_OUTPUT_TO_CONSOLE()
+#define A_DBG_SET_OUTPUT_TO_CONSOLE() 
 
 #endif /* ABF_DEBUG */
 /*-----------------------------------------------------------------------*/
@@ -143,37 +143,37 @@ void A_DBG_SET_OUTPUT_TO_CONSOLE(void);
 
 typedef enum _BTACTION_QUEUE_PROC {
     BTACTION_QUEUE_NORMAL      = 0, /* normal processing of the action queue */
-    BTACTION_QUEUE_FLUSH_ALL   = 1, /* flush all actions for shutdown */
-    BTACTION_QUEUE_FLUSH_STATE,     /* flush all actions associated with a
-                                       specific state */
-    BTACTION_QUEUE_SYNC_STATE       /* issue queued actions when we are
-                                       syncing radio state on adapter
-                                       available */
+    BTACTION_QUEUE_FLUSH_ALL   = 1, /* flush all actions for shutdown */ 
+    BTACTION_QUEUE_FLUSH_STATE,     /* flush all actions associated with a 
+                                       specific state */     
+    BTACTION_QUEUE_SYNC_STATE       /* issue queued actions when we are 
+                                       syncing radio state on adapter 
+                                       available */         
 } BTACTION_QUEUE_PROC;
 
 typedef enum _ATH_ADAPTER_EVENT {
    ATH_ADAPTER_ARRIVED = 0,
    ATH_ADAPTER_REMOVED = 1,
 } ATH_ADAPTER_EVENT;
-
+    
 typedef struct _BT_ACTION_MSG {
     DL_LIST                         ListEntry;
-    A_COND_OBJECT                   hWaitEvent;      /* wait object for
+    A_COND_OBJECT                   hWaitEvent;      /* wait object for 
                                                         blocking requests */
     A_MUTEX_OBJECT                  hWaitEventLock;
-    A_BOOL                          Blocking;        /* this action requires
-                                                        the calling thread to
-                                                        block until the
-                                                        dispatcher submits
+    A_BOOL                          Blocking;        /* this action requires 
+                                                        the calling thread to 
+                                                        block until the 
+                                                        dispatcher submits 
                                                         the command */
     ATHBT_STATE_INDICATION          IndicationForControlAction; /* indication
-                                                                   associated
-                                                                   with the
-                                                                   control
+                                                                   associated 
+                                                                   with the 
+                                                                   control 
                                                                    action */
     ATHBT_STATE                     StateForControlAction;
     BT_CONTROL_ACTION               ControlAction;
-} BT_ACTION_MSG;
+} BT_ACTION_MSG; 
 
 typedef struct _ATHBT_SCO_CONNECTION_INFO {
     A_BOOL                          Valid;
@@ -204,7 +204,7 @@ typedef struct _ATHBT_FILTER_INFO {
     struct _ABF_WLAN_INFO          *pWlanInfo;
     struct _ABF_BT_INFO            *pBtInfo;
     A_UCHAR                        SCOConnection_LMPVersion;   /* lmp version of remote SCO device */
-    A_UCHAR                        A2DPConnection_LMPVersion;  /* lmp version of remote A2DP device */
+    A_UCHAR                        A2DPConnection_LMPVersion;  /* lmp version of remote A2DP device */ 
     A_UCHAR                        SCOConnection_Role;         /* role of remote SCO device */
     A_UCHAR                        A2DPConnection_Role;        /* role of remote A2DP device */
     A_UINT32                       Flags;
@@ -259,7 +259,7 @@ void Abf_BtStackNotificationDeInit(ATH_BT_FILTER_INSTANCE *pInstance);
 #ifdef CONFIG_NO_HCILIBS
 #define Abf_HciLibInit(_flags) (A_ERROR)
 #define Abf_HciLibDeInit()
-#define Abf_RegisterToHciLib(_pInfo)
+#define Abf_RegisterToHciLib(_pInfo) 
 #define Abf_UnRegisterToHciLib(_pInfo)
 #define Abf_IssueAFHViaHciLib(_pInfo, _ch) do { } while (0)
 #else
@@ -270,7 +270,7 @@ void Abf_UnRegisterToHciLib(struct _ABF_BT_INFO * pAbfBtInfo);
 A_STATUS  Abf_IssueAFHViaHciLib (struct _ABF_BT_INFO  * pAbfBtInfo, int CurrentWLANChannel);
 #endif
 
-/* WLAN channel number can be expressed as either 1-14 or expressed in Mhz (i.e. 2412) */
+/* WLAN channel number can be expressed as either 1-14 or expressed in Mhz (i.e. 2412) */ 
 void IndicateCurrentWLANOperatingChannel(ATHBT_FILTER_INFO *pFilterInfo, int CurrentWLANChannel);
 
 /*-----------------------------------------------------------------------*/

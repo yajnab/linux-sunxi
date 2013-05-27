@@ -2071,9 +2071,10 @@ static int ahci_port_start(struct ata_port *ap)
 
 	//mem = dmam_alloc_coherent(dev, dma_sz, &mem_dma, GFP_KERNEL);
 	//danielwang
-	mem = kmalloc(dma_sz, GFP_DMA | GFP_KERNEL);
-	mem_dma = __pa(mem);
-	//printk("dmam_alloc_coherent mem = 0x%x, size = 0x%x, mem_dma=0x%x\n", (unsigned int)mem, (unsigned int)dma_sz, (unsigned int)mem_dma);
+	mem = dma_alloc_coherent(NULL, dma_sz, &mem_dma, GFP_KERNEL);
+	//mem = kmalloc(dma_sz, GFP_DMA | GFP_KERNEL);
+	//mem_dma = __pa(mem);
+	printk("dma_alloc_coherent mem = 0x%x, size = 0x%x, mem_dma=0x%x\n", (unsigned int)mem, (unsigned int)dma_sz, (unsigned int)mem_dma);  
 	if (!mem)
 		return -ENOMEM;
 	memset(mem, 0, dma_sz);
@@ -2119,7 +2120,7 @@ static int ahci_port_start(struct ata_port *ap)
 int ahci_hardware_recover_for_controller_resume(struct ata_host *host)
 {
 	int i;
-
+		
 	ahci_reset_controller(host);
 	ahci_init_controller(host);
 
@@ -2135,11 +2136,11 @@ int ahci_hardware_recover_for_controller_resume(struct ata_host *host)
 		}
 
 		memset((void*)pp->cmd_slot, 0, dma_sz);
-
+	
 		/* engage engines, captain */
-		ahci_port_resume(ap);
+		ahci_port_resume(ap);			
 	}
-
+	
 	return 0;
 }
 EXPORT_SYMBOL_GPL(ahci_hardware_recover_for_controller_resume);

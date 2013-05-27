@@ -60,7 +60,7 @@ tools: FORCE
 	$(MAKE) -C tools/palEventRecv/
 	$(MAKE) -C tools/wmiconfig/
 	$(MAKE) -C tools/recEvent/
-ifeq ($(ATH_BUILD_BTFILTER),yes)
+ifeq ($(ATH_BUILD_BTFILTER),yes) 	
 	$(MAKE) -C btfilter/ -f Makefile
 	$(MAKE) -C tools/athbtfilter/bluez/
 endif

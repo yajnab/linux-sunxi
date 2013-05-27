@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // Copyright (c) 2004-2011 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -21,24 +21,24 @@
 //==============================================================================
 
 /*
- * This file contains the definitions of the host_proxy interface.
+ * This file contains the definitions of the host_proxy interface.  
  */
 
 #ifndef _HOST_PROXY_IFACE_H_
 #define _HOST_PROXY_IFACE_H_
 
-/* Host proxy initializes shared memory with HOST_PROXY_INIT to
+/* Host proxy initializes shared memory with HOST_PROXY_INIT to 
  * indicate that it is ready to receive instruction */
 #define HOST_PROXY_INIT         (1)
-/* Host writes HOST_PROXY_NORMAL_BOOT to shared memory to
- * indicate to host proxy that it should proceed to boot
+/* Host writes HOST_PROXY_NORMAL_BOOT to shared memory to 
+ * indicate to host proxy that it should proceed to boot 
  * normally (bypassing BMI).
  */
 #define HOST_PROXY_NORMAL_BOOT  (2)
 /* Host writes HOST_PROXY_BMI_BOOT to shared memory to
- * indicate to host proxy that is should enable BMI and
+ * indicate to host proxy that is should enable BMI and 
  * exit.  This allows a host to reprogram the on board
- * flash.
+ * flash. 
  */
 #define HOST_PROXY_BMI_BOOT     (3)
 

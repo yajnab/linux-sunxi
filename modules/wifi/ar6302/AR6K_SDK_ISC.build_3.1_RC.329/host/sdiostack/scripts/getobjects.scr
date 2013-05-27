@@ -1,5 +1,5 @@
 #!/bin/sh
-#
+#  
 #  script to collect linux binary modules
 #  Copyright 2004-2006 Atheros Communications, Inc.
 #
@@ -15,7 +15,7 @@ checkandcopy()
      if [ -f $1/$2/$2_readme.txt ]; then
           cp -f -v $1/$2/$2_readme.txt $4/$2_readme.txt
      fi
-  fi
+  fi  
 }
 
 checkandcopy $SOURCE_BASE_PATH          busdriver sdio_busdriver.$mext    $OUTPUT_BASE_PATH
@@ -38,3 +38,5 @@ checkandcopy $SOURCE_BASE_PATH/hcd omap2420_spi2 athspi_omap2420_hcd.$mext $OUTP
 checkandcopy $SOURCE_BASE_PATH/hcd omap2420_spi2 athspi_omap2420_hcd.$mext $OUTPUT_BASE_PATH
 checkandcopy $SOURCE_BASE_PATH/hcd s3c6400      sdio_s3c6400.$mext $OUTPUT_BASE_PATH
 checkandcopy $SOURCE_BASE_PATH/hcd s3c6410      sdio_s3c6410_hcd.$mext $OUTPUT_BASE_PATH
+
+

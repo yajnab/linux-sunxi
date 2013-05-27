@@ -18,11 +18,12 @@
 *      <author>    		<time>       	<version >    		<desc>
 *    yangnaitian      2011-5-24            1.0          create this file
 *    javen            2011-6-26            1.1          add suspend and resume
-*    javen            2011-7-18            1.2          æ—¶é’Ÿå¼€å…³å’Œä¾›ç”µå¼€å…³ä»é©±åŠ¨ç§»å‡ºæ¥
+*    javen            2011-7-18            1.2          Ê±ÖÓ¿ª¹ØºÍ¹©µç¿ª¹Ø´ÓÇı¶¯ÒÆ³öÀ´
 *
 *************************************************************************************
 */
 
+#include <linux/device.h>
 #include <linux/platform_device.h>
 #include <linux/time.h>
 #include <linux/timer.h>
@@ -34,7 +35,7 @@
 #include "sw_hci_sun7i.h"
 
 /*.......................................................................................*/
-//                               å…¨å±€ä¿¡æ¯å®šä¹‰
+//                               È«¾ÖĞÅÏ¢¶¨Òå
 /*.......................................................................................*/
 
 //#define  SW_USB_EHCI_DEBUG
@@ -46,7 +47,7 @@ static struct sw_hci_hcd *g_sw_ehci[3];
 static u32 ehci_first_probe[3] = {1, 1, 1};
 
 /*.......................................................................................*/
-//                                      å‡½æ•°åŒº
+//                                      º¯ÊıÇø
 /*.......................................................................................*/
 
 extern int usb_disabled(void);
@@ -239,8 +240,8 @@ static int sw_release_io_resource(struct platform_device *pdev, struct sw_hci_hc
 */
 static void sw_start_ehci(struct sw_hci_hcd *sw_ehci)
 {
-	open_ehci_clock(sw_ehci);
-	sw_ehci->usb_passby(sw_ehci, 1);
+  	open_ehci_clock(sw_ehci); 
+	sw_ehci->usb_passby(sw_ehci, 1);	
 	sw_ehci_port_configure(sw_ehci, 1);
 	sw_hcd_board_set_vbus(sw_ehci, 1);
 
@@ -413,14 +414,14 @@ static int sw_ehci_hcd_probe(struct platform_device *pdev)
 		goto ERR2;
 	}
 
-	hcd->rsrc_start = (u32)sw_ehci->ehci_base;
+  	hcd->rsrc_start = (u32)sw_ehci->ehci_base;
 	hcd->rsrc_len 	= sw_ehci->ehci_reg_length;
 	hcd->regs 		= sw_ehci->ehci_base;
 	sw_ehci->hcd    = hcd;
-
+    
 	/* echi start to work */
 	sw_start_ehci(sw_ehci);
-
+    
 	ehci = hcd_to_ehci(hcd);
 	ehci->caps = hcd->regs;
 	ehci->regs = hcd->regs + HC_LENGTH(ehci, readl(&ehci->caps->hc_capbase));
@@ -447,6 +448,7 @@ static int sw_ehci_hcd_probe(struct platform_device *pdev)
 		      (u32)USBC_Readl(sw_ehci->sdram_vbase + SW_SDRAM_REG_HPCR_USB2));
 #endif
 
+    device_enable_async_suspend(&pdev->dev);
     sw_ehci->probe = 1;
 
     /* Disable ehci, when driver probe */
@@ -526,7 +528,7 @@ static int sw_ehci_hcd_remove(struct platform_device *pdev)
 	sw_ehci->hcd = NULL;
 
     if(sw_ehci->host_init_state){
-	g_sw_ehci[sw_ehci->usbc_no] = NULL;
+    	g_sw_ehci[sw_ehci->usbc_no] = NULL;
     }
 
 	platform_set_drvdata(pdev, NULL);
@@ -572,13 +574,13 @@ void sw_ehci_hcd_shutdown(struct platform_device* pdev)
 		return;
 	}
 
-	DMSG_INFO("[%s]: ehci shutdown start\n", sw_ehci->hci_name);
-
+ 	DMSG_INFO("[%s]: ehci shutdown start\n", sw_ehci->hci_name);
+    sw_ehci->probe = 0;
     usb_hcd_platform_shutdown(pdev);
 
     sw_stop_ehci(sw_ehci);
 
-	DMSG_INFO("[%s]: ehci shutdown end\n", sw_ehci->hci_name);
+ 	DMSG_INFO("[%s]: ehci shutdown end\n", sw_ehci->hci_name);
 
     return ;
 }
@@ -638,7 +640,7 @@ static int sw_ehci_hcd_suspend(struct device *dev)
 		return 0;
 	}
 
-	DMSG_INFO("[%s]: sw_ehci_hcd_suspend\n", sw_ehci->hci_name);
+ 	DMSG_INFO("[%s]: sw_ehci_hcd_suspend\n", sw_ehci->hci_name);
 
 	spin_lock_irqsave(&ehci->lock, flags);
 	ehci_prepare_ports_for_controller_suspend(ehci, device_may_wakeup(dev));
@@ -706,7 +708,7 @@ static int sw_ehci_hcd_resume(struct device *dev)
 		return 0;
 	}
 
-	DMSG_INFO("[%s]: sw_ehci_hcd_resume\n", sw_ehci->hci_name);
+ 	DMSG_INFO("[%s]: sw_ehci_hcd_resume\n", sw_ehci->hci_name);
 
 	sw_start_ehci(sw_ehci);
 
@@ -728,7 +730,7 @@ static int sw_ehci_hcd_resume(struct device *dev)
 		return 0;
 	}
 
-	DMSG_INFO("[%s]: lost power, restarting\n", sw_ehci->hci_name);
+ 	DMSG_INFO("[%s]: lost power, restarting\n", sw_ehci->hci_name);
 
 	usb_root_hub_lost_power(hcd->self.root_hub);
 
@@ -779,7 +781,7 @@ static struct platform_driver sw_ehci_hcd_driver ={
 		.name	= ehci_name,
 		.owner	= THIS_MODULE,
 		.pm		= SW_EHCI_PMOPS,
-	}
+  	}
 };
 
 /*
@@ -878,7 +880,7 @@ int sw_usb_enable_ehci(__u32 usbc_no)
 		return -1;
 	}
 
-	sw_ehci->probe = 1;
+	//sw_ehci->probe = 1;
 
 	DMSG_INFO("[%s]: sw_usb_enable_ehci\n", sw_ehci->hci_name);
 
@@ -887,3 +889,5 @@ int sw_usb_enable_ehci(__u32 usbc_no)
 	return 0;
 }
 EXPORT_SYMBOL(sw_usb_enable_ehci);
+
+

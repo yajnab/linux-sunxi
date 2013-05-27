@@ -13,7 +13,7 @@ A_INT32 m_loadAndRunCode
 	A_UINT32 loadFlag,
 	A_UINT32 pPhyAddr,
 	A_UINT32 length,
-	A_UCHAR  *pBuffer,
+ 	A_UCHAR  *pBuffer,
 	A_UINT32 devIndex
 );
 
@@ -23,7 +23,7 @@ A_INT32 m_loadAndProgramCode
 	A_UINT32 csAddr,
 	A_UINT32 pPhyAddr,
 	A_UINT32 length,
-	A_UCHAR  *pBuffer,
+ 	A_UCHAR  *pBuffer,
 	A_UINT32 devIndex
 );
 
@@ -39,7 +39,7 @@ void m_writeProdData
 	A_UINT32 devNum,
 	A_UCHAR wlan0Mac[6],
 	A_UCHAR wlan1Mac[6],
-	A_UCHAR enet0Mac[6],
+	A_UCHAR enet0Mac[6], 
 	A_UCHAR enet1Mac[6]
 );
 
@@ -53,8 +53,9 @@ A_INT32 m_ftpDownloadFile
 );
 
 A_INT32 m_runScreeningTest
-(
+(	
 	A_UINT32 testId
 );
 
 #endif
+

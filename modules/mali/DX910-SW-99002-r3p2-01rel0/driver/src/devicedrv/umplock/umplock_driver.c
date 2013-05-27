@@ -1,9 +1,9 @@
 /*
  * Copyright (C) 2012 ARM Limited. All rights reserved.
- *
+ * 
  * This program is free software and is provided to you under the terms of the GNU General Public License version 2
  * as published by the Free Software Foundation, and any use by you of this program is subject to the terms of such GNU licence.
- *
+ * 
  * A copy of the licence is included with the program, and can also be obtained from Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
@@ -19,11 +19,11 @@
 #include <linux/sched.h>
 
 #define MAX_ITEMS 1024
-#define MAX_PIDS 128
+#define MAX_PIDS 128    
 
 typedef struct lock_cmd_priv
 {
-	uint32_t msg[128];    /*ioctl args*/
+	uint32_t msg[128];    /*ioctl args*/     
 	u32 pid;			  /*process id*/
 }_lock_cmd_priv;
 
@@ -38,7 +38,7 @@ typedef struct umplock_item
 	u32 secure_id;
 	/*u32 references;*/
 	_lock_access_usage usage;
-	_lock_ref references[MAX_PIDS];
+	_lock_ref references[MAX_PIDS]; 
 	struct semaphore item_lock;
 } umplock_item;
 
@@ -66,8 +66,8 @@ static int  umplock_driver_open( struct inode *inode, struct file *filp );
 static int  umplock_driver_release( struct inode *inode, struct file *filp );
 static long umplock_driver_ioctl( struct file *f, unsigned int cmd, unsigned long arg );
 
-static struct file_operations umplock_fops =
-{
+static struct file_operations umplock_fops =  
+{  
 	.owner   = THIS_MODULE,
 	.open    = umplock_driver_open,
 	.release = umplock_driver_release,
@@ -123,11 +123,11 @@ int umplock_device_initialize( void )
 			{
 				struct device *mdev;
 				mdev = device_create(umplock_device.umplock_class, NULL, dev, NULL, umplock_dev_name);
-				if ( !IS_ERR(mdev) )
+				if ( !IS_ERR(mdev) ) 
 				{
 					return 0; /* all ok */
 				}
-
+	
 				err = PTR_ERR(mdev);
 				class_destroy(umplock_device.umplock_class);
 			}
@@ -174,7 +174,7 @@ int umplock_find_item( u32 secure_id )
 	{
 		if ( device.items[i].secure_id == secure_id ) return i;
 	}
-
+	
 	return -1;
 }
 
@@ -193,14 +193,14 @@ static int umplock_find_item_by_pid( _lock_cmd_priv *lock_cmd, int *item_slot, i
 {
 	_lock_item_s *lock_item;
 	int i,j;
-
+	
 	lock_item = (_lock_item_s *)&lock_cmd->msg;
 
 	i = umplock_find_item(lock_item->secure_id);
 
 	if ( i < 0)
 		return -1;
-
+	
 	for(j=0; j<MAX_PIDS; j++)
 	{
 		if(device.items[i].references[j].pid == lock_cmd->pid)
@@ -219,7 +219,7 @@ static int umplock_find_client_valid(u32 pid)
 
 	if(pid == 0)
 		return -1;
-
+	
 	for(i=0; i<MAX_PIDS; i++)
 	{
 		if(device.pids[i] == pid) return i;
@@ -243,7 +243,7 @@ static int do_umplock_create( _lock_cmd_priv *lock_cmd)
 	#endif
 
 	mutex_lock(&device.item_list_lock);
-	ret = umplock_find_client_valid( lock_cmd->pid );
+	ret = umplock_find_client_valid( lock_cmd->pid );	
 	mutex_unlock(&device.item_list_lock);
 	if( ret < 0 )
 	{
@@ -292,7 +292,7 @@ static int do_umplock_create( _lock_cmd_priv *lock_cmd)
 			printk( KERN_ERR "UMPLOCK: whoops, ran out of available slots\n" );
 		}
 	}
-
+	
 	mutex_unlock(&device.item_list_lock);
 	return 0;
 }
@@ -303,14 +303,14 @@ static int do_umplock_process( _lock_cmd_priv *lock_cmd )
 	_lock_item_s *lock_item = (_lock_item_s *)&lock_cmd->msg;
 
 	mutex_lock(&device.item_list_lock);
-	ret = umplock_find_client_valid( lock_cmd->pid );
+	ret = umplock_find_client_valid( lock_cmd->pid );	
 	mutex_unlock(&device.item_list_lock);
 	if( ret < 0 )
 	{
 		/*lock request from an invalid client pid, do nothing*/
 		return 0;
 	}
-
+	
 	mutex_lock(&device.item_list_lock);
 	ret = umplock_find_item_by_pid( lock_cmd, &i_index, &ref_index );
 	ref_count = device.items[i_index].references[ref_index].ref_count;
@@ -346,14 +346,14 @@ static int do_umplock_release( _lock_cmd_priv *lock_cmd )
 	_lock_item_s *lock_item = (_lock_item_s *)&lock_cmd->msg;
 
 	mutex_lock(&device.item_list_lock);
-	ret = umplock_find_client_valid( lock_cmd->pid );
+	ret = umplock_find_client_valid( lock_cmd->pid );	
 	mutex_unlock(&device.item_list_lock);
 	if( ret < 0 )
 	{
 		/*lock request from an invalid client pid, do nothing*/
 		return 0;
 	}
-
+	
 	i_index = ref_index = -1;
 
 	mutex_lock(&device.item_list_lock);
@@ -396,7 +396,7 @@ static int do_umplock_zap( void )
 	printk( KERN_DEBUG "UMPLOCK: ZAP ALL ENTRIES!\n" );
 
 	mutex_lock(&device.item_list_lock);
-
+	
 	for ( i=0; i<MAX_ITEMS; i++ )
 	{
 		device.items[i].secure_id = 0;
@@ -473,7 +473,7 @@ int do_umplock_client_delete (_lock_cmd_priv *lock_cmd )
 	int ret;
 	_lock_item_s *lock_item;
 	lock_item = (_lock_item_s *)&lock_cmd->msg;
-
+	
 	mutex_lock(&device.item_list_lock);
 	p_index = umplock_find_client_valid( lock_cmd->pid );
 	mutex_unlock(&device.item_list_lock);
@@ -490,7 +490,7 @@ int do_umplock_client_delete (_lock_cmd_priv *lock_cmd )
 		/*find the item index and reference slot for the lock_item*/
 		ret = umplock_find_item_by_pid(lock_cmd, &i_index, &ref_index);
 		mutex_unlock(&device.item_list_lock);
-
+		
 		if(ret < 0)
 		{
 			/*client has no reference on this umplock item, skip*/
@@ -502,7 +502,7 @@ int do_umplock_client_delete (_lock_cmd_priv *lock_cmd )
 			do_umplock_release(lock_cmd);
 		}
 	}
-
+	
 	mutex_lock(&device.item_list_lock);
 	/*remove the pid from umplock valid pid list*/
 	device.pids[p_index] = 0;
@@ -530,7 +530,7 @@ static long umplock_driver_ioctl( struct file *f, unsigned int cmd, unsigned lon
 	switch ( cmd )
 	{
 		case LOCK_IOCTL_CREATE:
-			if (size != sizeof(_lock_item_s))
+			if (size != sizeof(_lock_item_s)) 
 			{
 				return -ENOTTY;
 			}
@@ -539,7 +539,7 @@ static long umplock_driver_ioctl( struct file *f, unsigned int cmd, unsigned lon
 			{
 				return -EFAULT;
 			}
-			lock_cmd.pid = (u32)current->tgid;
+			lock_cmd.pid = (u32)current->tgid;		
 			ret = do_umplock_create(&lock_cmd);
 			if (ret)
 			{
@@ -548,7 +548,7 @@ static long umplock_driver_ioctl( struct file *f, unsigned int cmd, unsigned lon
 			return 0;
 
 		case LOCK_IOCTL_PROCESS:
-			if (size != sizeof(_lock_item_s))
+			if (size != sizeof(_lock_item_s)) 
 			{
 				return -ENOTTY;
 			}
@@ -561,7 +561,7 @@ static long umplock_driver_ioctl( struct file *f, unsigned int cmd, unsigned lon
 			return do_umplock_process(&lock_cmd);
 
 		case LOCK_IOCTL_RELEASE:
-			if (size != sizeof(_lock_item_s))
+			if (size != sizeof(_lock_item_s)) 
 			{
 				return -ENOTTY;
 			}
@@ -593,24 +593,24 @@ static long umplock_driver_ioctl( struct file *f, unsigned int cmd, unsigned lon
 static int umplock_driver_open( struct inode *inode, struct file *filp )
 {
 	_lock_cmd_priv lock_cmd;
-
-	atomic_inc(&device.sessions);
+	
+	atomic_inc(&device.sessions); 
 	printk( KERN_DEBUG "UMPLOCK: OPEN SESSION (%i references)\n", atomic_read(&device.sessions) );
-
+	
 	lock_cmd.pid = (u32)current->tgid;
 	do_umplock_client_add(&lock_cmd);
-
+	
 	return 0;
 }
 
 static int umplock_driver_release( struct inode *inode, struct file *filp )
 {
 	_lock_cmd_priv lock_cmd;
-
+	
 	lock_cmd.pid = (u32)current->tgid;
 	do_umplock_client_delete(&lock_cmd);
-
-	atomic_dec(&device.sessions);
+	
+	atomic_dec(&device.sessions); 
 	printk( KERN_DEBUG "UMPLOCK: CLOSE SESSION (%i references)\n", atomic_read(&device.sessions) );
 	if ( atomic_read(&device.sessions) == 0 )
 	{
@@ -646,6 +646,6 @@ module_init(umplock_initialize_module);
 module_exit(umplock_cleanup_module);
 
 
-MODULE_LICENSE("GPL");
-MODULE_AUTHOR("ARM Ltd.");
-MODULE_DESCRIPTION("ARM UMP locker");
+MODULE_LICENSE("GPL");  
+MODULE_AUTHOR("ARM Ltd.");  
+MODULE_DESCRIPTION("ARM UMP locker"); 

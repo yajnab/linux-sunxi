@@ -29,6 +29,14 @@ KERNEL_VERSION="3.3"
 LICHEE_KDIR=`pwd`
 LICHEE_MOD_DIR=${LICHEE_KDIR}/output/lib/modules/${KERNEL_VERSION}
 
+update_kernel_ver()
+{
+    if [ -r include/generated/utsrelease.h ] ; then
+        KERNEL_VERSION=`cat include/generated/utsrelease.h | awk -F\" '{print $2}'`
+    fi
+    LICHEE_MOD_DIR=${LICHEE_KDIR}/output/lib/modules/${KERNEL_VERSION}
+}
+
 build_standby()
 {
     echo "build standby"
@@ -54,7 +62,7 @@ build_nand_lib()
     echo "build nand library ${NAND_ROOT}/lib"
     if [ -d ${NAND_ROOT}/lib ]; then
         echo "build nand library now"
-        make -C modules/nand/lib clean 2> /dev/null
+        make -C modules/nand/lib clean 2> /dev/null 
         make -C modules/nand/lib lib install
     else
         echo "build nand with existing library"
@@ -97,6 +105,7 @@ build_kernel()
 
     ${OBJCOPY} -R .note.gnu.build-id -S -O binary vmlinux bImage
 
+    update_kernel_ver
     rm -rf output
     mkdir -p ${LICHEE_MOD_DIR}
     cp bImage output/
@@ -121,18 +130,16 @@ build_modules()
         printf "Please build kernel first\n"
         exit 1
     fi
+    update_kernel_ver
 
     make -C modules/example LICHEE_MOD_DIR=${LICHEE_MOD_DIR} LICHEE_KDIR=${LICHEE_KDIR} \
-        install
-
-    make -C modules/axp_gpio_test LICHEE_MOD_DIR=${LICHEE_MOD_DIR} LICHEE_KDIR=${LICHEE_KDIR} \
         install
 
     build_nand_lib
     make -C modules/nand LICHEE_MOD_DIR=${LICHEE_MOD_DIR} LICHEE_KDIR=${LICHEE_KDIR} \
         install
     copy_nand_mod
-
+        
     (
     export LANG=en_US.UTF-8
     unset LANGUAGE
@@ -200,7 +207,7 @@ clean_modules()
 {
     echo "Cleaning modules"
     make -C modules/example LICHEE_MOD_DIR=${LICHEE_MOD_DIR} LICHEE_KDIR=${LICHEE_KDIR} clean
-
+    
     (
     export LANG=en_US.UTF-8
     unset LANGUAGE
@@ -250,3 +257,4 @@ case "$1" in
         gen_output
         ;;
 esac
+

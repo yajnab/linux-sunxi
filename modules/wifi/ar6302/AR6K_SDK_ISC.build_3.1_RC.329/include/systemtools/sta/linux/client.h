@@ -46,12 +46,12 @@ typedef struct atheros_dev_ *p_atheros_dev;
 
 VOID init_client
 (
-	VOID
+ 	VOID
 );
 
 INT32 add_client
 (
-	VOID *bus_dev,
+ 	VOID *bus_dev,
 	UINT32 baseaddr[MAX_BARS],
 	UINT32 len[MAX_BARS],
 	UINT32 irq,
@@ -61,7 +61,7 @@ INT32 add_client
 
 VOID remove_client
 (
-	VOID *bus_dev
+ 	VOID *bus_dev
 );
 
 VOID cleanup_client
@@ -83,7 +83,7 @@ VOID unregister_client
 
 INT32 cli_cfg_read
 (
-	INT32 cli_id,
+ 	INT32 cli_id,
 	INT32 offset,
 	INT32 size,
 	INT32 *ret_val
@@ -92,7 +92,7 @@ INT32 cli_cfg_read
 
 INT32 cli_cfg_write
 (
-	INT32 cli_id,
+ 	INT32 cli_id,
 	INT32 offset,
 	INT32 size,
 	INT32 ret_val
@@ -100,7 +100,7 @@ INT32 cli_cfg_write
 
 INT32 cli_reg_read
 (
-	INT32 cli_id,
+ 	INT32 cli_id,
 	INT32 offset,
 	UINT32 *ret_val
 );
@@ -108,7 +108,7 @@ INT32 cli_reg_read
 
 INT32 cli_reg_write
 (
-	INT32 cli_id,
+ 	INT32 cli_id,
 	INT32 offset,
 	UINT32 ret_val
 );

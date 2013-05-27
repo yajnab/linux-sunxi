@@ -1,11 +1,11 @@
 #! /bin/bash
 #
 # Create the epivers.h file from epivers.h.in
-#
+# 
 # Epivers.h generation mechanism supports svn based checkouts
 #
 # $Id: epivers.sh 241914 2011-02-20 03:11:27Z $
-#
+# 
 # GetCompVer.py return value and action needed
 #    i. trunk => use current date as version string
 #   ii. local => use SVNURL expanded by HeadURL keyword
@@ -48,13 +48,13 @@ else # epivers.h doesn't exist
 		echo "DBG: SVN URL wasn't expanded. Getting it from svn info"
 		SVNURL=$($svncmd info epivers.sh 2> $NULL | egrep "^URL:")
 	fi
-
+	
 	if echo "${TAG}" | grep -q "BRANCH\|TWIG"; then
 		branchtag=$TAG
 	else
 		branchtag=""
 	fi
-
+	
 	# If this is a tagged build, use the tag to supply the numbers
 	# Tag should be in the form
 	#    <NAME>_REL_<MAJ>_<MINOR>
@@ -134,16 +134,16 @@ else # epivers.h doesn't exist
 	# TODO SVN transition matures
 	if [ "$SVNURL_VER" == "true" ]; then
 		case "${SVNURL}" in
-			*/branches/*)
+			*/branches/*) 	
 				SVNTAG=$(echo $SVNURL | sed -e 's%.*/branches/\(.*\)/src.*%\1%g' | xargs printf "%s")
 				;;
-			*/tags/*)
+			*/tags/*) 	
 				SVNTAG=$(echo $SVNURL | sed -e 's%.*/tags/\(.*\)/src.*%\1%g' | xargs printf "%s")
 				;;
-			*/trunk/*)
+			*/trunk/*) 	
 				SVNTAG=$(date '+TRUNKURL_REL_%Y_%m_%d')
 				;;
-			*)
+			*)       	
 				SVNTAG=$(date '+OTHER_REL_%Y_%m_%d')
 				;;
 		esac
@@ -162,7 +162,7 @@ else # epivers.h doesn't exist
 	if [ ${#tag[*]} -eq 0 ]; then
 	   tag=(`date '+TOT REL %Y %m %d 0 %y'`);
 	   # reconstruct a TAG from the date
-	   TAG=${tag[0]}_${tag[1]}_${tag[2]}_${tag[3]}_${tag[4]}_${tag[5]}
+	   TAG=${tag[0]}_${tag[1]}_${tag[2]}_${tag[3]}_${tag[4]}_${tag[5]}	   
 	   tagged=0
 	fi
 
@@ -186,7 +186,7 @@ else # epivers.h doesn't exist
 
 	# Strip 'RC' from front of rcnum if present
 	rcnum=${rcnum/#RC/}
-
+	
 	# strip leading zero off the number (otherwise they look like octal)
 	maj=${maj/#0/}
 	min=${min/#0/}
@@ -207,16 +207,16 @@ else # epivers.h doesn't exist
 	if [ ${tagged} -eq 1 ]; then
 	    # vernum is 32chars max
 	    vernum=`printf "0x%02x%02x%02x%02x" ${maj} ${min} ${rcnum} ${origincr}`
-	else
+	else 
 	    vernum=`printf "0x00%02x%02x%02x" ${tag[7]} ${min} ${rcnum}`
 	fi
 
-	# make sure the size of vernum is under 32 bits.
+	# make sure the size of vernum is under 32 bits. 
 	# Otherwise, truncate. The string will keep full information.
 	vernum=${vernum:0:10}
 
 	# build the string directly from the tag, irrespective of its length
-	# remove the name , the tag type, then replace all _ by .
+	# remove the name , the tag type, then replace all _ by . 
 	tag_ver_str=${TAG/${tag[0]}_}
 	tag_ver_str=${tag_ver_str/${tag[1]}_}
 	tag_ver_str=${tag_ver_str//_/.}

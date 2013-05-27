@@ -19,3 +19,4 @@ SECTIONS
 	__bss_end = .;
 	__resume0_end = . ;
 }
+

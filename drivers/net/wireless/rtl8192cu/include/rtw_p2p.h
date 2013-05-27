@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
- *
+ *                                        
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -69,6 +69,8 @@ void rtw_append_wfd_ie(_adapter *padapter, u8 *buf, u32 *len);
 
 void reset_global_wifidirect_info( _adapter* padapter );
 int rtw_init_wifi_display_info(_adapter* padapter);
+void rtw_init_wifidirect_timers(_adapter* padapter);
+void rtw_init_wifidirect_addrs(_adapter* padapter, u8 *dev_addr, u8 *iface_addr);
 void init_wifidirect_info( _adapter* padapter, enum P2P_ROLE role);
 int rtw_p2p_enable(_adapter *padapter, enum P2P_ROLE role);
 
@@ -156,3 +158,4 @@ void dbg_rtw_p2p_set_role(struct wifidirect_info *wdinfo, enum P2P_ROLE role, co
 	(wdinfo)->find_phase_state_exchange_cnt != P2P_FINDPHASE_EX_NONE)
 
 #endif
+

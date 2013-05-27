@@ -21,22 +21,22 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
-// Portions of this code were developed with information supplied from the
+// Portions of this code were developed with information supplied from the 
 // SD Card Association Simplified Specifications. The following conditions and disclaimers may apply:
 //
 //  The following conditions apply to the release of the SD simplified specification (“Simplified
-//  Specification”) by the SD Card Association. The Simplified Specification is a subset of the complete
-//  SD Specification which is owned by the SD Card Association. This Simplified Specification is provided
-//  on a non-confidential basis subject to the disclaimers below. Any implementation of the Simplified
+//  Specification”) by the SD Card Association. The Simplified Specification is a subset of the complete 
+//  SD Specification which is owned by the SD Card Association. This Simplified Specification is provided 
+//  on a non-confidential basis subject to the disclaimers below. Any implementation of the Simplified 
 //  Specification may require a license from the SD Card Association or other third parties.
 //  Disclaimers:
-//  The information contained in the Simplified Specification is presented only as a standard
-//  specification for SD Cards and SD Host/Ancillary products and is provided "AS-IS" without any
-//  representations or warranties of any kind. No responsibility is assumed by the SD Card Association for
-//  any damages, any infringements of patents or other right of the SD Card Association or any third
-//  parties, which may result from its use. No license is granted by implication, estoppel or otherwise
-//  under any patent or other rights of the SD Card Association or any third party. Nothing herein shall
-//  be construed as an obligation by the SD Card Association to disclose or distribute any technical
+//  The information contained in the Simplified Specification is presented only as a standard 
+//  specification for SD Cards and SD Host/Ancillary products and is provided "AS-IS" without any 
+//  representations or warranties of any kind. No responsibility is assumed by the SD Card Association for 
+//  any damages, any infringements of patents or other right of the SD Card Association or any third 
+//  parties, which may result from its use. No license is granted by implication, estoppel or otherwise 
+//  under any patent or other rights of the SD Card Association or any third party. Nothing herein shall 
+//  be construed as an obligation by the SD Card Association to disclose or distribute any technical 
 //  information, know-how or other confidential information to any third party.
 //
 //
@@ -45,7 +45,7 @@
 // sdio@atheros.com
 //
 //
-
+ 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 /* debug level for this module*/
 
@@ -68,7 +68,7 @@
 #define ATH_INIT_WORK(_t, _f, _c)	INIT_WORK((_t), (void (*)(void *))(_f), (_c));
 #else
 #define ATH_INIT_WORK(_t, _f, _c)	INIT_DELAYED_WORK((_t), (_f));
-#ifndef pci_module_init
+#ifndef pci_module_init 
 #define pci_module_init pci_register_driver
 #endif
 #endif
@@ -116,7 +116,7 @@ MODULE_PARM_DESC(debuglevel, "debuglevel 0-7, controls debug prints");
                             SDHCD_ATTRIB_MULTI_BLK_IRQ | \
                             SDHCD_ATTRIB_AUTO_CMD12    | \
                             SDHCD_ATTRIB_POWER_SWITCH )
-
+                            
 static UINT32 hcdattributes = DEFAULT_ATTRIBUTES;
 module_param(hcdattributes, int, 0644);
 MODULE_PARM_DESC(hcdattributes, "PCIELLEN Attributes");
@@ -141,10 +141,10 @@ static SDHCD_DRIVER_CONTEXT HcdContext = {
 
 #define PCI_CLASS_SYSTEM_SDIO    0x0805
 /* PCI devices supported */
-static const struct pci_device_id pci_ids [] = {
+static const struct pci_device_id pci_ids [] = { 
   {
     .vendor = 0x1679, .device = 0x3000,
-    .subvendor = PCI_ANY_ID, .subdevice = PCI_ANY_ID,
+    .subvendor = PCI_ANY_ID, .subdevice = PCI_ANY_ID,  
     .driver_data =  (unsigned long) &HcdContext,
   },
   {
@@ -164,11 +164,11 @@ static struct pci_driver sdio_pci_driver = {
     .remove =   Remove,
 
 #ifdef CONFIG_PM
-    .suspend =  NULL,
-    .resume =  NULL,
+    .suspend =  NULL,     
+    .resume =  NULL,      
 #endif
 };
-
+    
 
 
 /*
@@ -180,20 +180,20 @@ static SYSTEM_STATUS Probe(struct pci_dev *pPCIdevice, const struct pci_device_i
     SDIO_STATUS   status = SDIO_STATUS_SUCCESS;
     PSDHCD_DRIVER_CONTEXT pHcdContext;
     PSDHCD_DEVICE pDeviceContext = NULL;
-    PSDHCD_DEVICE pLastDeviceContext;
+    PSDHCD_DEVICE pLastDeviceContext; 
     int ii;
     int count;
     int firstBar;
     UINT8 config;
     SDHCD_TYPE type = TYPE_CLASS;
-
+    
     DBG_PRINT(SDDBG_TRACE, ("SDIO PCIELLEN HCD: Probe - probing for new device\n"));
     if ((pId == NULL) || (pId->driver_data == 0)) {
         DBG_PRINT(SDDBG_ERROR, ("SDIO PCIELLEN HCD: Probe - no device\n"));
         return -EINVAL;
-    }
+    } 
     pHcdContext = (PSDHCD_DRIVER_CONTEXT)pId->driver_data;
-
+    
     if (pci_enable_device(pPCIdevice) < 0) {
         DBG_PRINT(SDDBG_ERROR, ("SDIO PCIELLEN HCD: Probe  - failed to enable device\n"));
         return -ENODEV;
@@ -217,7 +217,7 @@ static SYSTEM_STATUS Probe(struct pci_dev *pPCIdevice, const struct pci_device_i
         pci_disable_device(pPCIdevice);
         return -ENODEV;
     }
-
+    
     /* create a device for each slot that we have */
     for(ii = 0; ii < count; ii++, firstBar++) {
         pLastDeviceContext = pDeviceContext;
@@ -234,7 +234,7 @@ static SYSTEM_STATUS Probe(struct pci_dev *pPCIdevice, const struct pci_device_i
         pDeviceContext->pBusDevice = pPCIdevice;
         spin_lock_init(&pDeviceContext->Lock);
         spin_lock_init(&pDeviceContext->AddressSpinlock);
-
+        
         SET_SDIO_STACK_VERSION(&pDeviceContext->Hcd);
         pDeviceContext->Hcd.pName = (PTEXT)KernelAlloc(SDHCD_MAX_DEVICE_NAME+1);
         snprintf(pDeviceContext->Hcd.pName, SDHCD_MAX_DEVICE_NAME, SDIO_BD_BASE"%i:%i",
@@ -254,32 +254,32 @@ static SYSTEM_STATUS Probe(struct pci_dev *pPCIdevice, const struct pci_device_i
         if (!SDIO_SUCCESS(status = SemaphorePendInterruptable(&pHcdContext->DeviceListSem))) {
             break;   /* wait interrupted */
         }
-        SDListInsertTail(&pHcdContext->DeviceList, &pDeviceContext->List);
+        SDListInsertTail(&pHcdContext->DeviceList, &pDeviceContext->List); 
         SemaphorePost(&pHcdContext->DeviceListSem);
-
+        
         /* map the slots memory BAR */
-        status = MapAddress(pPCIdevice, pDeviceContext->DeviceName,
+        status = MapAddress(pPCIdevice, pDeviceContext->DeviceName, 
                             (UINT8)firstBar, &pDeviceContext->Address);
         if (!SDIO_SUCCESS(status)) {
-            DBG_PRINT(SDDBG_ERROR,
+            DBG_PRINT(SDDBG_ERROR, 
                ("SDIO PCIELLEN HCD: Probe - failed to map device memory address %s 0x%X, status %d\n",
                 pDeviceContext->DeviceName, (UINT)pci_resource_start(pPCIdevice, firstBar),
                 status));
-               break;
+               break;                  
         }
         pDeviceContext->InitStateMask |= SDIO_BAR_MAPPED;
 
         if (type == TYPE_PCIELLEN) {
             if (pLastDeviceContext == NULL) {
                 /* map the slots control register BAR */
-                status = MapAddress(pPCIdevice, pDeviceContext->DeviceName,
+                status = MapAddress(pPCIdevice, pDeviceContext->DeviceName, 
                                     (UINT8)0, &pDeviceContext->ControlRegs);
                 if (!SDIO_SUCCESS(status)) {
-                    DBG_PRINT(SDDBG_ERROR,
+                    DBG_PRINT(SDDBG_ERROR, 
                        ("SDIO PCIELLEN HCD: Probe - failed to map device control address %s 0x%X, status %d\n",
                         pDeviceContext->DeviceName, (UINT)pci_resource_start(pPCIdevice, 0),
                         status));
-                       break;
+                       break;                  
                 }
             } else {
                 /* copy the prior mapping */
@@ -288,14 +288,14 @@ static SYSTEM_STATUS Probe(struct pci_dev *pPCIdevice, const struct pci_device_i
             if ((ii+1) == count) {
                 /* mark last one */
                 pDeviceContext->InitStateMask |= SDIO_LAST_CONTROL_BAR_MAPPED;
-            }
+            } 
         }
         /* initialize work items */
         ATH_INIT_WORK(&(pDeviceContext->iocomplete_work), hcd_iocomplete_wqueue_handler, pDeviceContext);
         ATH_INIT_WORK(&(pDeviceContext->carddetect_work), hcd_carddetect_wqueue_handler, pDeviceContext);
         ATH_INIT_WORK(&(pDeviceContext->sdioirq_work), hcd_sdioirq_wqueue_handler, pDeviceContext);
 
-        /* map the controller interrupt, we map it to each device.
+        /* map the controller interrupt, we map it to each device. 
            Interrupts can be called from this point on */
 #ifndef SA_SHIRQ
 #define SA_SHIRQ           IRQF_SHARED
@@ -314,49 +314,49 @@ static SYSTEM_STATUS Probe(struct pci_dev *pPCIdevice, const struct pci_device_i
             DBG_PRINT(SDDBG_ERROR, ("SDIO PCIELLEN Probe - failed to init HW, status =%d\n",status));
             err = SDIOErrorToOSError(status);
             break;
-        }
+        } 
         pDeviceContext->InitStateMask |= SDHC_HW_INIT;
-
+        
            /* register with the SDIO bus driver */
         if (!SDIO_SUCCESS((status = SDIO_RegisterHostController(&pDeviceContext->Hcd)))) {
             DBG_PRINT(SDDBG_ERROR, ("SDIO PCIELLEN Probe - failed to register with host, status =%d\n",status));
             err = SDIOErrorToOSError(status);
             break;
-        }
+        }      
         pDeviceContext->InitStateMask |= SDHC_REGISTERED;
-
+        
         /* queue a work item to check for a card present at start up
            this call will unmask the insert/remove interrupts */
         QueueEventResponse(pDeviceContext, WORK_ITEM_CARD_DETECT);
     }
-
-
+        
+    
     if ((err < 0) || (!SDIO_SUCCESS(status))){
         pHcdContext->DeviceCount--;
         RemoveDevice(pPCIdevice, pHcdContext);
     } else {
-
+      
       if (type == TYPE_PCIELLEN) {
           InitEllen(pDeviceContext);
-      }
-
+      }    
+    
       DBG_PRINT(SDDBG_ERROR, ("SDIO PCIELLEN Probe - HCD ready! \n"));
     }
-    return 0;
+    return 0;  
 }
 
 /* Remove - remove  device
  * perform the undo of the Probe
 */
-static void Remove(struct pci_dev *pPCIdevice)
+static void Remove(struct pci_dev *pPCIdevice) 
 {
     PSDHCD_DRIVER_CONTEXT pHcdContext = &HcdContext;
-
+    
     DBG_PRINT(SDDBG_TRACE, ("+SDIO PCIELLEN HCD: Remove - removing device\n"));
 
     RemoveDevice(pPCIdevice, pHcdContext);
     pHcdContext->DeviceCount--;
-
+    
     DBG_PRINT(SDDBG_TRACE, ("-SDIO PCIELLEN HCD: Remove\n"));
     return;
 }
@@ -366,14 +366,14 @@ static void Remove(struct pci_dev *pPCIdevice)
 */
 static void RemoveDevice(struct pci_dev *pPCIdevice, PSDHCD_DRIVER_CONTEXT pHcdContext)
 {
-    PSDHCD_DEVICE pDeviceContext;
+    PSDHCD_DEVICE pDeviceContext; 
     DBG_PRINT(SDDBG_TRACE, ("+SDIO PCIELLEN HCD: RemoveDevice\n"));
-
+    
     /* protect the devicelist */
     if (!SDIO_SUCCESS(SemaphorePendInterruptable(&pHcdContext->DeviceListSem))) {
         return;   /* wait interrupted */
     }
-
+    
     SDITERATE_OVER_LIST_ALLOW_REMOVE(&pHcdContext->DeviceList, pDeviceContext, SDHCD_DEVICE, List)
         if (pDeviceContext->pBusDevice == pPCIdevice) {
             if (pDeviceContext->InitStateMask & SDHC_HW_INIT) {
@@ -383,18 +383,18 @@ static void RemoveDevice(struct pci_dev *pPCIdevice, PSDHCD_DRIVER_CONTEXT pHcdC
             if (pDeviceContext->InitStateMask & SDHC_REGISTERED) {
                 SDIO_UnregisterHostController(&pDeviceContext->Hcd);
             }
-
+            
             /* wait for any of our work items to run */
             flush_scheduled_work();
-
+            
             if (pDeviceContext->InitStateMask & SDIO_IRQ_INTERRUPT_INIT) {
                 free_irq(pPCIdevice->irq, pDeviceContext);
             }
-
+            
             if (pDeviceContext->InitStateMask & SDIO_BAR_MAPPED) {
                 UnmapAddress(&pDeviceContext->Address);
             }
-
+            
             if (pDeviceContext->InitStateMask & SDIO_LAST_CONTROL_BAR_MAPPED) {
                 UnmapAddress(&pDeviceContext->ControlRegs);
             }
@@ -417,7 +417,7 @@ static int MapAddress(struct pci_dev *pPCIdevice, char *pName, UINT8 bar, PSDHCD
     if (pci_resource_flags(pPCIdevice, bar) & PCI_BASE_ADDRESS_SPACE  ) {
         DBG_PRINT(SDDBG_WARN, ("SDIO PCIELLEN HCD: MapAddress, port I/O not supported\n"));
         return -ENOMEM;
-    }
+    } 
     pAddress->Raw = pci_resource_start(pPCIdevice, bar);
     pAddress->Length = pci_resource_len(pPCIdevice, bar);
     if (!request_mem_region (pAddress->Raw, pAddress->Length, pName)) {
@@ -437,10 +437,10 @@ static int MapAddress(struct pci_dev *pPCIdevice, char *pName, UINT8 bar, PSDHCD
     return 0;
 }
 
-
+ 
 
 /*
- * UnmapAddress - unmaps the address
+ * UnmapAddress - unmaps the address 
 */
 static void UnmapAddress(PSDHCD_MEMORY pAddress) {
     iounmap(pAddress->pMapped);
@@ -450,20 +450,20 @@ static void UnmapAddress(PSDHCD_MEMORY pAddress) {
 
 /*
  * InitEllen - initialize the Ellen card control registers
- *
+ * 
 */
 static SDIO_STATUS InitEllen(PSDHCD_DEVICE pDeviceContext)
 {
     UINT32 temp = READ_CONTROL_REG16(pDeviceContext, INTCSR);
     DBG_PRINT(SDDBG_TRACE, ("SDIO PCIELLEN HCD: InitEllen INTCSR - 0x%X\n", (UINT)temp));
-
+ 
     WRITE_CONTROL_REG16(pDeviceContext, INTCSR,
         (UINT16)temp | INTCSR_LINTi1ENABLE | INTCSR_LINTi2ENABLE | INTCSR_PCIINTENABLE);
 
     temp = READ_CONTROL_REG32((pDeviceContext),GPIOCTRL);
         /* set GPIO 2,3 and 8 as output */
-    temp &= ~(GPIO3_PIN_SELECT | GPIO2_PIN_SELECT | GPIO4_PIN_SELECT);
-    temp |= (GPIO8_PIN_DIRECTION | GPIO3_PIN_DIRECTION | GPIO2_PIN_DIRECTION | GPIO4_PIN_DIRECTION);
+    temp &= ~(GPIO3_PIN_SELECT | GPIO2_PIN_SELECT | GPIO4_PIN_SELECT);  
+    temp |= (GPIO8_PIN_DIRECTION | GPIO3_PIN_DIRECTION | GPIO2_PIN_DIRECTION | GPIO4_PIN_DIRECTION);               
     WRITE_CONTROL_REG32((pDeviceContext),GPIOCTRL, temp);
     DBG_PRINT(SDDBG_TRACE, ("SDIO PCIELLEN HCD: InitEllen GPIOCTRL - 0x%X\n", (UINT)temp));
     TRACE_SIGNAL_DATA_WRITE(pDeviceContext, FALSE);
@@ -471,12 +471,12 @@ static SDIO_STATUS InitEllen(PSDHCD_DEVICE pDeviceContext)
     TRACE_SIGNAL_DATA_ISR(pDeviceContext, FALSE);
     TRACE_SIGNAL_DATA_IOCOMP(pDeviceContext, FALSE);
 
-    return SDIO_STATUS_SUCCESS;
+    return SDIO_STATUS_SUCCESS;    
 }
 
 /*
  * QueueEventResponse - queues an event in a process context back to the bus driver
- *
+ * 
 */
 SDIO_STATUS QueueEventResponse(PSDHCD_DEVICE pDeviceContext, INT WorkItemID)
 {
@@ -485,7 +485,7 @@ SDIO_STATUS QueueEventResponse(PSDHCD_DEVICE pDeviceContext, INT WorkItemID)
 #else
     struct delayed_work *work;
 #endif
-
+    
     if (pDeviceContext->ShuttingDown) {
         return SDIO_STATUS_CANCELED;
     }
@@ -507,7 +507,7 @@ SDIO_STATUS QueueEventResponse(PSDHCD_DEVICE pDeviceContext, INT WorkItemID)
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,20)
     if (schedule_work(work) > 0) {
 #else
-    if (schedule_delayed_work(work,0) > 0) {
+    if (schedule_delayed_work(work,0) > 0) { 
 #endif
         return SDIO_STATUS_SUCCESS;
     } else {
@@ -554,9 +554,9 @@ struct work_struct *work)
 
     HCD_EVENT event;
     volatile UINT32 temp;
-
+    
     event = EVENT_HCD_NOP;
-
+    
     DBG_PRINT(SDDBG_TRACE, ("+ SDIO PCIELLEN Card Detect Work Item \n"));
     if (pDeviceContext->ShuttingDown) {
         return;
@@ -565,22 +565,22 @@ struct work_struct *work)
     DBG_PRINT(SDDBG_TRACE, ("SDIO PCIELLEN Card Detect Delaying to debounce card... \n"));
         /* sleep for slot debounce if there is no card */
     OSSleep(SD_SLOT_DEBOUNCE_MS);
-
+    
     /* wait for stable */
-    while(!((temp = READ_HOST_REG32(pDeviceContext, HOST_REG_PRESENT_STATE))&
+    while(!((temp = READ_HOST_REG32(pDeviceContext, HOST_REG_PRESENT_STATE))& 
             HOST_REG_PRESENT_STATE_CARD_STATE_STABLE)) {
         ;
     }
 
-    if (pDeviceContext->CardInserted) {
+    if (pDeviceContext->CardInserted) { 
         /* look for removal */
         if (!(temp & HOST_REG_PRESENT_STATE_CARD_INSERTED)) {
             /* card not present */
             event = EVENT_HCD_DETACH;
-            pDeviceContext->CardInserted = FALSE;
-            pDeviceContext->KeepClockOn = FALSE;
+            pDeviceContext->CardInserted = FALSE; 
+            pDeviceContext->KeepClockOn = FALSE;   
             /* turn the power off */
-            SetPowerOn(pDeviceContext, FALSE);
+            SetPowerOn(pDeviceContext, FALSE); 
             MaskIrq(pDeviceContext, HOST_REG_INT_STATUS_ALL);
             DBG_PRINT(PXA_TRACE_CARD_INSERT, ("SDIO PCIELLEN Card Detect REMOVE\n"));
         }
@@ -589,23 +589,23 @@ struct work_struct *work)
         if (temp & HOST_REG_PRESENT_STATE_CARD_INSERTED) {
             /* card present */
             event = EVENT_HCD_ATTACH;
-            pDeviceContext->CardInserted = TRUE;
+            pDeviceContext->CardInserted = TRUE; 
             GetDefaults(pDeviceContext);
 
             DBG_PRINT(PXA_TRACE_CARD_INSERT, ("SDIO PCIELLEN Card Detect INSERT\n"));
         }
     }
                 /* clear interrupt */
-    WRITE_HOST_REG16(pDeviceContext,
+    WRITE_HOST_REG16(pDeviceContext, 
                      HOST_REG_NORMAL_INT_STATUS,
-                     HOST_REG_INT_STATUS_CARD_INSERT_ENABLE |
+                     HOST_REG_INT_STATUS_CARD_INSERT_ENABLE | 
                      HOST_REG_INT_STATUS_CARD_REMOVAL_ENABLE);
     UnmaskIrq(pDeviceContext, HOST_REG_INT_STATUS_ALLOW_INSERT_REMOVE_ONLY);
 
     if (event != EVENT_HCD_NOP) {
         SDIO_HandleHcdEvent(&pDeviceContext->Hcd, event);
     }
-
+    
     DBG_PRINT(PXA_TRACE_CARD_INSERT, ("- SDIO PCIELLEN Card Detect Work Item \n"));
 }
 
@@ -634,15 +634,15 @@ struct work_struct *work)
 /* SDIO interrupt request */
 static irqreturn_t hcd_sdio_irq(int irq, void *context
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,20)
-, struct pt_regs * r
+, struct pt_regs * r  
 #endif
   )
   {
     irqreturn_t retStat;
     UINT16 intStat;
-
+    
     DBG_PRINT(PXA_TRACE_SDIO_INT, ("SDIO PCIELLEN SDIO IRQ \n"));
-
+    
     if (((PSDHCD_DEVICE)context)->Type == TYPE_PCIELLEN) {
         /* see if we interrupted */
         intStat = READ_CONTROL_REG16((PSDHCD_DEVICE)context, INTCSR);
@@ -651,14 +651,14 @@ static irqreturn_t hcd_sdio_irq(int irq, void *context
             return IRQ_NONE;
         }
     }
-
+    
     TRACE_SIGNAL_DATA_ISR((PSDHCD_DEVICE)context, TRUE);
         /* call OS independent ISR */
     if (HcdSDInterrupt((PSDHCD_DEVICE)context)) {
         retStat = IRQ_HANDLED;
     } else {
         retStat = IRQ_NONE;
-    }
+    }    
     TRACE_SIGNAL_DATA_ISR((PSDHCD_DEVICE)context, FALSE);
     return retStat;
 }
@@ -667,10 +667,10 @@ static irqreturn_t hcd_sdio_irq(int irq, void *context
   UnmaskIrq - Unmask SD interrupts
   Input:    pDevice - host controller
             Mask - mask value
-  Output:
-  Return:
-  Notes:
-
+  Output: 
+  Return: 
+  Notes: 
+        
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 UINT16 UnmaskIrq(PSDHCD_DEVICE pDevice, UINT32 Mask)
 {
@@ -688,10 +688,10 @@ UINT16 UnmaskIrq(PSDHCD_DEVICE pDevice, UINT32 Mask)
   MaskIrq - Mask SD interrupts
   Input:    pDevice - host controller
             Mask - mask value
-  Output:
-  Return:
-  Notes:
-
+  Output: 
+  Return: 
+  Notes: 
+        
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 UINT16 MaskIrq(PSDHCD_DEVICE pDevice, UINT32 Mask)
 {
@@ -709,10 +709,10 @@ UINT16 MaskIrq(PSDHCD_DEVICE pDevice, UINT32 Mask)
   MaskIrqFromIsr - Mask SD interrupts, called from ISR
   Input:    pDevice - host controller
             Mask - mask value
-  Output:
-  Return:
-  Notes:
-
+  Output: 
+  Return: 
+  Notes: 
+        
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 UINT16 MaskIrqFromIsr(PSDHCD_DEVICE pDevice, UINT32 Mask)
 {
@@ -730,10 +730,10 @@ UINT16 MaskIrqFromIsr(PSDHCD_DEVICE pDevice, UINT32 Mask)
   UnmaskIrqFromIsr - Unmask SD interrupts
   Input:    pDevice - host controller
             Mask - mask value
-  Output:
-  Return:
-  Notes:
-
+  Output: 
+  Return: 
+  Notes: 
+        
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 UINT16 UnmaskIrqFromIsr(PSDHCD_DEVICE pDevice, UINT32 Mask)
 {
@@ -751,10 +751,10 @@ UINT16 UnmaskIrqFromIsr(PSDHCD_DEVICE pDevice, UINT32 Mask)
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   GetDefaults - get the user modifiable data items
   Input:    pDeviceContext - host controller
-  Output:
-  Return:
-  Notes:
-
+  Output: 
+  Return: 
+  Notes: 
+        
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 void GetDefaults(PSDHCD_DEVICE pDeviceContext)
 {
@@ -762,59 +762,59 @@ void GetDefaults(PSDHCD_DEVICE pDeviceContext)
     pDeviceContext->TimeOut = timeout;
     pDeviceContext->ClockSpinLimit = ClockSpinLimit;
 }
-
+    
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   EnableDisableSDIOIRQ - enable SDIO interrupt detection
   Input:    pDevice - host controller
             Enable - enable SDIO IRQ detection
             FromIsr - called from ISR
-  Output:
-  Return:
-  Notes:
-
+  Output: 
+  Return: 
+  Notes: 
+        
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 void EnableDisableSDIOIRQ(PSDHCD_DEVICE pDevice, BOOL Enable, BOOL FromIsr)
 {
     UINT16 intsEnables;
-
+   
     if (FromIsr) {
         if (Enable) {
-                // isr should never re-enable
+                // isr should never re-enable 
             DBG_ASSERT(FALSE);
         } else {
             MaskIrqFromIsr(pDevice, HOST_REG_INT_STATUS_CARD_INT_STAT_ENABLE);
         }
-    } else {
-        if (Enable) {
-            UnmaskIrq(pDevice, HOST_REG_INT_STATUS_CARD_INT_STAT_ENABLE);
-        } else {
-            MaskIrq(pDevice, HOST_REG_INT_STATUS_CARD_INT_STAT_ENABLE);
+    } else {  
+        if (Enable) { 
+            UnmaskIrq(pDevice, HOST_REG_INT_STATUS_CARD_INT_STAT_ENABLE); 
+        } else {             
+            MaskIrq(pDevice, HOST_REG_INT_STATUS_CARD_INT_STAT_ENABLE);    
         }
-    }
-
-    /* protected read-modify-write */
-    if (FromIsr) {
+    }           
+     
+    /* protected read-modify-write */   
+    if (FromIsr) { 
         spin_lock(&pDevice->AddressSpinlock);
     } else {
         spin_lock_irq(&pDevice->AddressSpinlock);
-    }
-
+    } 
+        
     intsEnables = READ_HOST_REG16(pDevice, HOST_REG_INT_STATUS_ENABLE);
     if (Enable) {
         intsEnables |=  HOST_REG_INT_STATUS_CARD_INT_STAT_ENABLE;
-    } else {
+    } else { 
         intsEnables &= ~HOST_REG_INT_STATUS_CARD_INT_STAT_ENABLE;
     }
-
-    WRITE_HOST_REG16(pDevice, HOST_REG_INT_STATUS_ENABLE, intsEnables);
-
+        
+    WRITE_HOST_REG16(pDevice, HOST_REG_INT_STATUS_ENABLE, intsEnables);   
+    
     if (FromIsr) {
         spin_unlock(&pDevice->AddressSpinlock);
     } else {
-        spin_unlock_irq(&pDevice->AddressSpinlock);
+        spin_unlock_irq(&pDevice->AddressSpinlock);    
     }
-
-
+    
+    
 }
 
 /*
@@ -822,16 +822,16 @@ void EnableDisableSDIOIRQ(PSDHCD_DEVICE pDevice, BOOL Enable, BOOL FromIsr)
 */
 static int __init sdio_pci_hcd_init(void) {
     SYSTEM_STATUS err;
-    SDIO_STATUS status;
-
+    SDIO_STATUS status; 
+    
     REL_PRINT(SDDBG_TRACE, ("+SDIO PCIELLEN HCD: loaded\n"));
-
+    
     SDLIST_INIT(&HcdContext.DeviceList);
     status = SemaphoreInitialize(&HcdContext.DeviceListSem, 1);
     if (!SDIO_SUCCESS(status)) {
        return SDIOErrorToOSError(status);
-    }
-
+    }       
+    
     /* register with the PCI bus driver */
     err = pci_module_init(&sdio_pci_driver);
     if (err < 0) {
@@ -851,7 +851,7 @@ static void __exit sdio_pci_hcd_cleanup(void) {
     DBG_PRINT(SDDBG_TRACE, ("-SDIO PCIELLEN HCD: leave sdio_pci_hcd_cleanup\n"));
 }
 
-//
+// 
 //MODULE_LICENSE("Dual BSD/GPL");
 //
 MODULE_DESCRIPTION(DESCRIPTION);
@@ -859,3 +859,4 @@ MODULE_AUTHOR(AUTHOR);
 
 module_init(sdio_pci_hcd_init);
 module_exit(sdio_pci_hcd_cleanup);
+

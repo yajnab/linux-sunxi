@@ -7,7 +7,7 @@
 #define SPRITE_OPENED           0x00000001
 #define SPRITE_OPENED_MASK      (~(SPRITE_OPENED))
 #define SPRITE_USED	            0x00000002
-#define SPRITE_USED_MASK        (~(SPRITE_USED))
+#define SPRITE_USED_MASK        (~(SPRITE_USED)) 
 
 #define SPRITE_BLOCK_OPENED     0x00000004
 #define SPRITE_BLOCK_OPEN_MASK  (~(SPRITE_OPENED))

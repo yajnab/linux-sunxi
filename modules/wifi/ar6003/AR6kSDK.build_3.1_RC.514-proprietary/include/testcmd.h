@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="testcmd.h" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 // The software source and binaries included in this development package are
 // licensed, not sold. You, or your company, received the package under one
 // or more license agreements. The rights granted to you are specifically
@@ -11,7 +11,7 @@
 // portion of this package must be in strict compliance with the license
 // agreement(s) terms.
 // </copyright>
-//
+// 
 // <summary>
 // 	Wifi driver for AR6002
 // </summary>
@@ -38,7 +38,7 @@ extern "C" {
 #define WMI_CMDS_SIZE_MAX 2048
 #define TC_CMDS_GAP       16
 // should add up to the same size as buf[WMI_CMDS_SIZE_MAX]
-//#define TC_CMDS_SIZE_MAX  (WMI_CMDS_SIZE_MAX - sizeof(TC_CMDS_HDR) - WMI_CMD_ID_SIZE - TC_CMDS_GAP)
+//#define TC_CMDS_SIZE_MAX  (WMI_CMDS_SIZE_MAX - sizeof(TC_CMDS_HDR) - WMI_CMD_ID_SIZE - TC_CMDS_GAP)  
 #define TC_CMDS_SIZE_MAX  256
 
 typedef enum {
@@ -134,7 +134,7 @@ typedef enum {
     TCMD_CONT_RX_REPORT,
     TCMD_CONT_RX_SETMAC,
     TCMD_CONT_RX_SET_ANT_SWITCH_TABLE,
-
+ 
     TC_CMD_RESP,
 } TCMD_CONT_RX_ACT;
 
@@ -157,10 +157,10 @@ typedef PREPACK struct {
             A_UINT16    rateCntShortGuard[TCMD_MAX_RATES];
         } POSTPACK report;
         struct PREPACK TCMD_CONT_RX_MAC {
-            A_UCHAR     addr[ATH_MAC_LEN];
-            A_UCHAR     btaddr[ATH_MAC_LEN];
-            A_UINT16    regDmn[2];
-            A_UINT32    otpWriteFlag;
+            A_UCHAR     addr[ATH_MAC_LEN];			
+            A_UCHAR     btaddr[ATH_MAC_LEN];     
+            A_UINT16    regDmn[2];			
+            A_UINT32    otpWriteFlag;    			
         } POSTPACK mac;
         struct PREPACK TCMD_CONT_RX_ANT_SWITCH_TABLE {
             A_UINT32                antswitch1;
@@ -234,7 +234,7 @@ typedef PREPACK union {
           TCMD_CONT_RX         contRx;
           TCMD_PM              pm;
           // New test cmds from ART/MDK ...
-          TC_CMDS              tcCmds;
+          TC_CMDS              tcCmds;          
           TCMD_SET_REG setReg;
 } POSTPACK TEST_CMD;
 
@@ -243,3 +243,5 @@ typedef PREPACK union {
 #endif
 
 #endif /* TESTCMD_H_ */
+
+

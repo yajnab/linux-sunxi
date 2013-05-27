@@ -86,38 +86,22 @@ static struct sys_timer sun7i_timer = {
 static void sun7i_fixup(struct tag *tags, char **from,
 			struct meminfo *meminfo)
 {
-	pr_info("%s(%d)\n", __func__, __LINE__);
+	pr_debug("[%s] enter\n", __func__);
 	meminfo->bank[0].start = PLAT_PHYS_OFFSET;
-	meminfo->bank[0].size = PLAT_MEM_SIZE - (SW_GPU_MEM_SIZE + SW_FB_MEM_SIZE + SW_G2D_MEM_SIZE);
-
+	meminfo->bank[0].size = PLAT_MEM_SIZE;
 	meminfo->nr_banks = 1;
 }
 
-u32 g_mem_resv[][2] = {
-	{SYS_CONFIG_MEMBASE, SYS_CONFIG_MEMSIZE},
-	//{SW_FB_MEM_BASE, 	SW_FB_MEM_SIZE		},
-	//{SW_GPU_MEM_BASE, 	SW_GPU_MEM_SIZE		},
-	//{SW_G2D_MEM_BASE, 	SW_G2D_MEM_SIZE		},
-	//{SW_CSI_MEM_BASE, 	SW_CSI_MEM_SIZE		},
-	{SW_VE_MEM_BASE, 	SW_VE_MEM_SIZE		},
-	{SUPER_STANDBY_BASE,	SUPER_STANDBY_SIZE	}, /* for standby: 0x5200,0000-0x5200,0000+64k; */
-#if defined(CONFIG_ION) || defined(CONFIG_ION_MODULE)
-	{ION_CARVEOUT_MEM_BASE, ION_CARVEOUT_MEM_SIZE	}, /* reserve for ION */
-#endif
-};
-
 static void __init sun7i_reserve(void)
 {
-	u32 	i = 0;
+	pr_info("memblock reserve %x(%x) for sysconfig, ret=%d\n", SYS_CONFIG_MEMBASE, SYS_CONFIG_MEMSIZE,
+		memblock_reserve(SYS_CONFIG_MEMBASE, SYS_CONFIG_MEMSIZE));
 
-	pr_info("memory reserved(in bytes):\n");
-	for(i = 0; i < ARRAY_SIZE(g_mem_resv); i++) {
-		if(0 != memblock_reserve(g_mem_resv[i][0], g_mem_resv[i][1]))
-			printk("%s err, line %d, base 0x%08x, size 0x%08x\n", __func__,
-				__LINE__, g_mem_resv[i][0], g_mem_resv[i][1]);
-		else
-			pr_info("\t: 0x%08x, 0x%08x\n", g_mem_resv[i][0], g_mem_resv[i][1]);
-	}
+	pr_info("memblock reserve %x(%x) for standby\n", SUPER_STANDBY_BASE, SUPER_STANDBY_SIZE,
+		memblock_reserve(SUPER_STANDBY_BASE, SUPER_STANDBY_SIZE));
+
+	pr_info("memblock remove %x(%x) for fb, ret=%d\n", SW_FB_MEM_BASE, SW_FB_MEM_SIZE,
+		memblock_remove(SW_FB_MEM_BASE, SW_FB_MEM_SIZE));
 }
 
 static void sun7i_restart(char mode, const char *cmd)

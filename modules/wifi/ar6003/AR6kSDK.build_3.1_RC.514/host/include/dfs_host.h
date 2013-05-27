@@ -18,7 +18,7 @@
 #ifndef _DFS_HOST_H_
 #define _DFS_HOST_H_
 
-#ifdef ATH_SUPPORT_DFS
+#ifdef ATH_SUPPORT_DFS 
 
 #include "dfs_host_project.h"
 
@@ -100,7 +100,7 @@
 
 #define DFS_MAX_PULSE_BUFFER_SIZE 1024          /* Max number of pulses kept in buffer */
 #define DFS_MAX_PULSE_BUFFER_MASK 0x3ff
-
+        
 #define DFS_FAST_CLOCK_MULTIPLIER       (800/11)
 #define DFS_NO_FAST_CLOCK_MULTIPLIER    (80)
 
@@ -122,7 +122,7 @@ struct  dfs_pulse {
                                   this pulse type */
     A_UINT32    rp_rssithresh;    /* Minimum rssi to be considered a radar pulse */
     A_UINT32    rp_meanoffset;    /* Offset for timing adjustment */
-    A_INT32        rp_rssimargin;  /* rssi threshold margin. In Turbo Mode HW reports rssi 3dBm
+    A_INT32        rp_rssimargin;  /* rssi threshold margin. In Turbo Mode HW reports rssi 3dBm 
                                     * lower than in non TURBO mode.  This will be used to offset
                                     * that diff.*/
     A_UINT32    rp_pulseid;    /* Unique ID for identifying filter */
@@ -172,7 +172,7 @@ PREPACK struct dfs_filter {
 } POSTPACK adf_os_packed;
 
 
-
+                                   
 PREPACK struct dfs_pulseparams {
     u_int64_t  p_time;  /* time for start of pulse in usecs*/
     u_int8_t   p_dur;   /* Duration of pulse in usecs*/
@@ -207,7 +207,7 @@ PREPACK struct dfs_event {
 #define DFS_RADARQ_SIZE		512		/* 1K radar events for buffer size */
 #define DFS_RADARQ_SEQSIZE	513		/* Sequence counter wrap for radar */
 #define DFS_NUM_RADAR_STATES	64		/* Number of radar channels we keep state for */
-#define DFS_MAX_NUM_RADAR_FILTERS 10		/* Max number radar filters for each type */
+#define DFS_MAX_NUM_RADAR_FILTERS 10		/* Max number radar filters for each type */ 
 #define DFS_MAX_RADAR_TYPES	32		/* Number of different radar types */
 
 struct dfs_ar_state {
@@ -254,8 +254,8 @@ PREPACK struct dfs_info_host {
     u_int32_t   rn_last_unique_ts;      /* last unique 32 bit ts from recv descriptor  */
     u_int64_t	rn_ts_prefix;		/* Prefix to prepend to 15 bit recv ts  */
     u_int32_t	rn_numbin5radars;	/* Number of bin5 radar pulses to search for  */
-    u_int64_t       dfs_bin5_chirp_ts;
-    u_int8_t        dfs_last_bin5_dur;
+    u_int64_t       dfs_bin5_chirp_ts;  
+    u_int8_t        dfs_last_bin5_dur; 
 } POSTPACK adf_os_packed;
 #include "athendpack.h"
 

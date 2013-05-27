@@ -21,7 +21,7 @@ typedef struct _rawDataPerXPD {
 
 typedef struct _rawDataPerChannel {
 	A_UINT16				channelValue;
-	A_INT16					maxPower_t4;
+	A_INT16					maxPower_t4;				
 	RAW_DATA_PER_XPD_GEN3	*pDataPerXPD;
 } RAW_DATA_PER_CHANNEL_GEN3;
 
@@ -59,13 +59,13 @@ typedef struct _eepromDataStruct {
 //contiguous struct for passing from library to upper level software
 typedef struct _eepromFullDataStruct {
 	A_UINT16						numChannels11a;
-	A_UINT16						xpd_mask11a;
+	A_UINT16						xpd_mask11a;	
 	EEPROM_DATA_PER_CHANNEL_GEN3	pDataPerChannel11a[NUM_11A_EEPROM_CHANNELS];
 	A_UINT16						numChannels11b;
-	A_UINT16						xpd_mask11b;
+	A_UINT16						xpd_mask11b;		
 	EEPROM_DATA_PER_CHANNEL_GEN3	pDataPerChannel11b[NUM_2_4_EEPROM_CHANNELS];
 	A_UINT16						numChannels11g;
-	A_UINT16						xpd_mask11g;
+	A_UINT16						xpd_mask11g;	
 	EEPROM_DATA_PER_CHANNEL_GEN3	pDataPerChannel11g[NUM_2_4_EEPROM_CHANNELS];
 } EEPROM_FULL_DATA_STRUCT_GEN3;
 
@@ -83,7 +83,7 @@ A_UINT16 fbin2freq_gen3(A_UINT32 fbin, A_UINT32 mode);
 A_BOOL get_xpd_gain_and_pcdacs_for_powers
 (
  A_UINT32 devNum,                         // In
- A_UINT16 channel,                         // In
+ A_UINT16 channel,                         // In       
  RAW_DATA_STRUCT_GEN3 *pRawDataset,        // In
  A_UINT32 numXpdGain,                      // In
  A_UINT32 xpdGainMask,                      // In     - desired xpd_gain
@@ -91,7 +91,7 @@ A_BOOL get_xpd_gain_and_pcdacs_for_powers
  A_INT16 *pPowerMax,                      // In/Out	(2 x power)
  A_INT16 *pPowerMid,                      // Out		(2 x power)
  A_UINT16 pXpdGainValues[],               // Out
- A_UINT16 pPCDACValues[]                  // Out
+ A_UINT16 pPCDACValues[]                  // Out 
 );
 A_BOOL initialize_datasets(A_UINT32 devNum, EEPROM_DATA_STRUCT_GEN3 *pCalDataset_gen3[], RAW_DATA_STRUCT_GEN3  *pRawDataset_gen3[]);
 A_BOOL mdk_getFullPwrTable(A_UINT32 devNum, A_UINT16 numPcdacs, A_UINT16 *pcdacs, A_INT16 *power, A_INT16 maxPower, A_INT16 *retVals);
@@ -107,3 +107,4 @@ copyGen3EepromStruct(EEPROM_FULL_DATA_STRUCT_GEN3 *pFullCalDataset_gen3, EEPROM_
 #endif
 
 #endif
+

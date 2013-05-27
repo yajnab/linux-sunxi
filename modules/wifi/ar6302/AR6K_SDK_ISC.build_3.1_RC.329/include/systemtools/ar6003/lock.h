@@ -5,7 +5,7 @@
 
 #ident  "ACI $Id: //depot/sw/releases/olca3.1-RC/include/systemtools/ar6003/lock.h#1 $, $Header: //depot/sw/releases/olca3.1-RC/include/systemtools/ar6003/lock.h#1 $"
 
-/*
+/* 
 modification history
 --------------------
 00a    14may01    fjc    Created.
@@ -68,7 +68,7 @@ static __inline void emptypfn(A_CHAR *msg) { }
 /**************************************************************************
 * printMsg - Print within kernel mode
 *
-*
+* 
 *
 * RETURNS: N/A
 */
@@ -77,3 +77,6 @@ void printMsg
 	A_CHAR *msg
 	);
 #endif
+
+
+

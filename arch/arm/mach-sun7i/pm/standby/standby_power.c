@@ -64,7 +64,7 @@ __s32 standby_power_init(__u32 wakeup_src)
 		reg_val &= 0xcf;
 		twi_byte_rw(TWI_OP_WR, AXP_ADDR,AXP20_PEK, &reg_val);
 	}
-
+	
 	if(wakeup_src & AXP_WAKEUP_SHORT_KEY){
 		/* enable pek short */
 		twi_byte_rw(TWI_OP_RD, AXP_ADDR,AXP20_IRQEN3, &reg_val);
@@ -85,7 +85,7 @@ __s32 standby_power_init(__u32 wakeup_src)
 		reg_val |= 0x40;
 		twi_byte_rw(TWI_OP_WR, AXP_ADDR,AXP20_IRQEN5, &reg_val);
 	}
-
+	
 	if(wakeup_src & AXP_WAKEUP_LOWBATT){
 		/* enable low voltage warning */
 		twi_byte_rw(TWI_OP_RD, AXP_ADDR,AXP20_IRQEN4, &reg_val);
@@ -95,7 +95,7 @@ __s32 standby_power_init(__u32 wakeup_src)
 		reg_val |= 0x03;
 		twi_byte_rw(TWI_OP_WR, AXP_ADDR,AXP20_IRQ4, &reg_val);
 	}
-
+	
 	if(wakeup_src & AXP_WAKEUP_USB){
 		/* enable usb plug-in / plug-out */
 		twi_byte_rw(TWI_OP_RD, AXP_ADDR,AXP20_IRQEN1, &reg_val);
@@ -113,8 +113,8 @@ __s32 standby_power_init(__u32 wakeup_src)
 #ifdef CONFIG_ARCH_SUN7I
     writel(0x1,NMI_INT_ENABLE_REG);
 #endif
-
-
+    
+    
     return 0;
 }
 
@@ -143,14 +143,14 @@ __s32 standby_power_exit(__u32 wakeup_src)
 		reg_val &= ~0x03;
 		twi_byte_rw(TWI_OP_WR, AXP_ADDR,AXP20_IRQEN3, &reg_val);
 	}
-
+	
 	if(wakeup_src & AXP_WAKEUP_LONG_KEY){
 		/* enable pek long/short */
 		twi_byte_rw(TWI_OP_RD, AXP_ADDR,AXP20_IRQEN3, &reg_val);
 		reg_val &= ~0x01;
 		twi_byte_rw(TWI_OP_WR, AXP_ADDR,AXP20_IRQEN3, &reg_val);
 	}
-
+	
 	if(wakeup_src & AXP_WAKEUP_SHORT_KEY){
 		/* enable pek long/short */
 		twi_byte_rw(TWI_OP_RD, AXP_ADDR,AXP20_IRQEN3, &reg_val);
@@ -171,7 +171,7 @@ __s32 standby_power_exit(__u32 wakeup_src)
 		reg_val &= ~0x40;
 		twi_byte_rw(TWI_OP_WR, AXP_ADDR,AXP20_IRQEN5, &reg_val);
 	}
-
+	
 	if(wakeup_src & AXP_WAKEUP_LOWBATT){
 		/* disable low voltage warning */
 		twi_byte_rw(TWI_OP_RD, AXP_ADDR,AXP20_IRQEN4, &reg_val);
@@ -336,3 +336,5 @@ __u32 standby_get_voltage(enum power_vol_type_e type)
 	else
 		return axp20_ldo4_data[val]*1000;
 }
+
+

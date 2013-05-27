@@ -74,7 +74,7 @@ typedef struct
 }__disp_lcd_cfg_t;
 
 typedef struct
-{
+{    
         __u32                   status; /*display engine,lcd,tv,vga,hdmi status*/
         __u32                   lcdc_status;//tcon0 used, tcon1 used
         __bool                  have_cfg_reg;
@@ -115,7 +115,7 @@ typedef struct
         __u32                   out_csc;
 
         __disp_lcd_cfg_t        lcd_cfg;
-        __hdle                  gpio_hdl[4];
+        __hdle                  gpio_hdl[6];
 
         __bool                  vsync_event_en;
 }__disp_screen_t;
@@ -138,6 +138,7 @@ typedef struct
         __disp_screen_t         screen[2];
         __disp_scaler_t         scaler[2];
         __disp_pwm_t            pwm[2];
+        __u32                   print_level;
 }__disp_dev_t;
 
 extern __disp_dev_t gdisp;

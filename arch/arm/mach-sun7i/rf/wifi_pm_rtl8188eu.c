@@ -90,7 +90,7 @@ void rtl8188eu_power(int mode, int *updown)
             *updown = 0;
 		rtl8188eu_msg("usb wifi power state: %s\n", rtl8188eu_powerup ? "on" : "off");
     }
-    return;
+    return;	
 }
 
 static void rtl8188eu_standby(int instadby)
@@ -125,7 +125,7 @@ void rtl8188eu_gpio_init(void)
 
 	axp_name = val.str;
 	rtl8188eu_msg("module power name %s\n", axp_name);
-
+	
 	rtl8188eu_powerup = 0;
 	rtk8188eu_suspend = 0;
 	ops->power     = rtl8188eu_power;

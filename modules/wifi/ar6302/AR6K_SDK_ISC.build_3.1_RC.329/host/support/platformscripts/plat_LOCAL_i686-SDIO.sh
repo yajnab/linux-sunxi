@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 # Platform-Dependent load script for x86 systems using Atheros SDIO stack
-#
+# 
 #
 
 ATH_RESTORE_NATIVEMMC=${ATH_RESTORE_NATIVEMMC:-yes}
@@ -20,31 +20,31 @@ CFG80211_LOADED="no"
 modprobe -l sdhci_pci | grep sdhci > /dev/null
 if [ $? -eq 0 ]; then
 # native PCI based STD host kernel module is available
-NATIVE_SDHCI_PCI_AVAIL="yes"
+NATIVE_SDHCI_PCI_AVAIL="yes"	
 fi
 
 modprobe -l sdhci | grep sdhci > /dev/null
 if [ $? -eq 0 ]; then
 # native STD host kernel module is available
-NATIVE_MMC_STACK_STD_HOST_AVAIL="yes"
+NATIVE_MMC_STACK_STD_HOST_AVAIL="yes"	
 fi
 
-lsmod | grep sdhci_pci > /dev/null
+lsmod | grep sdhci_pci > /dev/null   
 if [ $? -eq 0 ]; then
 # native PCI based STD host kernel module is also loaded
-NATIVE_SDHCI_PCI_LOADED="yes"
+NATIVE_SDHCI_PCI_LOADED="yes"	
 fi
 
-lsmod | grep sdhci > /dev/null
+lsmod | grep sdhci > /dev/null   
 if [ $? -eq 0 ]; then
 # native STD host kernel module is also loaded
-NATIVE_MMC_STACK_STD_HOST_LOADED="yes"
+NATIVE_MMC_STACK_STD_HOST_LOADED="yes"	
 fi
 
-lsmod | grep bt_hci_sdio > /dev/null
+lsmod | grep bt_hci_sdio > /dev/null   
 if [ $? -eq 0 ]; then
 # BT HCI SDIO kernel module is also loaded
-BT_HCI_SDIO_LOADED="yes"
+BT_HCI_SDIO_LOADED="yes"	
 fi
 
 echo $AR6K_MODULE_ARGS | grep setuphci > /dev/null
@@ -55,13 +55,13 @@ fi
 modprobe -l cfg80211 | grep cfg80211 > /dev/null
 if [ $? -eq 0 ]; then
 # cfg80211 kernel module is available
-CFG80211_AVAIL="yes"
+CFG80211_AVAIL="yes"	
 fi
 
-lsmod | grep cfg80211 > /dev/null
+lsmod | grep cfg80211 > /dev/null   
 if [ $? -eq 0 ]; then
 # cfg80211 kernel module is loaded
-CFG80211_LOADED="yes"
+CFG80211_LOADED="yes"	
 fi
 
 if [ -f /usr/sbin/hciconfig ]; then
@@ -77,7 +77,7 @@ fi
 case $1 in
 	loadbus)
     if [ "$ENABLE_BT_HCI" = "yes" ]; then
-        # only if BlueZ is installed
+        # only if BlueZ is installed 
         if [ -f /usr/sbin/bluetoothd ]; then
             service bluetooth restart
             sleep 0.5
@@ -91,15 +91,15 @@ case $1 in
 			exit -1
 		fi
 	else
-	if [ "$NATIVE_MMC_STACK_STD_HOST_LOADED" = "yes" ]; then
-		echo "Linux native stack STD host detected...attempting to remove kernel module"
-            ### TODO: need to revisit why this won't remove sdhci_pci
-		modprobe -r sdhci
-		if [ $? -ne 0 ]; then
-			echo "failed to remove native stack std host"
-			exit -1
-		fi
-	fi
+    	if [ "$NATIVE_MMC_STACK_STD_HOST_LOADED" = "yes" ]; then
+    		echo "Linux native stack STD host detected...attempting to remove kernel module"
+            ### TODO: need to revisit why this won't remove sdhci_pci 
+    		modprobe -r sdhci	
+    		if [ $? -ne 0 ]; then
+    			echo "failed to remove native stack std host"
+    			exit -1
+    		fi
+    	fi
     fi
 	echo "sdiostack loading"
 	/sbin/insmod $IMAGEPATH/sdio_lib.ko
@@ -111,31 +111,31 @@ case $1 in
 	fi
 	;;
 	unloadbus)
-	echo "sdio stack unloading ..."
+	echo "sdio stack unloading ..."	
     /sbin/rmmod -w sdio_pcistd_hcd.ko
 	/sbin/rmmod -w sdio_busdriver.ko
-	/sbin/rmmod -w sdio_lib.ko
+	/sbin/rmmod -w sdio_lib.ko	
 	if [ "$ATH_RESTORE_NATIVEMMC" = "yes" ]; then
 		if [ "$NATIVE_SDHCI_PCI_AVAIL" = "yes" ]; then
-			echo "restoring linux native pci based stack std host"
+		 	echo "restoring linux native pci based stack std host"
 			modprobe -q sdhci_pci
-		else
+		else	
 		    if [ "$NATIVE_MMC_STACK_STD_HOST_AVAIL" = "yes" ]; then
-			echo "restoring linux native stack std host"
-			modprobe -q sdhci
-		    fi
+		     	echo "restoring linux native stack std host"
+		    	modprobe -q sdhci	
+		    fi	
         fi
 	fi
 	;;
 	loadAR6K)
 	if [ "$CFG80211_AVAIL" = "yes" ]; then
-	   if [ "$CFG80211_LOADED" = "no" ]; then
+   	   if [ "$CFG80211_LOADED" = "no" ]; then
                modprobe -q cfg80211
                if [ $? -ne 0 ]; then
                   echo "*** Failed to install cfg80211 kernel module"
                fi
-	    fi
-	fi
+   	    fi
+   	fi
 	echo "loading AR6K module... Args = ($AR6K_MODULE_ARGS) , logfile:$AR6K_TGT_LOGFILE"
 	$IMAGEPATH/recEvent --logfile=$AR6K_TGT_LOGFILE --srcdir=$WORKAREA/include/ /dev/null 2>&1 &
     if [ "$ENABLE_BT_HCI" = "yes" ]; then
@@ -174,7 +174,7 @@ case $1 in
     if [ -n "$HCI_IF" ]; then
         /usr/sbin/hciconfig "$HCI_IF" down &> /dev/null
         sleep 0.5
-        # only if BlueZ is installed
+        # only if BlueZ is installed 
         if [ -f /usr/sbin/bluetoothd ]; then
             service bluetooth stop
             sleep 0.5
@@ -188,5 +188,8 @@ case $1 in
 	;;
 	*)
 		echo "Unknown option : $1"
-
+	
 esac
+
+
+

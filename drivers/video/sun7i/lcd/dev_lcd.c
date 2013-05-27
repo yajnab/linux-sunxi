@@ -36,7 +36,7 @@ long lcd_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	return 0;
 }
 
-static const struct file_operations lcd_fops =
+static const struct file_operations lcd_fops = 
 {
 	.owner		      = THIS_MODULE,
 	.open		        = lcd_open,
@@ -54,7 +54,7 @@ int lcd_init(void)
 
 	memset(&lcd0_cfg, 0, sizeof(__lcd_panel_fun_t));
 	memset(&lcd1_cfg, 0, sizeof(__lcd_panel_fun_t));
-
+    
     LCD_get_panel_funs_0(&lcd0_cfg);
 	LCD_get_panel_funs_1(&lcd1_cfg);
 	LCD_set_panel_funs(&lcd0_cfg, &lcd1_cfg);
@@ -62,7 +62,7 @@ int lcd_init(void)
     DRV_DISP_Init();
 
 	Fb_Init(0);
-
+    
 	return 0;
 }
 
@@ -89,20 +89,20 @@ int __init lcd_module_init(void)
                 __wrn("class_create fail\n");
                 return -1;
         }
-
+    
 	device_create(lcd_class, NULL, devid, NULL, "lcd");
-
+	
 	lcd_init();
-
+	
 	return ret;
 }
 
 static void __exit lcd_module_exit(void)
 {
         __inf("lcd_module_exit\n");
-
+        	
         device_destroy(lcd_class,  devid);
-
+        	
         class_destroy(lcd_class);
 
         cdev_del(my_cdev);
@@ -115,3 +115,4 @@ MODULE_AUTHOR("tyle");
 MODULE_DESCRIPTION("lcd driver");
 MODULE_LICENSE("GPL");
 MODULE_ALIAS("platform:lcd");
+

@@ -1,9 +1,9 @@
 /*
  * Copyright (C) 2010-2012 ARM Limited. All rights reserved.
- *
+ * 
  * This program is free software and is provided to you under the terms of the GNU General Public License version 2
  * as published by the Free Software Foundation, and any use by you of this program is subject to the terms of such GNU licence.
- *
+ * 
  * A copy of the licence is included with the program, and can also be obtained from Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
@@ -16,7 +16,7 @@
 #include "mali_osk.h"
 #include "mali_platform.h"
 
-#include <linux/module.h>
+#include <linux/module.h>  
 #include <linux/clk.h>
 #include <linux/err.h>
 #include <mach/irqs.h>
@@ -36,7 +36,7 @@ _mali_osk_errcode_t mali_platform_init(void)
     script_item_u   mali_use, clk_drv;
 
 	//get mali ahb clock
-    h_ahb_mali = clk_get(NULL, CLK_AHB_MALI);
+    h_ahb_mali = clk_get(NULL, CLK_AHB_MALI); 
 	if(!h_ahb_mali || IS_ERR(h_ahb_mali)){
 		MALI_PRINT(("try to get ahb mali clock failed!\n"));
 	} else
@@ -60,7 +60,7 @@ _mali_osk_errcode_t mali_platform_init(void)
 		MALI_PRINT(("try to set mali clock source failed!\n"));
 	} else
 		pr_info("%s(%d): set mali clock source success!\n", __func__, __LINE__);
-
+	
 	//set mali clock
 	rate = clk_get_rate(h_ve_pll);
 	pr_info("%s(%d): get ve pll rate %d!\n", __func__, __LINE__, rate);
@@ -85,7 +85,7 @@ _mali_osk_errcode_t mali_platform_init(void)
 		MALI_PRINT(("try to set mali clock failed!\n"));
 	} else
 		pr_info("%s(%d): set mali clock rate success!\n", __func__, __LINE__);
-
+	
 	if(clk_reset(h_mali_clk, AW_CCU_CLK_NRESET)){
 		MALI_PRINT(("try to reset release failed!\n"));
 	} else
@@ -99,8 +99,8 @@ _mali_osk_errcode_t mali_platform_deinit(void)
     /*close mali axi/apb clock*/
     if(mali_clk_flag == 1)
     {
-	//MALI_PRINT(("disable mali clock\n"));
-	mali_clk_flag = 0;
+    	//MALI_PRINT(("disable mali clock\n"));
+    	mali_clk_flag = 0;
        clk_disable(h_mali_clk);
        clk_disable(h_ahb_mali);
     }
@@ -108,10 +108,10 @@ _mali_osk_errcode_t mali_platform_deinit(void)
 }
 
 _mali_osk_errcode_t mali_platform_power_mode_change(mali_power_mode power_mode)
-{
+{	
 	if(power_mode == MALI_POWER_MODE_ON)
     {
-	if(mali_clk_flag == 0)
+    	if(mali_clk_flag == 0)
 	{
 		//printk(KERN_WARNING "enable mali clock\n");
 		//MALI_PRINT(("enable mali clock\n"));
@@ -128,7 +128,7 @@ _mali_osk_errcode_t mali_platform_power_mode_change(mali_power_mode power_mode)
     }
     else if(power_mode == MALI_POWER_MODE_LIGHT_SLEEP)
     {
-	/*close mali axi/apb clock*/
+    	/*close mali axi/apb clock*/
 	if(mali_clk_flag == 1)
 	{
 		//MALI_PRINT(("disable mali clock\n"));
@@ -139,7 +139,7 @@ _mali_osk_errcode_t mali_platform_power_mode_change(mali_power_mode power_mode)
     }
     else if(power_mode == MALI_POWER_MODE_DEEP_SLEEP)
     {
-	/*close mali axi/apb clock*/
+    	/*close mali axi/apb clock*/
 	if(mali_clk_flag == 1)
 	{
 		//MALI_PRINT(("disable mali clock\n"));
@@ -158,3 +158,5 @@ void mali_gpu_utilization_handler(u32 utilization)
 void set_mali_parent_power_domain(void* dev)
 {
 }
+
+

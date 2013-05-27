@@ -10,14 +10,14 @@ typedef struct
 	__u32 hdmi_clk; //required clock frequency for internal hdmi module, Hz
 	__u32 pll_clk;	//required pll frequency for VIDEO_PLL0(1x) or VIDEO_PLL1(1x), Hz
 	__u32 pll_2x;	//required 2x VIDEO_PLL or NOT: 0:no, 1: required
-
+	
 }__disp_tv_vga_clk_t;	//record tv/vga/hdmi mode clock requirement
 
 typedef struct
 {
 	__disp_tv_vga_clk_t tv_clk_tab[30];	//number related to number of tv mode supported
 	__disp_tv_vga_clk_t vga_clk_tab[12];//number related to number of vga mode supported
-
+	
 }__disp_clk_tab;
 
 typedef struct
@@ -95,3 +95,4 @@ __s32 disp_clk_cfg(__u32 sel, __u32 type, __u8 mode);
 extern __disp_clk_tab clk_tab;
 
 #endif
+

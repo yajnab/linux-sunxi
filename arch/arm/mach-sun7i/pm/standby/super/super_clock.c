@@ -37,7 +37,7 @@ __u32   cpu_ms_loopcnt;
 */
 __s32 mem_clk_plldisable(void)
 {
-    __ccmu_reg_list_t *CmuReg = (__ccmu_reg_list_t *)SW_VA_CCM_IO_BASE;
+    __ccmu_reg_list_t *CmuReg = (__ccmu_reg_list_t *)SW_VA_CCM_IO_BASE; 
     CmuReg->Pll1Ctl.PLLEn = 0;
     CmuReg->Pll2Ctl.PLLEn = 0;
     CmuReg->Pll3Ctl.PLLEn = 0;
@@ -63,7 +63,7 @@ __s32 mem_clk_plldisable(void)
 */
 __s32 mem_clk_pllenable(void)
 {
-    __ccmu_reg_list_t *CmuReg = (__ccmu_reg_list_t *)SW_VA_CCM_IO_BASE;
+    __ccmu_reg_list_t *CmuReg = (__ccmu_reg_list_t *)SW_VA_CCM_IO_BASE; 
     CmuReg->Pll1Ctl.PLLEn = 1;
     CmuReg->Pll2Ctl.PLLEn = 1;
     CmuReg->Pll3Ctl.PLLEn = 1;
@@ -89,16 +89,16 @@ __s32 mem_clk_pllenable(void)
 */
 __s32 mem_clk_setdiv(struct clk_div_t *clk_div)
 {
-    __ccmu_reg_list_t *CmuReg = (__ccmu_reg_list_t *)SW_VA_CCM_IO_BASE;
+    __ccmu_reg_list_t *CmuReg = (__ccmu_reg_list_t *)SW_VA_CCM_IO_BASE; 
 
     if(!clk_div){
         return -1;
     }
-
+    
     CmuReg->SysClkDiv.AXIClkDiv = clk_div->axi_div;
     CmuReg->SysClkDiv.AHBClkDiv = clk_div->ahb_div;
     CmuReg->SysClkDiv.APB0ClkDiv = clk_div->apb_div;
-
+    
     return 0;
 }
 
@@ -115,16 +115,16 @@ __s32 mem_clk_setdiv(struct clk_div_t *clk_div)
 */
 __s32 mem_clk_getdiv(struct clk_div_t  *clk_div)
 {
-    __ccmu_reg_list_t *CmuReg = (__ccmu_reg_list_t *)SW_VA_CCM_IO_BASE;
+    __ccmu_reg_list_t *CmuReg = (__ccmu_reg_list_t *)SW_VA_CCM_IO_BASE; 
 
     if(!clk_div){
         return -1;
     }
-
+    
     clk_div->axi_div = CmuReg->SysClkDiv.AXIClkDiv;
     clk_div->ahb_div = CmuReg->SysClkDiv.AHBClkDiv;
     clk_div->apb_div = CmuReg->SysClkDiv.APB0ClkDiv;
-
+    
     return 0;
 }
 
@@ -143,15 +143,15 @@ __s32 mem_clk_getdiv(struct clk_div_t  *clk_div)
 
 __s32 mem_clk_set_pll_factor(struct pll_factor_t *pll_factor)
 {
-    __ccmu_reg_list_t *CmuReg = (__ccmu_reg_list_t *)SW_VA_CCM_IO_BASE;
+    __ccmu_reg_list_t *CmuReg = (__ccmu_reg_list_t *)SW_VA_CCM_IO_BASE; 
 
     CmuReg->Pll1Ctl.FactorK = pll_factor->FactorK;
     CmuReg->Pll1Ctl.FactorM = pll_factor->FactorM;
     CmuReg->Pll1Ctl.PLLDivP = pll_factor->FactorP;
     CmuReg->Pll1Ctl.FactorN = pll_factor->FactorN;
-
+    
     //busy_waiting();
-
+    
     return 0;
 }
 
@@ -169,15 +169,15 @@ __s32 mem_clk_set_pll_factor(struct pll_factor_t *pll_factor)
 
 __s32 mem_clk_get_pll_factor(struct pll_factor_t *pll_factor)
 {
-    __ccmu_reg_list_t *CmuReg = (__ccmu_reg_list_t *)SW_VA_CCM_IO_BASE;
-
+    __ccmu_reg_list_t *CmuReg = (__ccmu_reg_list_t *)SW_VA_CCM_IO_BASE; 
+    
     pll_factor->FactorN = CmuReg->Pll1Ctl.FactorN;
     pll_factor->FactorK = CmuReg->Pll1Ctl.FactorK;
     pll_factor->FactorM = CmuReg->Pll1Ctl.FactorM;
     pll_factor->FactorP = CmuReg->Pll1Ctl.PLLDivP;
-
+    
     //busy_waiting();
-
+    
     return 0;
 }
 
@@ -195,7 +195,7 @@ __s32 mem_clk_get_pll_factor(struct pll_factor_t *pll_factor)
 */
 void mem_clk_dramgating(int onoff)
 {
-    __ccmu_reg_list_t *CmuReg = (__ccmu_reg_list_t *)SW_VA_CCM_IO_BASE;
+    __ccmu_reg_list_t *CmuReg = (__ccmu_reg_list_t *)SW_VA_CCM_IO_BASE; 
 
     if(onoff){
         CmuReg->Pll5Ctl.OutputEn = 1;
@@ -204,3 +204,28 @@ void mem_clk_dramgating(int onoff)
         CmuReg->Pll5Ctl.OutputEn = 0;
     }
 }
+
+/*
+*********************************************************************************************************
+*                                     mem_clk_dramgating
+*
+* Description: gating dram clock.
+*
+* Arguments  : onoff    dram clock gating on or off;
+*
+* Returns    : 0;
+*********************************************************************************************************
+*/
+void mem_clk_dramgating_nommu(int onoff)
+{
+    __ccmu_reg_list_t *CmuReg = (__ccmu_reg_list_t *)SW_PA_CCM_IO_BASE; 
+
+    if(onoff){
+        CmuReg->Pll5Ctl.OutputEn = 1;
+    }
+    else {
+        CmuReg->Pll5Ctl.OutputEn = 0;
+    }
+}
+
+

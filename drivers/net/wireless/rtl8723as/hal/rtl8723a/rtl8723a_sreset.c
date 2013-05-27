@@ -83,7 +83,7 @@ static void _restore_network_status(_adapter *padapter)
 	// reset related register of Beacon control
 
 	//set MSR to nolink
-	Set_MSR(padapter, _HW_STATE_NOLINK_);
+	Set_MSR(padapter, _HW_STATE_NOLINK_);		
 	// reject all data frame
 	rtw_write16(padapter, REG_RXFLTMAP2,0x00);
 	//reset TSF
@@ -149,7 +149,7 @@ void rtl8723a_silentreset_for_specific_platform(_adapter *padapter)
 	if (!rtw_netif_queue_stopped(padapter->pnetdev))
 		rtw_netif_stop_queue(padapter->pnetdev);
 
-	rtw_cancel_all_timer(padapter);
+	rtw_cancel_all_timer(padapter);	
 	tasklet_kill(&pxmitpriv->xmit_tasklet);
 
 	_enter_critical_mutex(&psrtpriv->silentreset_mutex, &irqL);
@@ -188,7 +188,7 @@ void rtl8723a_sreset_xmit_status_check(_adapter *padapter)
 	unsigned int diff_time;
 	u32 txdma_status;
 
-
+	
 	if( (txdma_status=rtw_read32(padapter, REG_TXDMA_STATUS)) !=0x00){
 		DBG_871X("%s REG_TXDMA_STATUS:0x%08x\n", __FUNCTION__, txdma_status);
 		rtl8723a_silentreset_for_specific_platform(padapter);
@@ -240,3 +240,4 @@ void rtl8723a_sreset_linked_status_check(_adapter *padapter)
 #endif
 }
 #endif
+

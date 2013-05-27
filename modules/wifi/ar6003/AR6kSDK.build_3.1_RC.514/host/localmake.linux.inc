@@ -1,10 +1,10 @@
 #
 #  Local Makefile includes for tool and kernel source paths
-#
+# 
 #  Copyright 2004-2010 Atheros Communications, Inc.
 #
 # When creating a new build type, use the following template:
-#  	ifeq ($(ATH_BUILD_TYPE),<platform name>)
+#  	ifeq ($(ATH_BUILD_TYPE),<platform name>) 
 #       ATH_ARCH_CPU_TYPE :=  < cpu architecture >
 #       ATH_CROSS_COMPILE_TYPE := < cross compiler path >
 #       ATH_LINUXPATH := < kernel source path >
@@ -78,7 +78,7 @@ endif
 
 
 ifndef ATH_LINUXPATH
-# Comment out the following variable for your platform
+# Comment out the following variable for your platform 
 # Link your kernel into android SDK directory as 'kernel' directory
 # export  ATH_LINUXPATH= [Your android/kernel path ]
 $(error define your kernel path here for ATH_LINUXPATH)

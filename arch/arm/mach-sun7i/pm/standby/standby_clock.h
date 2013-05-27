@@ -53,3 +53,4 @@ __s32 standby_clk_apb2hosc(void);
 extern __u32   cpu_ms_loopcnt;
 
 #endif  /* __STANDBY_CLOCK_H__ */
+

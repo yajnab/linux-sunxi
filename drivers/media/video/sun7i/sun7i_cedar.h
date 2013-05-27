@@ -9,7 +9,7 @@ enum IOCTL_CMD {
 	IOCTL_ENABLE_VE,
 	IOCTL_DISABLE_VE,
 	IOCTL_SET_VE_FREQ,
-
+	
 	IOCTL_CONFIG_AVS2 = 0x200,
 	IOCTL_GETVALUE_AVS2 ,
 	IOCTL_PAUSE_AVS2 ,
@@ -23,7 +23,7 @@ enum IOCTL_CMD {
 	IOCTL_ADJUST_AVS2_ABS,
 	IOCTL_FLUSH_CACHE,
 	IOCTL_SET_REFCOUNT,
-
+	
 	IOCTL_READ_REG = 0x300,
 	IOCTL_WRITE_REG,
 };
@@ -42,13 +42,13 @@ struct cedarv_cache_range{
 struct __cedarv_task {
 	int task_prio;
 	int ID;
-	unsigned long timeout;
+	unsigned long timeout;	
 	unsigned int frametime;
 	unsigned int block_mode;
 };
 
 struct cedarv_engine_task {
-	struct __cedarv_task t;
+	struct __cedarv_task t;	
 	struct list_head list;
 	struct task_struct *task_handle;
 	unsigned int status;
@@ -56,7 +56,7 @@ struct cedarv_engine_task {
 	unsigned int is_first_task;
 };
 
-/* 鍒╃敤浼樺厛绾ask_prio鏌ヨ褰撳墠杩愯task鐨刦rametime锛屽拰姣斾紭鍏堢骇task_prio楂樼殑task鍙兘杩愯鐨勬�绘椂闂磘otal_time */
+/* 利用优先级task_prio查询当前运行task的frametime，和比优先级task_prio高的task可能运行的总时间total_time */
 struct cedarv_engine_task_info {
 	int task_prio;
 	unsigned int frametime;

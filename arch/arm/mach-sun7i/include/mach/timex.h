@@ -28,3 +28,4 @@
 #define CLOCK_TICK_RATE		(AW_CLOCK_SRC/AW_CLOCK_DIV)
 
 #endif
+

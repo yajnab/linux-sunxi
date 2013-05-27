@@ -29,7 +29,7 @@
 #ifndef __AR3KPSCONFIG_H
 #define __AR3KPSCONFIG_H
 
-/*
+/* 
  * Define the flag HCI_TRANSPORT_SDIO and undefine HCI_TRANSPORT_UART if the transport being used is SDIO.
  */
 #undef HCI_TRANSPORT_UART
@@ -64,7 +64,7 @@
 #define BDADDR_FILE "ar3kbdaddr.pst"
 
 #define ROM_VER_AR3001_3_1_0	30000
-#define ROM_VER_AR3001_3_1_1	30101
+#define ROM_VER_AR3001_3_1_1	30101	
 
 
 #ifndef HCI_TRANSPORT_SDIO

@@ -38,7 +38,7 @@ typedef struct{
     A_UINT32 execAddr; // address from which execution should start
     A_UINT32 MACOffset; // offset in image of MAC address location.
     A_UINT32 ChksumOffset; // offset of checksum location <0 implies no checksum>
-    A_UINT32 ChksumStart; // offset in image for start of checksum calculation
+    A_UINT32 ChksumStart; // offset in image for start of checksum calculation 
     A_UINT32 ChksumEnd; // offset in image for end of checksum calculation
     A_UINT32 partitionTableOffset; // offset in image for start of 3 word partition table
     A_UINT32 flashDescOffset; // offset in image for the start of the flash descriptor file

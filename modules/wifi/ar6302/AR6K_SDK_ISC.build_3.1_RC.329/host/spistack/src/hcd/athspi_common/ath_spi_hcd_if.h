@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="ath_spi_hcd_if.h" company="Atheros">
 //    Copyright (c) 2007-2008 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -36,23 +36,23 @@ typedef UINT8 ATH_TRANS_CMD;
 #define ATH_TRANS_DS_32      0x03
 
 
-#define ATH_TRANS_DS_MASK    0x03
+#define ATH_TRANS_DS_MASK    0x03 
 #define ATH_TRANS_DMA        0x04  /* special DMA transfer */
 #define ATH_TRANS_TYPE_MASK  0x07
     /* register access is internal or external */
 #define ATH_TRANS_INT_TRANS   0x00   /* internal register (SPI internal) transfer */
 #define ATH_TRANS_EXT_TRANS   0x10   /* external register transfer */
     /* transfer to fixed or incrementing address (external transfers only) */
-#define ATH_TRANS_EXT_TRANS_ADDR_INC     0x00
-#define ATH_TRANS_EXT_TRANS_ADDR_FIXED   0x20
+#define ATH_TRANS_EXT_TRANS_ADDR_INC     0x00 
+#define ATH_TRANS_EXT_TRANS_ADDR_FIXED   0x20 
     /* direction of operation */
 #define ATH_TRANS_READ       0x80
-#define ATH_TRANS_WRITE      0x00
+#define ATH_TRANS_WRITE      0x00 
 
 #define ATH_TRANS_EXT_MAX_PIO_BYTES 32
 
     /* address mask */
-#define ATH_TRANS_ADDR_MASK 0x7FFF
+#define ATH_TRANS_ADDR_MASK 0x7FFF  
     /* macro to get the transfer type from a command */
 #define ATH_GET_TRANS_TYPE(cmd) ((cmd) & ATH_TRANS_TYPE_MASK)
     /* macro to get the transfer data size */
@@ -92,14 +92,14 @@ typedef UINT8 ATH_TRANS_CMD;
    ATH_SET_IO_ADDRESS(pReq, (UINT16)((addr) & ATH_TRANS_ADDR_MASK)); \
    ATH_SET_PIO_WRITE_VALUE(pReq, value);                             \
 }
-
+      
     /* macros to setup PIO read transfer requests */
 #define ATH_SET_PIO_INTERNAL_READ_OPERATION(pReq,addr)               \
 {  ATH_SET_IO_CMD(pReq, ATH_TRANS_READ | ATH_TRANS_INT_TRANS);       \
    ATH_SET_IO_ADDRESS(pReq,(UINT16)((addr) & ATH_TRANS_ADDR_MASK));  \
 }
 
-    /* macro to setup external register transfer request
+    /* macro to setup external register transfer request 
      * note: caller must set pReq->pDataBuffer separately */
 #define ATH_SET_PIO_EXTERNAL_OPERATION(pReq,type,addr,incaddr,length) \
 {  ATH_SET_IO_CMD(pReq, (type) | ATH_TRANS_EXT_TRANS | \
@@ -110,12 +110,12 @@ typedef UINT8 ATH_TRANS_CMD;
 
 #define ATH_SET_PIO_EXTERNAL_WRITE_OPERATION(pReq,addr,incaddr,length) \
     ATH_SET_PIO_EXTERNAL_OPERATION(pReq,ATH_TRANS_WRITE,addr,incaddr,length)
-
+                                         
 #define ATH_SET_PIO_EXTERNAL_READ_OPERATION(pReq,addr,incaddr,length) \
-    ATH_SET_PIO_EXTERNAL_OPERATION(pReq,ATH_TRANS_READ,addr,incaddr,length)
-
-
-    /* macros to setup DMA transfer requests, 64K max transfers
+    ATH_SET_PIO_EXTERNAL_OPERATION(pReq,ATH_TRANS_READ,addr,incaddr,length)                                         
+                                         
+  
+    /* macros to setup DMA transfer requests, 64K max transfers  
      * note, the caller must set pReq->pDataBuffer separately
      * and the number bytes (length) must be aligned to the DMA data width */
 #define ATH_SET_DMA_OPERATION(pReq,dir,addr,length)       \
@@ -139,7 +139,7 @@ typedef UINT8 ATH_TRANS_CMD;
 #define ATH_SPI_CONFIG_KEEP_AWAKE_ON_INTR (1 << 4)
 #define ATH_SPI_CONFIG_KEEP_AWAKE       (1 << 3)
 #define ATH_SPI_CONFIG_BYTE_SWAP        (1 << 2)
-#define ATH_SPI_CONFIG_SWAP_16BIT       (1 << 1)
+#define ATH_SPI_CONFIG_SWAP_16BIT       (1 << 1) 
 #define ATH_SPI_CONFIG_PREFETCH_MODE_RR (1 << 0)
 
 #define ATH_SPI_CONFIG_MISO_MUXSEL_MASK_SHIFT  9
@@ -201,20 +201,20 @@ typedef UINT8 ATH_TRANS_CMD;
     /* the 4-byte look ahead is split into 2 registers */
 #define ATH_SPI_RDBUF_LOOKAHEAD1_REG  (0x1400)
 #define ATH_SPI_GET_LOOKAHEAD1_BYTE_0(word) ((UINT8)((word) >> 8))
-#define ATH_SPI_GET_LOOKAHEAD1_BYTE_1(word) ((UINT8)(word))
+#define ATH_SPI_GET_LOOKAHEAD1_BYTE_1(word) ((UINT8)(word))  
 #define ATH_SPI_RDBUF_LOOKAHEAD2_REG  (0x1500)
 #define ATH_SPI_GET_LOOKAHEAD2_BYTE_3(word) ((UINT8)((word) >> 8))
-#define ATH_SPI_GET_LOOKAHEAD2_BYTE_4(word) ((UINT8)(word))
+#define ATH_SPI_GET_LOOKAHEAD2_BYTE_4(word) ((UINT8)(word))  
 
     /* get/set clock, takes an UINT32 parameter */
 #define ATH_SPI_CONFIG_SET_CLOCK  (SDCONFIG_PUT_HOST_CUSTOM + 2)
 #define ATH_SPI_CONFIG_GET_CLOCK  (SDCONFIG_GET_HOST_CUSTOM + 2)
 
-    /* for testing purposes, set the DMA data frame width
+    /* for testing purposes, set the DMA data frame width 
      * takes a UINT8 paramter with data size */
 #define ATH_SPI_CONFIG_SET_DMA_DATA_WIDTH  (SDCONFIG_PUT_HOST_CUSTOM + 3)
 
-    /* for testing purposes, set the host access data frame width
+    /* for testing purposes, set the host access data frame width 
      * takes a UINT8 paramter with data size */
 #define ATH_SPI_CONFIG_SET_HOST_ACCESS_DATA_WIDTH  (SDCONFIG_PUT_HOST_CUSTOM + 4)
 

@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2009 Atheros Communications Inc.
  * All rights reserved.
+ * 
  *
- *
- *
+ * 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -18,7 +18,7 @@
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
 //
- *
+ * 
  */
 
 #include <stdlib.h>
@@ -79,7 +79,7 @@ wlan_data_and_event_recv(void *pdev)
     char buf[1600];
     struct ifreq ifr;
     int len, event;
-
+    
     dev->s_rx = socket(PF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
 
     if (dev->s_rx < 0) {
@@ -132,7 +132,7 @@ wlan_data_and_event_recv(void *pdev)
         /* Invalidate the header, before re-use */
         *((short *)buf) = 0xFFFF;
     }
-
+    
     return NULL;
 }
 
@@ -304,11 +304,11 @@ amp_phy_init(char *intf_name)
 
 
 /* HCI events will land here */
-static A_STATUS
+static A_STATUS 
 app_hci_event_rx(AMP_DEV *dev, A_UINT8 *datap, int len)
 {
     WMI_HCI_EVENT *ev;
-
+    
     ev = (WMI_HCI_EVENT *)datap;
 
     PAL_PRINT("recvd HCI event = \n");
@@ -322,7 +322,7 @@ app_hci_event_rx(AMP_DEV *dev, A_UINT8 *datap, int len)
 
 
 /* HCI rx data will land here */
-static A_STATUS
+static A_STATUS 
 app_hci_data_rx(AMP_DEV *dev, A_UINT8 *datap, int len)
 {
     PAL_PRINT("recvd data frame = \n");
@@ -340,7 +340,7 @@ app_send_acl_data(AMP_DEV *dev, A_UINT8 *datap, short len)
     struct ifreq ifr;
     HCI_ACL_DATA_PKT *acl = (HCI_ACL_DATA_PKT *)(buf + sizeof(int));
 
-    ((int *)buf)[0] = AR6000_XIOCTL_ACL_DATA;
+    ((int *)buf)[0] = AR6000_XIOCTL_ACL_DATA; 
     ifr.ifr_data = buf;
     strncpy(ifr.ifr_name, dev->ifname, sizeof(dev->ifname));
     /* This copy is avoided by having a headroom in APP data buffer */
@@ -357,7 +357,7 @@ app_send_hci_cmd(AMP_DEV *dev, A_UINT8 *datap, short len)
     struct ifreq ifr;
     WMI_HCI_CMD *cmd = (WMI_HCI_CMD *)(buf + sizeof(int));
 
-    ((int *)buf)[0] = AR6000_XIOCTL_HCI_CMD;
+    ((int *)buf)[0] = AR6000_XIOCTL_HCI_CMD; 
     cmd->cmd_buf_sz = len;
     strncpy(ifr.ifr_name, dev->ifname, sizeof(dev->ifname));
     ifr.ifr_data = buf;

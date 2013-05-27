@@ -3,13 +3,13 @@
  * Basically selected code segments from usb-cdc.c and usb-rndis.c
  *
  * Copyright (C) 1999-2011, Broadcom Corporation
- *
+ * 
  *         Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- *
+ * 
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -17,7 +17,7 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- *
+ * 
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
@@ -71,8 +71,8 @@ extern int chip_is_b1;
 
 #ifdef DHD_DEBUG
 static int module_insert = 0;
-int module_remove = 0;
-#endif
+int module_remove = 0; 
+#endif 
 
 #ifdef WLMEDIA_HTSF
 #include <linux/time.h>
@@ -777,13 +777,13 @@ dhd_bssidx2bssid(dhd_pub_t *dhdp, int idx)
 	return NULL;
 }
 
-void
+void 
 dhd_state_set_flags(dhd_pub_t *dhdp, dhd_attach_states_t flags, int add)
 {
 	dhd_info_t *dhd = (dhd_info_t *)dhdp->info;
 
         ASSERT(dhd);
-
+	
 	if (add) {
 		DHD_INFO(("%s: add flags %x to dhd_state(%x).\n", __FUNCTION__, flags, dhd->dhd_state));
 		dhd->dhd_state |= flags;
@@ -1057,7 +1057,7 @@ dhd_op_if(dhd_if_t *ifp)
 		if (ifp->net != NULL) {
 			DHD_TRACE(("\n%s: got 'WLC_E_IF_DEL' state\n", __FUNCTION__));
 #ifdef WL_CFG80211
-			if (!ap_fw_loaded)
+			if (!ap_fw_loaded) 
 				wl_cfg80211_ifdel_ops(ifp->net);
 #endif
 			netif_stop_queue(ifp->net);
@@ -1078,7 +1078,7 @@ dhd_op_if(dhd_if_t *ifp)
 		dhd->iflist[ifp->idx] = NULL;
 #ifdef WL_CFG80211
 		if ((dhd->dhd_state & DHD_ATTACH_STATE_CFG80211) &&
-			!(ap_fw_loaded || (dhd->dhd_state & DHD_ATTACH_STATE_SOFTAP))) {
+        		!(ap_fw_loaded || (dhd->dhd_state & DHD_ATTACH_STATE_SOFTAP))) {
 			wl_cfg80211_notify_ifdel(ifp->net);
 		}
 #endif
@@ -1088,7 +1088,7 @@ dhd_op_if(dhd_if_t *ifp)
 			ap_net_dev = NULL;   /*  NULL  SOFTAP global wl0.1 as well */
 		dhd_os_spin_unlock(&dhd->pub, flags);
 #endif /*  SOFTAP */
-	    MFREE(dhd->pub.osh, ifp, sizeof(*ifp));
+ 	    MFREE(dhd->pub.osh, ifp, sizeof(*ifp));
 	}
 }
 
@@ -1660,9 +1660,9 @@ dhd_get_stats(struct net_device *net)
 #ifdef DHD_DEBUG
 		if (module_remove) {
 			printf("%s: module removed. return old value. ifp=%p, dhd=%p\n", __FUNCTION__, ifp, dhd);
-		} else
+		} else 
 #endif
-			/* Use the protocol to get dongle stats */
+ 			/* Use the protocol to get dongle stats */
 			dhd_prot_dstats(&dhd->pub);
 	}
 
@@ -2305,10 +2305,10 @@ dhd_stop(struct net_device *net)
 	dhd_prot_stop(&dhd->pub);
 
 /* anthony: we don't need this due to WEXT priv enabled */
-#if defined(WL_CFG80211) && 0
+#if defined(WL_CFG80211) && 0  
 	if (ifidx == 0)
 		wl_android_wifi_off(net);
-#endif
+#endif 
 
 	OLD_MOD_DEC_USE_COUNT;
 	return 0;
@@ -2351,7 +2351,7 @@ dhd_open(struct net_device *net)
 	 *  This should be removed in the future
 	 */
 	wl_control_wl_start(net);
-#endif
+#endif 
 
 	ifidx = dhd_net2idx(dhd, net);
 	DHD_TRACE(("%s: ifidx %d\n", __FUNCTION__, ifidx));
@@ -2372,7 +2372,7 @@ dhd_open(struct net_device *net)
 #if defined(WL_CFG80211) && 0
 		DHD_ERROR(("\n%s\n", dhd_version));
 		wl_android_wifi_on(net);
-#endif
+#endif 
 
 		if (dhd->pub.busstate != DHD_BUS_DATA) {
 			int ret;
@@ -3104,7 +3104,7 @@ dhd_net_attach(dhd_pub_t *dhdp, int ifidx)
 		 * We have to use the primary MAC for virtual interfaces
 		 */
 		memcpy(temp_addr, dhd->iflist[ifidx]->mac_addr, ETHER_ADDR_LEN);
-		/*
+		/* 
 		 * Android sets the locally administered bit to indicate that this is a
 		 * portable hotspot.  This will not work in simultaneous AP/STA mode,
 		 * nor with P2P.  Need to set the Donlge's MAC address, and then use that.
@@ -3317,7 +3317,7 @@ void dhd_detach(dhd_pub_t *dhdp)
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 27)) && 1 && defined(CONFIG_PM_SLEEP)
 		unregister_pm_notifier(&dhd_sleep_pm_notifier);
-#endif
+#endif 
 	/* && defined(CONFIG_PM_SLEEP) */
 
 	if (dhd->dhd_state & DHD_ATTACH_STATE_WAKELOCKS_INIT) {
@@ -3350,7 +3350,7 @@ dhd_module_cleanup(void)
 
 	disable_dev_wlc_ioctl();
 #ifdef DHD_DEBUG
-	module_remove = 1;
+	module_remove = 1; 
 	module_insert = 0;
 	msleep(1000);
 #endif
@@ -3396,7 +3396,7 @@ dhd_module_init(void)
 #if defined(CONFIG_WIFI_CONTROL_FUNC)
 	if (wl_android_wifictrl_func_add() < 0)
 		goto fail_1;
-#endif
+#endif 
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 27))
 		sema_init(&dhd_registration_sem, 0);
@@ -3437,7 +3437,7 @@ fail_2:
 fail_1:
 #if defined(CONFIG_WIFI_CONTROL_FUNC)
 	wl_android_wifictrl_func_del();
-#endif
+#endif 
 
 	/* Call customer gpio to turn off power with WL_REG_ON signal */
 	dhd_customer_gpio_wlan_ctrl(WLAN_POWER_OFF);

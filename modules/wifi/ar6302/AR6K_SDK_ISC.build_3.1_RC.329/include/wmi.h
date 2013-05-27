@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -241,21 +241,21 @@ typedef PREPACK struct {
     A_UINT8     csumFlags;    /*Flag for check sum engine to be offloaded to device*/
 } POSTPACK WMI_TX_META_V2;
 
-/* WMI_META_TX_FLAG... are used as TX qualifiers for frames containing WMI_TX_RATE_SCHEDULE in the
+/* WMI_META_TX_FLAG... are used as TX qualifiers for frames containing WMI_TX_RATE_SCHEDULE in the 
  * meta data.  0 or more of these flags should be assigned to the flags member of the schedule. */
 #define WMI_META_TX_FLAG_ACK            0x01 // frame needs ACK response from receiver
 #define WMI_META_TX_FLAG_SET_RETRY_BIT  0x02 // device will set retry bit in MAC header for retried frames.
 #define WMI_META_TX_FLAG_SET_DURATION   0x04 // device will fill duration field in MAC header
 /* NOTE: If WMI_META_TX_FLAG_USE_PREFIX == 0 device will NOT use prefix frame.
- *       If WMI_META_TX_FLAG_USE_PREFIX == 1 && WMI_META_TX_FLAG_PREFIX_RTS == 0 device will use CTS prefix.
+ *       If WMI_META_TX_FLAG_USE_PREFIX == 1 && WMI_META_TX_FLAG_PREFIX_RTS == 0 device will use CTS prefix. 
  *       If WMI_META_TX_FLAG_USE_PREFIX == 1 && WMI_META_TX_FLAG_PREFIX_RTS == 1 device will use RTS prefix.
- */
+ */  
 #define WMI_META_TX_FLAG_USE_PREFIX     0x08 // device will send either RTS or CTS frame prior to subject frame.
 #define WMI_META_TX_FLAG_PREFIX_RTS     0x10 // device will send RTS and wait for CTS prior to sending subject frame.
 #define WMI_META_TX_LOAD_TSF            0x20 // device will fill the TSF field during transmit procedure. <Beacons/probe responses>
 
 /* WMI_TX_RATE_SCHEDULE - Acts as a host-provided rate schedule to replace what would be normally determined
- * by firmware.  This allows the host to specify what rates and attempts should be used to transmit the
+ * by firmware.  This allows the host to specify what rates and attempts should be used to transmit the 
  * frame. */
 typedef PREPACK struct {
 #define WMI_TX_MAX_RATE_SERIES (4)
@@ -518,7 +518,7 @@ typedef enum {
     WMI_P2P_GO_NEG_START_CMDID,
     WMI_P2P_LISTEN_CMDID,
 
-    WMI_CONFIG_TX_MAC_RULES_CMDID,
+    WMI_CONFIG_TX_MAC_RULES_CMDID,    
     WMI_SET_PROMISCUOUS_MODE_CMDID,/* F040 */
     WMI_RX_FRAME_FILTER_CMDID,
     WMI_SET_CHANNEL_CMDID,
@@ -533,12 +533,12 @@ typedef enum {
     WMI_SET_PASSPHRASE_CMDID,
     WMI_SEND_ASSOC_RES_CMDID,
     WMI_SET_ASSOC_REQ_RELAY_CMDID,
-    WMI_GET_RFKILL_MODE_CMDID,
+    WMI_GET_RFKILL_MODE_CMDID, 
     WMI_SET_RFKILL_MODE_CMDID,
 
     /* ACS command, consists of sub-commands */
     WMI_ACS_CTRL_CMDID,
-
+    
     /* Ultra low power store / recall commands */
     WMI_STORERECALL_CONFIGURE_CMDID,
     WMI_STORERECALL_RECALL_CMDID,
@@ -2032,7 +2032,7 @@ typedef PREPACK struct {
 
 /*--------------------------END OF BTCOEX -------------------------------------*/
 
-/* WAC commands
+/* WAC commands 
  */
 
 
@@ -2194,7 +2194,7 @@ typedef enum {
     WMI_WAC_REPORT_BSS_EVENTID,
     WMI_WAC_START_WPS_EVENTID,
     WMI_WAC_CTRL_REQ_REPLY_EVENTID,
-
+        
     /*RFKILL Events*/
     WMI_RFKILL_STATE_CHANGE_EVENTID,
     WMI_RFKILL_GET_MODE_CMD_EVENTID,
@@ -2213,14 +2213,14 @@ typedef enum {
     WMI_THIN_RESERVED_END_EVENTID = 0x8fff,
 
     WMI_SET_CHANNEL_EVENTID,
-    WMI_ASSOC_REQ_EVENTID,
+    WMI_ASSOC_REQ_EVENTID, 
 
-
+    
     /* generic ACS event */
-    WMI_ACS_EVENTID,
+    WMI_ACS_EVENTID,   
     WMI_REPORT_WMM_PARAMS_EVENTID,
     WMI_STORERECALL_STORE_EVENTID,
-
+    
 } WMI_EVENT_ID;
 
 typedef enum {
@@ -3360,8 +3360,8 @@ typedef PREPACK struct {
 
 typedef PREPACK struct {
     A_UINT32 rateField[WMI_MAX_RATE_MASK]; /* 1 bit per rate corresponding to index */
-#define WMI_RATE_POLICY_ID_MAX 5
-    A_UINT8 id; /* valid values == 1->WMI_RATE_POLICY_ID_MAX */
+#define WMI_RATE_POLICY_ID_MAX 5    
+    A_UINT8 id; /* valid values == 1->WMI_RATE_POLICY_ID_MAX */    
     A_UINT8 shortTrys;
     A_UINT8 longTrys;
     A_UINT8 reserved; /* padding */
@@ -3390,13 +3390,13 @@ typedef PREPACK struct {
 
 typedef enum {
     WMI_SET_CHANNEL_RES_SUCCESS = 0, // device has joined the network
-    WMI_SET_CHANNEL_RES_FAIL, // device failed for unspecified reason
+    WMI_SET_CHANNEL_RES_FAIL, // device failed for unspecified reason   
 }WMI_SET_CHANNEL_RESULT;
 
 typedef PREPACK struct {
     A_UINT8 result; /* the result of the join cmd. one of WMI_THIN_JOIN_RESULT */
     A_UINT8 reserved[3]; /* alignment */
-} POSTPACK WMI_SET_CHANNEL_EVENT;
+} POSTPACK WMI_SET_CHANNEL_EVENT; 
 
 typedef enum {
     WMI_FILTERMASK_MGMT=0,
@@ -3406,7 +3406,7 @@ typedef enum {
 }WMI_FILTERMASK_INDEX;
 
 typedef PREPACK struct {
-    A_UINT16 filtermask[WMI_FILTERMASK_MAX];
+    A_UINT16 filtermask[WMI_FILTERMASK_MAX];     
     A_UINT16 reserved; /* alignment */
 } POSTPACK WMI_RX_FRAME_FILTER_CMD;
 
@@ -3714,7 +3714,7 @@ typedef PREPACK struct {
 /* STORE / RECALL Commands AND Events DEFINITION START */
 typedef PREPACK struct {
     A_UINT8 enable;
-#define STRRCL_RECIPIENT_HOST 1
+#define STRRCL_RECIPIENT_HOST 1    
     A_UINT8 recipient;
 } POSTPACK WMI_STORERECALL_CONFIGURE_CMD;
 
@@ -3726,7 +3726,7 @@ typedef PREPACK struct {
 typedef PREPACK struct {
     A_UINT32 sleep_msec;
     A_UINT8 store_after_tx_empty;
-    A_UINT8 store_after_fresh_beacon_rx;
+    A_UINT8 store_after_fresh_beacon_rx;    
 } POSTPACK WMI_STORERECALL_HOST_READY_CMD;
 
 typedef PREPACK struct {

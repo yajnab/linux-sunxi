@@ -3,7 +3,7 @@
  * All rights reserved.
  *
  *
- *
+ * 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -18,9 +18,9 @@
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
 //
- *
- * The file contains data structures to assist framing of bmi commands via
- * the sysfs interface. The layout of the structures conform to the bmi
+ * 
+ * The file contains data structures to assist framing of bmi commands via 
+ * the sysfs interface. The layout of the structures conform to the bmi 
  * parameters listed for different commands in the bmi_msdh.h header file.
  *
  */

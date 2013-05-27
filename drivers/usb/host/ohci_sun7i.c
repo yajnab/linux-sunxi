@@ -18,11 +18,12 @@
 *      <author>    		<time>       	<version >    		<desc>
 *    yangnaitian      2011-5-24            1.0          create this file
 *    javen            2011-6-26            1.1          add suspend and resume
-*    javen            2011-7-18            1.2          æ—¶é’Ÿå¼€å…³å’Œä¾›ç”µå¼€å…³ä»é©±åŠ¨ç§»å‡ºæ¥
+*    javen            2011-7-18            1.2          Ê±ÖÓ¿ª¹ØºÍ¹©µç¿ª¹Ø´ÓÇı¶¯ÒÆ³öÀ´
 *
 *************************************************************************************
 */
 
+#include <linux/device.h>
 #include <linux/platform_device.h>
 #include <linux/signal.h>
 
@@ -38,7 +39,7 @@
 
 
 /*.......................................................................................*/
-//                               å…¨å±€ä¿¡æ¯å®šä¹‰
+//                               È«¾ÖĞÅÏ¢¶¨Òå
 /*.......................................................................................*/
 
 //#define  SW_USB_OHCI_DEBUG
@@ -50,7 +51,7 @@ static struct sw_hci_hcd *g_sw_ohci[3];
 static u32 ohci_first_probe[3] = {1, 1, 1};
 
 /*.......................................................................................*/
-//                                      å‡½æ•°åŒº
+//                                      º¯ÊıÇø
 /*.......................................................................................*/
 
 extern int usb_disabled(void);
@@ -170,7 +171,7 @@ static int sw_release_io_resource(struct platform_device *pdev, struct sw_hci_hc
 */
 static void sw_start_ohc(struct sw_hci_hcd *sw_ohci)
 {
-	open_ohci_clock(sw_ohci);
+  	open_ohci_clock(sw_ohci);
 
     sw_ohci->port_configure(sw_ohci, 1);
     sw_ohci->usb_passby(sw_ohci, 1);
@@ -349,7 +350,7 @@ static int sw_ohci_hcd_probe(struct platform_device *pdev)
 		goto ERR2;
 	}
 
-	hcd->rsrc_start = (u32)sw_ohci->ohci_base;
+  	hcd->rsrc_start = (u32)sw_ohci->ohci_base;
 	hcd->rsrc_len 	= sw_ohci->ohci_reg_length;
 	hcd->regs 		= sw_ohci->ohci_base;
 	sw_ohci->hcd    = hcd;
@@ -378,6 +379,7 @@ static int sw_ohci_hcd_probe(struct platform_device *pdev)
               (u32)USBC_Readl(sw_ohci->sdram_vbase + SW_SDRAM_REG_HPCR_USB2));
 #endif
 
+	device_enable_async_suspend(&pdev->dev);
 	sw_ohci->probe = 1;
 
     /* Disable ohci, when driver probe */
@@ -496,16 +498,16 @@ void sw_ohci_hcd_shutdown(struct platform_device* pdev)
 	}
 
 	if(sw_ohci->probe == 0){
-	DMSG_PANIC("ERR: sw_ohci is disable, need not shutdown\n");
-	return ;
+    	DMSG_PANIC("ERR: sw_ohci is disable, need not shutdown\n");
+    	return ;
 	}
 
-	DMSG_INFO("[%s]: ohci shutdown start\n", sw_ohci->hci_name);
-
+ 	DMSG_INFO("[%s]: ohci shutdown start\n", sw_ohci->hci_name);
+    sw_ohci->probe = 0;
     usb_hcd_platform_shutdown(pdev);
     sw_stop_ohc(sw_ohci);
 
-	DMSG_INFO("[%s]: ohci shutdown end\n", sw_ohci->hci_name);
+ 	DMSG_INFO("[%s]: ohci shutdown end\n", sw_ohci->hci_name);
 
     return;
 }
@@ -566,7 +568,7 @@ static int sw_ohci_hcd_suspend(struct device *dev)
 		return 0;
 	}
 
-	DMSG_INFO("[%s]: sw_ohci_hcd_suspend\n", sw_ohci->hci_name);
+ 	DMSG_INFO("[%s]: sw_ohci_hcd_suspend\n", sw_ohci->hci_name);
 
 	/* Root hub was already suspended. Disable irq emission and
 	 * mark HW unaccessible, bail out if RH has been resumed. Use
@@ -636,7 +638,7 @@ static int sw_ohci_hcd_resume(struct device *dev)
 		return 0;
 	}
 
-	DMSG_INFO("[%s]: sw_ohci_hcd_resume\n", sw_ohci->hci_name);
+ 	DMSG_INFO("[%s]: sw_ohci_hcd_resume\n", sw_ohci->hci_name);
 
 	sw_start_ohc(sw_ohci);
 
@@ -766,7 +768,7 @@ int sw_usb_enable_ohci(__u32 usbc_no)
 		return -1;
 	}
 
-	sw_ohci->probe = 1;
+	//sw_ohci->probe = 1;
 
 	DMSG_INFO("[%s]: sw_usb_enable_ohci\n", sw_ohci->hci_name);
 
@@ -775,3 +777,5 @@ int sw_usb_enable_ohci(__u32 usbc_no)
 	return 0;
 }
 EXPORT_SYMBOL(sw_usb_enable_ohci);
+
+

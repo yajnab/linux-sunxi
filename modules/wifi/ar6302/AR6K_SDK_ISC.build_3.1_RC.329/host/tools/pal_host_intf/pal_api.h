@@ -3,7 +3,7 @@
  * All rights reserved.
 
  *
- *
+ * 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -36,19 +36,19 @@ typedef int (* data_rx_handler)(void *dev, char *buf, short sz);
 
 /*
  * pal_init:
- *      Initializes PAL internal data structures and
+ *      Initializes PAL internal data structures and 
  *      interacts  with driver. Stack passes the device
- *      name for PAL to identify the underlying device.
+ *      name for PAL to identify the underlying device. 
  * Parameters:
- *  if_name: an ascii character string with dev name.
+ *  if_name: an ascii character string with dev name. 
  *           Ex : "eth1" or "eth2".
  * Return:
  *  void * : -non-NULL indicates PAL_device handle; to be
  *            used for future interaction by stack.
- *           -NULL indicates failure. A failure will be
+ *           -NULL indicates failure. A failure will be 
  *            logged.
  */
-void *
+void *  
 pal_init(char *if_name);
 
 /*
@@ -62,13 +62,13 @@ pal_init(char *if_name);
  *
  *  Returns: 0 if the cmd passes basic checks.
  */
-int
+int     
 pal_send_hci_cmd(void *dev, char *buf, short sz);
 
 /*
  * pal_send_acl_data_pkt:
- *      Process and send an ACL data packet. The format
- *      of the buffer must adhere to the ACL data
+ *      Process and send an ACL data packet. The format 
+ *      of the buffer must adhere to the ACL data 
  *      frame format.
  * Parameters:
  *  dev : device handle of PAL
@@ -77,7 +77,7 @@ pal_send_hci_cmd(void *dev, char *buf, short sz);
  *
  *  Returns 0: if the frame has been accepted.
  */
-int
+int     
 pal_send_acl_data_pkt(void *dev, char *buf, short sz);
 
 /*
@@ -91,18 +91,18 @@ pal_send_acl_data_pkt(void *dev, char *buf, short sz);
  *  dev : device handle of PAL
  *  fn : Call back function, of type evt_dispatcher.
  *
- * Device handle is returned in callback for stack to
- * identify the pal_device, along with event buffer and
+ * Device handle is returned in callback for stack to 
+ * identify the pal_device, along with event buffer and 
  * its size. The event buffer will be an HCI event.
  */
-void
+void    
 pal_evt_set_dispatcher(void *dev, evt_dispatcher fn);
 
 
 /*
  * pal_data_set_dispatcher:
  *      Stack needs to register receive data handler
- *      to receive ACL data from PAL. The buffer from
+ *      to receive ACL data from PAL. The buffer from 
  *      PAL is held in PAL context; which will be freed
  *      upon return from this dispatcher. Return
  *      value from callback is ignored.
@@ -111,21 +111,21 @@ pal_evt_set_dispatcher(void *dev, evt_dispatcher fn);
  *  dev : device handle of PAL
  *  fn : Call back function, of type data_rx_handler.
  *
- * Device handle is returned in callback for stack to
- * identify the pal_device, along with databuffer and
+ * Device handle is returned in callback for stack to 
+ * identify the pal_device, along with databuffer and 
  * its size. The databuffer will be an ACL data pkt.
  */
-void
+void    
 pal_data_set_dispatcher(void *dev, data_rx_handler fn);
 
 
 /*
  * pal_log_cfg:
- *      Logging support in PAL. PAL will log in two
+ *      Logging support in PAL. PAL will log in two 
  *      places, in a file and on screen. User may choose
  *      based on their need, in the bit fields of input
  *      parameter. It will dump HCI cmds/events, data frames
- *      and lot of other info. Stack must call it after
+ *      and lot of other info. Stack must call it after 
  *      pal_init()
  *
  * Parameters:
@@ -144,3 +144,5 @@ pal_log_cfg(void * dev, A_UINT32 log_cfg);
 #endif
 
 #endif  /* __PAL_API_H__ */
+
+

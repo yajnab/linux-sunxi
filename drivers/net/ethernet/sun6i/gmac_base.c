@@ -466,3 +466,5 @@ void gmac_get_umac_addr(void __iomem *ioaddr, unsigned char *addr, unsigned int 
 	addr[4] = hi_addr & 0xff;
 	addr[5] = (hi_addr >> 8) & 0xff;
 }
+
+

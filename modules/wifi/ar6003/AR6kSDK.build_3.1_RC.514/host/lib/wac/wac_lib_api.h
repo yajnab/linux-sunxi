@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // Copyright (c) 2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -26,7 +26,7 @@
 #include "wac_defs.h"
 
 /*
- * Function to enable or disable the WAC feature. This is the entry point to WAC when the
+ * Function to enable or disable the WAC feature. This is the entry point to WAC when the 
  * user pushed a button on the remote
  * Input arguments:
  *      s - open file descriptor of socket
@@ -34,7 +34,7 @@
  *               for disablethe remaining arguments are don't cares
  *      period - time in milliseconds between consecutive scans when WAC is enabled
  *      scan_thres - number of scan retries before the STA gave up on looking for WAC AP
- *      rssi_thres - RSSI threshold the STA will check in beacon or probe response frames
+ *      rssi_thres - RSSI threshold the STA will check in beacon or probe response frames 
  *                   to qualify a WAC AP. This is absolute value of the signal strength in dBm
  * Return value:
  *      0  = success;	-1 = failure
@@ -76,17 +76,17 @@ int wac_enable(int s, int enable, unsigned int period, unsigned int scan_thres, 
  *              WAC_DISABLED
  * Examples:
  * To insert an IE into the probe request frame:
- *      wac_control_request(WAC_SET, WAC_ADD, PRBREQ,
+ *      wac_control_request(WAC_SET, WAC_ADD, PRBREQ, 
  *                          "0x0012fb0100010101083132333435363730" val, status)
  * To query the WAC status from STA:
  *      wac_control_request(WAC_GET, WAC_GET_STATUS, NULL, NULL, val, status)
  */
 void wac_control_request( int s,
-                          WAC_REQUEST_TYPE req,
-                          WAC_COMMAND cmd,
-                          WAC_FRAME_TYPE frm,
-                          char *ie,
-                          int *ret_val,
+                          WAC_REQUEST_TYPE req, 
+                          WAC_COMMAND cmd, 
+                          WAC_FRAME_TYPE frm, 
+                          char *ie, 
+                          int *ret_val, 
                           WAC_STATUS *status );
 
 #endif

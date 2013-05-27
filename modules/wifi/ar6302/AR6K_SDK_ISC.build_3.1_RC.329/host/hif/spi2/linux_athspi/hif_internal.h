@@ -1,12 +1,12 @@
-/*
+/* 
  * @file: hif_internal.h
- *
+ * 
  * @abstract: spi mode HIF layer definitions
- *
- *
+ * 
+ * 
  * @notice: Copyright (c) 2004-2006 Atheros Communications Inc.
- *
- *
+ * 
+ * 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -21,7 +21,7 @@
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
 //
- *
+ * 
  */
 
 #include "a_config.h"
@@ -81,7 +81,7 @@ struct hif_device {
 };
 
 
-void
+void 
 hifRWCompletionHandler(SDREQUEST *request);
 
 void
@@ -105,6 +105,8 @@ hifFreeBusRequest(HIF_DEVICE *device, BUS_REQUEST *request);
 
 
 void HIFSpiDumpRegs(HIF_DEVICE *device);
+                            
+#define SPIReadInternal(d,a,p) SPIReadWriteInternal((d),(a),(p),TRUE) 
+#define SPIWriteInternal(d,a,p) SPIReadWriteInternal((d),(a),(p),FALSE)      
 
-#define SPIReadInternal(d,a,p) SPIReadWriteInternal((d),(a),(p),TRUE)
-#define SPIWriteInternal(d,a,p) SPIReadWriteInternal((d),(a),(p),FALSE)
+                         

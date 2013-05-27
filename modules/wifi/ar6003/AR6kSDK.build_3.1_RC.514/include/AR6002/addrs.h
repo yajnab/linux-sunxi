@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -62,7 +62,7 @@
 #if defined(AR6002_REV42)
 #define AR6003_BOARD_EXT_DATA_SZ AR6003_VER2_BOARD_EXT_DATA_SZ
 #else
-#define AR6003_BOARD_EXT_DATA_SZ 1024
+#define AR6003_BOARD_EXT_DATA_SZ 1024 
 #endif /* AR6002_REV42 */
 #define MCKINLEY_BOARD_DATA_SZ 1024
 #define MCKINLEY_BOARD_EXT_DATA_SZ 0
@@ -118,3 +118,6 @@
 #define FLASH_IS_PRESENT_TARGADDR       HOST_INTEREST_FLASH_IS_PRESENT_ADDR
 
 #endif /* __ADDRS_H__ */
+
+
+

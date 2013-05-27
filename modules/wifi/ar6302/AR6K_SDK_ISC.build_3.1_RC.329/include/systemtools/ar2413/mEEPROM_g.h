@@ -25,7 +25,7 @@ typedef struct _rawDataPerPDGAIN {
 
 typedef struct _rawDataPerChannelGen5 {
 	A_UINT16					channelValue;
-	A_INT16						maxPower_t4;
+	A_INT16						maxPower_t4;	
 	A_UINT16                    numPdGains;       // # Pd Gains per channel
 	RAW_DATA_PER_PDGAIN_GEN5	*pDataPerPDGain;
 } RAW_DATA_PER_CHANNEL_GEN5;
@@ -34,14 +34,14 @@ typedef struct _rawDataPerChannelGen5 {
 typedef struct _rawDataStructGen5 {
 	A_UINT16					*pChannels;
 	A_UINT16					numChannels;
-	A_UINT16					xpd_mask;		  // mask inicating which xpd_gains are permitted
+	A_UINT16					xpd_mask;		  // mask inicating which xpd_gains are permitted	
 	RAW_DATA_PER_CHANNEL_GEN5	*pDataPerChannel; //ptr to array of info held per channel
 } RAW_DATA_STRUCT_GEN5;
 
 typedef struct _eepromDataPerChannelGen5 {
 	A_UINT16		channelValue;
 	A_UINT16        numPdGains;  // number of pdGains to be stored on eeprom per channel
-	A_UINT16		Vpd_I[MAX_NUM_PDGAINS_PER_CHANNEL];
+	A_UINT16		Vpd_I[MAX_NUM_PDGAINS_PER_CHANNEL];    
 	A_INT16			pwr_I[MAX_NUM_PDGAINS_PER_CHANNEL];
 	A_UINT16		Vpd_delta[NUM_POINTS_LAST_PDGAIN][MAX_NUM_PDGAINS_PER_CHANNEL];
 	A_INT16			pwr_delta_t2[NUM_POINTS_LAST_PDGAIN][MAX_NUM_PDGAINS_PER_CHANNEL];
@@ -58,13 +58,13 @@ typedef struct _eepromDataStructGen5 {
 //contiguous struct for passing from library to upper level software
 typedef struct _eepromFullDataStructGen5 {
 	A_UINT16						numChannels11a;
-	A_UINT16						xpd_mask11a;
+	A_UINT16						xpd_mask11a;		
 	EEPROM_DATA_PER_CHANNEL_GEN5	pDataPerChannel11a[NUM_11A_EEPROM_CHANNELS];
 	A_UINT16						numChannels11b;
-	A_UINT16						xpd_mask11b;
+	A_UINT16						xpd_mask11b;		
 	EEPROM_DATA_PER_CHANNEL_GEN5	pDataPerChannel11b[NUM_2_4_EEPROM_CHANNELS_GEN5];
 	A_UINT16						numChannels11g;
-	A_UINT16						xpd_mask11g;
+	A_UINT16						xpd_mask11g;	
 	EEPROM_DATA_PER_CHANNEL_GEN5	pDataPerChannel11g[NUM_2_4_EEPROM_CHANNELS_GEN5];
 } EEPROM_FULL_DATA_STRUCT_GEN5;
 
@@ -81,16 +81,16 @@ void eeprom_to_raw_dataset_gen5(A_UINT32 devNum, EEPROM_DATA_STRUCT_GEN5 *pCalDa
 A_BOOL get_gain_boundaries_and_pdadcs_for_powers
 (
  A_UINT32 devNum,                          // In
- A_UINT16 channel,                         // In
+ A_UINT16 channel,                         // In       
  RAW_DATA_STRUCT_GEN5 *pRawDataset,        // In
  A_UINT16 pdGainOverlap_t2,                // In
  A_INT16 *pMinCalPower,                    // Out	(2 x min calibrated power)
  A_UINT16 pPdGainBoundaries[],             // Out
  A_UINT16 pPdGainValues[],                 // Out
- A_UINT16 pPDADCValues[]                   // Out
+ A_UINT16 pPDADCValues[]                   // Out 
 );
 
-void fill_Vpd_Table(A_UINT32 pdGainIdx, A_INT16 Pmin, A_INT16  Pmax, A_INT16 *pwrList,
+void fill_Vpd_Table(A_UINT32 pdGainIdx, A_INT16 Pmin, A_INT16  Pmax, A_INT16 *pwrList, 
 					A_UINT16 *VpdList, A_UINT16 numIntercepts, A_UINT16 retVpdList[][64]);
 MANLIB_API void mdk_GetLowerUpperIndex_Signed16 (A_INT16 value, A_INT16 *pList, A_UINT16 listSize, A_UINT32 *pLowerValue, A_UINT32 *pUpperValue);
 A_UINT16 fbin2freq_gen5(A_UINT32 fbin, A_UINT32 mode);
@@ -112,3 +112,4 @@ A_BOOL initialize_datasets_forced_eeprom_gen5(A_UINT32 devNum, EEPROM_DATA_STRUC
 #endif
 
 #endif
+

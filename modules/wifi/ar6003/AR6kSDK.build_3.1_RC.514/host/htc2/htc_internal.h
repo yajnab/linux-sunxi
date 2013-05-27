@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="htc_internal.h" company="Atheros">
 //    Copyright (c) 2007-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -209,7 +209,7 @@ static INLINE HTC_PACKET *HTC_ALLOC_CONTROL_TX(HTC_TARGET *target) {
 
 #define HTC_UNPREPARE_SEND_PKT(pP)     \
     (pP)->pBuffer += HTC_HDR_LENGTH;   \
-
+    
 #ifdef __cplusplus
 }
 #endif

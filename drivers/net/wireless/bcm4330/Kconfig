@@ -12,3 +12,4 @@ config BCM4330
 
 	  If you choose to build a module, it'll be called dhd. Say M if
 	  unsure.
+

@@ -1,9 +1,9 @@
 /*
  * Copyright (C) 2010, 2012 ARM Limited. All rights reserved.
- *
+ * 
  * This program is free software and is provided to you under the terms of the GNU General Public License version 2
  * as published by the Free Software Foundation, and any use by you of this program is subject to the terms of such GNU licence.
- *
+ * 
  * A copy of the licence is included with the program, and can also be obtained from Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
@@ -39,7 +39,7 @@ typedef enum
     ACTIVITY_FP0,
     ACTIVITY_FP1,
     ACTIVITY_FP2,
-    ACTIVITY_FP3,
+    ACTIVITY_FP3, 
 
     /* L2 cache counters */
     COUNTER_L2_C0,
@@ -59,7 +59,7 @@ typedef enum
     COUNTER_FP3_C0,
     COUNTER_FP3_C1,
 
-    /*
+    /* 
      * If more hardware counters are added, the _mali_osk_hw_counter_table
      * below should also be updated.
      */

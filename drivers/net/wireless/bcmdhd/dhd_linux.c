@@ -136,10 +136,10 @@ DECLARE_WAIT_QUEUE_HEAD(dhd_dpc_wait);
 
 #if defined(OOB_INTR_ONLY)
 extern void dhd_enable_oob_intr(struct dhd_bus *bus, bool enable);
-#endif
+#endif 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 27)) && (1)
 static void dhd_hang_process(struct work_struct *work);
-#endif
+#endif 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 0))
 MODULE_LICENSE("GPL v2");
 #endif /* LinuxVer */
@@ -364,6 +364,9 @@ module_param(dhd_sysioc, uint, 0);
 module_param(dhd_msg_level, int, 0);
 #if defined(CONFIG_WIRELESS_EXT)
 module_param(iw_msg_level, int, 0);
+#endif
+#ifdef WL_CFG80211
+module_param(wl_dbg_level, int, 0);
 #endif
 module_param(android_msg_level, int, 0);
 
@@ -1392,7 +1395,7 @@ dhd_sendpkt(dhd_pub_t *dhdp, int ifidx, void *pktbuf)
 	/* Look into the packet and update the packet priority */
 #ifndef PKTPRIO_OVERRIDE
 	if (PKTPRIO(pktbuf) == 0)
-#endif
+#endif 
 		pktsetprio(pktbuf, FALSE);
 
 #ifdef PROP_TXSTATUS
@@ -2667,7 +2670,9 @@ dhd_open(struct net_device *net)
 		DHD_ERROR(("%s : dhd_open: call dev open before insmod complete!\n", __FUNCTION__));
 	}
 	mutex_lock(&_dhd_sdio_mutex_lock_);
-#endif
+#endif 
+
+  printk("%s, firmware path %s\n", __func__, firmware_path);
 
 	DHD_OS_WAKE_LOCK(&dhd->pub);
 	/* Update FW path if it was changed */
@@ -2772,7 +2777,7 @@ exit:
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 25)) && 1
 	mutex_unlock(&_dhd_sdio_mutex_lock_);
-#endif
+#endif 
 	return ret;
 }
 
@@ -2792,7 +2797,7 @@ int dhd_do_driver_init(struct net_device *net)
 		return 0;
 	}
 #endif /* MULTIPLE_SUPPLICANT */
-#endif
+#endif 
 
 	dhd = *(dhd_info_t **)netdev_priv(net);
 
@@ -2938,6 +2943,8 @@ dhd_attach(osl_t *osh, struct dhd_bus *bus, uint bus_hdrlen)
 	dhd_attach_states_t dhd_state = DHD_ATTACH_STATE_INIT;
 	DHD_TRACE(("%s: Enter\n", __FUNCTION__));
 
+  printk("%s, firmware path %s\n", __func__, firmware_path);
+
 	/* updates firmware nvram path if it was provided as module parameters */
 	if ((firmware_path != NULL) && (firmware_path[0] != '\0'))
 		COPY_FW_PATH_BY_CHIP(bus, fw_path, firmware_path);
@@ -3054,9 +3061,6 @@ dhd_attach(osl_t *osh, struct dhd_bus *bus, uint bus_hdrlen)
 		goto fail;
 	}
 	dhd_state |= DHD_ATTACH_STATE_PROT_ATTACH;
-#if defined(RSSIOFFSET) || 1
-	GET_CHIP_VER(bus, &chip, &chiprev);
-#endif
 
 #ifdef WL_CFG80211
 	/* Attach and link in the cfg80211 */
@@ -3254,7 +3258,7 @@ dhd_bus_start(dhd_pub_t *dhdp)
 
 	/* Enable oob at firmware */
 	dhd_enable_oob_intr(dhd->pub.bus, TRUE);
-#endif
+#endif 
 
 	/* If bus is not ready, can't come up */
 	if (dhd->pub.busstate != DHD_BUS_DATA) {
@@ -3382,7 +3386,7 @@ dhd_get_concurrent_capabilites(dhd_pub_t *dhd)
 	}
 	return 0;
 }
-#endif
+#endif 
 int
 dhd_preinit_ioctls(dhd_pub_t *dhd)
 {
@@ -3437,6 +3441,7 @@ dhd_preinit_ioctls(dhd_pub_t *dhd)
 	uint32 mpc = 0; /* Turn MPC off for AP/APSTA mode */
 	struct ether_addr p2p_ea;
 #endif
+	uint32 mimo_bw_cap = 1; /* Turn HT40 on in 2.4 GHz */
 
 #if defined(AP) || defined(WLP2P)
 	uint32 apsta = 1; /* Enable APSTA mode */
@@ -3640,6 +3645,12 @@ dhd_preinit_ioctls(dhd_pub_t *dhd)
 	bcm_mkiovar("apsta", (char *)&apsta, 4, iovbuf, sizeof(iovbuf));
 	dhd_wl_ioctl_cmd(dhd, WLC_SET_VAR, iovbuf, sizeof(iovbuf), TRUE, 0);
 #endif /* defined(AP) && !defined(WLP2P) */
+
+	if (dhd_bus_chip_id(dhd) == BCM43341_CHIP_ID) {
+		/* Turn on HT40 in 2.4 GHz */
+		bcm_mkiovar("mimo_bw_cap", (char *)&mimo_bw_cap, 4, iovbuf, sizeof(iovbuf));
+		dhd_wl_ioctl_cmd(dhd, WLC_SET_VAR, iovbuf, sizeof(iovbuf), TRUE, 0);
+	}
 
 #if defined(SOFTAP)
 	if (ap_fw_loaded == TRUE) {
@@ -4147,7 +4158,7 @@ dhd_bus_detach(dhd_pub_t *dhdp)
 
 #if defined(OOB_INTR_ONLY)
 			bcmsdh_unregister_oob_intr();
-#endif
+#endif 
 		}
 	}
 }
@@ -4945,7 +4956,7 @@ dhd_dev_reset(struct net_device *dev, uint8 flag)
 			DHD_TRACE(("%s: wl down failed\n", __FUNCTION__));
 		}
 	}
-    DHD_ERROR(("[%s %d]\n", __FUNCTION__, __LINE__));
+
 	ret = dhd_bus_devreset(&dhd->pub, flag);
 	if (ret) {
 		DHD_ERROR(("%s: dhd_bus_devreset: %d\n", __FUNCTION__, ret));

@@ -47,7 +47,7 @@ typedef struct __PMU_DVFS_CTRL_REG2
 
 typedef struct __PMU_DVFS_TIMEOUT_CTRL_REG
 {
-    __u32   DvfsTiCyc:6;                //bit0,  dvfs operate on TWI timeout cycles in TWI peripheral clock,
+    __u32   DvfsTiCyc:6;                //bit0,  dvfs operate on TWI timeout cycles in TWI peripheral clock, 
                                         //default 0x27 (40 cycles)
     __u32   reserved0:26;               //bit6,  reserved
 } __pmu_dvfs_timeout_ctrl_reg_t;
@@ -127,7 +127,7 @@ typedef struct __PMU_CPUVDD_VALUE_REG
     __u32   CpuvddDefVal:8;             //bit0,  pmu cpuvdd default value, default 0x16
                                         //0x00=0.70v, 0x02=0.75v, 0x04=0.80v, 0x06=0.85v, 0x08=0.90v, 0x0A=0.95v,
                                         //0x0C=1.00v, 0x0E=1.05v, 0x10=1.10v, 0x12=1.15v, 0x14=1.20v, 0x16=1.25v,
-                                        //0x18=1.30v, 0x1A=1.35v, 0x1C=1.40v, 0x1E=1.45v, 0x20=1.50v, 0x22=1.55v,
+                                        //0x18=1.30v, 0x1A=1.35v, 0x1C=1.40v, 0x1E=1.45v, 0x20=1.50v, 0x22=1.55v, 
                                         //0x24=1.60v
     __u32   reserved0:24;               //bit8,  reserved
 } __pmu_cpuvdd_value_reg_t;

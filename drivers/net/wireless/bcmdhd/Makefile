@@ -22,13 +22,11 @@ DHDOFILES = aiutils.o bcmsdh_sdmmc_linux.o dhd_linux.o siutils.o bcmutils.o   \
 obj-$(CONFIG_BCMDHD) += bcmdhd.o
 bcmdhd-objs += $(DHDOFILES)
 
-#ifeq ($(CONFIG_MACH_ODROID_4210),y)
 DHDOFILES += dhd_gpio.o
-#DHDCFLAGS += -Iarch/arm/plat-samsung/include
 DHDCFLAGS += -DCUSTOMER_HW
 DHDCFLAGS += -DSET_RANDOM_MAC_SOFTAP
 DHDCFLAGS += -DDISABLE_FW_ROAM_SUSPEND -DDISABLE_BUILTIN_ROAM
-#endif
+#DHDCFLAGS += -DBCMWAPI_WPI -DBCMWAPI_WAI
 
 ifeq ($(CONFIG_BCMDHD_OOB),y)
 DHDCFLAGS += -DOOB_INTR_ONLY -DHW_OOB -DCUSTOMER_OOB

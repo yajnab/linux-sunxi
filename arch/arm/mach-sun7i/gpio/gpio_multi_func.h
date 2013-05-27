@@ -29,3 +29,4 @@ u32 gpio_set_drvlevel(struct aw_gpio_chip *pchip, u32 offset, u32 val);
 u32 gpio_get_drvlevel(struct aw_gpio_chip *pchip, u32 offset);
 
 #endif /* __GPIO_MULTI_FUNC_H */
+

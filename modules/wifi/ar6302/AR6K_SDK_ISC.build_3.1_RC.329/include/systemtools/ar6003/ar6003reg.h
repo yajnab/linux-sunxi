@@ -156,7 +156,7 @@
 
 #define F2_TSF_L32          0x804c  // MAC local clock lower 32 bits
 #define F2_TSF_U32          0x8050  // MAC local clock upper 32 bits
-
+ 
 #endif
 
 #define F2_DIAG_SW           0x8030  // MAC PCU control register
@@ -164,7 +164,7 @@
 #define F2_DIAG_RX_DIS       0x00000020 // disable receive
 #define F2_DIAG_CHAN_INFO    0x00000100 // dump channel info
 #define F2_DUAL_CHAIN_CHAN_INFO    0x01000000 // dump channel info
-#define F2_DIAG_FORCE_RX_ABORT     0x02000000 // force rx abort
+#define F2_DIAG_FORCE_RX_ABORT     0x02000000 // force rx abort 
 
 #define F2_CR                0x0008  // MAC Control Register - only write values of 1 have effect
 #define F2_CR_RXE            0x00000004 // Receive enable
@@ -213,22 +213,22 @@
 
 // PHY registers
 #define PHY_BASE_CHAIN0      0x9800  // PHY registers base address for chain0
-#define PHY_BASE             PHY_BASE_CHAIN0
+#define PHY_BASE             PHY_BASE_CHAIN0      
 #define PHY_BASE_FORCE_AGC_CLEAR   0x10000000
 
 #define PHY_FRAME_CONTROL              0x9804  // PHY frame control register
 #define PHY_FC_TURBO_MODE              0x00000001 // Set turbo mode bits
 #define PHY_FC_TURBO_SHORT             0x00000002 // Set short symbols to turbo mode setting
-#define PHY_FC_DYN_20_40               0x00000004
-#define PHY_FC_DYN_20_40_PRI_ONLY      0x00000008
-#define PHY_FC_DYN_20_40_PRI_CHN       0x00000010
-#define PHY_FC_DYN_20_40_EXT_CHN       0x00000020
-#define PHY_FC_DYN_HT_ENABLE           0x00000040
-#define PHY_FC_ALLOW_SHORT_GI          0x00000080
-#define PHY_FC_CHAINS_USE_WALSH        0x00000100
-#define PHY_FC_SINGLE_HT_LTF1          0x00000200
-#define PHY_FC_GF_ENABLE               0x00000400
-#define PHY_FC_BYPASS_DAC_FIFO         0x00000800
+#define PHY_FC_DYN_20_40               0x00000004 
+#define PHY_FC_DYN_20_40_PRI_ONLY      0x00000008 
+#define PHY_FC_DYN_20_40_PRI_CHN       0x00000010 
+#define PHY_FC_DYN_20_40_EXT_CHN       0x00000020 
+#define PHY_FC_DYN_HT_ENABLE           0x00000040 
+#define PHY_FC_ALLOW_SHORT_GI          0x00000080 
+#define PHY_FC_CHAINS_USE_WALSH        0x00000100 
+#define PHY_FC_SINGLE_HT_LTF1          0x00000200 
+#define PHY_FC_GF_ENABLE               0x00000400 
+#define PHY_FC_BYPASS_DAC_FIFO         0x00000800 
 
 #define PHY_AGC_CONTROL      0x9860  // PHY chip calibration and noise floor setting
 #define PHY_AGC_CONTROL_CAL  0x00000001 // Perform PHY chip internal calibration
@@ -287,3 +287,4 @@
 
 
 #endif /* _AR6003REG_H */
+

@@ -10,7 +10,7 @@
 *
 * Author 		: javen
 *
-* Description 	: USB ÁÆ°ÁêÜÁ®ãÂ∫è
+* Description 	: USB π‹¿Ì≥Ã–Ú
 *
 * History 		:
 *      <author>    		<time>       	<version >    		<desc>
@@ -54,6 +54,7 @@
 static struct usb_cfg g_usb_cfg;
 
 #ifdef CONFIG_USB_SW_SUN7I_USB0_OTG
+__u32 thread_suspend_flag = 0;
 static __u32 thread_run_flag = 1;
 static __u32 thread_stopped_flag = 1;
 #endif
@@ -87,13 +88,13 @@ static int usb_hardware_scan_thread(void * pArg)
 
 	while(thread_run_flag){
 		DMSG_DBG_MANAGER("\n\n");
-
+		msleep(1000);  /* 1s */
+        if(thread_suspend_flag)
+            continue;
 		usb_hw_scan(cfg);
 		usb_msg_center(cfg);
 
-		DMSG_DBG_MANAGER("\n\n");
-
-		msleep(1000);  /* 1s */
+		DMSG_DBG_MANAGER("\n\n");		
 	}
 
 	thread_stopped_flag = 1;
@@ -234,6 +235,15 @@ static __s32 usb_script_parse(struct usb_cfg *cfg)
             DMSG_PANIC("ERR: get usbc(%d) det_vbus failed\n", i);
         }
 
+        /* enable ac */
+        type = script_get_item(set_usbc, "usb_ac_enable_gpio", &(cfg->port[i].ac_enable.gpio_set));
+        if(type == SCIRPT_ITEM_VALUE_TYPE_PIO){
+            cfg->port[i].ac_enable.valid = 1;
+        }else{
+            cfg->port[i].ac_enable.valid = 0;
+            DMSG_PANIC("ERR: get usbc(%d) ac_enable failed\n", i);
+        }
+        
         /* usbc usb_restrict */
         type = script_get_item(set_usbc, KEY_USB_RESTRICT_GPIO, &(cfg->port[i].restrict_gpio_set.gpio_set));
         if(type == SCIRPT_ITEM_VALUE_TYPE_PIO){
@@ -271,7 +281,7 @@ static __s32 check_usb_board_info(struct usb_cfg *cfg)
     // USB0
     //-------------------------------------
     if(cfg->port[0].enable){
-        /* Ê£ÄÊü•portÁöÑ‰ΩøÁî®Á±ªÂûãÊòØÂê¶ÂêàÊ≥ï */
+        /* ºÏ≤Èportµƒ π”√¿‡–Õ «∑Ò∫œ∑® */
         if(cfg->port[0].port_type != USB_PORT_TYPE_DEVICE
            && cfg->port[0].port_type != USB_PORT_TYPE_HOST
            && cfg->port[0].port_type != USB_PORT_TYPE_OTG){
@@ -279,14 +289,14 @@ static __s32 check_usb_board_info(struct usb_cfg *cfg)
             goto err;
         }
 
-        /* Ê£ÄÊü•USBÁöÑÊèíÊãîÊ£ÄÊµãÊñπÂºèÊòØÂê¶ÂêàÊ≥ï */
+        /* ºÏ≤ÈUSBµƒ≤Â∞ŒºÏ≤‚∑Ω Ω «∑Ò∫œ∑® */
         if(cfg->port[0].detect_type != USB_DETECT_TYPE_DP_DM
            && cfg->port[0].detect_type != USB_DETECT_TYPE_VBUS_ID){
             DMSG_PANIC("ERR: usbc0 detect_type(%d) is unkown\n", cfg->port[0].detect_type);
             goto err;
         }
 
-        /* Â¶ÇÊûúÁî®VBUS/IDÊ£ÄÊµãÊñπÂºèÔºåÂ∞±ÂøÖÈ°ªÊ£ÄÊü•id/vbus pin ÁöÑÊúâÊïàÊÄß */
+        /* »Áπ˚”√VBUS/IDºÏ≤‚∑Ω Ω£¨æÕ±ÿ–ÎºÏ≤Èid/vbus pin µƒ”––ß–‘ */
         if(cfg->port[0].detect_type == USB_DETECT_TYPE_VBUS_ID){
             if(cfg->port[0].id.valid == 0){
                 DMSG_PANIC("ERR: id pin is invaild\n");
@@ -500,7 +510,7 @@ static int __init usb_manager_init(void)
 	}
 
     memset(&usbc, 0, sizeof(bsp_usbc_t));
-	for(i = 0; i < USBC_MAX_CTL_NUM; i++){
+   	for(i = 0; i < USBC_MAX_CTL_NUM; i++){
 		usbc.usbc_info[i].num = i;
 
 		switch(i){
@@ -530,17 +540,17 @@ static int __init usb_manager_init(void)
 #ifdef CONFIG_USB_SW_SUN7I_USB0_OTG
     if(g_usb_cfg.port[0].port_type == USB_PORT_TYPE_OTG
        && g_usb_cfg.port[0].detect_type == USB_DETECT_TYPE_VBUS_ID){
-	usb_hw_scan_init(&g_usb_cfg);
+    	usb_hw_scan_init(&g_usb_cfg);
 
-	thread_run_flag = 1;
-	thread_stopped_flag = 0;
-	th = kthread_create(usb_hardware_scan_thread, &g_usb_cfg, "usb-hardware-scan");
-	if(IS_ERR(th)){
-		DMSG_PANIC("ERR: kthread_create failed\n");
-		return -1;
-	}
+    	thread_run_flag = 1;
+    	thread_stopped_flag = 0;
+    	th = kthread_create(usb_hardware_scan_thread, &g_usb_cfg, "usb-hardware-scan");
+    	if(IS_ERR(th)){
+    		DMSG_PANIC("ERR: kthread_create failed\n");
+    		return -1;
+    	}
 
-	wake_up_process(th);
+    	wake_up_process(th);
 	}
 #endif
 
@@ -595,13 +605,13 @@ static void __exit usb_manager_exit(void)
 #ifdef CONFIG_USB_SW_SUN7I_USB0_OTG
     if(g_usb_cfg.port[0].port_type == USB_PORT_TYPE_OTG
        && g_usb_cfg.port[0].detect_type == USB_DETECT_TYPE_VBUS_ID){
-	thread_run_flag = 0;
-	while(!thread_stopped_flag){
-		DMSG_INFO("waitting for usb_hardware_scan_thread stop\n");
-		msleep(10);
-	}
+    	thread_run_flag = 0;
+    	while(!thread_stopped_flag){
+    		DMSG_INFO("waitting for usb_hardware_scan_thread stop\n");
+    		msleep(10);
+    	}
 
-	usb_hw_scan_exit(&g_usb_cfg);
+    	usb_hw_scan_exit(&g_usb_cfg);
     }
 #endif
 
@@ -614,3 +624,4 @@ static void __exit usb_manager_exit(void)
 //module_init(usb_manager_init);
 fs_initcall(usb_manager_init);
 module_exit(usb_manager_exit);
+

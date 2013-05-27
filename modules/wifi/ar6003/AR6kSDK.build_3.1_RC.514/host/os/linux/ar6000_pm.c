@@ -4,7 +4,7 @@
 // All rights reserved.
 //
 //
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -25,7 +25,7 @@
 //
 
 /*
- * Implementation of system power management
+ * Implementation of system power management 
  */
 
 #include "ar6000_drv.h"
@@ -110,7 +110,7 @@ struct wake_lock ar6k_wow_wake_lock;
 
 #ifdef ANDROID_ENV
 extern void android_ar6k_check_wow_status(AR_SOFTC_T *ar, struct sk_buff *skb, A_BOOL isEvent);
-#endif
+#endif 
 #undef ATH_MODULE_NAME
 #define ATH_MODULE_NAME pm
 #define  ATH_DEBUG_PM       ATH_DEBUG_MAKE_MODULE_MASK(0)
@@ -197,9 +197,9 @@ static void ar6000_wow_resume(AR_SOFTC_T *ar)
 #else
                (void)fg_start_period;
                (void)bg_period;
-#endif
-
-
+#endif 
+    
+    
 #if WOW_ENABLE_MAX_INTERVAL /* we don't do it if the power consumption is already good enough. */
                 if (wmi_listeninterval_cmd(arPriv->arWmi, arSta->arListenIntervalT, arSta->arListenIntervalB) != A_OK) {
                     AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Fail to restore WoW listen interval %d\n", arSta->arListenIntervalT));
@@ -250,7 +250,7 @@ static void ar6000_wow_suspend(AR_SOFTC_T *ar)
 
     ar6000_TxDataCleanup(ar); /* IMPORTANT, otherwise there will be 11mA after listen interval as 1000*/
 
-    for(j = 0; j< num_device; j++)
+    for(j = 0; j< num_device; j++) 
     {
         arPriv = ar->arDev[j];
         arSta = &arPriv->arSta;
@@ -270,7 +270,7 @@ static void ar6000_wow_suspend(AR_SOFTC_T *ar)
         A_UINT8 allMask[] = { 0x7f };
         A_MEMZERO(&addWowCmd, sizeof(addWowCmd));
         addWowCmd.filter_list_id = WOW_LIST_ID;
-        addWowCmd.filter_size = sizeof(allMask);
+        addWowCmd.filter_size = sizeof(allMask); 
         addWowCmd.filter_offset = 20;
         status = wmi_add_wow_pattern_cmd(ar->arWmi, &addWowCmd, allData, allMask, addWowCmd.filter_size);
         if (status != A_OK) {
@@ -278,33 +278,33 @@ static void ar6000_wow_suspend(AR_SOFTC_T *ar)
         }
 #else
         /* Unicast IP, EAPOL-like and ARP packets */
-        A_UINT8 unicastData[] = {
-            0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+        A_UINT8 unicastData[] = { 
+            0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
             0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x08, };
-        A_UINT8 unicastMask[] = {
-            0x1, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+        A_UINT8 unicastMask[] = { 
+            0x1, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
             0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x7f };
-        A_UINT8 discoverData[] = { 0xe0, 0x00, 0x00, 0xf8 };
-        A_UINT8 discoverMask[] = { 0xf0, 0x00, 0x00, 0xf8 };
+        A_UINT8 discoverData[] = { 0xe0, 0x00, 0x00, 0xf8 }; 
+        A_UINT8 discoverMask[] = { 0xf0, 0x00, 0x00, 0xf8 };  
         A_UINT8 arpData[] = { 0x08, 0x06 };
         A_UINT8 arpMask[] = { 0xff, 0xff };
-        A_UINT8 dhcpData[] = {
-            0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-            0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x08, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        A_UINT8 dhcpData[] = { 
+            0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
+            0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x08, 0x00, 
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
             0x00, 0x00, 0x00, 0x43 /* port 67 */
         };
         A_UINT8 dhcpMask[] = {
-            0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-            0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0xff, 0xff,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
+            0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0xff, 0xff, 
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
             0x00, 0x00, 0xff, 0xff /* port 67 */
         };
         A_MEMZERO(&addWowCmd, sizeof(addWowCmd));
         addWowCmd.filter_list_id = WOW_LIST_ID;
-        addWowCmd.filter_size = sizeof(unicastMask);
+        addWowCmd.filter_size = sizeof(unicastMask); 
         addWowCmd.filter_offset = 0;
         status = wmi_add_wow_pattern_cmd(arPriv->arWmi, &addWowCmd, unicastData, unicastMask, addWowCmd.filter_size);
         if (status != A_OK) {
@@ -313,7 +313,7 @@ static void ar6000_wow_suspend(AR_SOFTC_T *ar)
         /* setup all ARP packet pattern for WoW */
         A_MEMZERO(&addWowCmd, sizeof(addWowCmd));
         addWowCmd.filter_list_id = WOW_LIST_ID;
-        addWowCmd.filter_size = sizeof(arpMask);
+        addWowCmd.filter_size = sizeof(arpMask); 
         addWowCmd.filter_offset = 20;
         status = wmi_add_wow_pattern_cmd(arPriv->arWmi, &addWowCmd, arpData, arpMask, addWowCmd.filter_size);
         if (status != A_OK) {
@@ -322,7 +322,7 @@ static void ar6000_wow_suspend(AR_SOFTC_T *ar)
         /* Setup multicast pattern for mDNS 224.0.0.251, SSDP 239.255.255.250 and LLMNR  224.0.0.252*/
         A_MEMZERO(&addWowCmd, sizeof(addWowCmd));
         addWowCmd.filter_list_id = WOW_LIST_ID;
-        addWowCmd.filter_size = sizeof(discoverMask);
+        addWowCmd.filter_size = sizeof(discoverMask); 
         addWowCmd.filter_offset = 38;
         status = wmi_add_wow_pattern_cmd(arPriv->arWmi, &addWowCmd, discoverData, discoverMask, addWowCmd.filter_size);
         if (status != A_OK) {
@@ -331,14 +331,14 @@ static void ar6000_wow_suspend(AR_SOFTC_T *ar)
         /* setup all DHCP broadcast packet pattern for WoW */
         A_MEMZERO(&addWowCmd, sizeof(addWowCmd));
         addWowCmd.filter_list_id = WOW_LIST_ID;
-        addWowCmd.filter_size = sizeof(dhcpMask);
+        addWowCmd.filter_size = sizeof(dhcpMask); 
         addWowCmd.filter_offset = 0;
         status = wmi_add_wow_pattern_cmd(arPriv->arWmi, &addWowCmd, dhcpData, dhcpMask, addWowCmd.filter_size);
         if (status != A_OK) {
             AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Fail to add WoW DHCP broadcast pattern for AP mode\n"));
         }
 #endif /* WLAN_CONFIG_SIMPLE_WOW_AP_MODE */
-    } else {
+    } else { 
         /* station mode */
         A_UINT8 macMask[] = { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
         A_UINT16 wow_listen_interval = A_MAX_WOW_LISTEN_INTERVAL;
@@ -346,8 +346,8 @@ static void ar6000_wow_suspend(AR_SOFTC_T *ar)
         if (wmi_listeninterval_cmd(arPriv->arWmi, wow_listen_interval, 0) != A_OK) {
             AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Fail to setup WoW listen interval %d\n", wow_listen_interval));
         } else {
-            /*
-             * The default bmiss is 1500ms when listen interval is 100ms
+            /* 
+             * The default bmiss is 1500ms when listen interval is 100ms 
              * We set listen interval x 15 times as bmiss time here
              */
             A_UINT16 bmissTime = wow_listen_interval*15;
@@ -378,18 +378,18 @@ static void ar6000_wow_suspend(AR_SOFTC_T *ar)
         }
 
         /* Setup multicast pattern for mDNS 224.0.0.251, SSDP 239.255.255.250 and LLMNR  224.0.0.252*/
-        if ( ndev->flags & IFF_ALLMULTI ||
+        if ( ndev->flags & IFF_ALLMULTI || 
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 34)
                  (ndev->flags & IFF_MULTICAST && ndev->mc_count>0) )
 #else
                  (ndev->flags & IFF_MULTICAST && netdev_mc_count(ndev)>0) )
 #endif
         {
-            A_UINT8 discoverData[] = { 0xe0, 0x00, 0x00, 0xf8 };
-            A_UINT8 discoverMask[] = { 0xf0, 0x00, 0x00, 0xf8 };
+            A_UINT8 discoverData[] = { 0xe0, 0x00, 0x00, 0xf8 }; 
+            A_UINT8 discoverMask[] = { 0xf0, 0x00, 0x00, 0xf8 };  
             A_MEMZERO(&addWowCmd, sizeof(addWowCmd));
             addWowCmd.filter_list_id = WOW_LIST_ID;
-            addWowCmd.filter_size = sizeof(discoverMask);
+            addWowCmd.filter_size = sizeof(discoverMask); 
             addWowCmd.filter_offset = 38;
             status = wmi_add_wow_pattern_cmd(arPriv->arWmi, &addWowCmd, discoverData, discoverMask, addWowCmd.filter_size);
             if (status != A_OK) {
@@ -431,7 +431,7 @@ static void ar6000_wow_suspend(AR_SOFTC_T *ar)
     if (status != A_OK) {
         AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Fail to enable wow mode\n"));
     }
-
+    
     status = wmi_set_host_sleep_mode_cmd(arPriv->arWmi, &hostSleepMode);
     if (status != A_OK) {
         AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Fail to set host asleep\n"));
@@ -492,17 +492,17 @@ wow_not_connected:
     case WLAN_SUSPEND_DEEP_SLEEP:
         /* fall through */
     default:
-        status = ar6000_update_wlan_pwr_state(ar, WLAN_DISABLED, TRUE);
-        if (ar->arWlanPowerState==WLAN_POWER_STATE_ON ||
+        status = ar6000_update_wlan_pwr_state(ar, WLAN_DISABLED, TRUE);        
+        if (ar->arWlanPowerState==WLAN_POWER_STATE_ON || 
             ar->arWlanPowerState==WLAN_POWER_STATE_WOW) {
             AR_DEBUG_PRINTF(ATH_DEBUG_PM, ("Strange suspend state for not wow mode %d", ar->arWlanPowerState));
         }
         AR_DEBUG_PRINTF(ATH_DEBUG_PM,("%s:Suspend for %d mode pwr %d status %d\n", __func__, pmmode, ar->arWlanPowerState, status));
         if (ar->arWlanPowerState==WLAN_POWER_STATE_CUT_PWR) {
-            status = A_OK;
+            status = A_OK; 
         } else {
             status = A_EBUSY; /* don't let mmc call sdio_init after resume */
-        }
+        } 
         break;
     }
 
@@ -560,7 +560,7 @@ void ar6000_check_wow_status(AR_SOFTC_T *ar, struct sk_buff *skb, A_BOOL isEvent
     } else {
 #ifdef ANDROID_ENV
         android_ar6k_check_wow_status(ar, skb, isEvent);
-#endif
+#endif 
     }
 }
 
@@ -568,7 +568,7 @@ A_STATUS ar6000_power_change_ev(void *context, A_UINT32 config)
 {
     AR_SOFTC_T *ar = (AR_SOFTC_T *)context;
     A_STATUS status = A_OK;
-
+  
     AR_DEBUG_PRINTF(ATH_DEBUG_PM, ("%s: power change event callback %d \n", __func__, config));
     switch (config) {
        case HIF_DEVICE_POWER_UP:
@@ -608,7 +608,7 @@ ar6000_wow_irq(int irq, void *dev_id)
 #endif /* PLAT_WOW_GPIO_PIN */
 
 #if PLAT_WLAN_CHIP_PWD_PIN
-void plat_setup_power_stub(AR_SOFTC_T *ar, int on, int detect)
+void plat_setup_power_stub(AR_SOFTC_T *ar, int on, int detect) 
 {
 #if 0
 //#if defined(CONFIG_MMC_MSM) && defined(CONFIG_ARCH_MSM7X27) && defined(CONFIG_MSM_SOC_REV_A)
@@ -646,7 +646,7 @@ void plat_setup_power_stub(AR_SOFTC_T *ar, int on, int detect)
 			else
 				continue;
 		}
-
+	
 		if (on) {
 			rc = vreg_set_level(vreg_info[index].vreg,
 					 vreg_info[index].vreg_level);
@@ -710,7 +710,7 @@ fail:
     A_BOOL chip_pwd_low_val;
 
     if (on) {
-        chip_pwd_low_val = 1;
+        chip_pwd_low_val = 1; 
     } else {
         chip_pwd_low_val = 0;
     }
@@ -768,7 +768,7 @@ static int ar6000_pm_resume(struct platform_device *pdev)
                A_BOOL allowCutPwr = ((!ar->arBTSharing) || btOff);
                if ((powerState==WLAN_POWER_STATE_CUT_PWR) && (!allowCutPwr)) {
                   plat_setup_power(ar, 1, 0);
-                   ar->arPlatPowerOff = FALSE;
+                   ar->arPlatPowerOff = FALSE;       
                }
            }
 #endif /* CONFIG_PM */
@@ -786,10 +786,10 @@ static struct platform_driver ar6000_pm_device = {
         .name = "wlan_ar6000_pm_dev",
     },
 };
-#endif
+#endif 
 #endif /* CONFIG_PM */
 
-A_STATUS
+A_STATUS 
 ar6000_setup_cut_power_state(struct ar6_softc *ar,  AR6000_WLAN_STATE state)
 {
     A_STATUS                      status = A_OK;
@@ -817,9 +817,9 @@ ar6000_setup_cut_power_state(struct ar6_softc *ar,  AR6000_WLAN_STATE state)
 #ifdef ANDROID_ENV
             ar->arResumeDone = FALSE;
 #endif /* ANDROID_ENV */
-
+    
             /* Indicate POWER_UP to HIF */
-            config = HIF_DEVICE_POWER_UP;
+            config = HIF_DEVICE_POWER_UP; 
             status = HIFConfigureDevice(ar->arHifDevice,
                                 HIF_DEVICE_POWER_STATE_CHANGE,
                                 &config,
@@ -853,7 +853,7 @@ ar6000_setup_cut_power_state(struct ar6_softc *ar,  AR6000_WLAN_STATE state)
             }
             ar6000_stop_endpoint(ar, TRUE, FALSE);
 
-            config = HIF_DEVICE_POWER_CUT;
+            config = HIF_DEVICE_POWER_CUT; 
             status = HIFConfigureDevice(ar->arHifDevice,
                                 HIF_DEVICE_POWER_STATE_CHANGE,
                                 &config,
@@ -869,7 +869,7 @@ ar6000_setup_cut_power_state(struct ar6_softc *ar,  AR6000_WLAN_STATE state)
     return status;
 }
 
-A_STATUS
+A_STATUS 
 ar6000_setup_deep_sleep_state(struct ar6_softc *ar, AR6000_WLAN_STATE state)
 {
     A_STATUS status = A_OK;
@@ -893,7 +893,7 @@ ar6000_setup_deep_sleep_state(struct ar6_softc *ar, AR6000_WLAN_STATE state)
             if (ar->arWlanPowerState != WLAN_POWER_STATE_DEEP_SLEEP) {
                 if (ar->arWlanPowerState != WLAN_POWER_STATE_ON) {
                     AR_DEBUG_PRINTF(ATH_DEBUG_ERR, ("Strange state when we resume from deep sleep %d\n", ar->arWlanPowerState));
-                }
+                }                
                 break;
             }
 
@@ -903,7 +903,7 @@ ar6000_setup_deep_sleep_state(struct ar6_softc *ar, AR6000_WLAN_STATE state)
                                 HIF_DEVICE_POWER_STATE_CHANGE,
                                 &config,
                                 sizeof(HIF_DEVICE_POWER_CHANGE_TYPE));
-
+            
             for(i = 0; i < num_device; i++)
             {
                 arPriv = ar->arDev[i];
@@ -922,7 +922,7 @@ ar6000_setup_deep_sleep_state(struct ar6_softc *ar, AR6000_WLAN_STATE state)
                 hostSleepMode.asleep = FALSE;
 
                 if ((status=wmi_set_host_sleep_mode_cmd(arPriv->arWmi, &hostSleepMode)) != A_OK) {
-                    break;
+                    break;    
                 }
 
                 /* Change the state to ON */
@@ -938,7 +938,7 @@ ar6000_setup_deep_sleep_state(struct ar6_softc *ar, AR6000_WLAN_STATE state)
                                         arSta->scParams.shortScanRatio,
                                         arSta->scParams.scanCtrlFlags,
                                         arSta->scParams.max_dfsch_act_time,
-                                        arSta->scParams.maxact_scan_per_ssid)) != A_OK)
+                                        arSta->scParams.maxact_scan_per_ssid)) != A_OK) 
                 {
                     break;
                 }
@@ -957,7 +957,7 @@ ar6000_setup_deep_sleep_state(struct ar6_softc *ar, AR6000_WLAN_STATE state)
             if (ar->arWlanPowerState != WLAN_POWER_STATE_ON) {
                 if (ar->arWlanPowerState != WLAN_POWER_STATE_DEEP_SLEEP) {
                     AR_DEBUG_PRINTF(ATH_DEBUG_ERR, ("Strange state when we suspend for deep sleep %d\n", ar->arWlanPowerState));
-                }
+                }    
                 break;
             }
 
@@ -1004,7 +1004,7 @@ ar6000_setup_deep_sleep_state(struct ar6_softc *ar, AR6000_WLAN_STATE state)
                         break;
                    }
                 }
-            }
+            }   
             status = hifWaitForPendingRecv(ar->arHifDevice);
 
             config = HIF_DEVICE_POWER_DOWN;
@@ -1019,12 +1019,12 @@ ar6000_setup_deep_sleep_state(struct ar6_softc *ar, AR6000_WLAN_STATE state)
 
     if (status!=A_OK) {
         AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Fail to enter/exit deep sleep %d\n", state));
-    }
-
+    }   
+    
     return status;
 }
 
-A_STATUS
+A_STATUS 
 ar6000_update_wlan_pwr_state(struct ar6_softc *ar, AR6000_WLAN_STATE state, A_BOOL pmEvent)
 {
     A_STATUS status = A_OK;
@@ -1050,7 +1050,7 @@ ar6000_update_wlan_pwr_state(struct ar6_softc *ar, AR6000_WLAN_STATE state, A_BO
     }
 
     if (ar->bIsDestroyProgress) {
-        up(&ar->arSem);
+        up(&ar->arSem); 
         return A_EBUSY;
     }
 
@@ -1065,7 +1065,7 @@ ar6000_update_wlan_pwr_state(struct ar6_softc *ar, AR6000_WLAN_STATE state, A_BO
             } else if (powerState == WLAN_POWER_STATE_CUT_PWR) {
                 status = ar6000_setup_cut_power_state(ar, WLAN_ENABLED);
             }
-        }
+        } 
 #ifdef CONFIG_PM
         else if (pmEvent && wlanOff) {
             A_BOOL allowCutPwr = ((!ar->arBTSharing) || btOff);
@@ -1082,11 +1082,11 @@ ar6000_update_wlan_pwr_state(struct ar6_softc *ar, AR6000_WLAN_STATE state, A_BO
 #ifdef CONFIG_PM
         if (pmEvent) {  /* disable due to suspend */
             A_BOOL suspendCutPwr = (ar->arSuspendConfig == WLAN_SUSPEND_CUT_PWR ||
-                                    (ar->arSuspendConfig == WLAN_SUSPEND_WOW &&
+                                    (ar->arSuspendConfig == WLAN_SUSPEND_WOW && 
                                         ar->arWow2Config==WLAN_SUSPEND_CUT_PWR));
-            A_BOOL suspendCutIfBtOff = ((ar->arSuspendConfig ==
+            A_BOOL suspendCutIfBtOff = ((ar->arSuspendConfig == 
                                             WLAN_SUSPEND_CUT_PWR_IF_BT_OFF ||
-                                        (ar->arSuspendConfig == WLAN_SUSPEND_WOW &&
+                                        (ar->arSuspendConfig == WLAN_SUSPEND_WOW && 
                                          ar->arWow2Config==WLAN_SUSPEND_CUT_PWR_IF_BT_OFF)) &&
                                         (!ar->arBTSharing || btOff));
             if ((suspendCutPwr) ||
@@ -1098,11 +1098,11 @@ ar6000_update_wlan_pwr_state(struct ar6_softc *ar, AR6000_WLAN_STATE state, A_BO
                 }
             }
         } else {
-            if ((wlanOff) &&
+            if ((wlanOff) && 
                 (ar->arWlanOffConfig == WLAN_OFF_CUT_PWR) &&
-                (!ar->arBTSharing || btOff))
+                (!ar->arBTSharing || btOff)) 
             {
-                /* For BT clock sharing designs, CUT_POWER depend on BT state */
+                /* For BT clock sharing designs, CUT_POWER depend on BT state */  
                 powerState = WLAN_POWER_STATE_CUT_PWR;
             }
         }
@@ -1137,7 +1137,7 @@ ar6000_update_wlan_pwr_state(struct ar6_softc *ar, AR6000_WLAN_STATE state, A_BO
             for(i = 0; i < num_device; i++)
             {
                 arPriv = ar->arDev[i];
-                ar6000_send_event_to_app(arPriv, WMI_REPORT_SLEEP_STATE_EVENTID, (A_UINT8*)pSleepEvent,
+                ar6000_send_event_to_app(arPriv, WMI_REPORT_SLEEP_STATE_EVENTID, (A_UINT8*)pSleepEvent, 
                                          sizeof(WMI_REPORT_SLEEP_STATE_EVENTID));
             }
         }
@@ -1146,7 +1146,7 @@ ar6000_update_wlan_pwr_state(struct ar6_softc *ar, AR6000_WLAN_STATE state, A_BO
     return status;
 }
 
-A_STATUS
+A_STATUS 
 ar6000_set_bt_hw_state(struct ar6_softc *ar, A_UINT32 enable)
 {
 #ifdef CONFIG_PM
@@ -1160,10 +1160,10 @@ ar6000_set_bt_hw_state(struct ar6_softc *ar, A_UINT32 enable)
     return status;
 #else
     return A_OK;
-#endif
+#endif 
 }
 
-A_STATUS
+A_STATUS 
 ar6000_set_wlan_state(struct ar6_softc *ar, AR6000_WLAN_STATE state)
 {
     A_INT32 i;
@@ -1192,7 +1192,7 @@ void ar6000_pm_init()
     wake_lock_init(&ar6k_suspend_wake_lock, WAKE_LOCK_SUSPEND, "ar6k_suspend");
     wake_lock_init(&ar6k_wow_wake_lock, WAKE_LOCK_SUSPEND, "ar6k_wow");
 #endif
-    /*
+    /* 
      * Register ar6000_pm_device into system.
      * We should also add platform_device into the first item of array
      * of devices[] in file arch/xxx/mach-xxx/board-xxxx.c
@@ -1243,3 +1243,4 @@ void ar6000_pm_exit()
 #endif
 #endif /* CONFIG_PM */
 }
+

@@ -59,7 +59,7 @@ s32 rtl8723_dequeue_writeport(PADAPTER padapter, u8 *freePage)
 	else
 		pxmitbuf = dequeue_pending_xmitbuf(pxmitpriv);
 
-	if (pxmitbuf == NULL)
+	if (pxmitbuf == NULL) 
 		return _TRUE;
 
 	//pframe = (struct xmit_frame*)pxmitbuf->priv_data;
@@ -113,9 +113,9 @@ s32 rtl8723_dequeue_writeport(PADAPTER padapter, u8 *freePage)
 		}
 
 		n++;
-		//if ((n & 0x3FF) == 0)
-		if ((n % 2) == 0)
-		{
+		//if ((n & 0x3FF) == 0) 
+		if ((n % 2) == 0) 
+		{		
 			if (n > 5000) {
 				DBG_8192C(KERN_NOTICE "%s: FIFO starvation!(%d) len=%d agg=%d page=(R)%d(A)%d\n",
 					__func__, n, pxmitbuf->len, pxmitbuf->agg_num, pxmitbuf->pg_num, freePage[PageIdx] + freePage[PUBLIC_QUEUE_IDX]);
@@ -210,13 +210,13 @@ s32 rtl8723as_xmit_buf_handler(PADAPTER padapter)
 
 	do {
 		queue_empty = rtl8723_dequeue_writeport(padapter, freePage);
-//	dump secondary adapter xmitbuf
+//	dump secondary adapter xmitbuf 
 #ifdef CONFIG_CONCURRENT_MODE
 		if(rtw_buddy_adapter_up(padapter))
 			queue_empty &= rtl8723_dequeue_writeport(padapter->pbuddy_adapter, freePage);
 #endif
 	} while ( !queue_empty);
-
+	
 #ifdef CONFIG_LPS_LCLK
 	rtw_unregister_tx_alive(padapter);
 #endif
@@ -322,7 +322,7 @@ static s32 xmit_xmitframes(PADAPTER padapter, struct xmit_priv *pxmitpriv)
 						(pxmitframe->attrib.triggered == 0))
 					{
 						//_exit_critical_bh(&pxmitpriv->lock, &irql);
-
+						
 						DBG_8192C("%s: one not triggered pkt in queue when STA sleep\n", __func__);
 						break;
 					}
@@ -331,7 +331,7 @@ static s32 xmit_xmitframes(PADAPTER padapter, struct xmit_priv *pxmitpriv)
 				rtw_list_delete(&pxmitframe->list);
 				ptxservq->qcnt--;
 				hwxmits->accnt--;
-
+				
 
 				if (k == 0) {
 					pxmitbuf->ff_hwaddr = rtw_get_ff_hwaddr(pxmitframe);
@@ -354,7 +354,7 @@ static s32 xmit_xmitframes(PADAPTER padapter, struct xmit_priv *pxmitpriv)
 
 					txlen = TXDESC_SIZE + pxmitframe->attrib.last_txcmdsz;
 					pxmitframe->pg_num = (txlen + 127)/128;
-					pxmitbuf->pg_num += (txlen + 127)/128;
+					pxmitbuf->pg_num += (txlen + 127)/128;					
 					//if (k != 1)
 					//	((struct xmit_frame*)pxmitbuf->priv_data)->pg_num += pxmitframe->pg_num;
 					pxmitbuf->ptail += _RND(txlen, 8); // round to 8 bytes alignment
@@ -397,7 +397,7 @@ static s32 xmit_xmitframes(PADAPTER padapter, struct xmit_priv *pxmitpriv)
 			}
 			else
 				rtw_free_xmitbuf(pxmitpriv, pxmitbuf);
-
+			
 			pxmitbuf = NULL;
 		}
 
@@ -528,13 +528,13 @@ s32 rtl8723as_mgnt_xmit(PADAPTER padapter, struct xmit_frame *pmgntframe)
 	if(GetFrameSubType(pframe)==WIFI_BEACON) //dump beacon directly
 	{
 		rtw_write_port(padapter, pdvobjpriv->Queue2Pipe[pxmitbuf->ff_hwaddr], pxmitbuf->len, (u8 *)pxmitbuf);
-
+		
 		rtw_free_xmitbuf(pxmitpriv, pxmitbuf);
 	}
          else
 	{
 		enqueue_pending_xmitbuf(pxmitpriv, pxmitbuf);
-	}
+	}	
 
 	if  (ret != _SUCCESS)
 		rtw_sctx_done_err(&pxmitbuf->sctx, RTW_SCTX_DONE_UNKNOWN);
@@ -652,3 +652,4 @@ void rtl8723as_free_xmit_priv(PADAPTER padapter)
 
 	_rtw_spinlock_free(&phal->SdioTxFIFOFreePageLock);
 }
+

@@ -1,9 +1,9 @@
 /*
  * Copyright (C) 2010-2012 ARM Limited. All rights reserved.
- *
+ * 
  * This program is free software and is provided to you under the terms of the GNU General Public License version 2
  * as published by the Free Software Foundation, and any use by you of this program is subject to the terms of such GNU licence.
- *
+ * 
  * A copy of the licence is included with the program, and can also be obtained from Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
@@ -12,7 +12,7 @@
 #include "common/basic_block.h"
 #include "common/ptrset.h"
 
-typedef struct
+typedef struct 
 {
 	mempool *pool;
 	control_flow_graph *cfg;
@@ -43,7 +43,7 @@ static memerr process_node(rewrite_sampler_accesses_context *ctx, node *n, essl_
 
 	if(change_type == ESSL_TRUE)
 	{
-		if(n->hdr.kind == EXPR_KIND_LOAD &&
+		if(n->hdr.kind == EXPR_KIND_LOAD && 
 			_essl_type_is_or_has_sampler(n->hdr.type))
 		{
 			ESSL_CHECK(n->hdr.type = _essl_get_type_with_given_vec_size(ctx->typestor_ctx, n->hdr.type, 4));
@@ -101,7 +101,7 @@ memerr _essl_rewrite_sampler_accesses(pass_run_context *pr_ctx, symbol *func)
 	ctx.typestor_ctx = pr_ctx->ts_ctx;
 
 	ESSL_CHECK(_essl_ptrset_init(&ctx.visited, pr_ctx->tmp_pool));
-	for (i = 0 ; i < ctx.cfg->n_blocks ; i++)
+	for (i = 0 ; i < ctx.cfg->n_blocks ; i++) 
 	{
 		ESSL_CHECK(handle_block(&ctx, ctx.cfg->postorder_sequence[i]));
 	}

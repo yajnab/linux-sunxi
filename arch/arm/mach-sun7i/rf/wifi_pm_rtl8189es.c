@@ -155,7 +155,7 @@ void rtl8189es_gpio_init(void)
 	axp_name = val.str;
 
 	type = script_get_item(wifi_para, "rtl8189es_shdn", &val);
-	if (SCIRPT_ITEM_VALUE_TYPE_PIO!=type)
+	if (SCIRPT_ITEM_VALUE_TYPE_PIO!=type) 
 		rtl8189es_msg("get rtl8189es rtl8189es_shdn gpio failed\n");
 	else
 		rtl8189es_shdn = val.gpio.gpio;
@@ -164,7 +164,7 @@ void rtl8189es_gpio_init(void)
 	rtl8189es_suspend = 0;
 	ops->standby 	  = rtl8189es_standby;
 	ops->power 		  = rtl8189es_power;
-
+	
 	// force to disable wifi power in system booting,
 	// make sure wifi power is down when system start up
 	rtl8189es_module_power(0);

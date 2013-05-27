@@ -1,6 +1,6 @@
 /*******************************************************************************
   Copyright (C) 2012 Shuge
-		Author: shuge  <shugeLinux@gmail.com>
+ 		Author: shuge  <shugeLinux@gmail.com>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms and conditions of the GNU General Public License,
@@ -226,3 +226,4 @@ int gmac_mdio_unregister(struct net_device *ndev)
 
 	return 0;
 }
+

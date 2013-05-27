@@ -28,7 +28,7 @@
 //#define SW_DEVICE_ID_KITE            0x002c // for kite
 #define SW_DEVICE_ID_KIWI            0x002d
 #define SW_DEVICE_ID_KIWI_PCIE       0x002e
-#define SW_DEVICE_ID_VENUS           0x003b
+#define SW_DEVICE_ID_VENUS           0x003b 
 
 #define SW_DEVICE_ID_AP51      0xa018
 
@@ -48,7 +48,7 @@
 #define SW_DEVICE_ID_PHOENIX 0x00c0
 #define DEVICE_ID_PHOENIX   0xc020
 #define PHS_SUBSYSTEM_ID	0xc020
-
+  
 #define SW_DEVICE_ID_CRETE_FEZ       0x0007
 #define SW_DEVICE_ID_BOSS_0012       0x0012
 #define SW_DEVICE_ID_VENICE_SOMBRERO 0x0013
@@ -82,3 +82,4 @@
 #define ANALOG_REVID_VENUS2_0  0x1
 
 #endif
+

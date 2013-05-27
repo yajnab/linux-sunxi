@@ -36,7 +36,7 @@
 #define MAX_BDADDR_FORMAT_LENGTH    30
 
 /*
- *  Structure used to send HCI packet, hci packet length and device info
+ *  Structure used to send HCI packet, hci packet length and device info 
  *  together as parameter to PSThread.
  */
 typedef struct {
@@ -105,7 +105,7 @@ A_STATUS AthPSInitialize(AR3K_CONFIG_INFO *hdev)
 #ifndef HCI_TRANSPORT_SDIO
     DECLARE_WAITQUEUE(wait, current);
 #endif /* HCI_TRANSPORT_SDIO */
-
+    
 
 #ifdef HCI_TRANSPORT_SDIO
     status = PSSendOps((void*)hdev);
@@ -129,10 +129,10 @@ A_STATUS AthPSInitialize(AR3K_CONFIG_INFO *hdev)
 
 
     return status;
-
+    
 }
 
-int PSSendOps(void *arg)
+int PSSendOps(void *arg) 
 {
     int i;
     int ps_index;
@@ -160,12 +160,12 @@ int PSSendOps(void *arg)
     status = 0;
     HciCmdList = NULL;
 #ifdef HCI_TRANSPORT_SDIO
-    device = hdev->pBtStackHCIDev;
+    device = hdev->pBtStackHCIDev; 
     firmwareDev = device->parent;
-#else
+#else 
     device = hdev;
     firmwareDev = &device->dev;
-    AthEnableSyncCommandOp(TRUE);
+    AthEnableSyncCommandOp(TRUE);    
 #endif /* HCI_TRANSPORT_SDIO */
     /* First verify if the controller is an FPGA or ASIC, so depending on the device type the PS file to be written will be different.
      */
@@ -196,11 +196,11 @@ int PSSendOps(void *arg)
         if(DevType == 0xdeadc0de){
 	        PsFileName =  PS_ASIC_FILE;
 	    } else{
-		AR_DEBUG_PRINTF(ATH_DEBUG_ERR,(" FPGA Test Image : %x %x  \n",Rom_Version,Build_Version));
+    		AR_DEBUG_PRINTF(ATH_DEBUG_ERR,(" FPGA Test Image : %x %x  \n",Rom_Version,Build_Version));
                 if((Rom_Version == 0x99999999) && (Build_Version == 1)){
-
-			AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("FPGA Test Image : Skipping Patch File load\n"));
-			patchFileName = NULL;
+                        
+    			AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("FPGA Test Image : Skipping Patch File load\n"));
+    			patchFileName = NULL;
 		}
 	        PsFileName =  PS_FPGA_FILE;
 	    }
@@ -241,12 +241,12 @@ int PSSendOps(void *arg)
                 snprintf(config_path,
                          MAX_FW_PATH_LEN, "%s%s",path,patchFileName);
 	else {
-		status = 0;
+        	status = 0;
 	}
     AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Patch File Name %s\n", config_path));
     if((patchFileName == NULL) || (A_REQUEST_FIRMWARE(&firmware,config_path,firmwareDev) < 0)) {
         AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("%s: firmware file open error\n", __FUNCTION__ ));
-        /*
+        /* 
          *  It is not necessary that Patch file be available, continue with PS Operations if.
          *  failed.
          */
@@ -265,7 +265,7 @@ int PSSendOps(void *arg)
                 /* parse and store the Patch file contents to a global variables */
 				patch_loc[0] = '\0';
                 status = AthDoParsePatch(buffer,len, patch_loc);
-
+		
                 A_FREE(buffer);
             } else {
                 A_RELEASE_FIRMWARE(firmware);
@@ -316,11 +316,11 @@ int PSSendOps(void *arg)
 
 
     /* Form the parameter for PSSendOps() API */
-
+ 
 
     /*
-     * First Send the CRC packet,
-     * We have to continue with the PS operations only if the CRC packet has been replied with
+     * First Send the CRC packet, 
+     * We have to continue with the PS operations only if the CRC packet has been replied with 
      * a Command complete event with status Error.
      */
 
@@ -338,7 +338,7 @@ int PSSendOps(void *arg)
 			if(bdaddr && bdaddr[0] !='\0') {
 				write_bdaddr(hdev,bdaddr,BDADDR_TYPE_STRING);
 			}
-#endif
+#endif 
                status = 1;
                goto complete;
         }
@@ -349,13 +349,13 @@ int PSSendOps(void *arg)
         status = 0;
         goto complete;
     }
-	/* Set Patch location */
+	/* Set Patch location */ 
 	if(patch_loc[0] != '\0') {
-	AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Setting Patch Location  %s\n", patch_loc));
+    	AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Setting Patch Location  %s\n", patch_loc));
 		set_patch_ram(hdev,patch_loc,sizeof(patch_loc));
 	}
     for(i = 1; i <numCmds; i++) {
-	Hci_log("PS/Patch Write -->",HciCmdList[i].Hcipacket,HciCmdList[i].packetLen);
+    	Hci_log("PS/Patch Write -->",HciCmdList[i].Hcipacket,HciCmdList[i].packetLen);
         if(SendHCICommandWaitCommandComplete
         (hdev,
         HciCmdList[i].Hcipacket,
@@ -391,7 +391,7 @@ int PSSendOps(void *arg)
 	/* if Platform config is present and TLPM is not available
 	 * write HCI command for TLPM with default timeout values */
 	if(bit7 && !(cFlags & TLPM_CONFIG_BIT)) {
-		A_UCHAR TLPMHciCmd[] = {0x0b, 0xfc, 0x1c, 0x01, 0x23, 0x00, 0x18,
+		A_UCHAR TLPMHciCmd[] = {0x0b, 0xfc, 0x1c, 0x01, 0x23, 0x00, 0x18, 
 			0x03, 0x00, 0x03, 0x00, 0x00, 0x00, 0x00,
 			0x00, 0x0a, 0x00, 0x0a, 0x00, 0xe8, 0x03,
 			0x00, 0x00, 0xe8, 0x03, 0x00, 0x00, 0xe8,
@@ -438,23 +438,23 @@ int PSSendOps(void *arg)
 	{
 		 /* Read Contents of BDADDR file if user has not provided any option */
         snprintf(config_path,MAX_FW_PATH_LEN, "%s%s",path,BDADDR_FILE);
-	AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("BDADDR File Name %s\n", config_path));
-	if(A_REQUEST_FIRMWARE(&firmware,config_path,firmwareDev) < 0) {
-		AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("%s: firmware file open error\n", __FUNCTION__ ));
-		goto complete;
-	}
-	if(NULL == firmware || firmware->size == 0) {
-		goto complete;
-	}
+    	AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("BDADDR File Name %s\n", config_path));
+    	if(A_REQUEST_FIRMWARE(&firmware,config_path,firmwareDev) < 0) {
+        	AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("%s: firmware file open error\n", __FUNCTION__ ));
+        	goto complete;
+    	}
+    	if(NULL == firmware || firmware->size == 0) {
+        	goto complete;
+    	}
         len = (firmware->size > MAX_BDADDR_FORMAT_LENGTH)? MAX_BDADDR_FORMAT_LENGTH: firmware->size;
 	memcpy(config_bdaddr, firmware->data,len);
 	config_bdaddr[len] = '\0';
 	write_bdaddr(hdev,config_bdaddr,BDADDR_TYPE_STRING);
-	A_RELEASE_FIRMWARE(firmware);
+       	A_RELEASE_FIRMWARE(firmware);
 	}
 complete:
 #ifndef HCI_TRANSPORT_SDIO
-    AthEnableSyncCommandOp(FALSE);
+    AthEnableSyncCommandOp(FALSE);    
     PSTagMode = FALSE;
     wake_up_interruptible(&PsCompleteEvent);
 #endif /* HCI_TRANSPORT_SDIO */
@@ -473,7 +473,7 @@ complete:
 /*
  *  This API is used to send the HCI command to controller and return
  *  with a HCI Command Complete event.
- *  For HCI SDIO transport, this will be internally defined.
+ *  For HCI SDIO transport, this will be internally defined. 
  */
 A_STATUS SendHCICommandWaitCommandComplete(AR3K_CONFIG_INFO *pConfig,
                                            A_UINT8          *pHCICommand,
@@ -506,7 +506,7 @@ A_STATUS SendHCICommandWaitCommandComplete(AR3K_CONFIG_INFO *pConfig,
 #endif /* HCI_TRANSPORT_SDIO */
 
 A_STATUS ReadPSEvent(A_UCHAR* Data){
-
+                                
     if(Data[4] == 0xFC && Data[5] == 0x00)
     {
          switch(Data[3]){
@@ -515,11 +515,11 @@ A_STATUS ReadPSEvent(A_UCHAR* Data){
                  break;
                  case 0x0C:
                     /* Change Baudrate */
-                        return A_OK;
-                 break;
+                        return A_OK;    
+                 break;  
                  case 0x04:
                      return A_OK;
-                 break;
+                 break;  
 		case 0x1E:
 			Rom_Version = Data[9];
 			Rom_Version = ((Rom_Version << 8) |Data[8]);
@@ -533,11 +533,11 @@ A_STATUS ReadPSEvent(A_UCHAR* Data){
 			return A_OK;
 		break;
 
-
+        
                 }
-    }
-
-    return A_ERROR;
+    }                       
+        
+    return A_ERROR;           
 }
 int str2ba(unsigned char *str_bdaddr,unsigned char *bdaddr)
 {
@@ -563,7 +563,7 @@ int str2ba(unsigned char *str_bdaddr,unsigned char *bdaddr)
 			str_byte+=2;
 		}
 	}
-	return 0;
+	return 0; 
 }
 A_STATUS set_patch_ram(AR3K_CONFIG_INFO *pConfig,A_UCHAR *patch_loc,A_UINT8 len)
 {
@@ -603,7 +603,7 @@ A_STATUS set_patch_ram(AR3K_CONFIG_INFO *pConfig,A_UCHAR *patch_loc,A_UINT8 len)
 }
 A_STATUS write_bdaddr(AR3K_CONFIG_INFO *pConfig,A_UCHAR *bdaddr,int type)
 {
-	A_UCHAR bdaddr_cmd[] = { 0x0B, 0xFC, 0x0A, 0x01, 0x01,
+	A_UCHAR bdaddr_cmd[] = { 0x0B, 0xFC, 0x0A, 0x01, 0x01, 
 							0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
     A_UINT8 *event;
@@ -664,7 +664,7 @@ A_STATUS getDeviceType(AR3K_CONFIG_INFO *pConfig, A_UINT32 * code)
     hciCommand[3] = (A_UINT8)(FPGA_REGISTER & 0xFF);
     hciCommand[4] = (A_UINT8)((FPGA_REGISTER >> 8) & 0xFF);
     hciCommand[5] = (A_UINT8)((FPGA_REGISTER >> 16) & 0xFF);
-    hciCommand[6] = (A_UINT8)((FPGA_REGISTER >> 24) & 0xFF);
+    hciCommand[6] = (A_UINT8)((FPGA_REGISTER >> 24) & 0xFF); 
     if(A_OK == SendHCICommandWaitCommandComplete(pConfig,hciCommand,sizeof(hciCommand),&event,&bufferToFree)) {
 
         if(event[4] == 0xFC && event[5] == 0x00){
@@ -690,3 +690,5 @@ A_STATUS getDeviceType(AR3K_CONFIG_INFO *pConfig, A_UINT32 * code)
    }
     return result;
 }
+
+

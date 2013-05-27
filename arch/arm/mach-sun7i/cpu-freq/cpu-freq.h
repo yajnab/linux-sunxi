@@ -63,3 +63,5 @@ struct sunxi_cpu_freq_t {
 extern struct cpufreq_frequency_table sunxi_freq_tbl[];
 
 #endif  /* #ifndef __sunxi_CPU_FREQ_H__ */
+
+

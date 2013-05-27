@@ -817,9 +817,9 @@ static int do_read(struct fsg_common *common)
 #ifdef CONFIG_USB_SW_SUN7I_USB
         if(curlun->zero_disk){
             if(file_offset_tmp == 0){
-			nread = vfs_read(curlun->filp,
-					 (char __user *)bh->buf,
-					 amount, &file_offset_tmp);
+        		nread = vfs_read(curlun->filp,
+        				 (char __user *)bh->buf,
+        				 amount, &file_offset_tmp);
             }else{
                 nread = amount;
             }
@@ -1027,7 +1027,7 @@ static int do_write(struct fsg_common *common)
             if(curlun->zero_disk){
                 nwritten = amount;
             }else{
-			/*åœ¨åˆ é™¤å°æ–‡ä»¶æ—¶vfs_writeå¯èƒ½ä¼šè¶…æ—¶ï¼Œå¼•èµ·usb reset,å¢åŠ å»¶æ—¶ï¼Œé€Ÿåº¦ä¼šä¸‹é™*/
+            		/*ÔÚÉ¾³ıĞ¡ÎÄ¼şÊ±vfs_write¿ÉÄÜ»á³¬Ê±£¬ÒıÆğusb reset,Ôö¼ÓÑÓÊ±£¬ËÙ¶È»áÏÂ½µ*/
 								if(amount <= 512){
 									msleep(1);
 								}
@@ -2772,14 +2772,14 @@ static struct fsg_common *fsg_common_init(struct fsg_common *common,
 
 	rc = fsg_num_buffers_validate();
 	if (rc != 0)
-		return ERR_PTR(rc);
+		return ERR_PTR(rc);    
 
 	/* Find out how many LUNs there should be */
 	nluns = cfg->nluns;
 	if (nluns < 1 || nluns > FSG_MAX_LUNS) {
 		dev_err(&gadget->dev, "invalid number of LUNs: %u\n", nluns);
 		return ERR_PTR(-EINVAL);
-	}
+	}    
 
 	/* Allocate? */
 	if (!common) {
@@ -2798,7 +2798,7 @@ static struct fsg_common *fsg_common_init(struct fsg_common *common,
 		if (common->free_storage_on_release)
 			kfree(common);
 		return ERR_PTR(-ENOMEM);
-	}
+	}    
 
 	common->ops = cfg->ops;
 	common->private_data = cfg->private_data;
@@ -2815,7 +2815,7 @@ static struct fsg_common *fsg_common_init(struct fsg_common *common,
 			goto error_release;
 		fsg_strings[FSG_STRING_INTERFACE].id = rc;
 		fsg_intf_desc.iInterface = rc;
-	}
+	}    
 
 	/*
 	 * Create the LUNs, open their backing files, and register the
@@ -2827,10 +2827,10 @@ static struct fsg_common *fsg_common_init(struct fsg_common *common,
 		goto error_release;
 	}
 	common->luns = curlun;
-
+    
 	init_rwsem(&common->filesem);
 
-	for (i = 0, lcfg = cfg->luns; i < nluns; ++i, ++curlun, ++lcfg) {
+	for (i = 0, lcfg = cfg->luns; i < nluns; ++i, ++curlun, ++lcfg) {	
 		curlun->cdrom = !!lcfg->cdrom;
 		curlun->ro = lcfg->cdrom || lcfg->ro;
 		curlun->initially_ro = curlun->ro;
@@ -2855,7 +2855,7 @@ static struct fsg_common *fsg_common_init(struct fsg_common *common,
 			common->nluns = i;
 			put_device(&curlun->dev);
 			goto error_release;
-		}
+		}        
 
 		rc = device_create_file(&curlun->dev, &dev_attr_ro);
 		if (rc)
@@ -2870,7 +2870,7 @@ static struct fsg_common *fsg_common_init(struct fsg_common *common,
         rc = device_create_file(&curlun->dev, &dev_attr_zero_disk);
         if (rc)
             goto error_luns;
-#endif
+#endif       
 		if (lcfg->filename) {
 		    printk("open %s for LUN%d\n", lcfg->filename, i);
 			rc = fsg_lun_open(curlun, lcfg->filename);
@@ -3253,7 +3253,7 @@ fsg_config_from_params(struct fsg_config *cfg,
 			params->file_count > i && params->file[i][0]
 			? params->file[i]
 			: 0;
-			printk("file_count = %d, file[%d][0] = %s, lun->filename = %s\n",
+			printk("file_count = %d, file[%d][0] = %s, lun->filename = %s\n", 
 			        params->file_count, i, params->file[i][0], lun->filename);
 	}
 

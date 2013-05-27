@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="_busdriver.h" company="Atheros">
 //    Copyright (c) 2007-2008 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -38,7 +38,7 @@
  *  HcdList - SDHCD
  *          one per registered host controller
  *          Next - links of all HCDs
- *  DeviceList SDDEVICE
+ *  DeviceList SDDEVICE  
  *          one per inserted device
  *          Next - links of all devices
  *          DeviceListNext - links of all devices on a function
@@ -49,13 +49,13 @@
  *          Next - links of all functions
  *          DeviceList - list of devices being support by this function
  *                       uses DeviceListNext in SDDEVICE to link
- *
- *
+ * 
+ * 
 */
 #define SDBUS_DEFAULT_REQ_LIST_SIZE         64
 #define SDBUS_DEFAULT_REQ_SIG_SIZE          16
-#define MAX_CARD_DETECT_MSGS                2
-#define MAX_HCD_REQ_RECURSION               5
+#define MAX_CARD_DETECT_MSGS                2   
+#define MAX_HCD_REQ_RECURSION               5 
 #define MAX_HCD_RECURSION_RUNAWAY           100
 
     /* internal signalling item */
@@ -71,7 +71,7 @@ typedef struct _HCD_EVENT_MESSAGE {
 
 /* internal data for bus driver */
 typedef struct _BDCONTEXT {
-
+   
     /* list of SD requests and signalling semaphores and a semaphore to protect it */
     SDLIST  RequestList;
     SDLIST  SignalList;
@@ -97,7 +97,7 @@ typedef struct _BDCONTEXT {
     UINT8            InitMask;               /* bus driver init mask */
 #define HELPER_INIT      0x02
 #define RESOURCE_INIT    0x04
-    OSKERNEL_HELPER  CardDetectHelper;       /* card detect helper */
+    OSKERNEL_HELPER  CardDetectHelper;       /* card detect helper */ 
     PSDMESSAGE_QUEUE pCardDetectMsgQueue;    /* card detect message queue */
     ULONG            HcdInUseField;          /* bit field of in use HCD numbers*/
     UINT32           ConfigFlags;            /* bus driver configuration flags */
@@ -106,12 +106,12 @@ typedef struct _BDCONTEXT {
 }BDCONTEXT, *PBDCONTEXT;
 
 #define BD_DEFAULT_CONFIG_FLAGS 0x00000000
-#define IsQueueBusy(pRequestQueue)      (pRequestQueue)->Busy
-#define MarkQueueBusy(pRequestQueue)    (pRequestQueue)->Busy = TRUE
-#define MarkQueueNotBusy(pRequestQueue) (pRequestQueue)->Busy = FALSE
+#define IsQueueBusy(pRequestQueue)      (pRequestQueue)->Busy 
+#define MarkQueueBusy(pRequestQueue)    (pRequestQueue)->Busy = TRUE   
+#define MarkQueueNotBusy(pRequestQueue) (pRequestQueue)->Busy = FALSE 
 
 #define CLEAR_INTERNAL_REQ_FLAGS(pReq) (pReq)->Flags &= ~(UINT)(SDREQ_FLAGS_FORCE_DEFERRED_COMPLETE)
-
+                                                          
 /* macros to insert request into the queue */
 #define QueueRequest(pReqQ,pReq) SDListInsertTail(&(pReqQ)->Queue,&(pReq)->SDList)
 #define QueueRequestToFront(pReqQ,pReq) SDListInsertHead(&(pReqQ)->Queue,&(pReq)->SDList)
@@ -121,19 +121,19 @@ static INLINE PSDREQUEST DequeueRequest(PSDREQUESTQUEUE pRequestQueue) {
     PSDLIST pItem;
     pItem = SDListRemoveItemFromHead(&pRequestQueue->Queue);
     if (pItem != NULL) {
-        return CONTAINING_STRUCT(pItem, SDREQUEST, SDList);
+        return CONTAINING_STRUCT(pItem, SDREQUEST, SDList);        
     }
     return NULL;
 }
 
 static INLINE SDIO_STATUS InitializeRequestQueue(PSDREQUESTQUEUE pRequestQueue) {
-    SDLIST_INIT(&pRequestQueue->Queue);
+    SDLIST_INIT(&pRequestQueue->Queue);  
     MarkQueueNotBusy(pRequestQueue);
     return SDIO_STATUS_SUCCESS;
 }
 
 static INLINE void CleanupRequestQueue(PSDREQUESTQUEUE pRequestQueue) {
-
+    
 }
 
 /* for bus driver internal use only */
@@ -164,7 +164,7 @@ PSDREQUEST AllocateRequest(void);
 void FreeRequest(PSDREQUEST pReq);
 PSIGNAL_ITEM AllocateSignal(void);
 void FreeSignal(PSIGNAL_ITEM pSignal);
-SDIO_STATUS DeviceAttach(PSDHCD pHcd);
+SDIO_STATUS DeviceAttach(PSDHCD pHcd); 
 SDIO_STATUS DeviceDetach(PSDHCD pHcd);
 SDIO_STATUS DeviceInterrupt(PSDHCD pHcd);
 SDIO_STATUS Do_OS_IncHcdReference(PSDHCD pHcd);
@@ -207,9 +207,9 @@ SDIO_STATUS _IssueBusRequestBd(PSDHCD           pHcd,
                                PSDREQUEST       pReqToUse,
                                PVOID            pData,
                                INT              Length);
-
+                                           
 SDIO_STATUS IssueRequestToHCD(PSDHCD pHcd,PSDREQUEST pReq);
-
+                
 #define CALL_HCD_CONFIG(pHcd,pCfg) (pHcd)->pConfigure((pHcd),(pCfg))
     /* macro to force all requests to be asynchronous in the HCD */
 static INLINE BOOL ForceAllRequestsAsync(void) {
@@ -217,45 +217,45 @@ static INLINE BOOL ForceAllRequestsAsync(void) {
 }
 
 static INLINE SDIO_STATUS CallHcdRequest(PSDHCD pHcd) {
-
+    
     if (pHcd->pCurrentRequest->Flags & SDREQ_FLAGS_PSEUDO) {
         DBG_PRINT(SDIODBG_REQUESTS, ("SDIO Bus Driver: PSEUDO Request 0x%X \n",
-                    (INT)pHcd->pCurrentRequest));
+                    (INT)pHcd->pCurrentRequest));   
             /* return successful completion so that processing can finish */
         return SDIO_STATUS_SUCCESS;
     }
-
+    
     if (ForceAllRequestsAsync()) {
             /* all requests must be completed(indicated) in a separate context */
-        pHcd->pCurrentRequest->Flags |= SDREQ_FLAGS_FORCE_DEFERRED_COMPLETE;
+        pHcd->pCurrentRequest->Flags |= SDREQ_FLAGS_FORCE_DEFERRED_COMPLETE;    
     } else {
             /* otherwise perform a test on flags in the HCD */
-        if (!CHECK_API_VERSION_COMPAT(pHcd,2,6) &&
+        if (!CHECK_API_VERSION_COMPAT(pHcd,2,6) && 
             AtomicTest_Set(&pHcd->HcdFlags, HCD_REQUEST_CALL_BIT)) {
 
-            /* bit was already set, this is a recursive call,
-             * we need to tell the HCD to complete the
+            /* bit was already set, this is a recursive call, 
+             * we need to tell the HCD to complete the 
              * request in a separate context */
             DBG_PRINT(SDIODBG_REQUESTS, ("SDIO Bus Driver: Recursive CallHcdRequest \n"));
             pHcd->pCurrentRequest->Flags |= SDREQ_FLAGS_FORCE_DEFERRED_COMPLETE;
         }
     }
  #if DEBUG
-    {
+    {       
         SDIO_STATUS status;
         BOOL forceDeferred;
         forceDeferred = pHcd->pCurrentRequest->Flags & SDREQ_FLAGS_FORCE_DEFERRED_COMPLETE;
-        status = pHcd->pRequest(pHcd);
+        status = pHcd->pRequest(pHcd);    
         if (forceDeferred) {
                 /* status better be pending... */
             DBG_ASSERT(status == SDIO_STATUS_PENDING);
         }
-        return status;
+        return status;  
     }
- #else
+ #else 
     return pHcd->pRequest(pHcd);
  #endif
-
+    
 }
 
 /* note the caller of this macro must take the HCD lock to protect the count */
@@ -280,10 +280,10 @@ static void INLINE DoRequestCompletion(PSDREQUEST pReq, PSDHCD pHcd) {
     CLEAR_INTERNAL_REQ_FLAGS(pReq);
     if (pReq->pCompletion != NULL) {
         DBG_PRINT(SDIODBG_REQUESTS, ("SDIO Bus Driver: Calling completion on request:0x%X, Parameter[0]:0x%X \n",
-           (INT)pReq, pReq->Parameters[0].As32bit));
+           (INT)pReq, pReq->Parameters[0].As32bit));  
             /* call completion routine, mark request reusable */
         AtomicTest_Clear(&pReq->InternalFlags, SDBD_PENDING);
-        pReq->pCompletion(pReq);
+        pReq->pCompletion(pReq);  
     } else {
             /* mark request reusable */
         AtomicTest_Clear(&pReq->InternalFlags, SDBD_PENDING);
@@ -299,13 +299,13 @@ static INLINE SDIO_STATUS PostCardDetectEvent(PBDCONTEXT pSDB, HCD_EVENT Event, 
     HCD_EVENT_MESSAGE message;
     SDIO_STATUS       status;
     message.Event = Event;
-    message.pHcd = pHcd;
-
+    message.pHcd = pHcd; 
+    
     if (pHcd != NULL) {
             /* increment HCD reference count to process this HCD message */
-        status = OS_IncHcdReference(pHcd);
+        status = OS_IncHcdReference(pHcd);        
         if (!SDIO_SUCCESS(status)) {
-            return status;
+            return status;    
         }
     }
         /* post card detect message */
@@ -316,11 +316,11 @@ static INLINE SDIO_STATUS PostCardDetectEvent(PBDCONTEXT pSDB, HCD_EVENT Event, 
                 /* decrement count */
             OS_DecHcdReference(pHcd);
         }
-        return status;
+        return status;   
     }
         /* wake card detect helper */
     DBG_PRINT(SDIODBG_HCD_EVENTS, ("SDIO Bus Driver: PostCardDetectEvent waking\n"));
-    return SD_WAKE_OS_HELPER(&pSDB->CardDetectHelper);
+    return SD_WAKE_OS_HELPER(&pSDB->CardDetectHelper); 
 }
 
 /* initialize device fields */
@@ -335,7 +335,7 @@ static INLINE void InitDeviceData(PSDHCD pHcd, PSDDEVICE pDevice) {
         /* set card flags in the ID */
     pDevice->pId[0].CardFlags = pHcd->CardProperties.Flags;
     pDevice->pFunction = NULL;
-    pDevice->pHcd = pHcd;
+    pDevice->pHcd = pHcd;   
     SET_SDIO_STACK_VERSION(pDevice);
 }
 
@@ -345,10 +345,10 @@ static INLINE void DeinitDeviceData(PSDDEVICE pDevice) {
 
 /* reset hcd state */
 static INLINE void ResetHcdState(PSDHCD pHcd) {
-    ZERO_POBJECT(&pHcd->CardProperties);
-    pHcd->PendingHelperIrqs = 0;
-    pHcd->PendingIrqAcks = 0;
-    pHcd->IrqsEnabled = 0;
+    ZERO_POBJECT(&pHcd->CardProperties);  
+    pHcd->PendingHelperIrqs = 0;  
+    pHcd->PendingIrqAcks = 0;     
+    pHcd->IrqsEnabled = 0; 
     pHcd->pCurrentRequest = NULL;
     pHcd->IrqProcState = SDHCD_IDLE;
         /* mark this device as special */
@@ -359,7 +359,7 @@ static INLINE SDIO_STATUS _IssueConfig(PSDHCD           pHcd,
                                        SDCONFIG_COMMAND Command,
                                        PVOID            pData,
                                        INT              Length){
-    SDCONFIG  configHdr;
+    SDCONFIG  configHdr; 
     SET_SDCONFIG_CMD_INFO(&configHdr,Command,pData,Length);
     return CALL_HCD_CONFIG(pHcd,&configHdr);
 }
@@ -374,31 +374,31 @@ static INLINE SDIO_STATUS _IssueConfig(PSDHCD           pHcd,
 SDIO_STATUS OS_AddDevice(PSDDEVICE pDevice, PSDFUNCTION pFunction);
 void OS_RemoveDevice(PSDDEVICE pDevice);
 SDIO_STATUS OS_InitializeDevice(PSDDEVICE pDevice, PSDFUNCTION pFunction);
-SDIO_STATUS SetOperationalBusMode(PSDDEVICE               pDevice,
-                                  PSDCONFIG_BUS_MODE_DATA pBusMode);
+SDIO_STATUS SetOperationalBusMode(PSDDEVICE               pDevice, 
+                                  PSDCONFIG_BUS_MODE_DATA pBusMode); 
 void FreeDevice(PSDDEVICE pDevice);
 BOOL IsPotentialIdMatch(PSD_PNP_INFO pIdsDev, PSD_PNP_INFO pIdsFuncList);
 
 
 #define CHECK_FUNCTION_DRIVER_VERSION(pF) \
-    (GET_SDIO_STACK_VERSION_MAJOR((pF)) == CT_SDIO_STACK_VERSION_MAJOR(g_Version))
+    (GET_SDIO_STACK_VERSION_MAJOR((pF)) == CT_SDIO_STACK_VERSION_MAJOR(g_Version))   
 #define CHECK_HCD_DRIVER_VERSION(pH) \
-    (GET_SDIO_STACK_VERSION_MAJOR((pH)) == CT_SDIO_STACK_VERSION_MAJOR(g_Version))
+    (GET_SDIO_STACK_VERSION_MAJOR((pH)) == CT_SDIO_STACK_VERSION_MAJOR(g_Version))                                                       
 
 /* CLARIFICATION on SDREQ_FLAGS_PSEUDO and SDREQ_FLAGS_BARRIER flags :
- *
+ * 
  * A request marked as PSEUDO is synchronized with bus requests and is not a true request
  * that is issued to an HCD.
- *
+ * 
  * A request marked with a BARRIER flag requires that the completion routine be called
- * before the next bus request starts.  This is required for HCD requests that can change
- * bus or clock modes.  Changing the clock or bus mode while a bus request is pending
+ * before the next bus request starts.  This is required for HCD requests that can change 
+ * bus or clock modes.  Changing the clock or bus mode while a bus request is pending 
  * can cause problems.
- *
- *
- *
+ * 
+ * 
+ * 
  * */
 #define SD_PSEUDO_REQ_FLAGS \
-      (SDREQ_FLAGS_PSEUDO | SDREQ_FLAGS_BARRIER | SDREQ_FLAGS_TRANS_ASYNC)
-
+      (SDREQ_FLAGS_PSEUDO | SDREQ_FLAGS_BARRIER | SDREQ_FLAGS_TRANS_ASYNC)      
+                                 
 #endif /*___BUSDRIVER_H___*/

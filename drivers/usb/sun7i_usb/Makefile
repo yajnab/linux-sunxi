@@ -29,5 +29,6 @@ sw_usb_udc-objs :=  udc/sw_udc.o \
                     udc/sw_udc_board.o \
                     udc/sw_udc_debug.o \
                     udc/sw_udc_dma.o
-
+                    
 obj-$(CONFIG_USB_SW_SUN7I_UDC0) += sw_usb_udc.o
+

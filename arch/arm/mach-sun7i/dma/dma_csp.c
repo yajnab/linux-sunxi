@@ -317,3 +317,4 @@ void inline csp_dma_clear_irqpend(dma_channel_t * pchan, u32 irq_type)
 	utemp &= (irq_type << (pchan->id << 1));
 	DMA_WRITE_REG(utemp, DMA_IRQ_PEND_REG);
 }
+

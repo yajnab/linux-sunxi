@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="p2p_internal.h" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -66,7 +66,7 @@ struct p2p_client_info {
     A_UINT16 config_methods;
     A_UINT8 dev_capab;
     A_UINT8 num_sec_dev_types;
-};
+}; 
 
 struct p2p_group_info {
     A_UINT32 num_clients;

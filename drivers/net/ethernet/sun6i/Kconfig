@@ -4,7 +4,7 @@ config NET_VENDOR_SUNXI
 	depends on HAS_IOMEM
 	---help---
 	The gmac device of sun6i platform soc.
-
+	
 if NET_VENDOR_SUNXI
 
 config SUNXI_GMAC

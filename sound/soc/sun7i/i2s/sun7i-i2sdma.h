@@ -19,8 +19,8 @@
 #define ST_OPENED     (1<<1)
 
 struct sun7i_dma_params {
-	char *name;
-	dma_addr_t dma_addr;
+	char *name;		
+	dma_addr_t dma_addr;	
 };
 
 #endif //SUN7I_PCM_H_

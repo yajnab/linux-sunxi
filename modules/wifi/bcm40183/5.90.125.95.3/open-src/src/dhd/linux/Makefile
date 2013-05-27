@@ -2,13 +2,13 @@
 # GNU Makefile for Broadcom Dongle Host Driver
 #
 # Copyright (C) 1999-2011, Broadcom Corporation
-#
+# 
 #         Unless you and Broadcom execute a separate written software license
 # agreement governing use of this software, this software is licensed to you
 # under the terms of the GNU General Public License version 2 (the "GPL"),
 # available at http://www.broadcom.com/licenses/GPLv2.php, with the
 # following added to such license:
-#
+# 
 #      As a special exception, the copyright holders of this software give you
 # permission to link this software with independent modules, and to copy and
 # distribute the resulting executable under terms of your choice, provided that
@@ -16,7 +16,7 @@
 # the license of that module.  An independent module is a module which is not
 # derived from this software.  The special exception does not apply to any
 # modifications of the software.
-#
+# 
 #      Notwithstanding the above, under no circumstances may you combine this
 # software in any way with any other Broadcom software provided under a license
 # other than the GPL, without Broadcom's express prior written consent.
@@ -24,7 +24,7 @@
 # $Id: Makefile,v 1.93.6.24 2011-02-10 02:31:08 $
 #
 
-# Although 32ON64 flag is supposed to be passed from caller, set it
+# Although 32ON64 flag is supposed to be passed from caller, set it 
 # if not set by caller on certain kernels and platforms
 ifeq ($(shell uname -m),x86_64)
      ifneq ($(findstring x86_64,$(LINUXVER)),x86_64)
@@ -165,18 +165,18 @@ ifneq ($(findstring arm,$(TARGET)),)
 endif
 
 # First include from linux kernel dirs
-IFLAGS := -I$(LINUXDIR)/include
-IFLAGS += -I$(LINUXDIR)/include/asm/mach-default
+IFLAGS := -I$(LINUXDIR)/include 
+IFLAGS += -I$(LINUXDIR)/include/asm/mach-default 
 # Followed by 2.6.29+ specific paths
 IFLAGS += -I$(LINUXDIR)/arch/$(DHDARCH)/include
 IFLAGS += -I$(LINUXDIR)/arch/$(DHDARCH)/include/asm/mach-default
 
 # From current workspace
-IFLAGS += -I.
-IFLAGS += -I$(SRCBASE)/include
-IFLAGS += -I$(SRCBASE)/shared
-IFLAGS += -I$(SRCBASE)/dhd/sys
-IFLAGS += -I$(SRCBASE)/dongle
+IFLAGS += -I. 
+IFLAGS += -I$(SRCBASE)/include 
+IFLAGS += -I$(SRCBASE)/shared 
+IFLAGS += -I$(SRCBASE)/dhd/sys 
+IFLAGS += -I$(SRCBASE)/dongle 
 IFLAGS += -I$(SRCBASE)/wl/sys
 IFLAGS += -I$(SRCBASE)/wl/phy
 
@@ -188,10 +188,10 @@ CONFIG_WIRELESS_EXT=y
 DFLAGS += -DCONFIG_WIRELESS_EXT
 endif
 
-ifeq ($(CONFIG_MMC_MSM7X00A),y)
+ifeq ($(CONFIG_MMC_MSM7X00A),y) 
 DFLAGS += -Dlinux
-DFLAGS += -DDHD_SDALIGN=64 -DMAX_HDR_READ=64 -DDHD_FIRSTREAD=64
-endif
+DFLAGS += -DDHD_SDALIGN=64 -DMAX_HDR_READ=64 -DDHD_FIRSTREAD=64 
+endif 
 
 WFLAGS := -Wall -Wstrict-prototypes
 ifeq (,$(findstring 2.4.18,$(LINUXVER)))
@@ -252,7 +252,7 @@ IFLAGS += -I$(SRCBASE)/dongle/rte/wl/builds/$(DNGL_IMAGE_NAME)
 endif
 
 ifneq ($(findstring -cdc-,-$(TARGET)-),)
-DFLAGS += -DBDC -DTOE
+DFLAGS += -DBDC -DTOE 
 DFLAGS += -DDHD_BCMEVENTS -DSHOW_EVENTS
 CFILES += dhd_cdc.c
 endif
@@ -260,7 +260,7 @@ ifneq ($(findstring -rndis-,-$(TARGET)-),)
 DFLAGS += -DRNDIS
 CFILES += dhd_rndis.c
 endif
-
+		  
 ifneq ($(findstring -dbususb-,-$(TARGET)-),)
 DFLAGS += -DBCMDHDUSB -DBCMDBUS
 CFILES += dbus.c dbus_usb.c dbus_usb_linux.c
@@ -365,8 +365,8 @@ endif
 ifneq ($(findstring -dk8k-,-$(TARGET)-),)
 DFLAGS += -Dlinux
 DFLAGS += -DOEM_ANDROID
-DFLAGS += -DMMC_SDIO_ABORT
-DFLAGS += -DBCMSDIO -DBCMLXSDMMC -DBCMPLATFORM_BUS
+DFLAGS += -DMMC_SDIO_ABORT 
+DFLAGS += -DBCMSDIO -DBCMLXSDMMC -DBCMPLATFORM_BUS 
 endif
 
 ifneq ($(findstring -prime-,-$(TARGET)-),)
@@ -378,7 +378,7 @@ CFILES += wl_cfgp2p.c
 CFILES += bcmwifi.c
 DFLAGS += -Dlinux
 DFLAGS += -DOEM_ANDROID
-DFLAGS += -DMMC_SDIO_ABORT
+DFLAGS += -DMMC_SDIO_ABORT 
 DFLAGS += -DWL_CFG80211
 DFLAGS += -DCUSTOM_OOB_GPIO_NUM=2
 DFLAGS += -DBCMDRIVER -DBCMDONGLEHOST -DUNRELEASEDCHIP -DBCMDMA32				\
@@ -394,11 +394,11 @@ endif
 
 ifneq ($(findstring -sdspi-,$(TARGET)-),)
 DFLAGS += -DBCMSDIO -DBCMSDIOH_SPI -DTESTDONGLE # -DBCMSDYIELD
-CFILES += dhd_sdio.c bcmsdh.c bcmsdspi.c bcmsdspi_linux.c bcmsdh_linux.c
+CFILES += dhd_sdio.c bcmsdh.c bcmsdspi.c bcmsdspi_linux.c bcmsdh_linux.c 
 endif
 ifneq ($(findstring -gspi-,$(TARGET)-),)
 DFLAGS += -DBCMSDIO -DBCMSDIOH_SPI -DTESTDONGLE -DBCMSPI
-CFILES += dhd_sdio.c bcmsdh.c bcmspibrcm.c bcmsdspi_linux.c bcmsdh_linux.c
+CFILES += dhd_sdio.c bcmsdh.c bcmspibrcm.c bcmsdspi_linux.c bcmsdh_linux.c 
 endif
 ifneq ($(findstring -gspibcm,$(TARGET)-),)
 DFLAGS += -DBCMSDIO -DBCMSDIOH_SPI -DTESTDONGLE -DBCMSPI
@@ -432,7 +432,7 @@ ifeq ($(KERNELVER_2_5_0_OR_LATER), TRUE)
   endif
   ifneq ($(findstring -prime-,$(TARGET)-),)
       KMODULES:=bcmdhd.ko
-  endif
+  endif  
 else
   KMODULES:=$(MODULES)
 endif
@@ -471,7 +471,7 @@ TARGETS += \
 	dhd-cdc-sdstd-n2dbg-debug-nothread \
 	dhd-cdc-sdstd-debug-nothread \
 	dhd-cdc-sdstd-largemtu \
-	dhd-cdc-sdstd-debug-largemtu
+	dhd-cdc-sdstd-debug-largemtu 
 
 #ifdef RNDIS
 TARGETS += dhd-rndis-usb

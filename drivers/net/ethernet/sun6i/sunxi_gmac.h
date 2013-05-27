@@ -2,7 +2,7 @@
  * sunxi_gmac.h: SUN6I Gigabit Ethernet Driver
  *
  * Copyright © 2012, Shuge
- *		Author: shuge
+ *		Author: shuge 
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -48,7 +48,7 @@ struct gmac_plat_data {
 	unsigned int phy_mask;
 	int probed_phy_irq;
 	int clk_csr;
-
+	
 	unsigned int tx_coe;
 	int bugged_jumbo;
 	int force_sf_dma_mode;
@@ -181,3 +181,4 @@ struct gmac_priv *gmac_dvr_probe(struct device *device,
 extern struct platform_driver gmac_driver;
 extern struct platform_device gmac_device;
 #endif //__SUNXI_GMAC_H__
+

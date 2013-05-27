@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2009 Atheros Communications Inc.
  * All rights reserved.
+ * 
  *
- *
- *
+ * 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -18,7 +18,7 @@
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
 //
- *
+ * 
  */
 
 #include <stdlib.h>
@@ -49,13 +49,13 @@
 #include "pal_intf.h"
 #include "paldebug.h"
 
-void *
+void *  
 pal_init(char *if_name)
 {
     return amp_phy_init(if_name);
 }
 
-int
+int     
 pal_send_hci_cmd(void *dev, char *buf, short sz)
 {
     PAL_PRINT("PAL recv HCI cmd ->\n");
@@ -64,7 +64,7 @@ pal_send_hci_cmd(void *dev, char *buf, short sz)
     return 0;
 }
 
-int
+int     
 pal_send_acl_data_pkt(void *dev, char *buf, short sz)
 {
     PAL_PRINT("PAL recv ACL data pkt\n");
@@ -74,7 +74,7 @@ pal_send_acl_data_pkt(void *dev, char *buf, short sz)
 }
 
 
-void
+void    
 pal_evt_set_dispatcher(void *dev, evt_dispatcher fn)
 {
     AMP_DEV *pdev = (AMP_DEV *)dev;
@@ -83,9 +83,13 @@ pal_evt_set_dispatcher(void *dev, evt_dispatcher fn)
 }
 
 
-void
+void    
 pal_data_set_dispatcher(void *dev, data_rx_handler fn)
 {
     AMP_DEV *pdev = (AMP_DEV *)dev;
     pdev->pal_data_dispatcher = fn;
 }
+
+
+
+

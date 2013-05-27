@@ -10,10 +10,10 @@ struct ctp_config_info{
         int revert_y_flag;
         int exchange_x_y_flag;
         u32 irq_gpio_number;
-        u32 wakeup_gpio_number;
-#ifdef TOUCH_KEY_LIGHT_SUPPORT
+        u32 wakeup_gpio_number; 
+#ifdef TOUCH_KEY_LIGHT_SUPPORT 
         u32 key_light_gpio_number;
-#endif
+#endif             
 };
 
 enum{
@@ -23,9 +23,9 @@ enum{
         DEBUG_X_Y_INFO = 1U << 3,
         DEBUG_KEY_INFO = 1U << 4,
         DEBUG_WAKEUP_INFO = 1U << 5,
-        DEBUG_OTHERS_INFO = 1U << 6,
-
-};
+        DEBUG_OTHERS_INFO = 1U << 6, 
+                     
+}; 
 extern bool ctp_get_int_enable(u32 *enable);
 extern bool ctp_set_int_enable(u32 enable);
 extern bool ctp_get_int_port_rate(u32 *clk);
@@ -39,7 +39,7 @@ extern int  ctp_wakeup(int status,int ms);
 extern int ctp_i2c_write_bytes(struct i2c_client *client, uint8_t *data, uint16_t len);
 extern int ctp_i2c_read_bytes_addr16(struct i2c_client *client, uint8_t *buf, uint16_t len);
 extern bool ctp_i2c_test(struct i2c_client * client);
-#ifdef TOUCH_KEY_LIGHT_SUPPORT
+#ifdef TOUCH_KEY_LIGHT_SUPPORT 
 extern int ctp_key_light(int status,int ms);
 #endif
 #endif

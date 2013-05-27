@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="hif_bmi_diag_access.c" company="Atheros">
 //    Copyright (c) 2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -262,3 +262,5 @@ ar6k_FetchTargetRegs(HIF_DEVICE *hifDevice, A_UINT32 *targregs)
         targregs[i] = val;
     }
 }
+
+

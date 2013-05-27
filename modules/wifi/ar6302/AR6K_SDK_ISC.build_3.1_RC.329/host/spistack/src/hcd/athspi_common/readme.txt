@@ -11,7 +11,7 @@ The SPI host driver uses the Atheros SDIO stack to reuse some key features:
 
 The Atheros SPI host driver uses a common layer (src\hcd\athspi_common) and a hardware layer
 to form the host controller driver binary. These two layers are tightly coupled using a common device
-structure and a set of fixed functions (no callback pointers are employed).
+structure and a set of fixed functions (no callback pointers are employed). 
 
 
         -----------------------------
@@ -21,8 +21,8 @@ structure and a set of fixed functions (no callback pointers are employed).
                     |
                     v
         -----------------------------
-        | SDIO bus driver (RAW mode)|
-        -----------------------------
+        | SDIO bus driver (RAW mode)| 
+        -----------------------------          
                     ^
                     |
                     v
@@ -31,6 +31,8 @@ structure and a set of fixed functions (no callback pointers are employed).
         -----------------------------
         |    ATH-SPI HW layer       |
         -----------------------------
-
+        
 The SPI common layer handles the AR6K SPI protocol specifics and provides a interface the WLAN
-function
+function            
+
+

@@ -8,7 +8,7 @@
  * under the terms of the GNU General Public License version 2 as published by
  * the Free Software Foundation.
  */
-
+ 
 /* The following architectures are known to be CORTEX_A9 */
 #if defined(CONFIG_ARCH_SUN6I) || defined(CONFIG_ARCH_SUN7I)
 #define CORTEX_A7
@@ -33,11 +33,11 @@ struct saved_context {
 	/* CR1 */
 #ifdef CORTEX_A8
 	__u32 cr;		/* Control */
-	__u32 acr;	/* Auxiliary Control Register*/
+	__u32 acr;	/* Auxiliary Control Register*/	
 	__u32 cacr;	/* Coprocessor Access Control */
-	__u32 sccfgr;	/* Secure Config Register*/
+	__u32 sccfgr;	/* Secure Config Register*/	
 	__u32 scdbgenblr;	/* Secure Debug Enable Register*/
-	__u32 nonscacctrlr;/* Nonsecure Access Control Register*/
+	__u32 nonscacctrlr;/* Nonsecure Access Control Register*/		
 #elif defined(CORTEX_A9)
 	__u32 cr;
 	__u32 actlr;
@@ -46,9 +46,9 @@ struct saved_context {
 	__u32 vcr;
 #elif defined(CORTEX_A7)
 	__u32 cr;		/* Control */
-	__u32 acr;	/* Auxiliary Control Register*/
+	__u32 acr;	/* Auxiliary Control Register*/	
 	__u32 cacr;	/* Coprocessor Access Control */
-	__u32 sccfgr;	/* Secure Config Register*/
+	__u32 sccfgr;	/* Secure Config Register*/	
 	__u32 scdbgenblr;	/* Secure Debug Enable Register*/
 	__u32 nonscacctrlr;/* Nonsecure Access Control Register*/
 #endif
@@ -93,7 +93,7 @@ struct saved_context {
 
 #endif
 
-	/* CR10 */
+	/* CR10 */	
 #ifdef CORTEX_A8
 	__u32 d_tlblr;	/* Data TLB Lockdown Register */
 	__u32 i_tlblr;	/* Instruction TLB Lockdown Register */
@@ -101,7 +101,7 @@ struct saved_context {
 #endif
 	__u32 prrr;	/* Primary Region Remap Register */
 	__u32 nrrr;	/* Normal Memory Remap Register */
-
+	
 	/* CR11 */
 #ifdef CORTEX_A8
 	__u32 pleuar;	/* PLE User Accessibility */
@@ -116,7 +116,7 @@ struct saved_context {
 	/* CR12 */
 #ifdef CORTEX_A8
 	__u32 snsvbar;	/* Secure or Nonsecure Vector Base Address */
-	__u32 monvecbar; /*Monitor Vector Base*/
+	__u32 monvecbar; /*Monitor Vector Base*/	
 #elif defined(CORTEX_A9)
 	__u32 vbar;
 	__u32 mvbar;
@@ -133,7 +133,7 @@ struct saved_context {
 	__u32 urwtpid;	/* User read/write Thread and Process ID */
 	__u32 urotpid;	/* User read-only Thread and Process ID */
 	__u32 potpid;	/* Privileged only Thread and Process ID */
-
+	
 	/* CR15 */
 #ifdef CORTEX_A9
 	__u32 mtlbar;

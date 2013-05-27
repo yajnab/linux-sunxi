@@ -10,7 +10,7 @@
 *
 * Author 		: javen
 *
-* Description 	: dmaæ“ä½œ
+* Description 	: dma²Ù×÷
 *
 * Notes         :
 *
@@ -24,17 +24,17 @@
 #define  __SW_HCD_DMA_H__
 
 //---------------------------------------------------------------
-//  æ•°æ®ç»“æž„ å®šä¹‰
+//  Êý¾Ý½á¹¹ ¶¨Òå
 //---------------------------------------------------------------
 typedef struct sw_hcd_dma{
 	char name[32];
 	//struct sw_dma_client dma_client;
 
-	int dma_hdle;	/* dma å¥æŸ„ */
+	int dma_hdle;	/* dma ¾ä±ú */
 }sw_hcd_dma_t;
 
 //---------------------------------------------------------------
-//  å® å®šä¹‰
+//  ºê ¶¨Òå
 //---------------------------------------------------------------
 #ifdef SW_HCD_DMA
 #define  is_hcd_support_dma(usbc_no)    (usbc_no == 0)
@@ -42,13 +42,13 @@ typedef struct sw_hcd_dma{
 #define  is_hcd_support_dma(usbc_no)    0
 #endif
 
-/* ä½¿ç”¨DMAçš„æ¡ä»¶: 1ã€å¤§äºŽæ•´åŒ…  2ã€DMAç©ºé—² 3ã€éžep0 */
+/* Ê¹ÓÃDMAµÄÌõ¼þ: 1¡¢´óÓÚÕû°ü  2¡¢DMA¿ÕÏÐ 3¡¢·Çep0 */
 #define  is_sw_hcd_dma_capable(usbc_no, len, maxpacket, epnum)	(is_hcd_support_dma(usbc_no) \
-									 && (len > maxpacket) \
-									 && epnum)
+        	                                             		 && (len > maxpacket) \
+        	                                             		 && epnum)
 
 //---------------------------------------------------------------
-//  å‡½æ•° å®šä¹‰
+//  º¯Êý ¶¨Òå
 //---------------------------------------------------------------
 void sw_hcd_switch_bus_to_dma(struct sw_hcd_qh *qh, u32 is_in);
 void sw_hcd_switch_bus_to_pio(struct sw_hcd_qh *qh, __u32 is_in);
@@ -64,3 +64,5 @@ __s32 sw_hcd_dma_probe(struct sw_hcd *sw_hcd);
 __s32 sw_hcd_dma_remove(struct sw_hcd *sw_hcd);
 
 #endif   //__SW_HCD_DMA_H__
+
+

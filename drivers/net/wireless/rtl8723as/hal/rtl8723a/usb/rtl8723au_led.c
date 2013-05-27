@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
- *
+ *                                        
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -31,7 +31,7 @@
 //================================================================================
 
 //================================================================================
-// LED_819xUsb routines.
+// LED_819xUsb routines. 
 //================================================================================
 
 //
@@ -40,7 +40,7 @@
 //
 void
 SwLedOn(
-	_adapter			*padapter,
+	_adapter			*padapter, 
 	PLED_871x		pLed
 )
 {
@@ -53,7 +53,7 @@ SwLedOn(
 	}
 
 	pLed->bLedOn = _TRUE;
-
+	
 }
 
 
@@ -63,21 +63,21 @@ SwLedOn(
 //
 void
 SwLedOff(
-	_adapter			*padapter,
+	_adapter			*padapter, 
 	PLED_871x		pLed
 )
 {
 	u8	LedCfg;
 	//HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
 
-	if((padapter->bSurpriseRemoved == _TRUE) || ( padapter->bDriverStopped == _TRUE))
+	if((padapter->bSurpriseRemoved == _TRUE) || ( padapter->bDriverStopped == _TRUE))	
 	{
 		goto exit;
 	}
 
 exit:
 	pLed->bLedOn = _FALSE;
-
+	
 }
 
 //================================================================================
@@ -121,3 +121,4 @@ rtl8192cu_DeInitSwLeds(
 	DeInitLed871x( &(ledpriv->SwLed0) );
 	DeInitLed871x( &(ledpriv->SwLed1) );
 }
+

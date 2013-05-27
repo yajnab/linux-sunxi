@@ -1,9 +1,9 @@
 /*
  * Copyright (C) 2012 ARM Limited. All rights reserved.
- *
+ * 
  * This program is free software and is provided to you under the terms of the GNU General Public License version 2
  * as published by the Free Software Foundation, and any use by you of this program is subject to the terms of such GNU licence.
- *
+ * 
  * A copy of the licence is included with the program, and can also be obtained from Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
@@ -13,7 +13,7 @@
 
 MALI_EXPORT struct mali_sw_counters* _mali_sw_counters_alloc()
 {
-	/* just return an NULL'ed memory block.
+	/* just return an NULL'ed memory block. 
 	 * No special initialization needed. */
 	return _mali_sys_calloc( 1, sizeof( mali_sw_counters ) );
 }
@@ -42,3 +42,5 @@ MALI_EXPORT void _mali_sw_counters_reset(struct mali_sw_counters* counters)
 	MALI_DEBUG_ASSERT_POINTER(counters);
 	_mali_sys_memset( counters, 0, sizeof( mali_sw_counters ) );
 }
+
+

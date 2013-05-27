@@ -20,6 +20,7 @@ static char* wifi_mod[] = {" ",
 	"rtl8192cu",  /* 5 - RTL8192CU*/
 	"rtl8188eu",  /* 6 - RTL8188EU*/
 	"ap6210",     /* 7 - AP6210*/
+	"ap6330",     /* 8 - AP6330*/
 };
 
 int wifi_pm_get_mod_type(void)
@@ -36,12 +37,12 @@ EXPORT_SYMBOL(wifi_pm_get_mod_type);
 
 int wifi_pm_gpio_ctrl(char* name, int level)
 {
-	struct wifi_pm_ops *ops = &wifi_select_pm_ops;
-	if (ops->wifi_used.val && ops->gpio_ctrl)
-		return ops->gpio_ctrl(name, level);
-	else {
-		wifi_pm_msg("No select wifi, please check your config !!\n");
-		return -1;
+	struct wifi_pm_ops *ops = &wifi_select_pm_ops;	
+	if (ops->wifi_used.val && ops->gpio_ctrl)		
+		return ops->gpio_ctrl(name, level);	
+	else {		
+		wifi_pm_msg("No select wifi, please check your config !!\n");		
+		return -1;	
 	}
 }
 EXPORT_SYMBOL(wifi_pm_gpio_ctrl);
@@ -77,13 +78,13 @@ static int wifi_pm_power_ctrl(struct file *file, const char __user *buffer, unsi
 {
     struct wifi_pm_ops *ops = (struct wifi_pm_ops *)data;
     int power = simple_strtoul(buffer, NULL, 10);
-
+    
     power = power ? 1 : 0;
     if (ops->power)
         ops->power(1, &power);
     else
         wifi_pm_msg("No power control for %s\n", ops->mod_name);
-    return sizeof(power);
+    return sizeof(power);	
 }
 
 static inline void awwifi_procfs_attach(void)
@@ -140,19 +141,20 @@ static int wifi_pm_get_res(void)
 		wifi_pm_msg("failed to fetch sdio card's sdcid\n");
 		return -1;
 	}
-
+	
 	type = script_get_item(wifi_para, "wifi_usbc_id", &ops->usb_id);
 	if (SCIRPT_ITEM_VALUE_TYPE_INT != type) {
 		wifi_pm_msg("failed to fetch usb's id\n");
 		return -1;
-	}
+	}	
 
 	type = script_get_item(wifi_para, "wifi_mod_sel", &ops->module_sel);
 	if (SCIRPT_ITEM_VALUE_TYPE_INT != type) {
 		wifi_pm_msg("failed to fetch sdio module select\n");
 		return -1;
-	}
+	}	
 	ops->mod_name = wifi_mod[ops->module_sel.val];
+	
 	printk("[wifi]: select wifi: %s !!\n", wifi_mod[ops->module_sel.val]);
 
 	return 0;
@@ -182,6 +184,7 @@ static int __devinit wifi_pm_probe(struct platform_device *pdev)
 			rtl8188eu_gpio_init();
 			break;
 		case 7: /* AP6210 */
+		case 8: /* AP6330 */
 			ap6xxx_gpio_init();
             break;
 		default:
@@ -264,3 +267,4 @@ static void __exit wifi_pm_exit(void)
 
 module_init(wifi_pm_init);
 module_exit(wifi_pm_exit);
+

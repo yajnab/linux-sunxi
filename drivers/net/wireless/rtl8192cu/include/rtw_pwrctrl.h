@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
- *
+ *                                        
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -21,7 +21,7 @@
 #define __RTW_PWRCTRL_H_
 
 #include <drv_conf.h>
-#include <osdep_service.h>
+#include <osdep_service.h>		
 #include <drv_types.h>
 
 #ifdef CONFIG_HAS_EARLYSUSPEND
@@ -29,13 +29,13 @@
 #endif //CONFIG_HAS_EARLYSUSPEND
 
 
-#define FW_PWR0	0
+#define FW_PWR0	0	
 #define FW_PWR1 	1
 #define FW_PWR2 	2
 #define FW_PWR3 	3
 
 
-#define HW_PWR0	7
+#define HW_PWR0	7	
 #define HW_PWR1 	6
 #define HW_PWR2 	2
 #define HW_PWR3	0
@@ -108,7 +108,7 @@ struct reportpwrstate_parm {
 	unsigned char mode;
 	unsigned char state; //the CPWM value
 	unsigned short rsvd;
-};
+}; 
 
 
 typedef _sema _pwrlock;
@@ -179,7 +179,7 @@ enum _PS_BBRegBackup_ {
 enum { // for ips_mode
 	IPS_NONE=0,
 	IPS_NORMAL,
-	IPS_LEVEL_2,
+	IPS_LEVEL_2,	
 };
 
 struct pwrctrl_priv
@@ -206,7 +206,7 @@ struct pwrctrl_priv
 
 #ifdef CONFIG_PCI_HCI
 	//just for PCIE ASPM
-	u8	b_support_aspm; // If it supports ASPM, Offset[560h] = 0x40, otherwise Offset[560h] = 0x00.
+	u8	b_support_aspm; // If it supports ASPM, Offset[560h] = 0x40, otherwise Offset[560h] = 0x00. 
 	u8	b_support_backdoor;
 
 	//just for PCIE ASPM
@@ -216,7 +216,7 @@ struct pwrctrl_priv
 	uint 	ips_enter_cnts;
 	uint 	ips_leave_cnts;
 
-	u8	ips_mode;
+	u8	ips_mode; 
 	u8	ips_mode_req; // used to accept the mode setting request, will update to ipsmode later
 	uint bips_processing;
 	u32 ips_deny_time; /* will deny IPS when system time is smaller than this */
@@ -234,7 +234,7 @@ struct pwrctrl_priv
 
 	u8		bInternalAutoSuspend;
 	u8		bInSuspend;
-	u8		bSupportRemoteWakeup;
+	u8		bSupportRemoteWakeup;	
 #ifdef CONFIG_WOWLAN
 	u8		wowlan_mode;
 	u8		wowlan_pattern;
@@ -248,7 +248,7 @@ struct pwrctrl_priv
 	u8		pwr_state_check_cnts;
 
 	int 		ps_flag;
-
+	
 	rt_rf_power_state	rf_pwrstate;//cur power state
 	//rt_rf_power_state 	current_rfpwrstate;
 	rt_rf_power_state	change_rfpwrstate;
@@ -256,10 +256,10 @@ struct pwrctrl_priv
 	u8		wepkeymask;
 	u8		bHWPowerdown;//if support hw power down
 	u8		bHWPwrPindetect;
-	u8		bkeepfwalive;
+	u8		bkeepfwalive;		
 	u8		brfoffbyhw;
 	unsigned long PS_BBRegBackup[PSBBREG_TOTALCNT];
-
+	
 	#ifdef CONFIG_RESUME_IN_WORKQUEUE
 	struct workqueue_struct *rtw_workqueue;
 	_workitem resume_work;
@@ -269,12 +269,12 @@ struct pwrctrl_priv
 	struct early_suspend early_suspend;
 	u8 do_late_resume;
 	#endif //CONFIG_HAS_EARLYSUSPEND
-
+	
 	#ifdef CONFIG_ANDROID_POWER
 	android_early_suspend_t early_suspend;
 	u8 do_late_resume;
 	#endif
-
+	
 };
 
 #define rtw_get_ips_mode_req(pwrctrlpriv) \
@@ -290,7 +290,7 @@ struct pwrctrl_priv
 		/*DBG_871X("%s _rtw_set_pwr_state_check_timer(%p, %d)\n", __FUNCTION__, (pwrctrlpriv), (ms));*/ \
 		_set_timer(&(pwrctrlpriv)->pwr_state_check_timer, (ms)); \
 	} while(0)
-
+	
 #define rtw_set_pwr_state_check_timer(pwrctrlpriv) \
 	_rtw_set_pwr_state_check_timer((pwrctrlpriv), (pwrctrlpriv)->pwr_state_check_interval)
 
@@ -337,14 +337,24 @@ void rtw_resume_in_workqueue(struct pwrctrl_priv *pwrpriv);
 #endif //CONFIG_RESUME_IN_WORKQUEUE
 
 #if defined(CONFIG_HAS_EARLYSUSPEND ) || defined(CONFIG_ANDROID_POWER)
-#define rtw_is_earlysuspend_registered(pwrpriv) (pwrpriv)->early_suspend.suspend
+bool rtw_is_earlysuspend_registered(struct pwrctrl_priv *pwrpriv);
+bool rtw_is_do_late_resume(struct pwrctrl_priv *pwrpriv);
+void rtw_set_do_late_resume(struct pwrctrl_priv *pwrpriv, bool enable);
 void rtw_register_early_suspend(struct pwrctrl_priv *pwrpriv);
 void rtw_unregister_early_suspend(struct pwrctrl_priv *pwrpriv);
-#endif //CONFIG_HAS_EARLYSUSPEND || CONFIG_ANDROID_POWER
+#else
+#define rtw_is_earlysuspend_registered(pwrpriv) _FALSE
+#define rtw_is_do_late_resume(pwrpriv) _FALSE
+#define rtw_set_do_late_resume(pwrpriv, enable) do {} while (0)
+#define rtw_register_early_suspend(pwrpriv) do {} while (0)
+#define rtw_unregister_early_suspend(pwrpriv) do {} while (0)
+#endif /* CONFIG_HAS_EARLYSUSPEND || CONFIG_ANDROID_POWER */
 
 u8 rtw_interface_ps_func(_adapter *padapter,HAL_INTF_PS_FUNC efunc_id,u8* val);
+void rtw_set_ips_deny(_adapter *padapter, u32 ms);
 int _rtw_pwr_wakeup(_adapter *padapter, u32 ips_deffer_ms, const char *caller);
 #define rtw_pwr_wakeup(adapter) _rtw_pwr_wakeup(adapter, RTW_PWR_STATE_CHK_INTERVAL, __FUNCTION__)
+#define rtw_pwr_wakeup_ex(adapter, ips_deffer_ms) _rtw_pwr_wakeup(adapter, ips_deffer_ms, __FUNCTION__)
 int rtw_pm_set_ips(_adapter *padapter, u8 mode);
 int rtw_pm_set_lps(_adapter *padapter, u8 mode);
 

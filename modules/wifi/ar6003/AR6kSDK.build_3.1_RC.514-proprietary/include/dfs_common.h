@@ -51,7 +51,7 @@ PREPACK struct dfs_event_info {
     A_UINT8   rssi;       /* rssi of radar event */
     A_UINT8   dur;        /* duration of radar pulse */
     A_UINT8   chanindex;  /* Channel of event */
-    A_UINT8   flags;
+    A_UINT8   flags; 
 #define CH_TYPE_MASK 1
 #define PRIMARY_CH 0
 #define EXT_CH 1

@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="ar6k.c" company="Atheros">
 //    Copyright (c) 2007-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -65,12 +65,12 @@ void DevCleanup(AR6K_DEVICE *pDev)
         HIFDetachHTC(pDev->HIFDevice);
         pDev->HifAttached = FALSE;
     }
-
+   
     DevCleanupVirtualScatterSupport(pDev);
-
+    
     if (A_IS_MUTEX_VALID(&pDev->Lock)) {
         A_MUTEX_DELETE(&pDev->Lock);
-    }
+    }   
 }
 
 A_STATUS DevSetup(AR6K_DEVICE *pDev)
@@ -79,28 +79,28 @@ A_STATUS DevSetup(AR6K_DEVICE *pDev)
     A_STATUS status = A_OK;
     int      i;
     HTC_CALLBACKS htcCallbacks;
-
+    
     do {
-
+        
         DL_LIST_INIT(&pDev->ScatterReqHead);
            /* initialize our free list of IO packets */
         INIT_HTC_PACKET_QUEUE(&pDev->RegisterIOList);
         A_MUTEX_INIT(&pDev->Lock);
-
+               
         A_MEMZERO(&htcCallbacks, sizeof(HTC_CALLBACKS));
             /* the device layer handles these */
         htcCallbacks.rwCompletionHandler = DevRWCompletionHandler;
         htcCallbacks.dsrHandler = DevDsrHandler;
         htcCallbacks.context = pDev;
-
+        
         status = HIFAttachHTC(pDev->HIFDevice, &htcCallbacks);
-
+                
         if (A_FAILED(status)) {
-            break;
+            break;    
         }
-
+        
         pDev->HifAttached = TRUE;
-
+        
             /* get the addresses for all 4 mailboxes */
         status = HIFConfigureDevice(pDev->HIFDevice, HIF_DEVICE_GET_MBOX_ADDR,
                                     &pDev->MailBoxInfo, sizeof(pDev->MailBoxInfo));
@@ -161,20 +161,20 @@ A_STATUS DevSetup(AR6K_DEVICE *pDev)
                            sizeof(pDev->HifIRQProcessingMode));
 
         switch (pDev->HifIRQProcessingMode) {
-            case HIF_DEVICE_IRQ_SYNC_ONLY:
+            case HIF_DEVICE_IRQ_SYNC_ONLY:                
                 AR_DEBUG_PRINTF(ATH_DEBUG_INFO,("HIF Interrupt processing is SYNC ONLY\n"));
                     /* see if HIF layer wants HTC to yield */
                 HIFConfigureDevice(pDev->HIFDevice,
                                    HIF_DEVICE_GET_IRQ_YIELD_PARAMS,
                                    &pDev->HifIRQYieldParams,
                                    sizeof(pDev->HifIRQYieldParams));
-
+                                   
                 if (pDev->HifIRQYieldParams.RecvPacketYieldCount > 0) {
                     AR_DEBUG_PRINTF(ATH_DEBUG_WARN,
                         ("HIF requests that DSR yield per %d RECV packets \n",
-                        pDev->HifIRQYieldParams.RecvPacketYieldCount));
-                    pDev->DSRCanYield = TRUE;
-                }
+                        pDev->HifIRQYieldParams.RecvPacketYieldCount));   
+                    pDev->DSRCanYield = TRUE;    
+                }                              
                 break;
             case HIF_DEVICE_IRQ_ASYNC_SYNC:
                 AR_DEBUG_PRINTF(ATH_DEBUG_TRC,("HIF Interrupt processing is ASYNC and SYNC\n"));
@@ -197,9 +197,9 @@ A_STATUS DevSetup(AR6K_DEVICE *pDev)
         status = DevDisableInterrupts(pDev);
 
         if (A_FAILED(status)) {
-            break;
+            break;    
         }
-
+        
     } while (FALSE);
 
     if (A_FAILED(status)) {
@@ -548,11 +548,11 @@ void DevDumpRegisters(AR6K_DEVICE               *pDev,
             ("Rx Lookahead 0:            0x%x\n",pIrqProcRegs->rx_lookahead[0]));
         AR_DEBUG_PRINTF(ATH_DEBUG_ANY,
             ("Rx Lookahead 1:            0x%x\n",pIrqProcRegs->rx_lookahead[1]));
-
+            
         if (pDev->MailBoxInfo.GMboxAddress != 0) {
                 /* if the target supports GMBOX hardware, dump some additional state */
             AR_DEBUG_PRINTF(ATH_DEBUG_ANY,
-                ("GMBOX Host Int Status 2:   0x%x\n",pIrqProcRegs->host_int_status2));
+                ("GMBOX Host Int Status 2:   0x%x\n",pIrqProcRegs->host_int_status2));           
             AR_DEBUG_PRINTF(ATH_DEBUG_ANY,
                 ("GMBOX RX Avail:            0x%x\n",pIrqProcRegs->gmbox_rx_avail));
             AR_DEBUG_PRINTF(ATH_DEBUG_ANY,
@@ -575,9 +575,9 @@ void DevDumpRegisters(AR6K_DEVICE               *pDev,
 
 #define DEV_GET_VIRT_DMA_INFO(p)  ((DEV_SCATTER_DMA_VIRTUAL_INFO *)((p)->HIFPrivate[0]))
 
-static HIF_SCATTER_REQ *DevAllocScatterReq(HIF_DEVICE *Context)
+static HIF_SCATTER_REQ *DevAllocScatterReq(HIF_DEVICE *Context) 
 {
-    DL_LIST *pItem;
+    DL_LIST *pItem; 
     AR6K_DEVICE *pDev = (AR6K_DEVICE *)Context;
     LOCK_AR6K(pDev);
     pItem = DL_ListRemoveItemFromHead(&pDev->ScatterReqHead);
@@ -585,7 +585,7 @@ static HIF_SCATTER_REQ *DevAllocScatterReq(HIF_DEVICE *Context)
     if (pItem != NULL) {
         return A_CONTAINING_STRUCT(pItem, HIF_SCATTER_REQ, ListLink);
     }
-    return NULL;
+    return NULL;   
 }
 
 static void DevFreeScatterReq(HIF_DEVICE *Context, HIF_SCATTER_REQ *pReq)
@@ -593,7 +593,7 @@ static void DevFreeScatterReq(HIF_DEVICE *Context, HIF_SCATTER_REQ *pReq)
     AR6K_DEVICE *pDev = (AR6K_DEVICE *)Context;
     LOCK_AR6K(pDev);
     DL_ListInsertTail(&pDev->ScatterReqHead, &pReq->ListLink);
-    UNLOCK_AR6K(pDev);
+    UNLOCK_AR6K(pDev); 
 }
 
 A_STATUS DevCopyScatterListToFromDMABuffer(HIF_SCATTER_REQ *pReq, A_BOOL FromDMA)
@@ -601,38 +601,38 @@ A_STATUS DevCopyScatterListToFromDMABuffer(HIF_SCATTER_REQ *pReq, A_BOOL FromDMA
     A_UINT8         *pDMABuffer = NULL;
     int             i, remaining;
     A_UINT32        length;
-
+ 
     pDMABuffer = pReq->pScatterBounceBuffer;
-
+       
     if (pDMABuffer == NULL) {
         A_ASSERT(FALSE);
-        return A_EINVAL;
+        return A_EINVAL;   
     }
-
+    
     remaining = (int)pReq->TotalLength;
-
+    
     for (i = 0; i < pReq->ValidScatterEntries; i++) {
-
+        
         length = min((int)pReq->ScatterList[i].Length, remaining);
-
+                       
         if (length != (int)pReq->ScatterList[i].Length) {
             A_ASSERT(FALSE);
                 /* there is a problem with the scatter list */
-            return A_EINVAL;
+            return A_EINVAL;    
         }
-
+         
         if (FromDMA) {
                 /* from DMA buffer */
-            A_MEMCPY(pReq->ScatterList[i].pBuffer, pDMABuffer , length);
+            A_MEMCPY(pReq->ScatterList[i].pBuffer, pDMABuffer , length);  
         } else {
                 /* to DMA buffer */
-            A_MEMCPY(pDMABuffer, pReq->ScatterList[i].pBuffer, length);
+            A_MEMCPY(pDMABuffer, pReq->ScatterList[i].pBuffer, length);      
         }
-
+        
         pDMABuffer += length;
         remaining -= length;
     }
-
+    
     return A_OK;
 }
 
@@ -640,15 +640,15 @@ static void DevReadWriteScatterAsyncHandler(void *Context, HTC_PACKET *pPacket)
 {
     AR6K_DEVICE     *pDev = (AR6K_DEVICE *)Context;
     HIF_SCATTER_REQ *pReq = (HIF_SCATTER_REQ *)pPacket->pPktContext;
-
+    
     AR_DEBUG_PRINTF(ATH_DEBUG_RECV,("+DevReadWriteScatterAsyncHandler: (dev: 0x%lX)\n", (unsigned long)pDev));
-
+    
     pReq->CompletionStatus = pPacket->Status;
-
+    
     AR6KFreeIOPacket(pDev,pPacket);
-
+    
     pReq->CompletionRoutine(pReq);
-
+    
     AR_DEBUG_PRINTF(ATH_DEBUG_RECV,("-DevReadWriteScatterAsyncHandler \n"));
 }
 
@@ -657,48 +657,48 @@ static A_STATUS DevReadWriteScatter(HIF_DEVICE *Context, HIF_SCATTER_REQ *pReq)
     AR6K_DEVICE     *pDev = (AR6K_DEVICE *)Context;
     A_STATUS        status = A_OK;
     HTC_PACKET      *pIOPacket = NULL;
-    A_UINT32        request = pReq->Request;
-
-    do {
-
+    A_UINT32        request = pReq->Request; 
+    
+    do {    
+        
         if (pReq->TotalLength > AR6K_MAX_TRANSFER_SIZE_PER_SCATTER) {
             AR_DEBUG_PRINTF(ATH_DEBUG_ERR,
                             ("Invalid length: %d \n", pReq->TotalLength));
-            break;
+            break;          
         }
-
+        
         if (pReq->TotalLength == 0) {
             A_ASSERT(FALSE);
-            break;
+            break;    
         }
-
-        if (request & HIF_ASYNCHRONOUS) {
+                
+        if (request & HIF_ASYNCHRONOUS) {           
                 /* use an I/O packet to carry this request */
-            pIOPacket = AR6KAllocIOPacket(pDev);
+            pIOPacket = AR6KAllocIOPacket(pDev);    
             if (NULL == pIOPacket) {
                 status = A_NO_MEMORY;
                 break;
             }
-
+            
                 /* save the request */
-            pIOPacket->pPktContext = pReq;
+            pIOPacket->pPktContext = pReq;  
                 /* stick in our completion routine when the I/O operation completes */
             pIOPacket->Completion = DevReadWriteScatterAsyncHandler;
             pIOPacket->pContext = pDev;
         }
 
-        if (request & HIF_WRITE) {
+        if (request & HIF_WRITE) { 
             /* in virtual DMA, we are issuing the requests through the legacy HIFReadWrite API
              * this API will adjust the address automatically for the last byte to fall on the mailbox
              * EOM. */
-
+             
             /* if the address is an extended address, we can adjust the address here since the extended
-             * address will bypass the normal checks in legacy HIF layers */
+             * address will bypass the normal checks in legacy HIF layers */ 
             if (pReq->Address == pDev->MailBoxInfo.MboxProp[HTC_MAILBOX].ExtendedAddress) {
-                pReq->Address += pDev->MailBoxInfo.MboxProp[HTC_MAILBOX].ExtendedSize - pReq->TotalLength;
-            }
+                pReq->Address += pDev->MailBoxInfo.MboxProp[HTC_MAILBOX].ExtendedSize - pReq->TotalLength;         
+            }    
         }
-
+        
             /* use legacy readwrite */
         status = HIFReadWrite(pDev->HIFDevice,
                               pReq->Address,
@@ -706,18 +706,18 @@ static A_STATUS DevReadWriteScatter(HIF_DEVICE *Context, HIF_SCATTER_REQ *pReq)
                               pReq->TotalLength,
                               request,
                               (request & HIF_ASYNCHRONOUS) ? pIOPacket : NULL);
-
+    
     } while (FALSE);
-
+    
     if ((status != A_PENDING) && A_FAILED(status) && (request & HIF_ASYNCHRONOUS)) {
         if (pIOPacket != NULL) {
-            AR6KFreeIOPacket(pDev,pIOPacket);
-        }
+            AR6KFreeIOPacket(pDev,pIOPacket);    
+        } 
         pReq->CompletionStatus = status;
         pReq->CompletionRoutine(pReq);
         status = A_OK;
     }
-
+    
     return status;
 }
 
@@ -725,17 +725,17 @@ static A_STATUS DevReadWriteScatter(HIF_DEVICE *Context, HIF_SCATTER_REQ *pReq)
 static void DevCleanupVirtualScatterSupport(AR6K_DEVICE *pDev)
 {
     HIF_SCATTER_REQ *pReq;
-
+    
     while (1) {
         pReq = DevAllocScatterReq((HIF_DEVICE *)pDev);
         if (NULL == pReq) {
-            break;
-        }
-        A_FREE(pReq);
+            break;    
+        } 
+        A_FREE(pReq);   
     }
-
+    
 }
-
+   
     /* function to set up virtual scatter support if HIF layer has not implemented the interface */
 static A_STATUS DevSetupVirtualScatterSupport(AR6K_DEVICE *pDev)
 {
@@ -744,36 +744,36 @@ static A_STATUS DevSetupVirtualScatterSupport(AR6K_DEVICE *pDev)
     int                          i;
     DEV_SCATTER_DMA_VIRTUAL_INFO *pVirtualInfo;
     HIF_SCATTER_REQ              *pReq;
-
-    bufferSize = sizeof(DEV_SCATTER_DMA_VIRTUAL_INFO) +
+    
+    bufferSize = sizeof(DEV_SCATTER_DMA_VIRTUAL_INFO) + 
                 2 * (A_GET_CACHE_LINE_BYTES()) + AR6K_MAX_TRANSFER_SIZE_PER_SCATTER;
-
-    sgreqSize = sizeof(HIF_SCATTER_REQ) +
+    
+    sgreqSize = sizeof(HIF_SCATTER_REQ) + 
                     (AR6K_SCATTER_ENTRIES_PER_REQ - 1) * (sizeof(HIF_SCATTER_ITEM));
-
+    
     for (i = 0; i < AR6K_SCATTER_REQS; i++) {
-            /* allocate the scatter request, buffer info and the actual virtual buffer itself */
+            /* allocate the scatter request, buffer info and the actual virtual buffer itself */            
         pReq = (HIF_SCATTER_REQ *)A_MALLOC_NOWAIT(sgreqSize + bufferSize);
-
+        
         if (NULL == pReq) {
             AR_DEBUG_PRINTF(ATH_DEBUG_ERR, ("%s: Alloc HIF_SCATTER_REQ fail with NOWAIT func. Try wait version\n", __FUNCTION__));
             pReq = (HIF_SCATTER_REQ *)A_MALLOC(sgreqSize + bufferSize);
         }
         if (NULL == pReq) {
             status = A_NO_MEMORY;
-            break;
+            break;    
         }
-
+        
         A_MEMZERO(pReq, sgreqSize);
-
+        
             /* the virtual DMA starts after the scatter request struct */
         pVirtualInfo = (DEV_SCATTER_DMA_VIRTUAL_INFO *)((A_UINT8 *)pReq + sgreqSize);
         A_MEMZERO(pVirtualInfo, sizeof(DEV_SCATTER_DMA_VIRTUAL_INFO));
-
+            
         pVirtualInfo->pVirtDmaBuffer = &pVirtualInfo->DataArea[0];
             /* align buffer to cache line in case host controller can actually DMA this */
         pVirtualInfo->pVirtDmaBuffer = A_ALIGN_TO_CACHE_LINE(pVirtualInfo->pVirtDmaBuffer);
-            /* store the structure in the private area */
+            /* store the structure in the private area */ 
         pReq->HIFPrivate[0] = pVirtualInfo;
             /* we emulate a DMA bounce interface */
         pReq->ScatterMethod = HIF_SCATTER_DMA_BOUNCE;
@@ -781,19 +781,19 @@ static A_STATUS DevSetupVirtualScatterSupport(AR6K_DEVICE *pDev)
             /* free request to the list */
         DevFreeScatterReq((HIF_DEVICE *)pDev,pReq);
     }
-
+    
     if (A_FAILED(status)) {
-        DevCleanupVirtualScatterSupport(pDev);
-    } else {
+        DevCleanupVirtualScatterSupport(pDev);    
+    } else {   
         pDev->HifScatterInfo.pAllocateReqFunc = DevAllocScatterReq;
         pDev->HifScatterInfo.pFreeReqFunc = DevFreeScatterReq;
-        pDev->HifScatterInfo.pReadWriteScatterFunc = DevReadWriteScatter;
+        pDev->HifScatterInfo.pReadWriteScatterFunc = DevReadWriteScatter;   
         pDev->HifScatterInfo.MaxScatterEntries = AR6K_SCATTER_ENTRIES_PER_REQ;
-        pDev->HifScatterInfo.MaxTransferSizePerScatterReq = AR6K_MAX_TRANSFER_SIZE_PER_SCATTER;
-        pDev->ScatterIsVirtual = TRUE;
-    }
-
-    return status;
+        pDev->HifScatterInfo.MaxTransferSizePerScatterReq = AR6K_MAX_TRANSFER_SIZE_PER_SCATTER;   
+        pDev->ScatterIsVirtual = TRUE; 
+    }   
+    
+    return status;    
 }
 
 A_STATUS DevCleanupMsgBundling(AR6K_DEVICE *pDev)
@@ -810,97 +810,97 @@ A_STATUS DevCleanupMsgBundling(AR6K_DEVICE *pDev)
 
 A_STATUS DevSetupMsgBundling(AR6K_DEVICE *pDev, int MaxMsgsPerTransfer)
 {
-    A_STATUS status;
-
+    A_STATUS status;    
+    
     if (pDev->MailBoxInfo.Flags & HIF_MBOX_FLAG_NO_BUNDLING) {
-        AR_DEBUG_PRINTF(ATH_DEBUG_WARN, ("HIF requires bundling disabled\n"));
-        return A_ENOTSUP;
+        AR_DEBUG_PRINTF(ATH_DEBUG_WARN, ("HIF requires bundling disabled\n"));     
+        return A_ENOTSUP;    
     }
-
-    status = HIFConfigureDevice(pDev->HIFDevice,
+    
+    status = HIFConfigureDevice(pDev->HIFDevice, 
                                 HIF_CONFIGURE_QUERY_SCATTER_REQUEST_SUPPORT,
-                                &pDev->HifScatterInfo,
+                                &pDev->HifScatterInfo, 
                                 sizeof(pDev->HifScatterInfo));
 
     if (A_FAILED(status)) {
         AR_DEBUG_PRINTF(ATH_DEBUG_WARN,
             ("AR6K: ** HIF layer does not support scatter requests (%d) \n",status));
-
+        
             /* we can try to use a virtual DMA scatter mechanism using legacy HIFReadWrite() */
-        status = DevSetupVirtualScatterSupport(pDev);
-
+        status = DevSetupVirtualScatterSupport(pDev);  
+        
         if (A_SUCCESS(status)) {
              AR_DEBUG_PRINTF(ATH_DEBUG_INFO,
                 ("AR6K: virtual scatter transfers enabled (max scatter items:%d: maxlen:%d) \n",
-                    DEV_GET_MAX_MSG_PER_BUNDLE(pDev), DEV_GET_MAX_BUNDLE_LENGTH(pDev)));
-        }
-
+                    DEV_GET_MAX_MSG_PER_BUNDLE(pDev), DEV_GET_MAX_BUNDLE_LENGTH(pDev)));      
+        } 
+        
     } else {
         AR_DEBUG_PRINTF(ATH_DEBUG_INFO,
             ("AR6K: HIF layer supports scatter requests (max scatter items:%d: maxlen:%d) \n",
-                    DEV_GET_MAX_MSG_PER_BUNDLE(pDev), DEV_GET_MAX_BUNDLE_LENGTH(pDev)));
+                    DEV_GET_MAX_MSG_PER_BUNDLE(pDev), DEV_GET_MAX_BUNDLE_LENGTH(pDev)));    
     }
-
+    
     if (A_SUCCESS(status)) {
             /* for the recv path, the maximum number of bytes per recv bundle is just limited
              * by the maximum transfer size at the HIF layer */
         pDev->MaxRecvBundleSize = pDev->HifScatterInfo.MaxTransferSizePerScatterReq;
-
+        
             /* for the send path, the max transfer size is limited by the existence and size of
              * the extended mailbox address range */
         if (pDev->MailBoxInfo.MboxProp[0].ExtendedAddress != 0) {
-            pDev->MaxSendBundleSize = pDev->MailBoxInfo.MboxProp[0].ExtendedSize;
+            pDev->MaxSendBundleSize = pDev->MailBoxInfo.MboxProp[0].ExtendedSize; 
         } else {
                 /* legacy */
-            pDev->MaxSendBundleSize = AR6K_LEGACY_MAX_WRITE_LENGTH;
+            pDev->MaxSendBundleSize = AR6K_LEGACY_MAX_WRITE_LENGTH;   
         }
-
+        
         if (pDev->MaxSendBundleSize > pDev->HifScatterInfo.MaxTransferSizePerScatterReq) {
                 /* limit send bundle size to what the HIF can support for scatter requests */
-            pDev->MaxSendBundleSize = pDev->HifScatterInfo.MaxTransferSizePerScatterReq;
+            pDev->MaxSendBundleSize = pDev->HifScatterInfo.MaxTransferSizePerScatterReq;    
         }
-
+        
         AR_DEBUG_PRINTF(ATH_DEBUG_INFO,
             ("AR6K: max recv: %d max send: %d \n",
-                    DEV_GET_MAX_BUNDLE_RECV_LENGTH(pDev), DEV_GET_MAX_BUNDLE_SEND_LENGTH(pDev)));
-
-    }
-    return status;
+                    DEV_GET_MAX_BUNDLE_RECV_LENGTH(pDev), DEV_GET_MAX_BUNDLE_SEND_LENGTH(pDev)));   
+                        
+    }  
+    return status;        
 }
 
-A_STATUS DevSubmitScatterRequest(AR6K_DEVICE *pDev, HIF_SCATTER_REQ *pScatterReq, A_BOOL Read, A_BOOL Async)
-{
+A_STATUS DevSubmitScatterRequest(AR6K_DEVICE *pDev, HIF_SCATTER_REQ *pScatterReq, A_BOOL Read, A_BOOL Async)                            
+{   
     A_STATUS status;
-
+                                                                                                                    
     if (Read) {
             /* read operation */
         pScatterReq->Request = (Async) ? HIF_RD_ASYNC_BLOCK_FIX : HIF_RD_SYNC_BLOCK_FIX;
-        pScatterReq->Address = pDev->MailBoxInfo.MboxAddresses[HTC_MAILBOX];
-        A_ASSERT(pScatterReq->TotalLength <= (A_UINT32)DEV_GET_MAX_BUNDLE_RECV_LENGTH(pDev));
+        pScatterReq->Address = pDev->MailBoxInfo.MboxAddresses[HTC_MAILBOX];    
+        A_ASSERT(pScatterReq->TotalLength <= (A_UINT32)DEV_GET_MAX_BUNDLE_RECV_LENGTH(pDev));                  
     } else {
         A_UINT32 mailboxWidth;
-
+        
             /* write operation */
         pScatterReq->Request = (Async) ? HIF_WR_ASYNC_BLOCK_INC : HIF_WR_SYNC_BLOCK_INC;
-        A_ASSERT(pScatterReq->TotalLength <= (A_UINT32)DEV_GET_MAX_BUNDLE_SEND_LENGTH(pDev));
+        A_ASSERT(pScatterReq->TotalLength <= (A_UINT32)DEV_GET_MAX_BUNDLE_SEND_LENGTH(pDev));   
         if (pScatterReq->TotalLength > AR6K_LEGACY_MAX_WRITE_LENGTH) {
                 /* for large writes use the extended address */
-            pScatterReq->Address = pDev->MailBoxInfo.MboxProp[HTC_MAILBOX].ExtendedAddress;
+            pScatterReq->Address = pDev->MailBoxInfo.MboxProp[HTC_MAILBOX].ExtendedAddress;  
             mailboxWidth = pDev->MailBoxInfo.MboxProp[HTC_MAILBOX].ExtendedSize;
         } else {
-            pScatterReq->Address = pDev->MailBoxInfo.MboxAddresses[HTC_MAILBOX];
-            mailboxWidth = AR6K_LEGACY_MAX_WRITE_LENGTH;
+            pScatterReq->Address = pDev->MailBoxInfo.MboxAddresses[HTC_MAILBOX];    
+            mailboxWidth = AR6K_LEGACY_MAX_WRITE_LENGTH; 
         }
-
+        
         if (!pDev->ScatterIsVirtual) {
             /* we are passing this scatter list down to the HIF layer' scatter request handler, fixup the address
              * so that the last byte falls on the EOM, we do this for those HIFs that support the
              * scatter API */
-            pScatterReq->Address += (mailboxWidth - pScatterReq->TotalLength);
+            pScatterReq->Address += (mailboxWidth - pScatterReq->TotalLength);         
         }
-
+                    
     }
-
+    
     AR_DEBUG_PRINTF(ATH_DEBUG_RECV | ATH_DEBUG_SEND,
                 ("DevSubmitScatterRequest, Entries: %d, Total Length: %d Mbox:0x%X (mode: %s : %s)\n",
                 pScatterReq->ValidScatterEntries,
@@ -908,30 +908,30 @@ A_STATUS DevSubmitScatterRequest(AR6K_DEVICE *pDev, HIF_SCATTER_REQ *pScatterReq
                 pScatterReq->Address,
                 Async ? "ASYNC" : "SYNC",
                 (Read) ? "RD" : "WR"));
-
+    
     status = DEV_PREPARE_SCATTER_OPERATION(pScatterReq);
-
+    
     if (A_FAILED(status)) {
         if (Async) {
             pScatterReq->CompletionStatus = status;
             pScatterReq->CompletionRoutine(pScatterReq);
-            return A_OK;
+            return A_OK; 
         }
-        return status;
+        return status;    
     }
-
+                
     status = pDev->HifScatterInfo.pReadWriteScatterFunc(pDev->ScatterIsVirtual ? pDev : pDev->HIFDevice,
-                                                        pScatterReq);
+                                                        pScatterReq); 
     if (!Async) {
             /* in sync mode, we can touch the scatter request */
         pScatterReq->CompletionStatus = status;
-        DEV_FINISH_SCATTER_OPERATION(pScatterReq);
+        DEV_FINISH_SCATTER_OPERATION(pScatterReq);       
     } else {
         if (status == A_PENDING) {
-            status = A_OK;
-        }
+            status = A_OK;    
+        }    
     }
-
+    
     return status;
 }
 
@@ -1458,3 +1458,6 @@ A_STATUS DoMboxHWTest(AR6K_DEVICE *pDev)
     return A_ERROR;
 }
 #endif
+
+
+

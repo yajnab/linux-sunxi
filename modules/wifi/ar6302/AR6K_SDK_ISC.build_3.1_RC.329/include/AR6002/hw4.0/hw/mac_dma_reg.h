@@ -1,7 +1,7 @@
 //
 // Copyright (c) 2002-2009 Atheros Communications Inc.
 // All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -48,7 +48,7 @@
 #define MAC_DMA_CFG_CLK_GATE_DIS_MASK            0x00000400 /* Clock gating disable  */
 
 #define MAC_DMA_MIRT_ADDRESS                     0x00000020 /* Maximum rate threshold register */
-#define MAC_DMA_MIRT_THRESH_MASK                 0x0000FFFF
+#define MAC_DMA_MIRT_THRESH_MASK                 0x0000FFFF 
 
 #define MAC_DMA_IER_ADDRESS                      0x00000024  /* MAC Interrupt enable register */
 #define MAC_DMA_IER_ENABLE_MASK                  0x00000001 /* Global interrupt enable */
@@ -217,7 +217,7 @@
 #define MAC_DMA_ISR_S5_QUIET_TIMER_TRIGGER_MASK  0x00000040
 #define MAC_DMA_ISR_S5_NDP_TIMER_TRIGGER_MASK    0x00000080
 #define MAC_DMA_ISR_S5_GENERIC_TIMER2_TRIGGER_MASK 0x0000FF00
-#define MAC_DMA_ISR_S5_GENERIC_TIMER2_TRIGGER_LSB 8
+#define MAC_DMA_ISR_S5_GENERIC_TIMER2_TRIGGER_LSB 8 
 #define MAC_DMA_ISR_S5_GENERIC_TIMER2_TRIGGER(_i) (0x00000100 << (_i))
 #define MAC_DMA_ISR_S5_TIMER_OVERFLOW_MASK       0x00010000
 #define MAC_DMA_ISR_S5_DBA_TIMER_THRESHOLD_MASK  0x00020000
@@ -228,7 +228,7 @@
 #define MAC_DMA_ISR_S5_QUIET_TIMER_THRESHOLD_MASK 0x00400000
 #define MAC_DMA_ISR_S5_NDP_TIMER_THRESHOLD_MASK   0x00800000
 #define MAC_DMA_IMR_S5_GENERIC_TIMER2_THRESHOLD_MASK 0xFF000000
-#define MAC_DMA_IMR_S5_GENERIC_TIMER2_THRESHOLD_LSB  24
+#define MAC_DMA_IMR_S5_GENERIC_TIMER2_THRESHOLD_LSB  24 
 #define MAC_DMA_IMR_S5_GENERIC_TIMER2_THRESHOLD(_i) (0x01000000 << (_i))
 
 #define MAC_DMA_IMR_ADDRESS                      0x000000A0  /* MAC Primary interrupt mask register */
@@ -312,7 +312,7 @@
 #define MAC_DMA_IMR_S3_ADDRESS                   0x000000B0  /* MAC Secondary interrupt mask register 3 */
 #define MAC_DMA_IMR_S3_QCU_QCBROVF_MASK          0x000003FF /* Mask for QCBROVF (QCU 0-9) */
 #define MAC_DMA_IMR_S3_QCU_QCBRURN_MASK          0x03FF0000 /* Mask for QCBRURN (QCU 0-9) */
-#define MAC_DMA_IMR_S3_QCU_QCBRURN_LSB           16
+#define MAC_DMA_IMR_S3_QCU_QCBRURN_LSB           16 
 
 #define MAC_DMA_IMR_S4_ADDRESS                   0x000000B4  /* MAC Secondary interrupt mask register 4 */
 #define MAC_DMA_IMR_S4_QCU_QTRIG_MASK            0x000003FF /* Mask for QTRIG (QCU 0-9) */
@@ -327,7 +327,7 @@
 #define MAC_DMA_IMR_S5_QUIET_TIMER_TRIGGER_MASK  0x00000040
 #define MAC_DMA_IMR_S5_NDP_TIMER_TRIGGER_MASK    0x00000080
 #define MAC_DMA_IMR_S5_GENERIC_TIMER2_TRIGGER_MASK 0x0000FF00
-#define MAC_DMA_IMR_S5_GENERIC_TIMER2_TRIGGER_LSB 8
+#define MAC_DMA_IMR_S5_GENERIC_TIMER2_TRIGGER_LSB 8 
 #define MAC_DMA_IMR_S5_GENERIC_TIMER2_TRIGGER(_i)    (0x100 << (_i))
 #define MAC_DMA_IMR_S5_TIMER_OVERFLOW_MASK       0x00010000
 #define MAC_DMA_IMR_S5_DBA_TIMER_THRESHOLD_MASK  0x00020000
@@ -338,7 +338,7 @@
 #define MAC_DMA_IMR_S5_QUIET_TIMER_THRESHOLD_MASK 0000400000
 #define MAC_DMA_IMR_S5_NDP_TIMER_THRESHOLD_MASK  0x00800000
 #define MAC_DMA_IMR_S5_GENERIC_TIMER2_THRESHOLD_MASK 0xFF000000
-#define MAC_DMA_IMR_S5_GENERIC_TIMER2_THRESHOLD_LSB  24
+#define MAC_DMA_IMR_S5_GENERIC_TIMER2_THRESHOLD_LSB  24 
 #define MAC_DMA_IMR_S5_GENERIC_TIMER2_THRESHOLD(_i) (0x01000000 << (_i))
 
 #define MAC_DMA_ISR_RAC_ADDRESS                  0x000000C0  /* ISR read-and-clear access */

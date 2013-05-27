@@ -331,32 +331,34 @@ static void twi_set_gpio_sysconfig(struct sun7i_i2c *i2c)
 {
 	int cnt, i;
 	char twi_para[16] = {0};
+	char twi_used[16] = {0};
 	script_item_u used, *list = NULL;
 	script_item_value_type_e type;
 
 	sprintf(twi_para, "twi%d_para", i2c->bus_num);
-	type = script_get_item(twi_para, "twi_used", &used);
+	sprintf(twi_used, "twi%d_used", i2c->bus_num);
+	type = script_get_item(twi_para,twi_used, &used);
 	if (SCIRPT_ITEM_VALUE_TYPE_INT != type) {
 		I2C_ERR("[i2c%d] twi_used err!\n", i2c->bus_num);
 		return;
 	}
 
 	if (1 == used.val) {
-		/* èŽ·å–gpio list */
+		/* »ñÈ¡gpio list */
 		cnt = script_get_pio_list(twi_para, &list);
 		if (0 == cnt) {
 			I2C_ERR("[i2c%d] get gpio list failed\n", i2c->bus_num);
 			return;
 		}
 
-		/* ç”³è¯·gpio */
+		/* ÉêÇëgpio */
 		for (i = 0; i < cnt; i++)
 			if (0 != gpio_request(list[i].gpio.gpio, NULL)){
-			        I2C_ERR("[i2c%d] gpio_request i:%d, gpio:%d failed\n", i, list[i].gpio.gpio);
+			        I2C_ERR("[i2c%d] gpio_request i:%d, gpio:%d failed\n", i2c->bus_num, i, list[i].gpio.gpio);
 				goto end;
 			}
 
-		/* é…ç½®gpio list */
+		/* ÅäÖÃgpio list */
 		if (0 != sw_gpio_setall_range(&list[0].gpio, cnt))
 			I2C_ERR("[i2c%d] sw_gpio_setall_range failed\n", i2c->bus_num);
 	}
@@ -364,7 +366,7 @@ static void twi_set_gpio_sysconfig(struct sun7i_i2c *i2c)
 	return;
 
 end:
-	/* é‡Šæ”¾gpio */
+	/* ÊÍ·Ågpio */
 	while (i--)
 		gpio_free(list[i].gpio.gpio);
 }
@@ -590,7 +592,7 @@ static void twi_enable_lcr(void *base_addr, unsigned int sda_scl)
 {
         unsigned int reg_val = readl(base_addr + TWI_LCR_REG);
         sda_scl &= 0x01;
-
+        
         if(sda_scl) {
                 reg_val |= TWI_LCR_SCL_EN;/* enable scl line control */
         } else {
@@ -604,7 +606,7 @@ static void twi_disable_lcr(void *base_addr, unsigned int sda_scl)
 {
         unsigned int reg_val = readl(base_addr + TWI_LCR_REG);
         sda_scl &= 0x01;
-
+        
         if(sda_scl) {
                 reg_val &= ~TWI_LCR_SCL_EN;/* disable scl line control */
         } else {
@@ -656,7 +658,7 @@ static int twi_send_clk_9pulse(void *base_addr, int bus_num)
 *  FunctionName:           sun7i_i2c_addr_byte
 *
 *  Description:
-*            å‘é€slaveåœ°å€ï¼Œ7bitçš„å…¨éƒ¨ä¿¡æ¯ï¼ŒåŠ10bitçš„ç¬¬ä¸€éƒ¨åˆ†åœ°å€ã€‚ä¾›å¤–éƒ¨æŽ¥å£è°ƒç”¨ï¼Œå†…éƒ¨å®žçŽ°ã€‚
+*            ·¢ËÍslaveµØÖ·£¬7bitµÄÈ«²¿ÐÅÏ¢£¬¼°10bitµÄµÚÒ»²¿·ÖµØÖ·¡£¹©Íâ²¿½Ó¿Úµ÷ÓÃ£¬ÄÚ²¿ÊµÏÖ¡£
 *         7bits addr: 7-1bits addr+0 bit r/w
 *         10bits addr: 1111_11xx_xxxx_xxxx-->1111_0xx_rw,xxxx_xxxx
 *         send the 7 bits addr,or the first part of 10 bits addr
@@ -664,7 +666,7 @@ static int twi_send_clk_9pulse(void *base_addr, int bus_num)
 *
 *
 *  Return value:
-*           æ— 
+*           ÎÞ
 *  Notes:
 *
 ****************************************************************************************************
@@ -770,13 +772,13 @@ static int sun7i_i2c_core_process(struct sun7i_i2c *i2c)
 
 		i2c->msg_idx++; /* the other msg */
 		i2c->msg_ptr = 0;
-
+		
 		if (i2c->msg_idx == i2c->msg_num) {
 			err_code = SUN7I_I2C_OK;/* Success,wakeup */
 			goto ok_out;
 		} else if(i2c->msg_idx < i2c->msg_num) {/* for restart pattern */
 			ret = twi_restart(base_addr, i2c->bus_num);/* read spec, two msgs */
-
+			
 			if(ret == SUN7I_I2C_FAIL) {
 				err_code = SUN7I_I2C_SFAIL;
 				goto err_out;/* START can't sendout */
@@ -1032,7 +1034,7 @@ static int sun7i_i2c_clk_init(struct sun7i_i2c *i2c)
 		I2C_ERR("[i2c%d] enable apb_twi clock failed!\n", i2c->bus_num);
 		return -1;
 	}
-
+	
 	if (clk_enable(i2c->mclk)) {
 		I2C_ERR("[i2c%d] enable mod_twi clock failed!\n", i2c->bus_num);
 		return -1;
@@ -1202,11 +1204,11 @@ static int sun7i_i2c_probe(struct platform_device *pdev)
 	i2c->adap.timeout = 5*HZ;
 	i2c->adap.class   = I2C_CLASS_HWMON | I2C_CLASS_SPD;
 	i2c->bus_freq     = pdata->frequency;
-	i2c->irq 		  = irq;
+	i2c->irq 	  = irq;
 	i2c->bus_num      = pdata->bus_num;
 	i2c->status       = I2C_XFER_IDLE;
 	i2c->suspended    = 0;
-
+	
 	spin_lock_init(&i2c->lock);
 	init_waitqueue_head(&i2c->wait);
 
@@ -1365,6 +1367,16 @@ static int sun7i_i2c_suspend(struct device *dev)
 	struct platform_device *pdev = to_platform_device(dev);
 	struct sun7i_i2c *i2c = platform_get_drvdata(pdev);
 	int count = 10;
+	
+	i2c->suspended = 1;
+	/*
+	 * twi0 is for power, it will be accessed by axp driver
+	 * before twi resume, so, don't suspend twi0
+	 */
+	if(0 == i2c->bus_num) {
+		i2c->suspended = 0;
+		return 0;
+	}
 
 	while ((i2c->status != I2C_XFER_IDLE) && (count-- > 0)) {
 		I2C_ERR("[i2c%d] suspend while xfer,dev addr = 0x%x\n",
@@ -1372,7 +1384,7 @@ static int sun7i_i2c_suspend(struct device *dev)
 		msleep(100);
 	}
 
-	i2c->suspended = 1;
+	
 	if(sun7i_i2c_clk_exit(i2c)) {
 		I2C_ERR("[i2c%d] suspend failed.. \n", i2c->bus_num);
 		i2c->suspended = 0;
@@ -1389,6 +1401,10 @@ static int sun7i_i2c_resume(struct device *dev)
 #ifndef CONFIG_AW_FPGA_PLATFORM
 	struct platform_device *pdev = to_platform_device(dev);
 	struct sun7i_i2c *i2c = platform_get_drvdata(pdev);
+	
+	if(0 == i2c->bus_num) {
+		return 0;
+	}
 
 	i2c->suspended = 0;
 
@@ -1462,10 +1478,10 @@ static struct resource sun7i_twi1_resources[] = {
 		.start	= TWI1_BASE_ADDR_START,
 		.end	= TWI1_BASE_ADDR_END,
 		.flags	= IORESOURCE_MEM,
-	},
+	}, 
 	{
-		.start	= 34,
-		.end	= 34,
+		.start	= AW_IRQ_TWI1,
+		.end	= AW_IRQ_TWI1,
 		.flags	= IORESOURCE_IRQ,
 	},
 };
@@ -1473,7 +1489,7 @@ static struct resource sun7i_twi1_resources[] = {
 static struct sun7i_i2c_platform_data sun7i_twi1_pdata[] = {
 	{
 		.bus_num   = 1,
-	        .frequency = TWI1_TRANSFER_SPEED,
+    	        .frequency = TWI1_TRANSFER_SPEED,
 	},
 };
 
@@ -1504,7 +1520,7 @@ static struct resource sun7i_twi2_resources[] = {
 static struct sun7i_i2c_platform_data sun7i_twi2_pdata[] = {
 	{
 		.bus_num   = 2,
-	        .frequency = TWI2_TRANSFER_SPEED,
+    	        .frequency = TWI2_TRANSFER_SPEED,
 	},
 };
 
@@ -1518,11 +1534,74 @@ struct platform_device sun7i_twi2_device = {
 	},
 };
 
+/* twi3 */
+static struct resource sun7i_twi3_resources[] = {
+	{
+		.start	= TWI3_BASE_ADDR_START,
+		.end	= TWI3_BASE_ADDR_END,
+		.flags	= IORESOURCE_MEM,
+	},
+        {
+		 .start	= AW_IRQ_TWI3,
+		 .end	= AW_IRQ_TWI3,
+		 .flags	= IORESOURCE_IRQ,
+	 },
+};
+
+static struct sun7i_i2c_platform_data sun7i_twi3_pdata[] = {
+	{
+		.bus_num   = 3,
+    	        .frequency = TWI3_TRANSFER_SPEED,
+	},
+};
+
+struct platform_device sun7i_twi3_device = {
+	.name		= "sun7i-i2c",
+	.id             = 3,
+	.resource	= sun7i_twi3_resources,
+	.num_resources	= ARRAY_SIZE(sun7i_twi3_resources),
+	.dev = {
+		.platform_data = sun7i_twi3_pdata,
+	},
+};
+
+/* twi4 */
+static struct resource sun7i_twi4_resources[] = {
+	{
+		.start	= TWI4_BASE_ADDR_START,
+		.end	= TWI4_BASE_ADDR_END,
+		.flags	= IORESOURCE_MEM,
+	},
+        {
+		 .start	= AW_IRQ_TWI4,
+		 .end	= AW_IRQ_TWI4,
+		 .flags	= IORESOURCE_IRQ,
+	 },
+};
+
+static struct sun7i_i2c_platform_data sun7i_twi4_pdata[] = {
+	{
+		.bus_num   = 4,
+    	        .frequency = TWI4_TRANSFER_SPEED,
+	},
+};
+
+struct platform_device sun7i_twi4_device = {
+	.name		= "sun7i-i2c",
+	.id             = 4,
+	.resource	= sun7i_twi4_resources,
+	.num_resources	= ARRAY_SIZE(sun7i_twi4_resources),
+	.dev = {
+		.platform_data = sun7i_twi4_pdata,
+	},
+};
+
 #ifndef CONFIG_AW_FPGA_PLATFORM
 #define TWI0_USED_MASK 0x1
 #define TWI1_USED_MASK 0x2
 #define TWI2_USED_MASK 0x4
-//#define TWI3_USED_MASK 0x8
+#define TWI3_USED_MASK 0x8
+#define TWI4_USED_MASK 0x10
 static int twi_used_mask = 0;
 
 static int __init sun7i_i2c_adap_init(void)
@@ -1531,16 +1610,18 @@ static int __init sun7i_i2c_adap_init(void)
         script_item_value_type_e type;
         int i = 0;
         char twi_para[16] = {0};
+        char twi_used[16] = {0};
 
-        for (i=0; i<4; i++) {
+        for (i=0; i < TWI_MODULE_NUM; i++) {
                 sprintf(twi_para, "twi%d_para", i);
-		type = script_get_item(twi_para, "twi_used", &used);
-
+                sprintf(twi_used, "twi%d_used", i);
+		type = script_get_item(twi_para, twi_used, &used);
+		        
 		if (SCIRPT_ITEM_VALUE_TYPE_INT != type) {
 		        I2C_ERR("[i2c%d] fetch para from sysconfig failed\n", i);
 			continue;
 		}
-
+                
                 if (used.val)
                         twi_used_mask |= 1 << i;
         }
@@ -1554,6 +1635,11 @@ static int __init sun7i_i2c_adap_init(void)
         if (twi_used_mask & TWI2_USED_MASK)
                 platform_device_register(&sun7i_twi2_device);
 
+        if (twi_used_mask & TWI3_USED_MASK)
+                platform_device_register(&sun7i_twi3_device);
+                
+        if (twi_used_mask & TWI4_USED_MASK)
+                platform_device_register(&sun7i_twi4_device);
 
         if (twi_used_mask)
                 return platform_driver_register(&sun7i_i2c_driver);
@@ -1589,3 +1675,4 @@ MODULE_LICENSE("GPL");
 MODULE_ALIAS("platform:sun7i-i2c");
 MODULE_DESCRIPTION("SUN7I I2C Bus Driver");
 MODULE_AUTHOR("pannan");
+

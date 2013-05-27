@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="sdio_lib_os.c" company="Atheros">
 //    Copyright (c) 2007-2008 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -23,10 +23,10 @@
 /* debug level for this module*/
 #define DBG_DECLARE 4;
 #include "../../include/ctsystem.h"
-
+ 
 #include <linux/module.h>
 #include <linux/init.h>
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,0)
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,0)   
 #include <linux/kthread.h>
 #endif
 
@@ -48,12 +48,12 @@ SDIO_STATUS SDLIB_IssueConfig(PSDDEVICE        pDevice,
                               INT              Length)
 {
     return _SDLIB_IssueConfig(pDevice,Command,pData,Length);
-}
-
+}   
+  
 void SDLIB_PrintBuffer(PUCHAR pBuffer,INT Length,PTEXT pDescription)
 {
-    _SDLIB_PrintBuffer(pBuffer,Length,pDescription);
-}
+    _SDLIB_PrintBuffer(pBuffer,Length,pDescription);   
+} 
 
 
 /* helper function launcher */
@@ -62,7 +62,7 @@ INT HelperLaunch(PVOID pContext)
     INT exit;
         /* call function */
     exit = ((POSKERNEL_HELPER)pContext)->pHelperFunc((POSKERNEL_HELPER)pContext);
-    complete_and_exit(&((POSKERNEL_HELPER)pContext)->Completion, exit);
+    complete_and_exit(&((POSKERNEL_HELPER)pContext)->Completion, exit);    
     return exit;
 }
 
@@ -70,20 +70,20 @@ INT HelperLaunch(PVOID pContext)
  * OSCreateHelper - create a worker kernel thread
 */
 SDIO_STATUS SDLIB_OSCreateHelper(POSKERNEL_HELPER pHelper,
-                           PHELPER_FUNCTION pFunction,
+                           PHELPER_FUNCTION pFunction, 
                            PVOID            pContext)
 {
     SDIO_STATUS status = SDIO_STATUS_SUCCESS;
-
-    memset(pHelper,0,sizeof(OSKERNEL_HELPER));
-
+    
+    memset(pHelper,0,sizeof(OSKERNEL_HELPER));  
+    
     do {
         pHelper->pContext = pContext;
         pHelper->pHelperFunc = pFunction;
         status = SignalInitialize(&pHelper->WakeSignal);
         if (!SDIO_SUCCESS(status)) {
-            break;
-        }
+            break; 
+        }    
         init_completion(&pHelper->Completion);
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,0)
         pHelper->pTask = kthread_create(HelperLaunch,
@@ -91,55 +91,55 @@ SDIO_STATUS SDLIB_OSCreateHelper(POSKERNEL_HELPER pHelper,
                                        "SDIO Helper");
         if (NULL == pHelper->pTask) {
             status = SDIO_STATUS_NO_RESOURCES;
-            break;
+            break;  
         }
         wake_up_process(pHelper->pTask);
-#else
-    /* 2.4 */
+#else 
+    /* 2.4 */       
         pHelper->pTask = kernel_thread(HelperLaunch,
                                        (PVOID)pHelper,
                                        (CLONE_FS | CLONE_FILES | SIGCHLD));
         if (pHelper->pTask < 0) {
-            DBG_PRINT(SDDBG_TRACE,
+            DBG_PRINT(SDDBG_TRACE, 
                 ("SDIO BusDriver - OSCreateHelper, failed to create thread\n"));
-        }
+        }        
 #endif
 
     } while (FALSE);
-
+    
     if (!SDIO_SUCCESS(status)) {
-        SDLIB_OSDeleteHelper(pHelper);
+        SDLIB_OSDeleteHelper(pHelper);   
     }
     return status;
 }
-
+                           
 /*
  * OSDeleteHelper - delete thread created with OSCreateHelper
 */
 void SDLIB_OSDeleteHelper(POSKERNEL_HELPER pHelper)
 {
-
+ 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,0)
     if (pHelper->pTask != NULL) {
-#else
-    /* 2.4 */
+#else 
+    /* 2.4 */       
     if (pHelper->pTask >= 0) {
-#endif
-        pHelper->ShutDown = TRUE;
-        SignalSet(&pHelper->WakeSignal);
+#endif        
+        pHelper->ShutDown = TRUE;       
+        SignalSet(&pHelper->WakeSignal); 
             /* wait for thread to exit */
-        wait_for_completion(&pHelper->Completion);
+        wait_for_completion(&pHelper->Completion);  
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,0)
         pHelper->pTask = NULL;
-#else
-    /* 2.4 */
+#else 
+    /* 2.4 */       
         pHelper->pTask = 0;
-#endif
-    }
-
+#endif        
+    }  
+    
     SignalDelete(&pHelper->WakeSignal);
 }
-
+                          
 /*
  * module init
 */
@@ -158,7 +158,7 @@ static void __exit sdio_lib_cleanup(void) {
 PSDMESSAGE_QUEUE SDLIB_CreateMessageQueue(INT MaxMessages, INT MaxMessageLength)
 {
     return _CreateMessageQueue(MaxMessages,MaxMessageLength);
-
+  
 }
 void SDLIB_DeleteMessageQueue(PSDMESSAGE_QUEUE pQueue)
 {

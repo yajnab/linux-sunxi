@@ -2,13 +2,13 @@
  * Linux Cfg80211 support
  *
  * Copyright (C) 1999-2010, Broadcom Corporation
- *
+ * 
  *      Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- *
+ * 
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -16,7 +16,7 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- *
+ * 
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
@@ -146,13 +146,13 @@ static int32 wl_notify_mic_status(struct wl_priv *wl, struct net_device *ndev,
 	const wl_event_msg_t *e, void* data);
 
 /*
-** register/deregister sdio function
+** register/deregister sdio function 
 */
 static struct sdio_func *wl_sdio_func(void);
 static void wl_clear_sdio_func(void);
 
 /*
-** ioctl utilites
+** ioctl utilites 
 */
 static int32 wl_dev_bufvar_get(struct net_device *dev, int8 *name, int8 *buf, int32 buf_len);
 static __used int32 wl_dev_bufvar_set(struct net_device *dev, int8 *name, int8 *buf, int32 len);
@@ -162,7 +162,7 @@ static int32 wl_dev_ioctl(struct net_device *dev, uint32 cmd, void *arg, uint32 
 
 
 /*
-** cfg80211 set_wiphy_params utilities
+** cfg80211 set_wiphy_params utilities 
 */
 static int32 wl_set_frag(struct net_device *dev, uint32 frag_threshold);
 static int32 wl_set_rts(struct net_device *dev, uint32 frag_threshold);
@@ -177,7 +177,7 @@ static void wl_init_prof(struct wl_profile *prof);
 
 
 /*
-** cfg80211 connect utilites
+** cfg80211 connect utilites 
 */
 static int32 wl_set_wpa_version(struct net_device *dev, struct cfg80211_connect_params *sme);
 static int32 wl_set_auth_type(struct net_device *dev, struct cfg80211_connect_params *sme);
@@ -187,8 +187,8 @@ static int32 wl_set_set_sharedkey(struct net_device *dev, struct cfg80211_connec
 static int32 wl_get_assoc_ies(struct wl_priv *wl);
 
 
-/*
-** information element utilities
+/* 
+** information element utilities 
 */
 static void wl_rst_ie(struct wl_priv *wl);
 static int32 wl_add_ie(struct wl_priv *wl, uint8 t, uint8 l, uint8 *v);
@@ -211,7 +211,7 @@ static int32 wl_add_keyext(struct wiphy *wiphy, struct net_device *dev,
 
 
 /*
-** key indianess swap utilities
+** key indianess swap utilities 
 */
 static void swap_key_from_BE(struct wl_wsec_key *key);
 static void swap_key_to_BE(struct wl_wsec_key *key);
@@ -225,7 +225,7 @@ static void wl_deinit_priv_mem(struct wl_priv *wl);
 
 static void wl_delay(uint32 ms);
 
-/*
+/* 
 ** store/restore cfg80211 instance data
 */
 static void wl_set_drvdata(struct wl_dev *dev, void *data);
@@ -237,8 +237,8 @@ static void *wl_get_drvdata(struct wl_dev *dev);
 static bool wl_is_ibssmode(struct wl_priv *wl);
 static bool wl_is_ibssstarter(struct wl_priv *wl);
 
-/*
-** dongle up/down , default configuration utilities
+/* 
+** dongle up/down , default configuration utilities 
 */
 static bool wl_is_linkdown(struct wl_priv *wl, const wl_event_msg_t *e);
 static bool wl_is_linkup(struct wl_priv *wl, const wl_event_msg_t *e);
@@ -271,7 +271,7 @@ static int32 wl_update_wiphybands(struct wl_priv *wl);
 static int32 wl_config_dongle(struct wl_priv *wl, bool need_lock);
 
 /*
-** iscan handler
+** iscan handler 
 */
 static void wl_iscan_timer(ulong data);
 static void wl_term_iscan(struct wl_priv *wl);
@@ -300,7 +300,7 @@ static int32 wl_iscan_aborted(struct wl_priv *wl);
 static void wl_init_fw(struct wl_fw_ctrl *fw);
 
 /*
-* find most significant bit set
+* find most significant bit set 
 */
 static __used uint32 wl_find_msb(uint16 bit16);
 
@@ -781,8 +781,8 @@ __wl_cfg80211_scan(struct wiphy *wiphy, struct net_device *ndev,
 		ssids = request->ssids;
 		n_ssids = min(request->n_ssids, WL_NUM_SCAN_MAX);
 		if (wl->iscan_on && n_ssids && !ssids->ssid_len) { /* for specific scan,
-								* ssids->ssid_len has
-								* non-zero(ssid string) length.
+								* ssids->ssid_len has 
+								* non-zero(ssid string) length.  
 								* Otherwise this is 0.
 								* we do not iscan for
 								* specific scan request
@@ -1059,7 +1059,7 @@ wl_cfg80211_join_ibss(struct wiphy *wiphy, struct net_device *dev,
 	if ((chan = params->channel)) {
 		wl->channel = ieee80211_frequency_to_channel(chan->center_freq);
 	}
-	/*
+	/* 
 	** Join with specific BSSID and cached SSID
 	** If SSID is zero join based on BSSID only
 	*/
@@ -1408,7 +1408,7 @@ wl_cfg80211_connect(struct wiphy *wiphy, struct net_device *dev,
 		return err;
 	}
 	wl_update_prof(wl, NULL, sme->bssid, WL_PROF_BSSID);
-	/*
+	/* 
 	**  Join with specific BSSID and cached SSID
 	**  If SSID is zero join based on BSSID only
 	 */
@@ -1770,7 +1770,7 @@ wl_cfg80211_del_key(struct wiphy *wiphy, struct net_device *dev,
 
 	key.index = (uint32)key_idx;
 	key.flags = WL_PRIMARY_KEY;
-	key.algo = CRYPTO_ALGO_OFF;
+	key.algo = CRYPTO_ALGO_OFF; 
 
 	WL_DBG(("key index (%d)\n", key_idx));
 	/* Set the new key/index */
@@ -2400,7 +2400,7 @@ wl_alloc_wdev(int32 sizeof_iface, struct device *dev)
 	wdev->wiphy->interface_modes = BIT(NL80211_IFTYPE_STATION)| BIT(NL80211_IFTYPE_ADHOC);
 	wdev->wiphy->bands[IEEE80211_BAND_2GHZ] = &__wl_band_2ghz;
 	wdev->wiphy->bands[IEEE80211_BAND_5GHZ] = &__wl_band_5ghz_a;	/* Set it as 11a by default.
-								** This will be updated with
+								** This will be updated with 
 								** 11n phy tables in "ifconfig up"
 								** if phy has 11n capability
 								*/
@@ -2410,8 +2410,8 @@ wl_alloc_wdev(int32 sizeof_iface, struct device *dev)
 #ifndef WL_POWERSAVE_DISABLED
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 33)) || \
 	defined(CHROMIUMOS_COMPAT_WIRELESS)
-	wdev->wiphy->flags |= WIPHY_FLAG_PS_ON_BY_DEFAULT; /* enable power
-							* save mode by default
+	wdev->wiphy->flags |= WIPHY_FLAG_PS_ON_BY_DEFAULT; /* enable power 
+							* save mode by default 
 							*/
 #else
 	wdev->wiphy->ps_default = TRUE;	/* enable power save mode by default */
@@ -3586,7 +3586,7 @@ wl_flush_eq(struct wl_priv *wl)
 	wl_unlock_eq(wl);
 }
 
-/*
+/* 
 * retrieve first queued event from head
 */
 

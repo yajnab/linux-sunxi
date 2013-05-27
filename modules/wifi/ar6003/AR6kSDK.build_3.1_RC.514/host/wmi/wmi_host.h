@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="wmi_host.h" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -55,7 +55,7 @@ typedef struct sq_threshold_params_s {
 
 /*
  * Virtual device specific wmi_t data structure
- */
+ */ 
 
 struct wmi_t {
     void                           *wmi_devt;
@@ -77,7 +77,7 @@ struct wmi_t {
 
 /*
  * Virtual device independent wmi data structure
- */
+ */ 
 
 struct wmi_priv_t {
     A_BOOL                          wmi_ready;

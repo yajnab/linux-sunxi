@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="sdio_lib.h" company="Atheros">
 //    Copyright (c) 2007-2008 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -27,7 +27,7 @@
 #include "wince\sdio_lib_wince.h"
 #endif /* WINCE */
 
-
+        
     /* a message block */
 typedef struct _SDMESSAGE_BLOCK {
     SDLIST  SDList;                   /* list entry */
@@ -42,12 +42,12 @@ typedef struct _SDMESSAGE_QUEUE {
     SDLIST          FreeMessageList;    /* free message list */
     INT             MaxMessageLength;   /* max message block length */
 }SDMESSAGE_QUEUE, *PSDMESSAGE_QUEUE;
-
+                   
 SDIO_STATUS _SDLIB_IssueConfig(PSDDEVICE        pDevice,
                                SDCONFIG_COMMAND Command,
                                PVOID            pData,
-                               INT              Length);
-void _SDLIB_PrintBuffer(PUCHAR pBuffer, INT Length,PTEXT pDescription);
+                               INT              Length);                                  
+void _SDLIB_PrintBuffer(PUCHAR pBuffer, INT Length,PTEXT pDescription);  
 
 PSDMESSAGE_QUEUE _CreateMessageQueue(INT MaxMessages, INT MaxMessageLength);
 void _DeleteMessageQueue(PSDMESSAGE_QUEUE pQueue);
@@ -64,13 +64,13 @@ SDIO_STATUS _GetMessage(PSDMESSAGE_QUEUE pQueue, PVOID pData, INT *pBufferLength
 #define SDLIB_PrintBuffer           _SDLIB_PrintBuffer
 #else
 
-
+                        
 SDIO_STATUS SDLIB_IssueConfig(PSDDEVICE        pDevice,
                               SDCONFIG_COMMAND Command,
                               PVOID            pData,
-                              INT              Length);
-
-void SDLIB_PrintBuffer(PUCHAR pBuffer, INT Length,PTEXT pDescription);
+                              INT              Length); 
+                                   
+void SDLIB_PrintBuffer(PUCHAR pBuffer, INT Length,PTEXT pDescription);                  
 
 PSDMESSAGE_QUEUE SDLIB_CreateMessageQueue(INT MaxMessages, INT MaxMessageLength);
 
@@ -83,24 +83,24 @@ SDIO_STATUS SDLIB_GetMessage(PSDMESSAGE_QUEUE pQueue, PVOID pData, INT *pBufferL
 
 
 SDIO_STATUS SDLIB_OSCreateHelper(POSKERNEL_HELPER pHelper,
-                           PHELPER_FUNCTION pFunction,
-                           PVOID            pContext);
+                           PHELPER_FUNCTION pFunction, 
+                           PVOID            pContext);                            
 
 void SDLIB_OSDeleteHelper(POSKERNEL_HELPER pHelper);
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @function: Check message queue is empty
-
+  
   @function name: SDLIB_IsQueueEmpty
   @prototype: BOOL SDLIB_IsQueueEmpty(PSDMESSAGE_QUEUE pQueue)
   @category: Support_Reference
-
+  
   @input: pQueue - message queue to check
 
   @return: TRUE if empty else false
-
-  @see also: SDLIB_CreateMessageQueue
-
+            
+  @see also: SDLIB_CreateMessageQueue 
+         
   @example: Check message queue :
               if (SDLIB_IsQueueEmpty(pInstance->pQueue)) {
                    .. message queue is empty
@@ -113,5 +113,5 @@ static INLINE BOOL SDLIB_IsQueueEmpty(PSDMESSAGE_QUEUE pQueue) {
 
 void SDLIB_Init(void);
 void SDLIB_Cleanup(void);
-
+       
 #endif /* __SDIO_LIB_H___*/

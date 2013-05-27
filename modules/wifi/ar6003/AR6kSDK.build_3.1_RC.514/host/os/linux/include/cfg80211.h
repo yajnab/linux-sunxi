@@ -2,7 +2,7 @@
 // Copyright (c) 2004-2010 Atheros Communications Inc.
 // All rights reserved.
 //
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -42,3 +42,9 @@ void ar6k_cfg80211_disconnect_event(AR_SOFTC_DEV_T *arPriv, A_UINT8 reason,
 void ar6k_cfg80211_tkip_micerr_event(AR_SOFTC_DEV_T *arPriv, A_UINT8 keyid, A_BOOL ismcast);
 
 #endif /* _AR6K_CFG80211_H_ */
+
+
+
+
+
+

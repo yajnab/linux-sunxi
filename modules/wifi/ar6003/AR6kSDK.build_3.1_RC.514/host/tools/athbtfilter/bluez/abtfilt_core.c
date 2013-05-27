@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="abtfilt_core.c" company="Atheros">
 //    Copyright (c) 2011 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -54,32 +54,32 @@ static void AthFilterCmdEventsCallback(void *pContext,
                                        ATHBT_HCI_CTRL_TYPE Type,
                                        unsigned char *pBuffer, int Length);
 static void AthFilterIndicateStateCallback(void *pContext,
-                                           ATHBT_STATE_INDICATION Indication,
-                                           ATHBT_STATE State,
+                                           ATHBT_STATE_INDICATION Indication, 
+                                           ATHBT_STATE State, 
                                            unsigned char LMPVersion);
 static void AthFilterAclDataOutCallback(void *pContext,
                                         unsigned char *pBuffer, int Length);
-static void AthFilterAclDataInCallback(void *pContext,
+static void AthFilterAclDataInCallback(void *pContext, 
                                        unsigned char *pBuffer, int Length);
-static void ProcessBTActionMessages(ATHBT_FILTER_INFO      *pInfo,
+static void ProcessBTActionMessages(ATHBT_FILTER_INFO      *pInfo, 
                                     BTACTION_QUEUE_PROC    Process,
                                     ATHBT_STATE_INDICATION StateToFlush);
-static void ExecuteBtAction(ATHBT_FILTER_INFO *pInfo,
+static void ExecuteBtAction(ATHBT_FILTER_INFO *pInfo, 
                             BT_ACTION_MSG *pBtActionMsg);
-static ATHBT_STATE_INDICATION IndicateA2DP(ATHBT_FILTER_INFO *pInfo ,
+static ATHBT_STATE_INDICATION IndicateA2DP(ATHBT_FILTER_INFO *pInfo , 
                                            ATHBT_STATE_INDICATION Indication,
                                            ATHBT_STATE State,
                                            unsigned char *pACLBuffer);
 static void *FilterThread(void *arg);
 static void SyncBTState(ATHBT_FILTER_INFO *pInfo);
-static void ProcessActionOverride(ATHBT_FILTER_INFO *pInfo,
-                                  A_CHAR            *pIndicationStr,
+static void ProcessActionOverride(ATHBT_FILTER_INFO *pInfo, 
+                                  A_CHAR            *pIndicationStr, 
                                   A_CHAR            *pModifyAction,
                                   A_CHAR            *pAction);
 static void GetActionStringOverrides(ATHBT_FILTER_INFO *pInfo);
 
 /* APIs exported to other modules */
-void
+void 
 AthBtFilter_State_Off(ATHBT_FILTER_INFO *pInfo)
 {
             /*
@@ -120,7 +120,7 @@ AthBtFilter_State_Off(ATHBT_FILTER_INFO *pInfo)
                                         ATH_BT_NOOP);
             }
 
-
+       
 }
 
 int
@@ -266,7 +266,7 @@ AthBtFilter_Detach(ATH_BT_FILTER_INSTANCE *pInstance)
     pInstance->FilterEnabled = FALSE;
 
     if (NULL == pInfo) {
-        return;
+        return;    
     }
 
     pInfo->Shutdown = TRUE;
@@ -275,7 +275,7 @@ AthBtFilter_Detach(ATH_BT_FILTER_INSTANCE *pInstance)
     A_MUTEX_LOCK(&pInfo->hWakeEventLock);
     A_COND_SIGNAL(&pInfo->hWakeEvent);
     A_MUTEX_UNLOCK(&pInfo->hWakeEventLock);
-
+   
     if (pInfo->FilterThreadValid) {
         pInfo->FilterThreadValid = FALSE;
             /* wait for thread to exit */
@@ -354,13 +354,13 @@ AdjustBtControlAction(ATHBT_FILTER_INFO      *pInfo,
                     pA2dpPspollConfig->a2dpWlanMaxDur = 30;
                     pA2dpOptModeConfig->a2dpMaxAggrSize = 1;
                     pA2dpOptModeConfig->a2dpMinlowRateMbps =52;
-		    pA2dpPspollConfig->a2dpDataRespTimeout = 10;
+            	    pA2dpPspollConfig->a2dpDataRespTimeout = 10;
                     pA2dpPspollConfig->a2dpMinBurstCnt = 4;
                     break;
                 case 3: // 2.0
                 case 4: // 2.1
                 default:
-		    pA2dpPspollConfig->a2dpDataRespTimeout = 20;
+            	    pA2dpPspollConfig->a2dpDataRespTimeout = 20;
                     pA2dpPspollConfig->a2dpWlanMaxDur = 50;
                     pA2dpOptModeConfig->a2dpMaxAggrSize = 16;
                     pA2dpOptModeConfig->a2dpMinlowRateMbps =36;
@@ -371,7 +371,7 @@ AdjustBtControlAction(ATHBT_FILTER_INFO      *pInfo,
                     pA2dpPspollConfig->a2dpMinBurstCnt = 2;
                    }
 
-
+                    
 #else
                     pA2dpPspollConfig->a2dpMinBurstCnt = 2;
 
@@ -398,7 +398,7 @@ AdjustBtControlAction(ATHBT_FILTER_INFO      *pInfo,
             pA2dpOptModeConfig->a2dpHighPktRatio = 5;
             pA2dpOptModeConfig->a2dpPktStompCnt = 6;
 	  /* Continuation of addressing EV#80876 and EV#80859. Disabling OPT mode always as
-	   * device is forced to SLAVE */
+	   * device is forced to SLAVE */  
 	    pA2dpGenericConfig->a2dpFlags &= ~A2DP_CONFIG_ALLOW_OPTIMIZATION;
 
             A_DEBUG(("ATHBT: BT PARAMS A2DP Adjustments :\r\n"));
@@ -436,7 +436,7 @@ AdjustBtControlAction(ATHBT_FILTER_INFO      *pInfo,
                                             &pScoParamsCmd->scoPspollConfig;
             BTCOEX_OPTMODE_SCO_CONFIG * pScoOptModeConfig =
                                             &pScoParamsCmd->scoOptModeConfig;
-            BTCOEX_WLANSCAN_SCO_CONFIG * pScoWlanScanConfig =
+            BTCOEX_WLANSCAN_SCO_CONFIG * pScoWlanScanConfig = 
                                             &pScoParamsCmd->scoWlanScanConfig;
 
             pScoGenericConfig->scoFlags = 0;
@@ -519,7 +519,7 @@ AdjustBtControlAction(ATHBT_FILTER_INFO      *pInfo,
                 pScoGenericConfig->scoSlots);
              A_DEBUG(("    noIdleSlots              : %d \n"),
                 pScoGenericConfig->scoIdleSlots);
-	    A_DEBUG((" scoFlags                      : %d \n"),
+     	    A_DEBUG((" scoFlags                      : %d \n"),
                 pScoGenericConfig->scoFlags);
 
              pScoOptModeConfig->scoStompCntIn100ms = 3;
@@ -851,29 +851,29 @@ AthFilterCmdEventsCallback(void *pContext, ATHBT_HCI_CTRL_TYPE Type,
                     pInfo->SCOConnectInfo.Valid = TRUE;
                 } else {
                     /* disconnected, invalidate */
-                    pInfo->SCOConnectInfo.Valid = FALSE;
-                }
+                    pInfo->SCOConnectInfo.Valid = FALSE; 
+                }             
             }
         }
     }
-
+    
     A_UNLOCK_FILTER(pInfo);
-
+    
     if (indication == ATH_BT_NOOP) {
-        return;
+        return;    
     }
 
-    A_DEBUG(("New Indication :%d State:%s (map:0x%X)\n"),
-            indication, (state == STATE_ON) ? "ON" : "OFF",
-            FCore_GetCurrentBTStateBitMap(&pInfo->FilterCore));
+    A_DEBUG(("New Indication :%d State:%s (map:0x%X)\n"), 
+            indication, (state == STATE_ON) ? "ON" : "OFF", 
+            FCore_GetCurrentBTStateBitMap(&pInfo->FilterCore)); 
 
     if (pInfo->AdapterAvailable) {
         DoBtStateAction(pInfo, indication, state);
     }
 }
 
-static ATHBT_STATE_INDICATION
-IndicateA2DP(ATHBT_FILTER_INFO        *pInfo,
+static ATHBT_STATE_INDICATION 
+IndicateA2DP(ATHBT_FILTER_INFO        *pInfo, 
              ATHBT_STATE_INDICATION   Indication,
              ATHBT_STATE              State,
              unsigned char            *pACLBuffer)
@@ -883,50 +883,50 @@ IndicateA2DP(ATHBT_FILTER_INFO        *pInfo,
     return ATH_BT_NOOP; /* TODO */
 }
 
-static void
+static void 
 AthFilterAclDataOutCallback(void *pContext, unsigned char *pBuffer, int Length)
 {
     ATHBT_STATE_INDICATION  indication;
     ATHBT_FILTER_INFO       *pInfo = (ATHBT_FILTER_INFO *)pContext;
     ATHBT_STATE             state;
-
+    
     if (pInfo->Shutdown) {
-        return;
+        return;    
     }
-
+    
     A_LOCK_FILTER(pInfo);
-
+    
     indication = FCore_FilterACLDataOut(&pInfo->FilterCore,
-                                        pBuffer,
-                                        Length,
+                                        pBuffer, 
+                                        Length, 
                                         &state);
-
+                                        
     if (indication == ATH_BT_A2DP) {
-        indication = IndicateA2DP(pInfo,
+        indication = IndicateA2DP(pInfo, 
                                   ATH_BT_A2DP,
                                   state,
-                                  pBuffer);
+                                  pBuffer);   
     }
-
+    
     A_UNLOCK_FILTER(pInfo);
-
+    
     if (indication == ATH_BT_NOOP) {
-        return;
+        return;    
     }
 
-    A_DEBUG(("New Indication :%d State:%s (map:0x%X)\n"),
-            indication, (state == STATE_ON) ? "ON" : "OFF",
+    A_DEBUG(("New Indication :%d State:%s (map:0x%X)\n"), 
+            indication, (state == STATE_ON) ? "ON" : "OFF", 
             FCore_GetCurrentBTStateBitMap(&pInfo->FilterCore));
 
     if (pInfo->AdapterAvailable) {
         DoBtStateAction(pInfo, indication, state);
     }
-
+    
 }
 
-static void
+static void 
 AthFilterAclDataInCallback(void *pContext, unsigned char *pBuffer, int Length)
-{
+{   
     ATHBT_STATE_INDICATION  indication;
     ATHBT_FILTER_INFO       *pInfo = (ATHBT_FILTER_INFO *)pContext;
     ATHBT_STATE             state;
@@ -1017,44 +1017,44 @@ FilterThread(void *pContext)
         if (pInfo->Shutdown) {
             /*
              * before we exit we need to counter-act the coexistence
-             * settings. Currently we just indicate that each state is now
-             * OFF (if they are ON). This state synchronization is typically
-             * required on HOT-removable BT adapters or where the low level
-             * adapter can be surprise removed before the BT stack can clean
-             * up HCI connections and states
+             * settings. Currently we just indicate that each state is now 
+             * OFF (if they are ON). This state synchronization is typically 
+             * required on HOT-removable BT adapters or where the low level 
+             * adapter can be surprise removed before the BT stack can clean 
+             * up HCI connections and states 
              */
             if (pInfo->AdapterAvailable) {
                 int         indication, newIndication;
                 ATHBT_STATE newState;
-
-                /*
-                 * the BT adapter is going away, indicate that all indications
-                 * are now in the OFF state, this may queue up control action
-                 * messages, which is okay
+                
+                /* 
+                 * the BT adapter is going away, indicate that all indications 
+                 * are now in the OFF state, this may queue up control action 
+                 * messages, which is okay 
                  */
                 for (indication = 0; indication < ATH_BT_MAX_STATE_INDICATION;
-                     indication++)
+                     indication++) 
                 {
                     A_LOCK_FILTER(pInfo);
-                    newIndication =
-                        FCore_FilterIndicatePreciseState(&pInfo->FilterCore,
+                    newIndication = 
+                        FCore_FilterIndicatePreciseState(&pInfo->FilterCore, 
                                           indication, STATE_OFF, &newState);
                     A_UNLOCK_FILTER(pInfo);
 
                     if (newIndication == ATH_BT_NOOP) {
                         continue;
                     }
-
+                    
                     DoBtStateAction(pInfo, indication, newState);
                 }
-
+                
                 /* issue control actions */
-                ProcessBTActionMessages(pInfo, BTACTION_QUEUE_SYNC_STATE,
+                ProcessBTActionMessages(pInfo, BTACTION_QUEUE_SYNC_STATE, 
                                         ATH_BT_NOOP);
             }
 
-            break;
-        }
+            break;    
+        } 
     }
 
     A_INFO("Terminating the BT Filter task\n");
@@ -1156,15 +1156,15 @@ ProcessBTActionMessages(ATHBT_FILTER_INFO      *pInfo,
                     A_COND_SIGNAL(&pActionMsg->hWaitEvent);
                     A_MUTEX_UNLOCK(&pActionMsg->hWaitEventLock);
                 }
-                A_LOCK_FILTER(pInfo);
+                A_LOCK_FILTER(pInfo); 
                 break;
 
             case BTACTION_QUEUE_FLUSH_ALL:
                 A_DEBUG(("Flushed action for state=%d from queue\n"),
                         pActionMsg->StateForControlAction);
-                /*
-                 * nothing to do here, the action message will get
-                 * recycled below
+                /* 
+                 * nothing to do here, the action message will get 
+                 * recycled below 
                  */
                 break;
 
@@ -1173,15 +1173,15 @@ ProcessBTActionMessages(ATHBT_FILTER_INFO      *pInfo,
         }
 
         if (pActionMsg) {
-            /* recycle message */
+            /* recycle message */        
             FREE_BT_ACTION_MSG(pInfo, pActionMsg);
         }
     }
 
     A_UNLOCK_FILTER(pInfo);
 }
-
-static void
+    
+static void 
 SyncBTState(ATHBT_FILTER_INFO *pInfo)
 {
     int      stateIndication;
@@ -1190,13 +1190,13 @@ SyncBTState(ATHBT_FILTER_INFO *pInfo)
     A_LOCK_FILTER(pInfo);
     stateBitMap = FCore_GetCurrentBTStateBitMap(&pInfo->FilterCore);
     A_UNLOCK_FILTER(pInfo);
-
-    /*
-     * the state bit map is a simple STATE ON/OFF bit map, if we detect
-     * that one of the states is ON we process the BT action to synchronize
-     * the WLAN side with the BT radio state
+    
+    /* 
+     * the state bit map is a simple STATE ON/OFF bit map, if we detect 
+     * that one of the states is ON we process the BT action to synchronize 
+     * the WLAN side with the BT radio state 
      */
-    for (stateIndication = 0; stateIndication < ATH_BT_MAX_STATE_INDICATION;
+    for (stateIndication = 0; stateIndication < ATH_BT_MAX_STATE_INDICATION; 
          stateIndication++)
     {
         if (stateBitMap & (1 << stateIndication)) {
@@ -1354,44 +1354,44 @@ ProcessActionOverride(ATHBT_FILTER_INFO *pInfo,
         if (strstr(pIndicationStr, g_IndicationStrings[indication]) != NULL) {
             /* found one */
             if (strstr(pIndicationStr, "-ON") != NULL) {
-                state = STATE_ON;
-            }
+                state = STATE_ON;    
+            }    
 
             if (strstr(pIndicationStr, "-OFF") != NULL) {
                 state = STATE_OFF;
-            }
+            }  
 
             if (strstr(pModifyAction, "REPLACE") != NULL) {
                 modifyAction = ATHBT_MODIFY_CONTROL_ACTION_REPLACE;
-            }
+            }     
 
             if (strstr(pModifyAction, "APPEND") != NULL) {
                 modifyAction = ATHBT_MODIFY_CONTROL_ACTION_APPEND;
-            }
+            } 
 
-            break;
+            break;    
         }
-    }
+    }    
 
-    if ((indication == ATH_BT_MAX_STATE_INDICATION) ||
-        (state == STATE_MAX)               ||
-        (modifyAction == ATHBT_MODIFY_CONTROL_ACTION_NOOP))
+    if ((indication == ATH_BT_MAX_STATE_INDICATION) || 
+        (state == STATE_MAX)               || 
+        (modifyAction == ATHBT_MODIFY_CONTROL_ACTION_NOOP)) 
     {
-        return;
+        return;    
     }
 
-    A_DEBUG("Found Action override : %s (%s) (%s)\n",
+    A_DEBUG("Found Action override : %s (%s) (%s)\n", 
             pIndicationStr, pModifyAction, pAction);
 
     A_MEMZERO(charBuffer, sizeof(charBuffer));
 
-    for (i = 0; (i < (int)strlen(pAction)) && (i < (MAX_VAL_DATA_LENGTH - 1));
+    for (i = 0; (i < (int)strlen(pAction)) && (i < (MAX_VAL_DATA_LENGTH - 1)); 
          i++)
     {
-        charBuffer[i] = (char)pAction[i];
+        charBuffer[i] = (char)pAction[i];    
     }
 
-    FCore_ModifyControlActionString(&pInfo->FilterCore,
+    FCore_ModifyControlActionString(&pInfo->FilterCore, 
                                     indication,
                                     state,
                                     charBuffer,
@@ -1399,7 +1399,7 @@ ProcessActionOverride(ATHBT_FILTER_INFO *pInfo,
                                     modifyAction);
 }
 
-static void
+static void 
 GetActionStringOverrides(ATHBT_FILTER_INFO *pInfo)
 {
     A_CHAR *ptr, *indication, *modify, *action;

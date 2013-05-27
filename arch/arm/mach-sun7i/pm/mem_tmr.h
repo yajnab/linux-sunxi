@@ -72,5 +72,7 @@ struct tmr_state{
 };
 __s32 mem_tmr_save(struct tmr_state *ptmr_state);
 __s32 mem_tmr_restore(struct tmr_state *ptmr_state);
+__u32 pm_enable_watchdog(void);
+void pm_disable_watchdog(__u32 dogMode);
 
 #endif  //__MEM_TMR_H__

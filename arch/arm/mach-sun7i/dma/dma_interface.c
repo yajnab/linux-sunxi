@@ -244,3 +244,4 @@ void sw_dma_dump_chan(dma_hdl_t dma_hdl)
 	DMA_CHAN_UNLOCK(&pchan->lock, flags);
 }
 EXPORT_SYMBOL(sw_dma_dump_chan);
+

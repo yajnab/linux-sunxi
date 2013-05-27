@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="bmi.c" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -171,8 +171,8 @@ BMIReadMemory(HIF_DEVICE *device,
     }
 
     AR_DEBUG_PRINTF(ATH_DEBUG_BMI,
-			("BMI Read Memory: Enter (device: 0x%p, address: 0x%x, length: %d)\n",
-				device, address, length));
+       			("BMI Read Memory: Enter (device: 0x%p, address: 0x%x, length: %d)\n",
+        			device, address, length));
 
     cid = BMI_READ_MEMORY;
 
@@ -246,7 +246,7 @@ BMIWriteMemory(HIF_DEVICE *device,
                 remaining = remaining + (4 - (remaining & 3));
                 memcpy(alignedBuffer, src, remaining);
                 src = alignedBuffer;
-            }
+            } 
             txlen = remaining;
         } else {
             txlen = (BMI_DATASZ_MAX - header);
@@ -505,7 +505,7 @@ BMIrompatchUninstall(HIF_DEVICE *device,
 
     AR_DEBUG_PRINTF(ATH_DEBUG_BMI,
          ("BMI rompatch Uninstall: Enter (device: 0x%p, rompatch_id: %d)\n",
-									 device, rompatch_id));
+         								 device, rompatch_id));
 
     cid = BMI_ROMPATCH_UNINSTALL;
 
@@ -770,3 +770,5 @@ BMIRawRead(HIF_DEVICE *device, A_UCHAR *buffer, A_UINT32 length, A_BOOL want_tim
 }
 
 #endif
+
+

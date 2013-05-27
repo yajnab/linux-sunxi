@@ -50,3 +50,4 @@
 #define TIMER_ASSERT_RET(x, ret, pos)	if(!(x)) {ret = __LINE__; goto pos;}
 
 #endif /* __SUNXI_TIMER_TEST_I_H */
+

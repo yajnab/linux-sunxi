@@ -55,7 +55,7 @@ static int sndi2s_startup(struct snd_pcm_substream *substream,
 static void sndi2s_shutdown(struct snd_pcm_substream *substream,
 	struct snd_soc_dai *dai)
 {
-
+	
 }
 
 static int sndi2s_hw_params(struct snd_pcm_substream *substream,
@@ -77,7 +77,7 @@ static int sndi2s_set_dai_clkdiv(struct snd_soc_dai *codec_dai, int div_id, int 
 {
 
 //	hdmi_parameter.fs_between = div;
-
+	
 	return 0;
 }
 
@@ -116,18 +116,18 @@ struct snd_soc_dai_driver sndi2s_dai = {
 	},
 	/* pcm operations */
 	.ops = &sndi2s_dai_ops,
-
+	
 };
 EXPORT_SYMBOL(sndi2s_dai);
-
+	
 static int sndi2s_soc_probe(struct snd_soc_codec *codec)
 {
 	struct sndi2s_priv *sndi2s;
 
 	sndi2s = kzalloc(sizeof(struct sndi2s_priv), GFP_KERNEL);
-	if(sndi2s == NULL){
+	if(sndi2s == NULL){		
 		return -ENOMEM;
-	}
+	}		
 	snd_soc_codec_set_drvdata(codec, sndi2s);
 
 	return 0;
@@ -150,7 +150,7 @@ static struct snd_soc_codec_driver soc_codec_dev_sndi2s = {
 
 static int __devinit sndi2s_codec_probe(struct platform_device *pdev)
 {
-	return snd_soc_register_codec(&pdev->dev, &soc_codec_dev_sndi2s, &sndi2s_dai, 1);
+	return snd_soc_register_codec(&pdev->dev, &soc_codec_dev_sndi2s, &sndi2s_dai, 1);	
 }
 
 static int __devexit sndi2s_codec_remove(struct platform_device *pdev)
@@ -174,31 +174,31 @@ static struct platform_driver sndi2s_codec_driver = {
 };
 
 static int __init sndi2s_codec_init(void)
-{
+{	
 	int err = 0;
 		/*	ret = script_parser_fetch("i2s_para","i2s_used", &i2s_used, sizeof(int));
 	if (ret) {
         printk("[I2S]sndi2s_init fetch i2s using configuration failed\n");
-    }
+    } 
 	*/
 	if (i2s_used) {
 		if((err = platform_device_register(&sndi2s_codec_device)) < 0)
 			return err;
-
+	
 		if ((err = platform_driver_register(&sndi2s_codec_driver)) < 0)
 			return err;
 	} else {
        printk("[I2S]sndi2s cannot find any using configuration for controllers, return directly!\n");
        return 0;
     }
-
+	
 	return 0;
 }
 module_init(sndi2s_codec_init);
 
 static void __exit sndi2s_codec_exit(void)
 {
-	if (i2s_used) {
+	if (i2s_used) {	
 		i2s_used = 0;
 		platform_driver_unregister(&sndi2s_codec_driver);
 	}

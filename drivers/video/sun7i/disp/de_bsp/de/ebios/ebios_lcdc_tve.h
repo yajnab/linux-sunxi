@@ -11,29 +11,30 @@
 #define LCDC_VBI_HD 0x00004000
 #define LCDC_LTI_LCD_FLAG 0x00002000
 #define LCDC_LTI_HD_FLAG 0x00001000
-
+                    
 typedef enum
 {
-        LCDC_SRC_BE0 	= 0,
+        LCDC_SRC_BE0 	= 0, 
         LCDC_SRC_BE1 	= 1,
         LCDC_SRC_DMA 	= 2,
         LCDC_SRC_BLACK 	= 3,
         LCDC_SRC_WHITE 	= 4,
         LCDC_SRC_BLUE 	= 5,
-}__lcdc_src_t;
+}__lcdc_src_t;  
 
 typedef enum
 {
-        LCDC_LCDIF_HV 	= 0,
-        LCDC_LCDIF_CPU 	= 1,
-        LCDC_LCDIF_TTL 	= 2,
-        LCDC_LCDIF_LVDS	= 3,
-}__lcdc_lcdif_t;
-
+        LCDC_LCDIF_HV 	        = 0, 
+        LCDC_LCDIF_CPU 	        = 1,
+        LCDC_LCDIF_TTL 	        = 2,
+        LCDC_LCDIF_LVDS	        = 3,
+        LCDC_LCDIF_HV2DSI       = 4,
+}__lcdc_lcdif_t; 
+  
 
 typedef enum
 {
-        LCDC_FRM_RGB888 = 0,
+        LCDC_FRM_RGB888 = 0, 
         LCDC_FRM_RGB666 = 1,
         LCDC_FRM_RGB656 = 2,
 }__lcdc_frm_t;
@@ -50,9 +51,9 @@ typedef struct
         __u16   scl_y;              //tcon1 scale output height size
         __u16   out_x;              //tcon1 output width in pixels
         __u16   out_y;              //tcon1 output height in pixels
-        __u16   ht;                 //tcon1 horizontal total time
+        __u16   ht;                 //tcon1 horizontal total time 
         __u16   hbp;                //tcon1 back porch
-        __u16   vt;                 //tcon1 vertical total time
+        __u16   vt;                 //tcon1 vertical total time 
         __u16   vbp;                //tcon1 vertical back porch
         __u16   vspw;               //tcon1 vertical sync pulse width in pixels
         __u16   hspw;               //tcon1 horizontal sync pulse width
@@ -69,7 +70,7 @@ typedef struct
 
 typedef enum
 {
-        TVE_MODE_NTSC = 0,
+        TVE_MODE_NTSC = 0, 
         TVE_MODE_PAL,
         TVE_MODE_480I,
         TVE_MODE_576I,
@@ -93,7 +94,7 @@ typedef enum tag_TVE_DAC
 
 typedef enum tag_TVE_SRC
 {
-        CVBS            = 0,
+        CVBS            = 0, 
         SVIDEO_Y        = 1,
         SVIDEO_C        = 2,
         COMPONENT_Y     = 4,
@@ -101,7 +102,7 @@ typedef enum tag_TVE_SRC
         COMPONENT_PR    = 6,
         VGA_R           = 4,
         VGA_G           = 5,
-        VGA_B           = 6
+        VGA_B           = 6  
 }__tve_src_t;
 
 
@@ -188,3 +189,4 @@ __s32   TVE_dac_sel(__u32 sel,__u32 dac, __u32 index);
 
 
 #endif
+

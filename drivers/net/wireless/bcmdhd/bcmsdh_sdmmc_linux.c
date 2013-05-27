@@ -250,7 +250,6 @@ static struct semaphore *notify_semaphore = NULL;
 static int dummy_probe(struct sdio_func *func,
                               const struct sdio_device_id *id)
 {
-    printk("dummy_probe\n");
 	if (notify_semaphore)
 		up(notify_semaphore);
 	return 0;

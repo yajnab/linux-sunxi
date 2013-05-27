@@ -127,7 +127,7 @@ static int fxos8700_data_convert(struct fxos8700_data_axis *axis_data,int positi
 
 /**
  * e_compass_fetch_sysconfig_para - get config info from sysconfig.fex file.
- * return value:
+ * return value:  
  *                    = 0; success;
  *                    < 0; err
  */
@@ -138,31 +138,31 @@ static int e_compass_fetch_sysconfig_para(void)
 	int device_used = -1;
 	script_item_u	val;
 	script_item_value_type_e  type;
-
-
+	
+		
 	dprintk(DEBUG_INIT, "========%s===================\n", __func__);
 
-
+	
 	type = script_get_item("compass_para", "compass_used", &val);
-
+ 
 	if (SCIRPT_ITEM_VALUE_TYPE_INT != type) {
 		pr_err("%s: type err  device_used = %d. \n", __func__, val.val);
 		goto script_get_err;
 	}
 	device_used = val.val;
-
+	
 	if (1 == device_used) {
-		type = script_get_item("compass_para", "compass_twi_id", &val);
+		type = script_get_item("compass_para", "compass_twi_id", &val);	
 		if(SCIRPT_ITEM_VALUE_TYPE_INT != type){
 			pr_err("%s: type err twi_id = %d. \n", __func__, val.val);
 			goto script_get_err;
 		}
 		twi_id = val.val;
-
+		
 		dprintk(DEBUG_INIT, "%s: twi_id is %d. \n", __func__, twi_id);
 
 		ret = 0;
-
+		
 	} else {
 		pr_err("%s: gsensor_unused. \n",  __func__);
 		ret = -1;
@@ -178,7 +178,7 @@ script_get_err:
 
 /**
  * e_compass_detect - Device detection callback for automatic device creation
- * return value:
+ * return value:  
  *                    = 0; success;
  *                    < 0; err
  */
@@ -188,9 +188,9 @@ static int e_compass_detect(struct i2c_client *client, struct i2c_board_info *in
 	int ret;
 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA))
             return -ENODEV;
-
+            
 	if (twi_id == adapter->nr) {
-		for (i2c_num = 0; i2c_num < (sizeof(i2c_address)/sizeof(i2c_address[0]));i2c_num++) {
+		for (i2c_num = 0; i2c_num < (sizeof(i2c_address)/sizeof(i2c_address[0]));i2c_num++) {	    
 			client->addr = i2c_address[i2c_num];
 			dprintk(DEBUG_INIT, "%s:addr= 0x%x,i2c_num:%d\n",__func__,client->addr,i2c_num);
 			ret = i2c_smbus_read_byte_data(client,FXOS8700_WHO_AM_I);
@@ -198,10 +198,10 @@ static int e_compass_detect(struct i2c_client *client, struct i2c_board_info *in
 			if ((ret &0x00FF) == FXOS8700_DEVICE_ID) {
 				dprintk(DEBUG_INIT, "FXOS8700 Device detected!\n" );
 				strlcpy(info->type, FXOS8700_DEV_NAME, I2C_NAME_SIZE);
-				return 0;
-			}
+				return 0; 
+			}                                                           
 		}
-
+        
 		pr_info("%s:FXOS8700 Device not found, \
 		maybe the other gsensor equipment! \n",__func__);
 		return -ENODEV;
@@ -307,7 +307,7 @@ static int fxos8700_report_data(struct input_dev *idev, struct fxos8700_data_axi
 		input_report_abs(idev, ABS_Z, data->z);
 		input_sync(idev);
 		dprintk(DEBUG_REPORT_DATA, "fxos8700 x = %d, y = %d, z = %d. \n", \
-		data->x, data->y, data->z);
+		data->x, data->y, data->z); 
 	}
 	return 0;
 }
@@ -556,13 +556,13 @@ static ssize_t fxos8700_position_store(struct device *dev,
 //	int error;
 //
 //	error = strict_strtoul(buf, 10, &data);
-//
+//	
 //	if (error)
 //		return error;
-//
+//		
 //	if (data > POLL_INTERVAL_MAX)
 //		data = POLL_INTERVAL;
-//
+//		
 //	mma865x_idev->poll_interval = data;
 //
 //	return count;
@@ -666,7 +666,7 @@ static int fxos8700_resume(struct device *dev)
 		ret = i2c_smbus_write_byte_data(client, FXOS8700_M_CTRL_REG1,0x3); //hybrid mode
 		if (ret < 0)
 			goto out;
-
+		
 		mutex_lock(&pdata->data_lock);
 		if(pdata->acc_active)
 			fxos8700_change_mode(client,FXOS8700_TYPE_ACC,FXOS8700_ACTIVED);
@@ -698,7 +698,7 @@ static void fxos8700_early_suspend(struct early_suspend *h)
 static void fxos8700_late_resume(struct early_suspend *h)
 {
 	int ret = 0;
-
+	
 	struct fxos8700_data *pdata =  container_of(h, struct fxos8700_data, early_suspend);
 	struct i2c_client *client =  pdata->client;
 	dprintk(DEBUG_SUSPEND, "%s: start\n", __func__);
@@ -717,7 +717,7 @@ static void fxos8700_late_resume(struct early_suspend *h)
 		ret = i2c_smbus_write_byte_data(client, FXOS8700_M_CTRL_REG1,0x3); //hybrid mode
 		if (ret < 0)
 			printk("fxos8700 write register failed\n");
-
+		
 		if(pdata->acc_active)
 			fxos8700_change_mode(client,FXOS8700_TYPE_ACC,FXOS8700_ACTIVED);
 		if(pdata->mag_active)
@@ -759,7 +759,7 @@ static int __devinit fxos8700_probe(struct i2c_client *client,
 		dev_err(&client->dev, "alloc data memory error!\n");
 		goto err_out;
 	}
-
+	
 	pdata->client = client;
 	mutex_init(&pdata->data_lock);
 	i2c_set_clientdata(client,pdata);
@@ -856,7 +856,7 @@ static int __init fxos8700_init(void)
 	int res;
 
 	pr_info("%s driver: init\n", FXOS8700_DEV_NAME);
-
+	
 	if(e_compass_fetch_sysconfig_para()){
 		printk("%s: err.\n", __func__);
 		return -1;

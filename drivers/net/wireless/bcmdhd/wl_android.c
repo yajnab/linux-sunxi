@@ -1016,12 +1016,13 @@ wl_get_avg_rssi(wl_rssi_cache_ctrl_t *rssi_cache_ctrl, void *addr)
 #endif
 
 #if defined(RSSIOFFSET)
-uint chip;
-uint chiprev;
-
 int
 wl_update_rssi_offset(int rssi)
 {
+	uint chip, chiprev;
+
+	chip = dhd_bus_chip_id(bcmsdh_get_drvdata());
+	chiprev = dhd_bus_chiprev_id(bcmsdh_get_drvdata());
 	if (chip == BCM4330_CHIP_ID && chiprev == BCM4330B2_CHIP_REV) {
 #if defined(RSSIOFFSET_NEW)
 		int j;
@@ -1132,10 +1133,10 @@ wl_update_bss_cache(wl_bss_cache_ctrl_t *bss_cache_ctrl, wl_scan_results_t *ss_l
 		node = *bss_head;
 		prev = NULL;
 		bi = bi ? (wl_bss_info_t *)((uintptr)bi + dtoh32(bi->length)) : ss_list->bss_info;
-
+		
 		for (;node;) {
 			if (!memcmp(&node->results.bss_info->BSSID, &bi->BSSID, ETHER_ADDR_LEN)) {
-				tmp = node;
+ 				tmp = node;
 				leaf = kmalloc(dtoh32(bi->length) + WLC_IW_SS_CACHE_CTRL_FIELD_MAXLEN, GFP_KERNEL);
 				if (!leaf) {
 					ANDROID_ERROR(("%s: Memory alloc failure %d and keep old BSS info\n",

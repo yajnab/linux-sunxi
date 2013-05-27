@@ -313,3 +313,4 @@
 #define AW_CPU1_PWROFF_REG        0x01b4
 
 #endif
+

@@ -13,7 +13,7 @@ extern "C" {
 
 #ifndef WIN32
 #include <unistd.h>
-#ifndef EILSEQ
+#ifndef EILSEQ  
     #define EILSEQ EIO
 #endif	// EILSEQ
 #endif	// #ifndef WIN32
@@ -201,21 +201,21 @@ typedef struct mdk_eepMap
 
 #define EEPROM_ENTRIES_FOR_TXPOWER 32 // 64 bytes of EEPROM calibration data
 #define EEPROM_TXPOWER_OFFSET 0xE0    // Power values start at 0xE0
-#define MAX_TX_QUEUE_GEN	16
+#define MAX_TX_QUEUE_GEN	16 
 #define MAX_TX_QUEUE	5  // Venus
 #define PROBE_QUEUE 2 //(MAX_TX_QUEUE - 1)
 
 typedef struct txPowerSetup
 {
 	A_UINT16 eepromPwrTable[EEPROM_ENTRIES_FOR_TXPOWER];
-    A_UINT16 tpScale;             // Scaling factor to be applied to max TP
+    A_UINT16 tpScale;             // Scaling factor to be applied to max TP 
 } TXPOWER_SETUP;
 
 typedef struct txSetup
 {
 	A_UINT32		txEnable;     // Transmit has been setup
 	A_UINT32		pktAddress;	  // physical address of transmit packet
-	A_UINT32		descAddress;  // Physical address to start of descriptors
+	A_UINT32		descAddress;  // Physical address to start of descriptors				  
     A_UINT32        barPktAddress; // Physical address of BAR packet
 	A_UINT32        barDescAddress; // Physical address of barDescAddress
 	A_UINT32		endPktAddr;	  // Address of special end packet
@@ -224,7 +224,7 @@ typedef struct txSetup
     A_UINT32        dataBodyLen;  // number of bytes in pkt body
     A_UINT32        retryValue;   // copy of retry register value (to write back)
 	WLAN_MACADDR    destAddr;     // destination address for packets
-	TX_STATS_STRUCT txStats[STATS_BINS];   // Transmit stats
+	TX_STATS_STRUCT txStats[STATS_BINS];   // Transmit stats 
     A_UINT32        haveStats;    // set to true when txStats contains stats values
     A_UINT32        broadcast;    // set to true if broadcast is enabled
     A_UINT32        contType;     // type of continuous transmit that has been enabled
@@ -234,24 +234,24 @@ typedef struct txSetup
 typedef struct rxSetup
 {
 	A_UINT32		rxEnable;     // Transmit has been setup
-	A_UINT32		descAddress;  // Physical address to start of descriptors
+	A_UINT32		descAddress;  // Physical address to start of descriptors				  
 	A_UINT32		bufferSize;	  // Size, in bytes, of packet
 	A_UINT32		bufferAddress;// physical address to start of memory buffers
 	A_UINT32		lastDescAddress;
 	A_UINT32		numDesc;	  // number of descriptors created
-	RX_STATS_STRUCT rxStats[MAX_TX_QUEUE][STATS_BINS];   // Receive stats
-	//RX_STATS_STRUCT rxStats[STATS_BINS];   // Receive stats
+	RX_STATS_STRUCT rxStats[MAX_TX_QUEUE][STATS_BINS];   // Receive stats 
+	//RX_STATS_STRUCT rxStats[STATS_BINS];   // Receive stats 
     A_UINT32        haveStats;    // set to true when rxStats contains stats values
     A_UINT32        enablePPM;    // PPM was enabled by setup
 	A_UINT32		rxMode;		  //receive mode
-	A_UINT32		numExpectedPackets;
+	A_UINT32		numExpectedPackets; 
 	A_BOOL			overlappingDesc;
 } RX_SETUP;
 
 typedef struct memSetup
 {
 	A_UINT32      allocMapSize;  // Size of the allocation map
-	A_UCHAR       *pAllocMap;    // The bitMap for tracking memory allocation
+	A_UCHAR       *pAllocMap;    // The bitMap for tracking memory allocation	
 	A_UINT16      *pIndexBlocks; // Number of blocks for the specified index
     A_BOOL        usingExternalMemory; // TRUE if using other driver memory map
 } MEM_SETUP;
@@ -263,7 +263,7 @@ typedef struct AR2413_txgain_tbl {
   A_UCHAR bb2_gain ;
   A_UCHAR if_gain ;
   A_UCHAR rf_gain ;
- } AR2413_TXGAIN_TBL;
+ } AR2413_TXGAIN_TBL; 
 //++JC++
 
 typedef struct merlin_txgain_tbl {
@@ -273,7 +273,7 @@ typedef struct merlin_txgain_tbl {
   A_UCHAR pabuf5gn;
   A_UCHAR txV2Igain;
   A_UCHAR txldBloqgain;
- } MERLIN_TXGAIN_TBL;
+ } MERLIN_TXGAIN_TBL; 
 
 typedef struct venus_txgain_tbl {
   A_UCHAR desired_gain ;
@@ -285,7 +285,7 @@ typedef struct venus_txgain_tbl {
   A_UCHAR padrvgnc;
   A_UCHAR padrvgnd;
   A_UCHAR enablepal;
- } VENUS_TXGAIN_TBL;
+ } VENUS_TXGAIN_TBL; 
 
 
 // devState Defines
@@ -319,8 +319,8 @@ typedef	struct libDevInfo1
 	A_UINT32      turbo;       // Turbo state of this device
 	A_UINT32      devState;    // Current state of the device
 	A_UINT32      remoteStats; // set if have remote stats - specifies stats type
-	TX_STATS_STRUCT txRemoteStats[MAX_TX_QUEUE][STATS_BINS]; // transmit stats from remote station
-	RX_STATS_STRUCT rxRemoteStats[MAX_TX_QUEUE][STATS_BINS]; // Receive stats from remote station
+	TX_STATS_STRUCT txRemoteStats[MAX_TX_QUEUE][STATS_BINS]; // transmit stats from remote station 
+	RX_STATS_STRUCT rxRemoteStats[MAX_TX_QUEUE][STATS_BINS]; // Receive stats from remote station 
 	ATHEROS_REG_FILE *regArray;
 	PCI_REG_VALUES   *pciValuesArray;
 	A_UINT16         sizeRegArray;
@@ -367,7 +367,7 @@ typedef	struct libDevInfo1
 	A_UINT32		rxDataRateMsk;
 	RAW_DATA_STRUCT_GEN3 *pGen3RawData[3];
 	EEPROM_FULL_DATA_STRUCT_GEN3 *pGen3CalData;
-	LIB_PARAMS		libCfgParams;
+	LIB_PARAMS		libCfgParams;	
 	A_INT32 mdkErrno;
     A_CHAR mdkErrStr[SIZE_ERROR_BUFFER];
     struct earHeader    *pEarHead;          /* All EAR information */
@@ -376,7 +376,7 @@ typedef	struct libDevInfo1
 	ART_ANI_LADDER  artAniLadder[3];  // 1 for each NI/BI/SI
 	ART_ANI_SETUP   artAniSetup;
 	A_UINT32        eepromStartLoc; // eeprom start location. default = 0x00, but for dual 11a set to 0x400
-	A_INT32         maxLinPwrx4;    // 4 x max linear power at current operating channel.
+	A_INT32         maxLinPwrx4;    // 4 x max linear power at current operating channel. 
 	                                // valid only for eep_map = 1 format
 	A_UINT32        startOfRfPciValues;  // index of beginning of rf pci writes in the big pci writes array
 	A_BOOL			eepromHeaderApplied[4];
@@ -395,14 +395,14 @@ typedef	struct libDevInfo1
     struct ar5416Eeprom *ar5416Eep;
 	struct ar9285Eeprom *ar9285Eep;
     struct ar9287Eeprom* ar9287Eep;
-
+    
 	A_BOOL          generatedMerlinGainTable;
     A_UINT32        femBandSel;
     A_UINT32        spurChans[5];
     A_UINT32        fastClk5g;       /* fast clk mode in 5G */
     A_BOOL          isForcedPALOn;
     A_UINT32        eepromFileRead;
-    A_UINT32        paprdEnabled;
+    A_UINT32        paprdEnabled; 
     FILE*	    prom_file_handle;
 #ifdef SUPER_TX_GAIN_CFG
     A_BOOL          xpaCfgEnable;
@@ -421,7 +421,7 @@ typedef	struct pwrCtrlParams
 	A_UINT32      rf_pd_period_xr[3];       // pwr ctl params need to be stored.
 	A_UINT32      rf_pd_delay_a[3];       // pwr ctl params need to be stored.
 	A_UINT32      rf_pd_delay_xr[3];       // pwr ctl params need to be stored.
-	A_UINT32      bb_tx_frame_to_tx_d_start[3];
+	A_UINT32      bb_tx_frame_to_tx_d_start[3];  
 } PWR_CTL_PARAMS;
 
 #define 	MDK_INIT_CODE		0
@@ -432,8 +432,8 @@ typedef	struct pwrCtrlParams
 /* LIB_INFO structure will hold the library global information.
  */
 typedef struct libInfo	{
-	A_UINT32           devCount;                  // No. of currently connected devices
-	struct libDevInfo1 *pLibDevArray[LIB_MAX_DEV]; // Array of devinfo pointers
+	A_UINT32           devCount;                  // No. of currently connected devices 
+	struct libDevInfo1 *pLibDevArray[LIB_MAX_DEV]; // Array of devinfo pointers 
 } LIB_INFO;
 
 // Macros to devMap defined functions
@@ -451,7 +451,7 @@ typedef struct libInfo	{
 // Func Prototypes
 int mError(A_UINT32 devNum, A_UINT32 error, const char * format, ...);
 A_UINT32 reverseBits(A_UINT32 val, int bit_count);
-A_BOOL checkDevNum(A_UINT32 devNum);
+A_BOOL checkDevNum(A_UINT32 devNum); 
 A_BOOL parseAtherosRegFile(LIB_DEV_INFO *pLibDev, char *filename);
 #ifdef NART_BUILD
 A_BOOL parseAcSettingRegFile(LIB_DEV_INFO *pLibDev, char *filename);
@@ -501,7 +501,7 @@ A_UINT16 GetMaxTxQueue();
 
 #if defined(WIN32) || defined(WIN64)
 #pragma pack (pop)
-#endif
+#endif	
 
 #ifdef __cplusplus
 }

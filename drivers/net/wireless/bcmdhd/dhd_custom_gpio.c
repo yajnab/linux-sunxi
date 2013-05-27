@@ -34,6 +34,9 @@
 #include <wlioctl.h>
 #include <wl_iw.h>
 
+#include <mach/sys_config.h>
+#include <mach/gpio.h>
+
 #define WL_ERROR(x) printf x
 #define WL_TRACE(x) printf x
 
@@ -59,7 +62,7 @@ int wifi_get_irq_number(unsigned long *irq_flags_ptr) { return -1; }
 int wifi_get_mac_addr(unsigned char *buf) { return -1; }
 void *wifi_get_country_code(char *ccode) { return NULL; }
 #endif /* CONFIG_WIFI_CONTROL_FUNC */
-#endif
+#endif 
 
 #if defined(OOB_INTR_ONLY)
 
@@ -121,16 +124,32 @@ int dhd_customer_oob_irq_map(unsigned long *irq_flags_ptr)
 	host_oob_irq = gpio_to_irq(dhd_oob_gpio_num);
 	gpio_direction_input(dhd_oob_gpio_num);
 #endif /* CUSTOMER_HW */
-#endif
+#endif 
 
 	return (host_oob_irq);
 }
-#endif
+#endif 
 
 /* Customer function to control hw specific wlan gpios */
 void
 dhd_customer_gpio_wlan_ctrl(int onoff)
 {
+	static int first = 1;
+	static int sdc_id = 1;
+
+	script_item_value_type_e type;
+	script_item_u val;
+
+	if (first == 1) {
+		type = script_get_item("wifi_para", "wifi_sdc_id", &val);
+		if (SCIRPT_ITEM_VALUE_TYPE_INT != type) {
+			WL_ERROR(("failed to fetch sdio card's sdcid\n"));
+			return -1;
+		}
+		sdc_id = val.val;
+		first = 0;
+	}
+
 	switch (onoff) {
 		case WLAN_RESET_OFF:
 			WL_TRACE(("%s: call customer specific GPIO to insert WLAN RESET\n",
@@ -161,7 +180,7 @@ dhd_customer_gpio_wlan_ctrl(int onoff)
 				__FUNCTION__));
 #ifdef CUSTOMER_HW
 			wifi_pm_power(0);
-			sw_mci_rescan_card(0, 0);
+			sw_mci_rescan_card(sdc_id, 0);
 #endif /* CUSTOMER_HW */
 			WL_ERROR(("=========== WLAN placed in POWER OFF ========\n"));
 		break;
@@ -170,10 +189,8 @@ dhd_customer_gpio_wlan_ctrl(int onoff)
 			WL_TRACE(("%s: call customer specific GPIO to turn on WL_REG_ON\n",
 				__FUNCTION__));
 #ifdef CUSTOMER_HW
-            WL_TRACE(("[%s %d]\n", __FUNCTION__, __LINE__));
 			wifi_pm_power(1);
-			WL_TRACE(("[%s %d]\n", __FUNCTION__, __LINE__));
-			sw_mci_rescan_card(0, 1);
+			sw_mci_rescan_card(sdc_id, 1);
 			/* Lets customer power to get stable */
 			OSL_DELAY(200);
 #endif /* CUSTOMER_HW */

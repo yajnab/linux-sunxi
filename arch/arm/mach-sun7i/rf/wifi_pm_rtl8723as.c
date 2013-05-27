@@ -99,7 +99,7 @@ static int rtl8723as_gpio_ctrl(char* name, int level)
 						gpio = rtk_rtl8723as_bt_dis;
 						break;
 					default:
-				rtl8723as_msg("no matched gpio!\n");
+            			rtl8723as_msg("no matched gpio!\n");
 			    }
 			break;
 		}
@@ -114,7 +114,7 @@ static int rtl8723as_gpio_ctrl(char* name, int level)
 		flags = GPIOF_OUT_INIT_HIGH;
 	else
 		flags = GPIOF_OUT_INIT_LOW;
-
+	
 	rtl8723as_msg("Set GPIO %s to %d !\n", name, level);
 	if (strcmp(name, "rtk_rtl8723as_wl_dis") == 0) {
 		if ((level && !rtl8723as_bt_on)	|| (!level && !rtl8723as_bt_on)) {
@@ -153,21 +153,21 @@ gpio_state_change:
 		gpio_free(gpio);
 		rtl8723as_msg("succeed to set gpio %s to %d !\n", name, level);
 	}
-
+	
 	return 0;
-
+	
 power_change:
 
 	rtl8723as_module_power(level);
 	udelay(500);
-
+	
 state_change:
 	if (strcmp(name, "rtk_rtl8723as_wl_dis")==0)
 		rtl8723as_wl_on = level;
 	if (strcmp(name, "rtk_rtl8723as_bt_dis")==0)
 		rtl8723as_bt_on = level;
 	rtl8723as_msg("%s power state change: wifi %d, bt %d !!\n", SDIO_MODULE_NAME, rtl8723as_wl_on, rtl8723as_bt_on);
-
+	
 	goto gpio_state_change;
 }
 
@@ -175,9 +175,9 @@ void rtl8723as_power(int mode, int *updown)
 {
     if (mode) {
         if (*updown) {
-		rtl8723as_gpio_ctrl("rtk_rtl8723as_wl_dis", 1);
+        	rtl8723as_gpio_ctrl("rtk_rtl8723as_wl_dis", 1);
         } else {
-		rtl8723as_gpio_ctrl("rtk_rtl8723as_wl_dis", 0);
+        	rtl8723as_gpio_ctrl("rtk_rtl8723as_wl_dis", 0);
         }
         rtl8723as_msg("sdio wifi power state: %s\n", *updown ? "on" : "off");
     } else {
@@ -211,7 +211,7 @@ void rtl8723as_gpio_init(void)
 	script_item_u val ;
 	script_item_value_type_e type;
 	struct wifi_pm_ops *ops = &wifi_select_pm_ops;
-
+	
 	rtl8723as_msg("exec rt8723as_wifi_gpio_init\n");
 
 	type = script_get_item(wifi_para, "wifi_power", &val);
@@ -232,14 +232,14 @@ void rtl8723as_gpio_init(void)
 		rtl8723as_msg("get rtl8723as rtk_rtl8723as_bt_dis gpio failed\n");
 	else
 		rtk_rtl8723as_bt_dis = val.gpio.gpio;
-
+	
 	rtl8723as_wl_on = 0;
 	rtl8723as_bt_on = 0;
 	rtk_suspend 	= 0;
 	ops->gpio_ctrl	= rtl8723as_gpio_ctrl;
 	ops->power 		= rtl8723as_power;
 	ops->standby	= rtl8723as_standby;
-
+	
 	// force to disable wifi power in system booting,
 	// make sure wifi power is down when system start up
 	rtl8723as_module_power(0);

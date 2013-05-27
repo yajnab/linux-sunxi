@@ -13,7 +13,7 @@ HW OOB:
 SW OOB edge trigger:
 	sd_gpout=0
 	sd_oobonly=1
-
+	
 SW OOB level trigger:
 	sd_gpout=0
 	sd_oobonly=1

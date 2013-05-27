@@ -65,6 +65,7 @@
 #include <dhd_wlfc.h>
 #endif
 
+extern int wifi_pm_get_mod_type(void);
 
 #ifdef WLMEDIA_HTSF
 extern void htsf_update(struct dhd_info *dhd, void *data);
@@ -189,13 +190,39 @@ const bcm_iovar_t dhd_iovars[] = {
 void
 dhd_common_init(osl_t *osh)
 {
+	int select_type = 0;
+	//aw checkout which wifi had select
+	select_type = wifi_pm_get_mod_type();
+	
 #ifdef CONFIG_BCMDHD_FW_PATH
-	bcm_strncpy_s(fw_path, sizeof(fw_path), CONFIG_BCMDHD_FW_PATH, MOD_PARAM_PATHLEN-1);
+	//select ap6181 or ap6210
+	if (select_type == 1 || select_type == 7) {
+		bcm_strncpy_s(fw_path, sizeof(fw_path), "/system/vendor/modules/fw_bcm40181a2.bin", MOD_PARAM_PATHLEN-1);
+	}
+	
+	if (select_type == 8) {
+		bcm_strncpy_s(fw_path, sizeof(fw_path), "/system/vendor/modules/fw_bcm40183b2_ag.bin", MOD_PARAM_PATHLEN-1);
+	}
+	
 #else /* CONFIG_BCMDHD_FW_PATH */
 	fw_path[0] = '\0';
 #endif /* CONFIG_BCMDHD_FW_PATH */
 #ifdef CONFIG_BCMDHD_NVRAM_PATH
-	bcm_strncpy_s(nv_path, sizeof(nv_path), CONFIG_BCMDHD_NVRAM_PATH, MOD_PARAM_PATHLEN-1);
+	//select ap6181
+	if (select_type == 1) {
+		bcm_strncpy_s(nv_path, sizeof(nv_path), "/system/vendor/modules/nvram_ap6181.txt", MOD_PARAM_PATHLEN-1);
+	}
+
+	//select ap6210
+	if (select_type == 7) {
+		bcm_strncpy_s(nv_path, sizeof(nv_path), "/system/vendor/modules/nvram_ap6210.txt", MOD_PARAM_PATHLEN-1);
+	}
+	
+	//select ap6330
+	if (select_type == 8) {
+		bcm_strncpy_s(nv_path, sizeof(nv_path), "/system/vendor/modules/nvram_ap6330.txt", MOD_PARAM_PATHLEN-1);
+	}
+	
 #else /* CONFIG_BCMDHD_NVRAM_PATH */
 	nv_path[0] = '\0';
 #endif /* CONFIG_BCMDHD_NVRAM_PATH */
@@ -1132,7 +1159,7 @@ wl_host_event(dhd_pub_t *dhd_pub, int *ifidx, void *pktdata,
 		memcpy((void *)(&pvt_data->event.event_type), &temp,
 		       sizeof(pvt_data->event.event_type));
 	}
-#endif
+#endif 
 		/* These are what external supplicant/authenticator wants */
 		/* fall through */
 	case WLC_E_LINK:

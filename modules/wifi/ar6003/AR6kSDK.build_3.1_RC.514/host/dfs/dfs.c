@@ -45,10 +45,10 @@ struct ath_dfs_host *dfs_attach_host(DEV_HDL dev, OS_HDL os, ATH_DFS_CAPINFO *ca
     ATH_DFSEVENTQ_LOCK_INIT(dfs);
 
     OS_INIT_TIMER(&dfs->dfs_radar_task_timer, dfs_radar_task, dfs);
-
+    
     dfs->events = (struct dfs_event *)DFS_MALLOC(os,
             sizeof(struct dfs_event)*DFS_MAX_EVENTS);
-
+    
     if (dfs->events == NULL) {
         OS_FREE(dfs);
         dfs = NULL;
@@ -63,7 +63,7 @@ struct ath_dfs_host *dfs_attach_host(DEV_HDL dev, OS_HDL os, ATH_DFS_CAPINFO *ca
     dfs->pulses = (struct dfs_pulseline *)DFS_MALLOC(os, sizeof(struct dfs_pulseline));
 
     if (dfs->pulses == NULL) {
-        OS_FREE(dfs->events);
+        OS_FREE(dfs->events);   
         dfs->events = NULL;
         OS_FREE(dfs);
         dfs = NULL;
@@ -122,7 +122,7 @@ struct ath_dfs_host *dfs_attach_host(DEV_HDL dev, OS_HDL os, ATH_DFS_CAPINFO *ca
 bad2:
     OS_FREE(dfs->dfs_radartable);
     dfs->dfs_radartable = NULL;
-bad1:
+bad1:	
     for (n=0; n<DFS_MAX_RADAR_TYPES; n++) {
         if (dfs->dfs_radarf[n] != NULL) {
             OS_FREE(dfs->dfs_radarf[n]);

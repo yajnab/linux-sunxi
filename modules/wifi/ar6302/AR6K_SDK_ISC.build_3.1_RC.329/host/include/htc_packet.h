@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="htc_packet.h" company="Atheros">
 //    Copyright (c) 2007-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -126,7 +126,7 @@ typedef struct _HTC_PACKET {
 
 /* fast macro to recycle an RX packet that will be re-queued to HTC */
 #define HTC_PACKET_RESET_RX(p)              \
-    { (p)->pBuffer = (p)->pBufferStart; (p)->ActualLength = 0; }
+    { (p)->pBuffer = (p)->pBufferStart; (p)->ActualLength = 0; }  
 
 /* macro to set packet parameters for TX */
 #define SET_HTC_PACKET_INFO_TX(p,c,b,len,ep,tag)  \
@@ -141,9 +141,9 @@ typedef struct _HTC_PACKET {
 /* HTC Packet Queueing Macros */
 typedef struct _HTC_PACKET_QUEUE {
     DL_LIST     QueueHead;
-    int         Depth;
+    int         Depth;    
 } HTC_PACKET_QUEUE;
-
+ 
 /* initialize queue */
 #define INIT_HTC_PACKET_QUEUE(pQ)   \
 {                                   \
@@ -167,8 +167,8 @@ typedef struct _HTC_PACKET_QUEUE {
 /* get packet at head without removing it */
 static INLINE HTC_PACKET *HTC_GET_PKT_AT_HEAD(HTC_PACKET_QUEUE *queue)   {
     if (queue->Depth == 0) {
-        return NULL;
-    }
+        return NULL; 
+    }  
     return A_CONTAINING_STRUCT((DL_LIST_GET_ITEM_AT_HEAD(&queue->QueueHead)),HTC_PACKET,ListLink);
 }
 /* remove a packet from a queue, where-ever it is in the queue */
@@ -218,10 +218,10 @@ static INLINE HTC_PACKET *HTC_PACKET_DEQUEUE_TAIL(HTC_PACKET_QUEUE *queue) {
     DL_LIST_INIT_AND_ADD(&(pQ)->QueueHead,&(pP)->ListLink)  \
     (pQ)->Depth = 1;                                        \
 }
-
+    
 #define HTC_PACKET_QUEUE_ITERATE_ALLOW_REMOVE(pQ, pPTemp) \
-    ITERATE_OVER_LIST_ALLOW_REMOVE(&(pQ)->QueueHead,(pPTemp), HTC_PACKET, ListLink)
+    ITERATE_OVER_LIST_ALLOW_REMOVE(&(pQ)->QueueHead,(pPTemp), HTC_PACKET, ListLink) 
 
 #define HTC_PACKET_QUEUE_ITERATE_END ITERATE_END
-
+        
 #endif /*HTC_PACKET_H_*/

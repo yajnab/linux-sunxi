@@ -1,6 +1,6 @@
 #!/bin/sh
 #Applicable only for AR6003 and 3001.
-#
+# 
 
 Help() {
     echo "Usage: $0 [options]"
@@ -14,19 +14,19 @@ Help() {
 
     echo "Load wifi and bluetooth with dual antenna no coex"
     echo "   $0 danocoex"
-    echo
+    echo 
     echo "Load wifi and bluetooth with dual antenna and coex"
     echo "   $0 dawithcoex"
-    echo
+    echo 
     echo "Load wifi and bluetooth with single antenna"
     echo "   $0 sa"
-    echo
+    echo 
     echo "Load wifi and bluetooth over sdio (hciOverSDIO)"
     echo "   $0 hcioversdio"
-    echo
+    echo 
     echo "To unload all of the drivers:"
     echo "   $0 unloadall"
-    echo
+    echo 
     echo "To enable WLAN degug UART print:"
     echo "   $0 [options] enableuartprint"
     exit 0
@@ -124,7 +124,7 @@ if [ "$dounload" = "yes" ]; then
     if [ $? -eq 0 ]; then
         $WORKAREA_BT/scripts/load.sh unloadall
     fi
-    sleep 2
+    sleep 2	
     pkill abtfilt
     sleep 2
     $WORKAREA/host/support/loadAR6000.sh unloadall
@@ -149,7 +149,7 @@ if [ "$singleantenna" = "yes" ]; then
     cp -r $WORKAREA/host/miscdrv/ar3k/30000coex/PS_ASIC_aclLowPri.pst $WORKAREA/host/miscdrv/ar3k/30000coex/PS_ASIC.pst
     cp -r $WORKAREA/host/miscdrv/ar3k/30101coex/PS_ASIC_aclLowPri.pst $WORKAREA/host/miscdrv/ar3k/30101coex/PS_ASIC.pst
     cp -rf $WORKAREA/host/miscdrv/ar3k/  /lib/firmware/.
- else
+ else    
     echo "copy bluetooth PST with acl set to HighPri file to /lib/firmware/ar3k"
     cp -r $WORKAREA/host/miscdrv/ar3k/30000coex/PS_ASIC_aclHighPri.pst $WORKAREA/host/miscdrv/ar3k/30000coex/PS_ASIC.pst
     cp -r $WORKAREA/host/miscdrv/ar3k/30101coex/PS_ASIC_aclHighPri.pst $WORKAREA/host/miscdrv/ar3k/30101coex/PS_ASIC.pst
@@ -161,7 +161,7 @@ sleep 2
 
 
 if [ "$btoversdio" = "no" ]; then
-$WORKAREA_BT/scripts/load.sh -i $ATH_BTSERIAL_TTY  -s 3000000
+$WORKAREA_BT/scripts/load.sh -i $ATH_BTSERIAL_TTY  -s 3000000 
 sleep 5
 fi
 
@@ -170,7 +170,7 @@ if [ "$startbtfilter" = "yes" ]; then
     if [ "$singleantenna" = "yes" ]; then
         echo "Set front end antenna conf to Single Ant"
         $WORKAREA/host/.output/$ATH_PLATFORM/image/abtfilt -a -d -v -s
-    else
+    else        
         echo "Set front end antenna conf to Dual Ant"
         $WORKAREA/host/.output/$ATH_PLATFORM/image/abtfilt -a -d -v
     fi

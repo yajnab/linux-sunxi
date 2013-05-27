@@ -45,7 +45,7 @@ static int axp_set_voltage(struct regulator_dev *rdev,
 	struct axp_regulator_info *info = rdev_get_drvdata(rdev);
 	struct device *axp_dev = to_axp_dev(rdev);
 	uint8_t val, mask;
-
+	
 
 	if (check_range(info, min_uV, max_uV)) {
 		pr_err("invalid voltage range (%d, %d) uV\n", min_uV, max_uV);
@@ -69,12 +69,12 @@ static int axp_get_voltage(struct regulator_dev *rdev)
 	ret = axp_read(axp_dev, info->vol_reg, &val);
 	if (ret)
 		return ret;
-
+  
 	mask = ((1 << info->vol_nbits) - 1)  << info->vol_shift;
 	val = (val & mask) >> info->vol_shift;
 
 	return info->min_uV + info->step_uV * val;
-
+	
 }
 
 static int axp_enable(struct regulator_dev *rdev)
@@ -116,7 +116,7 @@ static int axp_list_voltage(struct regulator_dev *rdev, unsigned selector)
 
 	if(info->desc.id == AXP20_ID_LDO4)
 		return axp20_ldo4_data[selector] * 1000;
-
+	
 	ret = info->min_uV + info->step_uV * selector;
 	if (ret > info->max_uV)
 		return -EINVAL;
@@ -130,7 +130,7 @@ static int axp_set_ldo4_voltage(struct regulator_dev *rdev,
 	struct device *axp_dev = to_axp_dev(rdev);
 	uint8_t val, mask;
 	int i;
-
+	
 	if (check_range(info, min_uV, max_uV)) {
 		pr_err("invalid voltage range (%d, %d) uV\n", min_uV, max_uV);
 		return -EINVAL;
@@ -142,7 +142,7 @@ static int axp_set_ldo4_voltage(struct regulator_dev *rdev,
 			break;
 		}
 	}
-
+	
 	val <<= info->vol_shift;
 	mask = ((1 << info->vol_nbits) - 1)  << info->vol_shift;
 	return axp_update(axp_dev, info->vol_reg, val, mask);
@@ -158,7 +158,7 @@ static int axp_get_ldo4_voltage(struct regulator_dev *rdev)
 	ret = axp_read(axp_dev, info->vol_reg, &val);
 	if (ret)
 		return ret;
-
+  
 	mask = ((1 << info->vol_nbits) - 1)  << info->vol_shift;
 	val = (val & mask) >> info->vol_shift;
 	ret = axp20_ldo4_data[val]*1000;
@@ -170,7 +170,7 @@ static int axp_set_suspend_voltage(struct regulator_dev *rdev, int uV)
 	int ldo = rdev_get_id(rdev);
 
 	switch (ldo) {
-
+	
 	case AXP20_ID_LDO1 ... AXP20_ID_LDO3:
 		return axp_set_voltage(rdev, uV, uV,NULL);
 	case AXP20_ID_LDO4:
@@ -259,7 +259,7 @@ static struct regulator_ops axp20_ldoio0_ops = {
 
 static struct axp_regulator_info axp_regulator_info[] = {
 	AXP20_LDO(	1,	AXP20LDO1,	AXP20LDO1,	0,		LDO1,	0,	0,	LDO1EN,	0),//ldo1 for rtc
-	AXP20_LDO(	2,	1800,		3300,		100,	LDO2,	4,	4,	LDO2EN,	2),//ldo2 for analog1
+	AXP20_LDO(	2,	1800,		3300,		100,	LDO2,	4,	4,	LDO2EN,	2),//ldo2 for analog1 
 	AXP20_LDO(	3,	700,		3500,		25,		LDO3,	0,	7,	LDO3EN,	6),//ldo3 for digital
 	AXP20_LDO(	4,	1250,		3300,		130,	LDO4,	0,	4,	LDO4EN,	3),//ldo4 for analog2
 	AXP20_BUCK(	2,	700,		2275,		25,		BUCK2,	0,	6,	BUCK2EN,4),//buck2 for core
@@ -278,7 +278,7 @@ static ssize_t workmode_show(struct device *dev,
 	ret = axp_read(axp_dev, AXP20_BUCKMODE, &val);
 	if (ret)
 		return sprintf(buf, "IO ERROR\n");
-
+	
 	if(info->desc.id == AXP20_ID_BUCK2){
 		switch (val & 0x04) {
 			case 0:return sprintf(buf, "AUTO\n");
@@ -299,7 +299,7 @@ static ssize_t workmode_show(struct device *dev,
 
 static ssize_t workmode_store(struct device *dev,
 				struct device_attribute *attr, const char *buf, size_t count)
-{
+{	
 	struct regulator_dev *rdev = dev_get_drvdata(dev);
 	struct axp_regulator_info *info = rdev_get_drvdata(rdev);
 	struct device *axp_dev = to_axp_dev(rdev);
@@ -309,7 +309,7 @@ static ssize_t workmode_store(struct device *dev,
 		mode = buf[0];
 	else
 		mode = buf[1];
-
+	
 	switch(mode){
 	 case 'U':
 	 case 'u':
@@ -318,11 +318,11 @@ static ssize_t workmode_store(struct device *dev,
 	 case 'W':
 	 case 'w':
 	 case '2':
-		val = 1;break;
+	 	val = 1;break;
 	 default:
-	    val =0;
+	    val =0;	
 	}
-
+	
 	if(info->desc.id == AXP20_ID_BUCK2){
 		if(val)
 			axp_set_bits(axp_dev, AXP20_BUCKMODE,0x04);
@@ -335,7 +335,7 @@ static ssize_t workmode_store(struct device *dev,
 		else
 			axp_clr_bits(axp_dev, AXP20_BUCKMODE,0x02);
 	}
-
+	
 	return count;
 }
 
@@ -355,7 +355,7 @@ static ssize_t frequency_show(struct device *dev,
 
 static ssize_t frequency_store(struct device *dev,
 				struct device_attribute *attr, const char *buf, size_t count)
-{
+{	
 	struct regulator_dev *rdev = dev_get_drvdata(dev);
 	struct device *axp_dev = to_axp_dev(rdev);
 	uint8_t val,tmp;
@@ -365,10 +365,10 @@ static ssize_t frequency_store(struct device *dev,
 		var = 750;
 	if(var > 1875)
 		var = 1875;
-
+		
 	val = (var -750)/75;
 	val &= 0x0F;
-
+	
 	axp_read(axp_dev, AXP20_BUCKFREQ, &tmp);
 	tmp &= 0xF0;
 	val |= tmp;
@@ -391,7 +391,7 @@ int axp_regu_create_attrs(struct platform_device *pdev)
 			goto sysfs_failed;
 	}
     goto succeed;
-
+	
 sysfs_failed:
 	while (j--)
 		device_remove_file(&pdev->dev,&axp_regu_attrs[j]);
@@ -427,7 +427,7 @@ static int __devinit axp_regulator_probe(struct platform_device *pdev)
 		|| ri->desc.id == AXP20_ID_LDO3 || ri->desc.id == AXP20_ID_BUCK2 \
 		||ri->desc.id == AXP20_ID_BUCK3)
 		ri->desc.ops = &axp20_ops;
-
+	
 	if(ri->desc.id == AXP20_ID_LDO4)
 		ri->desc.ops = &axp20_ldo4_ops;
 
@@ -445,14 +445,14 @@ static int __devinit axp_regulator_probe(struct platform_device *pdev)
 	}
 	// rdev->desc->irq = 32;
 	platform_set_drvdata(pdev, rdev);
-
+	
 	if(ri->desc.id == AXP20_ID_BUCK2 ||ri->desc.id == AXP20_ID_BUCK3){
 		ret = axp_regu_create_attrs(pdev);
 		if(ret){
 			return ret;
 		}
 	}
-
+	
 	return 0;
 }
 

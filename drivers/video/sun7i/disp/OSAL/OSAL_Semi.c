@@ -10,7 +10,7 @@
 *
 * Author 		: javen
 *
-* Description 	: ä¿¡å·é‡æ“ä½œ
+* Description 	: ĞÅºÅÁ¿²Ù×÷
 *
 * History 		:
 *      <author>    		<time>       	<version >    		<desc>
@@ -25,13 +25,13 @@
 *                     eBase_CreateSemaphore
 *
 * Description:
-*    åˆ›å»ºä¿¡å·é‡
+*    ´´½¨ĞÅºÅÁ¿
 *
 * Parameters:
-*    Count  :  input.  ä¿¡å·é‡çš„åˆå§‹å€¼ã€‚
-*
+*    Count  :  input.  ĞÅºÅÁ¿µÄ³õÊ¼Öµ¡£
+* 
 * Return value:
-*    æˆåŠŸï¼Œè¿”å›ä¿¡å·é‡å¥æŸ„ã€‚å¤±è´¥ï¼Œè¿”å›NULLã€‚
+*    ³É¹¦£¬·µ»ØĞÅºÅÁ¿¾ä±ú¡£Ê§°Ü£¬·µ»ØNULL¡£
 *
 * note:
 *    void
@@ -48,11 +48,11 @@ OSAL_SemHdle OSAL_CreateSemaphore(__u32 Count)
 *                     OSAL_DeleteSemaphore
 *
 * Description:
-*    åˆ é™¤ä¿¡å·é‡
+*    É¾³ıĞÅºÅÁ¿
 *
 * Parameters:
-*    SemHdle  :  input.  OSAL_CreateSemaphore ç”³è¯·çš„ ä¿¡å·é‡å¥æŸ„
-*
+*    SemHdle  :  input.  OSAL_CreateSemaphore ÉêÇëµÄ ĞÅºÅÁ¿¾ä±ú
+* 
 * Return value:
 *    void
 *
@@ -72,11 +72,11 @@ void OSAL_DeleteSemaphore(OSAL_SemHdle SemHdle)
 *                     OSAL_SemPend
 *
 * Description:
-*    é”ä¿¡å·é‡
+*    ËøĞÅºÅÁ¿
 *
 * Parameters:
-*    SemHdle  :  input.  OSAL_CreateSemaphore ç”³è¯·çš„ ä¿¡å·é‡å¥æŸ„
-*
+*    SemHdle  :  input.  OSAL_CreateSemaphore ÉêÇëµÄ ĞÅºÅÁ¿¾ä±ú
+* 
 * Return value:
 *    void
 *
@@ -95,11 +95,11 @@ void OSAL_SemPend(OSAL_SemHdle SemHdle, __u16 TimeOut)
 *                     OSAL_SemPost
 *
 * Description:
-*    ä¿¡å·é‡è§£é”
+*    ĞÅºÅÁ¿½âËø
 *
 * Parameters:
-*    SemHdle  :  input.  OSAL_CreateSemaphore ç”³è¯·çš„ ä¿¡å·é‡å¥æŸ„
-*
+*    SemHdle  :  input.  OSAL_CreateSemaphore ÉêÇëµÄ ĞÅºÅÁ¿¾ä±ú
+* 
 * Return value:
 *    void
 *
@@ -112,3 +112,7 @@ void OSAL_SemPost(OSAL_SemHdle SemHdle)
 {
 
 }
+
+
+
+

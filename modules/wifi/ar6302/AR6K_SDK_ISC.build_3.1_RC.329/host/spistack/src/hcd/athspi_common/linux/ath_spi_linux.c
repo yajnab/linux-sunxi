@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="ath_spi_linux.c" company="Atheros">
 //    Copyright (c) 2007-2008 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -33,42 +33,42 @@ int HcdMapCurrentRequestBuffer(PSDHCD_DEVICE pDevice, struct scatterlist *pSGLis
     int length;
     UINT32 vaddress = (UINT32)pDevice->pCurrentBuffer;
     int byteCount = pDevice->CurrentTransferLength;
-
+    
     DBG_ASSERT(pDevice->Hcd.pDmaDescription != NULL);
-
+            
     do {
-
+                
         if (pDevice->HostDMABufferCopyMode != NO_BYTE_SWAP) {
-                /* can't do direct if we have to byte swap in software, let the hardware layer
+                /* can't do direct if we have to byte swap in software, let the hardware layer 
                  * punt this to common buffer DMA */
-            break;
+            break;    
         }
-
+                
         if (vaddress & pDevice->Hcd.pDmaDescription->AddressAlignment) {
             /* illegal address bits, hardware cannot handle the address range */
-            break;
+            break;                 
         }
-
+                 
         if (byteCount & pDevice->Hcd.pDmaDescription->LengthAlignment) {
             /* illegal length alignment, hardware cannot handle the length multiple */
-            break;
+            break;    
         }
-
+        
         DBG_PRINT(ATH_SPI_TRACE_DATA, ("ATH SPI, building scatter table (%s): pVaddr:0x%X length: %d \n",
             pDevice->CurrentTransferDirRx ? "RX":"TX",(UINT32)vaddress,pDevice->CurrentTransferLength));
-
-            /* assemble scatter gather list */
+            
+            /* assemble scatter gather list */   
         for (validEntries = 0 ; (validEntries < MaxEntries) && (byteCount > 0); validEntries++) {
                 /* set up page */
             pSGList[validEntries].page =  virt_to_page(vaddress);
                 /* validate */
             if (!VALID_PAGE(pSGList[validEntries].page)) {
                 validEntries = 0;
-                break;
-            }
-
+                break;    
+            }   
+            
                 /* setup offset into page */
-            pSGList[validEntries].offset =
+            pSGList[validEntries].offset = 
                             virt_to_phys((void *)vaddress) - page_to_phys(pSGList[validEntries].page);
                 /* setup length for this descriptor */
                 /* push length to the end of the page */
@@ -77,8 +77,8 @@ int HcdMapCurrentRequestBuffer(PSDHCD_DEVICE pDevice, struct scatterlist *pSGLis
             length = min(length,(int)pDevice->Hcd.pDmaDescription->MaxBytesPerDescriptor);
                 /* limit it to the current buffer count */
             length = min(length,byteCount);
-                /* set the scatter entry length */
-            pSGList[validEntries].length = length;
+                /* set the scatter entry length */ 
+            pSGList[validEntries].length = length;               
 #if LINUX_VERSION_CODE <= KERNEL_VERSION(2,4,20)
                 /* under linux 2.4.20, the address field must be filled in for the HCD
                  * in order to call consistent_sync() to flush the caches, this API
@@ -91,20 +91,21 @@ int HcdMapCurrentRequestBuffer(PSDHCD_DEVICE pDevice, struct scatterlist *pSGLis
                 (UINT32)pSGList[validEntries].page,
                 pSGList[validEntries].offset,
                 pSGList[validEntries].length));
-
+            
                 /* advance address */
             vaddress += length;
             byteCount -= length;
         }
-
+        
         if ((validEntries > 0) && (byteCount > 0)) {
-            DBG_PRINT(SDDBG_WARN,
+            DBG_PRINT(SDDBG_WARN, 
                           ("  ATH SPI - request buffer 0x%X does not fit, remaining bytes:%d, valid entries:%d \n",
-                          (UINT32)pDevice->pCurrentBuffer,byteCount, validEntries));
+                          (UINT32)pDevice->pCurrentBuffer,byteCount, validEntries));    
             validEntries = 0;
         }
-
+                   
     } while (FALSE);
-
-    return validEntries;
+ 
+    return validEntries;       
 }
+

@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2006 Atheros Communications Inc.
  * All rights reserved.
+ * 
  *
- *
- *
+ * 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -18,10 +18,10 @@
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
 //
- *
+ * 
  */
 
-/* This tool parses the recevent logs stored in the binary format
+/* This tool parses the recevent logs stored in the binary format 
    by the wince athsrc */
 
 #include <stdlib.h>
@@ -190,7 +190,7 @@ usage(void)
     exit(-1);
 }
 
-static A_INT32
+static A_INT32 
 decode_debug_rec(struct dbg_binary_record *dbg_rec)
 {
 #define BUF_SIZE    120
@@ -226,30 +226,30 @@ decode_debug_rec(struct dbg_binary_record *dbg_rec)
                     timestamp);
 #ifdef DBGLOG_DEBUG
             RECEVENT_DEBUG_PRINTF("%s (%d)\n",
-                                  dbglog_id_tag[moduleid][debugid],
+                                  dbglog_id_tag[moduleid][debugid], 
                                   timestamp);
 #endif /* DBGLOG_DEBUG */
             break;
 
             case 1:
             fprintf(fpout, "%8d: %s (%d): 0x%x\n", dbg_rec->ts,
-                    dbglog_id_tag[moduleid][debugid],
+                    dbglog_id_tag[moduleid][debugid], 
                     timestamp, buffer[count+1]);
 #ifdef DBGLOG_DEBUG
-            RECEVENT_DEBUG_PRINTF("%s (%d): 0x%x\n",
-                                  dbglog_id_tag[moduleid][debugid],
+            RECEVENT_DEBUG_PRINTF("%s (%d): 0x%x\n", 
+                                  dbglog_id_tag[moduleid][debugid], 
                                   timestamp, buffer[count+1]);
 #endif /* DBGLOG_DEBUG */
             break;
 
             case 2:
             fprintf(fpout, "%8d: %s (%d): 0x%x, 0x%x\n", dbg_rec->ts,
-                    dbglog_id_tag[moduleid][debugid],
+                    dbglog_id_tag[moduleid][debugid], 
                     timestamp, buffer[count+1],
                     buffer[count+2]);
 #ifdef DBGLOG_DEBUG
             RECEVENT_DEBUG_PRINTF("%s (%d): 0x%x, 0x%x\n",
-                                  dbglog_id_tag[moduleid][debugid],
+                                  dbglog_id_tag[moduleid][debugid], 
                                   timestamp, buffer[count+1],
                                   buffer[count+2]);
 #endif /* DBGLOG_DEBUG */
@@ -350,7 +350,7 @@ A_INT32 main(A_INT32 argc, A_CHAR** argv)
     dbglog_print_id_tags();
 #endif /* DBGLOG_DEBUG */
 
-    /* first 8 bytes are header */
+    /* first 8 bytes are header */  
     if (fread(&dbg_header, sizeof(struct dbg_binary_header), 1, fpin)!=1) {
         perror("dbg_header mismatch\n");
         return -1;
@@ -362,7 +362,7 @@ A_INT32 main(A_INT32 argc, A_CHAR** argv)
         dbg_rec_len += dbg_header.len;
         dbg_header_len = 8;
     } else {
-        /* header not present; assume max size */
+        /* header not present; assume max size */ 
         dbg_rec_len += AR6K_MAX_DBG_BUFFER_SIZE;
         dbg_header_len = 0;
     }
@@ -385,7 +385,7 @@ A_INT32 main(A_INT32 argc, A_CHAR** argv)
 
     /* go past header */
     fseek(fpin, dbg_header_len , SEEK_SET);
-
+        
     // Goto the first min record
     fseek(fpin, min_rec_num * dbg_rec_len , SEEK_CUR);
     while (!feof(fpin)) {
@@ -409,3 +409,4 @@ A_INT32 main(A_INT32 argc, A_CHAR** argv)
     fclose(fpout);
     return 0;
 }
+

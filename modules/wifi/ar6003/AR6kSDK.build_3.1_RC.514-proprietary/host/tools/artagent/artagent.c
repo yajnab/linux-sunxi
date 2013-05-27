@@ -3,7 +3,7 @@
  * All rights reserved.
  *
  *
- *
+ * 
 // The software source and binaries included in this development package are
 // licensed, not sold. You, or your company, received the package under one
 // or more license agreements. The rights granted to you are specifically
@@ -13,12 +13,12 @@
 // portion of this package must be in strict compliance with the license
 // agreement(s) terms.
 // </copyright>
-//
+// 
 // <summary>
 // 	Wifi driver for AR6002
 // </summary>
 //
- *
+ * 
  */
 
 #include <sys/types.h>
@@ -29,8 +29,8 @@
 #include <linux/types.h>
 #include <linux/if.h>
 #include <linux/wireless.h>
-#include <netinet/in.h>
-#include <netinet/tcp.h>
+#include <netinet/in.h> 
+#include <netinet/tcp.h> 
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -56,7 +56,7 @@
 #define DPRINTF printf
 #else
 #define DPRINTF(...) do { } while (0)
-#endif
+#endif 
 
 #include "athdrv_linux.h"
 #include "artagent.h"
@@ -126,7 +126,7 @@ int art_htc_raw_write(int sockid, unsigned char *buf, int buflen)
     struct ifreq    ifr;
 
     //DPRINTF("[%s] Enter, data length = %d\n", __FUNCTION__, buflen);
-
+   
     memset(&ifr, 0, sizeof(struct ifreq));
     strncpy(ifr.ifr_name, ar6kifname, sizeof(ifr.ifr_name));
     ifr.ifr_data = (char *)malloc(12 + buflen);;
@@ -210,11 +210,11 @@ int sock_init(int port)
 
     /* Create socket */
     sockid = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if (sockid == -1) {
+    if (sockid == -1) { 
         perror(__FUNCTION__);
         printf("Create socket to PC failed\n");
         return -1;
-    }
+    } 
 
     i = 1;
     res = setsockopt(sockid, SOL_SOCKET, SO_REUSEADDR, (char *)&i, sizeof(i));
@@ -231,31 +231,31 @@ int sock_init(int port)
     }
 
 
-    myaddr.sin_family      = AF_INET;
-    myaddr.sin_port        = htons(port);
-    myaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    myaddr.sin_family      = AF_INET; 
+    myaddr.sin_port        = htons(port); 
+    myaddr.sin_addr.s_addr = htonl(INADDR_ANY); 
     memset(&(myaddr.sin_zero), 0, 8);
     res = bind(sockid, (struct sockaddr *)&myaddr, sizeof(struct sockaddr));
-    if (res != 0) {
+    if (res != 0) { 
         perror(__FUNCTION__);
         printf("Bind failed\n");
 		close(sockid);
         return -1;
-    }
-    if (listen(sockid, 4) == -1) {
+    } 
+    if (listen(sockid, 4) == -1) { 
         perror(__FUNCTION__);
         printf("Listen failed\n");
 		close(sockid);
         return -1;
-    }
+    } 
 
     printf("Waiting for client to connect...\n");
-    sinsize = sizeof(struct sockaddr_in);
-    if ((cid = accept(sockid, (struct sockaddr *)&myaddr, &sinsize)) == -1) {
+    sinsize = sizeof(struct sockaddr_in); 
+    if ((cid = accept(sockid, (struct sockaddr *)&myaddr, &sinsize)) == -1) { 
         printf("Accept failed\n");
 		close(sockid);
         return -1;
-    }
+    } 
     i = 1;
     res = setsockopt(cid, IPPROTO_TCP, TCP_NODELAY, (char *)&i, sizeof(i));
     if (res == -1) {
@@ -277,7 +277,7 @@ int sock_recv(int sockid, unsigned char *buf, int buflen)
         return -1;
     } else if (recvbytes > 0) {
         return recvbytes;
-    }
+    } 
     return -1;
 }
 
@@ -302,7 +302,7 @@ int sock_send(int sockid, unsigned char *buf, int bytes)
         bytes -= cnt;
         bufpos += cnt;
     }
-    return (bufpos - buf);
+    return (bufpos - buf);    
 }
 
 static void print_help(char *pname)
@@ -321,7 +321,7 @@ int main (int argc, char **argv)
 	int recvbytes=0;
 	int chunkLen = 0;
 	unsigned int readLength = 0;
-	unsigned char	*bufpos;
+	unsigned char	*bufpos;  
     int reducedARTPacket = 1;
     A_UINT8  line[LINE_ARRAY_SIZE];
     int              frag_size = 768;
@@ -334,7 +334,7 @@ int main (int argc, char **argv)
     sa.sa_handler = cleanup;
     DPRINTF("before call sigaction\n");
     sigaction(SIGTERM, &sa, NULL);
-    sigaction(SIGINT,  &sa, NULL);
+    sigaction(SIGINT,  &sa, NULL);    
     sigaction(SIGHUP, &sa, NULL);
     sigaction(SIGABRT, &sa, NULL);
 
@@ -357,7 +357,7 @@ int main (int argc, char **argv)
     if (argc > 3) {
         port = atoi(argv[3]);
     }
-	if (port == 0)
+	if (port == 0) 
 		port = ART_PORT;
 	else if (port < 0 || port >65534) {
 		printf("Invalid port number\n");
@@ -371,7 +371,7 @@ int main (int argc, char **argv)
     }
 
     aid = socket(AF_INET, SOCK_DGRAM, 0);
-    if (aid < 0)
+    if (aid < 0) 
     {
         printf("Create socket to AR6002 failed\n");
         goto main_exit;
@@ -460,10 +460,11 @@ int main (int argc, char **argv)
             sock_send(cid, &(line[0]), 1);
         }
     }
-
+		
 
 main_exit:
     printf("Normal exit\n");
     cleanup(0);
     return 0;
 }
+

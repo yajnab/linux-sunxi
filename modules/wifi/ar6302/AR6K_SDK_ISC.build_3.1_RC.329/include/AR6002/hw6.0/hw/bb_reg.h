@@ -1,6 +1,6 @@
 // ------------------------------------------------------------------
 // Copyright (c) 2004-2007 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -8938,7 +8938,7 @@ typedef struct bb_reg_reg_s_12 {
 
 #ifndef __ASSEMBLER__
 
-#if 0
+#if 0 
 typedef struct bb_reg_reg_s_13 {
   volatile char pad__0[0x9800];                                        /*        0x0 - 0x9800     */
   struct chn_reg_map bb_chn_reg_map;                                   /*     0x9800 - 0x9bf8     */
@@ -8963,7 +8963,7 @@ typedef struct bb_reg_reg_s_13 {
   struct sm3_reg_map bb_sm3_reg_map;                                   /*     0xd200 - 0xd800     */
   struct mit_local_reg_map bb_mit_reg_map;                             /*     0xd800 - 0xd820     */
 } bb_reg_reg_t_13;
-#endif //0
+#endif //0 
 
 #endif /* __ASSEMBLER__ */
 

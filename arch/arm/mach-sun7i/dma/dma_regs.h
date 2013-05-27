@@ -54,3 +54,4 @@
 #define DMA_WRITE_REG(val, reg)			writel(val, reg)
 
 #endif  /* __DMA_REGS_H */
+

@@ -10,7 +10,7 @@
 *
 * Author 		: javen
 *
-* Description 	: USB æ£€æµ‹
+* Description 	: USB ¼ì²â
 *
 * History 		:
 *      <author>    		<time>       	<version >    		<desc>
@@ -53,6 +53,30 @@ static struct usb_scan_info g_usb_scan_info;
 extern int axp_usb_det(void);
 void (*__usb_hw_scan) (struct usb_scan_info *);
 
+static void ac_enable(struct usb_scan_info *info)
+{
+    if(info->ac_enable)
+        return;
+    printk("ac_enable\n");
+    info->ac_enable = 1;
+    if(info->cfg->port[0].ac_enable.valid){
+        printk("gpio ac_enable pull up\n");
+		__gpio_set_value(info->cfg->port[0].ac_enable.gpio_set.gpio.gpio, 1);
+	}
+}
+
+static void ac_disable(struct usb_scan_info *info)
+{
+    if(!info->ac_enable)
+        return;
+    printk("ac_disable\n");
+    info->ac_enable = 0;
+    if(info->cfg->port[0].ac_enable.valid){
+        printk("gpio ac_enable pull down\n");
+		__gpio_set_value(info->cfg->port[0].ac_enable.gpio_set.gpio.gpio, 0);
+    }
+}
+
 /*
 *******************************************************************************
 *                     __get_pin_data
@@ -81,19 +105,19 @@ static __u32 get_pin_data(struct usb_gpio *usb_gpio)
 *                     PIODataIn_debounce
 *
 * Description:
-*   è¿‡æ»¤PIOçš„æ¯›åˆº
-*   å–10æ¬¡ï¼Œå¦‚æžœ10æ¬¡ç›¸åŒï¼Œåˆ™è®¤ä¸ºæ— æŠ–åŠ¨ï¼Œå–ä»»æ„ä¸€æ¬¡çš„å€¼è¿”å›ž
-*   å¦‚æžœ10æ¬¡æœ‰ä¸€æ¬¡ä¸ç›¸åŒï¼Œåˆ™æœ¬æ¬¡è¯»å–æ— æ•ˆ
+*   ¹ýÂËPIOµÄÃ«´Ì
+*   È¡10´Î£¬Èç¹û10´ÎÏàÍ¬£¬ÔòÈÏÎªÎÞ¶¶¶¯£¬È¡ÈÎÒâÒ»´ÎµÄÖµ·µ»Ø
+*   Èç¹û10´ÎÓÐÒ»´Î²»ÏàÍ¬£¬Ôò±¾´Î¶ÁÈ¡ÎÞÐ§
 *
 * Arguments:
 *    phdle  :  input.
-*    value  :  output.  è¯»å›žæ¥çš„PIOçš„å€¼
+*    value  :  output.  ¶Á»ØÀ´µÄPIOµÄÖµ
 *
 * Returns:
-*    è¿”å›žæ˜¯å¦æœ‰å˜åŒ–
+*    ·µ»ØÊÇ·ñÓÐ±ä»¯
 *
 * note:
-*    æ— 
+*    ÎÞ
 *
 *********************************************************************
 */
@@ -103,10 +127,10 @@ static __u32 PIODataIn_debounce(struct usb_gpio *usb_gpio, __u32 *value)
     __u32 time   = 10;
     __u32 temp1  = 0;
     __u32 cnt    = 0;
-    __u32 change = 0;   /* æ˜¯å¦æœ‰æŠ–åŠ¨? */
+    __u32 change = 0;   /* ÊÇ·ñÓÐ¶¶¶¯? */
 
-    /* å– 10 æ¬¡PIOçš„çŠ¶æ€ï¼Œå¦‚æžœ10æ¬¡çš„å€¼éƒ½ä¸€æ ·ï¼Œè¯´æ˜Žæœ¬æ¬¡è¯»æ“ä½œæœ‰æ•ˆï¼Œ
-       å¦åˆ™ï¼Œè®¤ä¸ºæœ¬æ¬¡è¯»æ“ä½œå¤±è´¥ã€‚
+    /* È¡ 10 ´ÎPIOµÄ×´Ì¬£¬Èç¹û10´ÎµÄÖµ¶¼Ò»Ñù£¬ËµÃ÷±¾´Î¶Á²Ù×÷ÓÐÐ§£¬
+       ·ñÔò£¬ÈÏÎª±¾´Î¶Á²Ù×÷Ê§°Ü¡£
     */
     if(usb_gpio->valid){
         retry = time;
@@ -117,7 +141,7 @@ static __u32 PIODataIn_debounce(struct usb_gpio *usb_gpio, __u32 *value)
             }
         }
 
-        /* 10 æ¬¡éƒ½ä¸º0ï¼Œæˆ–è€…éƒ½ä¸º1 */
+        /* 10 ´Î¶¼Îª0£¬»òÕß¶¼Îª1 */
         if((cnt == time)||(cnt == 0)){
             change = 0;
         }
@@ -216,8 +240,7 @@ static u32 get_detect_vbus_state(struct usb_scan_info *info)
             }
         }
     }else if(info->cfg->port[0].det_vbus_type == USB_DET_VBUS_TYPE_AXP){
-        //if(axp_usb_det()){
-        if(1){
+        if(axp_usb_det()){        
             det_vbus_state = USB_DET_VBUS_VALID;
         }else{
             det_vbus_state = USB_DET_VBUS_INVALID;
@@ -264,7 +287,7 @@ static u32 get_dp_dm_status(struct usb_scan_info *info)
     ret1 = get_dp_dm_status_normal(info);
     ret2 = get_dp_dm_status_normal(info);
 
-    //è¿žç»­è¯»3æ¬¡æ˜¯ä¸ºäº†é¿å¼€ç”µå¹³çš„çž¬é—´å˜åŒ–
+    //Á¬Ðø¶Á3´ÎÊÇÎªÁË±Ü¿ªµçÆ½µÄË²¼ä±ä»¯
     if((ret0 == ret1) && (ret0 == ret2)){
         ret = ret0;
     }else if(ret2 == 0x11){
@@ -461,14 +484,18 @@ static void do_vbus1_id1(struct usb_scan_info *info)
 	switch(role){
 		case USB_ROLE_NULL:
 			if(get_dp_dm_status(info) == 0x00){
-			/* delay for vbus is stably */
-			if(info->device_insmod_delay < USB_SCAN_INSMOD_DEVICE_DRIVER_DELAY){
-				info->device_insmod_delay++;
-				break;
-			}
+    			/* delay for vbus is stably */
+    			if(info->device_insmod_delay < USB_SCAN_INSMOD_DEVICE_DRIVER_DELAY){
+    				info->device_insmod_delay++;
+    				break;
+    			}
 
-			info->device_insmod_delay = 0;
+    			info->device_insmod_delay = 0;
 			    hw_insmod_usb_device();
+			}
+			else{
+			    ac_enable(info);
+			    return;
 			}
 		break;
 
@@ -483,7 +510,7 @@ static void do_vbus1_id1(struct usb_scan_info *info)
 		default:
 			DMSG_PANIC("ERR: unkown usb role(%d)\n", role);
 	}
-
+    ac_disable(info);
 	return;
 }
 
@@ -561,12 +588,12 @@ static void vbus_id_hw_scan(struct usb_scan_info *info)
 
 		case  0x03:
 			do_vbus1_id1(info);
-		break;
+		return;
 
 		default:
 			DMSG_PANIC("ERR: vbus_id_hw_scan: unkown vbus_id_state(0x%x)\n", vbus_id_state);
 	}
-
+    ac_disable(info);
 	return ;
 }
 
@@ -676,7 +703,7 @@ __s32 usb_hw_scan_init(struct usb_cfg *cfg)
 							goto failed;
 						}
 
-	                    /* å¦‚æžœidå’Œvbusçš„pinç›¸åŒ, å°±ä¸éœ€è¦æ‹‰pioäº† */
+	                    /* Èç¹ûidºÍvbusµÄpinÏàÍ¬, ¾Í²»ÐèÒªÀ­pioÁË */
 						if(port_info->id.gpio_set.gpio.gpio == port_info->det_vbus.gpio_set.gpio.gpio){
 							need_pull_pio = 0;
 						}
@@ -737,6 +764,19 @@ __s32 usb_hw_scan_init(struct usb_cfg *cfg)
 			ret = -1;
 			goto failed;
 	}
+    if(port_info->ac_enable.valid){
+        ret = gpio_request(port_info->ac_enable.gpio_set.gpio.gpio, "ac_enable");
+        if(ret != 0){
+            DMSG_PANIC("ERR: ac_enable gpio_request failed\n");
+            port_info->ac_enable.valid = 0;
+        }else{
+            /* set config, ouput */
+            sw_gpio_setcfg(port_info->ac_enable.gpio_set.gpio.gpio, 1);
+
+            /* reserved is pull down */
+            sw_gpio_setpull(port_info->ac_enable.gpio_set.gpio.gpio, 2);
+        }
+    }
 
 	return 0;
 
@@ -784,3 +824,5 @@ __s32 usb_hw_scan_exit(struct usb_cfg *cfg)
 
 	return 0;
 }
+
+

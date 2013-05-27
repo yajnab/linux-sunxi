@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="target_reg_table.h" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -187,7 +187,7 @@ static struct targetdef_s my_target_def = {
 #else
 
 static struct targetdef_s my_target_def = {
-    .d_RTC_SOC_BASE_ADDRESS = RTC_SOC_BASE_ADDRESS,
+    .d_RTC_SOC_BASE_ADDRESS = RTC_SOC_BASE_ADDRESS,                      
     .d_RTC_WMAC_BASE_ADDRESS = RTC_WMAC_BASE_ADDRESS,
     .d_SYSTEM_SLEEP_OFFSET = WLAN_SYSTEM_SLEEP_OFFSET,
     .d_WLAN_SYSTEM_SLEEP_OFFSET = WLAN_SYSTEM_SLEEP_OFFSET,

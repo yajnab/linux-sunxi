@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="dbglog_api.h" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -45,7 +45,7 @@ extern "C" {
 #define DBGLOG_GET_TIMESTAMP(arg) \
     ((arg & DBGLOG_TIMESTAMP_MASK) >> DBGLOG_TIMESTAMP_OFFSET)
 
-/**
+/** 
   @param lv 0->RAW info, 1->Breif translated info, 2->Full info
   @param logbuf dbglog buffer
  */

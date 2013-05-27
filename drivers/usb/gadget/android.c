@@ -658,7 +658,7 @@ static int mass_storage_function_init(struct android_usb_function *f,
 	struct mass_storage_function_config *config;
 	struct fsg_common *common;
 	int err;
-	int i = 0;
+	int i = 0;    
 	config = kzalloc(sizeof(struct mass_storage_function_config),
 								GFP_KERNEL);
 	if (!config)
@@ -681,7 +681,7 @@ static int mass_storage_function_init(struct android_usb_function *f,
         config->fsg.luns[i].cdrom       = 0;
         config->fsg.luns[i].nofua       = 1;
     }
-#endif
+#endif    
     //config->fsg.luns[0].filename = "/dev/mmcblk0";
 	common = fsg_common_init(NULL, cdev, &config->fsg);
 	if (IS_ERR(common)) {
@@ -842,7 +842,7 @@ static int android_init_functions(struct android_usb_function **functions,
 			err = PTR_ERR(f->dev);
 			goto err_create;
 		}
-
+        
 		if (f->init) {
 			err = f->init(f, cdev);
 			if (err) {
@@ -977,7 +977,7 @@ functions_store(struct device *pdev, struct device_attribute *attr,
 
 	while (b) {
 		name = strsep(&b, ",");
-		if (name) {
+		if (name) {		    
 			err = android_enable_function(dev, name);
 			if (err)
 				pr_err("android_usb: Cannot enable '%s'", name);
@@ -1010,7 +1010,7 @@ static ssize_t enable_store(struct device *pdev, struct device_attribute *attr,
 	mutex_lock(&dev->mutex);
 
 	sscanf(buff, "%d", &enabled);
-
+	
 	if (enabled && !dev->enabled) {
 		cdev->next_string_id = 0;
 		/*
@@ -1232,9 +1232,9 @@ static int android_bind(struct usb_composite_dev *cdev)
 			longname, gadget->name);
 		device_desc.bcdDevice = __constant_cpu_to_le16(0x9999);
 	}
-
+    
 	usb_gadget_set_selfpowered(gadget);
-
+	
 	dev->cdev = cdev;
 
 	return 0;

@@ -45,5 +45,5 @@ INT32 bus_cfg_write
 	INT32 size,
 	INT32 ret_val
 );
-
+		
 #endif //__PCI_BUS_H_

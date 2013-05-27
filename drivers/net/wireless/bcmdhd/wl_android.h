@@ -84,14 +84,11 @@ int16 wl_get_avg_rssi(wl_rssi_cache_ctrl_t *rssi_cache_ctrl, void *addr);
 #define RSSI_INT ((RSSI_MAX-RSSI_MIN)/RSSI_OFFSET)
 #define BCM4330_CHIP_ID		0x4330
 #define BCM4330B2_CHIP_REV      4
-extern uint chip;
-extern uint chiprev;
-
 int wl_update_rssi_offset(int rssi);
 #endif
 
 #if defined(BSSCACHE)
-#define BSSCACHE_LEN	4
+#define BSSCACHE_LEN	8
 #define BSSCACHE_TIME	15000
 
 typedef struct wl_bss_cache {

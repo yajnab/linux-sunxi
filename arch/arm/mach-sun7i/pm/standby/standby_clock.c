@@ -358,9 +358,9 @@ __s32 standby_clk_set_pll_factor(struct pll_factor_t *pll_factor)
 	CmuReg->Pll1Ctl.FactorK = pll_factor->FactorK;
 	CmuReg->Pll1Ctl.FactorM = pll_factor->FactorM;
 	CmuReg->Pll1Ctl.PLLDivP = pll_factor->FactorP;
-
+	
 	//busy_waiting();
-
+	
 	return 0;
 }
 
@@ -368,7 +368,7 @@ __s32 standby_clk_set_pll_factor(struct pll_factor_t *pll_factor)
 *********************************************************************************************************
 *                                     standby_clk_get_pll_factor
 *
-* Description:
+* Description: 
 *
 * Arguments  : none
 *
@@ -387,9 +387,9 @@ __s32 standby_clk_get_pll_factor(struct pll_factor_t *pll_factor)
 	pll_factor->FactorK = CmuReg->Pll1Ctl.FactorK;
 	pll_factor->FactorM = CmuReg->Pll1Ctl.FactorM;
 	pll_factor->FactorP = CmuReg->Pll1Ctl.PLLDivP;
-
+	
 	//busy_waiting();
-
+	
 	return 0;
 }
 
@@ -495,3 +495,35 @@ __s32 standby_clk_apbexit(void)
     CmuReg->Apb1ClkDiv.ClkSrc = apbclkbak.ClkSrc;
     return 0;
 }
+
+
+/*
+*********************************************************************************************************
+*                                     standby_clk_apb_save
+*
+* Description: switch apb1 clock to 24M hosc.
+*
+* Arguments  : none
+*
+* Returns    : 0;
+*********************************************************************************************************
+*/
+__ccmu_sysclkl_ratio_reg0054_t sysclk_bak;
+
+__s32 standby_clk_ahb_2pll(void)
+{
+    sysclk_bak = CmuReg->SysClkDiv;
+    /* change ahb clock to axi */
+    CmuReg->SysClkDiv.AHBClkSrc = 0;
+    printk("sysclk_bak, %x!\n", sysclk_bak);
+    return 0;
+}
+
+__s32 standby_clk_ahb_restore(void)
+{
+    //sysclk_bak = CmuReg->SysClkDiv;
+    /* restore ahb clock */
+    CmuReg->SysClkDiv.AHBClkSrc = sysclk_bak.AHBClkSrc;
+    return 0;
+}
+

@@ -47,7 +47,7 @@
 
 #undef	PHY_POWER
 #undef	DYNAMIC_MAC_SYSCONFIG
-#undef	SYSCONFIG_GPIO
+#define	SYSCONFIG_GPIO
 #define	SYSCONFIG_CCMU
 
 #undef	PKT_DUMP
@@ -232,7 +232,7 @@ __s32 emactx_DMAEqueueBuf(dma_hdl_t hDma, void *buff_addr, __u32 len)
 int wemac_dma_config_start(__u8 rw, void *buff_addr, __u32 len)
 {
 	int ret;
-
+   
     if (rw == 0) {
         dma_config_t dma_cfg = {
             .xfer_type = {
@@ -246,7 +246,7 @@ int wemac_dma_config_start(__u8 rw, void *buff_addr, __u32 len)
                 .dst_addr_mode  = DDMA_ADDR_LINEAR
             },
             .bconti_mode    = false,
-            .src_drq_type   = D_SRC_EMAC_RX,
+            .src_drq_type   = D_SRC_EMAC_RX, 
             .dst_drq_type   = D_DST_SRAM,
             .irq_spt        = CHAN_IRQ_FD
         };
@@ -261,7 +261,7 @@ int wemac_dma_config_start(__u8 rw, void *buff_addr, __u32 len)
         if(ret)
             goto err_out;
 
-    } else {
+    } else {      
         dma_config_t dma_cfg = {
             .xfer_type = {
                 .src_data_width = DATA_WIDTH_32BIT,
@@ -274,8 +274,8 @@ int wemac_dma_config_start(__u8 rw, void *buff_addr, __u32 len)
                 .dst_addr_mode  = DDMA_ADDR_IO
             },
             .bconti_mode    = false,
-            .src_drq_type   = D_SRC_SRAM,
-            .dst_drq_type   = D_DST_EMAC_TX,
+            .src_drq_type   = D_SRC_SRAM, 
+            .dst_drq_type   = D_DST_EMAC_TX, 
             .irq_spt        = CHAN_IRQ_FD
         };
 
@@ -501,6 +501,9 @@ void emac_sys_setup(wemac_board_info_t * db)
     if(!gpio_num){
        printk(KERN_ERR "ERROR: emac get  gpio resources from sysconfig failed!!!\n");
     } else {
+        /* someone maybe have a power pin, and we could not request it here*/
+        if (gpio_num > 18)
+            gpio_num = 18;
         for(i = 0; i < gpio_num; i++) {
             if (0 != gpio_request(db->gpio_list[i].gpio.gpio, NULL)){
                 printk(KERN_ERR"----------------------EMAC---------------------\n\n");
@@ -519,8 +522,10 @@ void emac_sys_setup(wemac_board_info_t * db)
 #ifdef SYSCONFIG_CCMU
 	/*  set up clock gating  */
 	db->emac_clk = clk_get(db->dev, CLK_AHB_EMAC);
-	if(IS_ERR(db->emac_clk))
+	if(!IS_ERR(db->emac_clk))
 		clk_enable(db->emac_clk);
+    else
+        printk(KERN_ERR "emac get clk failed!\n");
 #else
 	reg_val = readl(db->ccmu_vbase + CCM_AHB_GATING_REG0);
 	reg_val |= 0x1<<17;
@@ -571,7 +576,7 @@ unsigned int emac_setup(struct net_device *ndev )
 	CONFIG_REG(EMAC_RX_MHF, reg_val, 21);
 	CONFIG_REG(EMAC_RX_BCO, reg_val, 22);
 #endif
-
+	
 	CONFIG_REG(EMAC_RX_SAF, reg_val, 24);
 	CONFIG_REG(EMAC_RX_SAIF, reg_val, 25);
 
@@ -582,7 +587,7 @@ unsigned int emac_setup(struct net_device *ndev )
 	CONFIG_REG(EMAC_MAC_TFC, reg_val, 3);
 	CONFIG_REG(EMAC_MAC_RFC, reg_val, 2);
 	writel(reg_val, db->emac_vbase + EMAC_MAC_CTL0_REG);
-
+	
 	/* set MAC CTL1 */
 	reg_val = readl(db->emac_vbase + EMAC_MAC_CTL1_REG);
 
@@ -599,7 +604,7 @@ unsigned int emac_setup(struct net_device *ndev )
 	CONFIG_REG(EMAC_MAC_BNB, reg_val, 13);
 	CONFIG_REG(EMAC_MAC_ED, reg_val, 14);
 	writel(reg_val, db->emac_vbase + EMAC_MAC_CTL1_REG);
-
+	
 #if 0
 	/* set up IPGT */
 	reg_val = EMAC_MAC_IPGT;
@@ -636,7 +641,7 @@ unsigned int wemac_powerup(struct net_device *ndev )
 	reg_val = readl(db->emac_vbase + EMAC_RX_CTL_REG);
 	reg_val |= 0x8;
 	writel(reg_val, db->emac_vbase + EMAC_RX_CTL_REG);
-
+	
 	/* Soft reset MAC */
 	reg_val = readl(db->emac_vbase + EMAC_MAC_CTL0_REG);
 	reg_val &= ((0x1<<15) | (0x1<<14) | (0x1<<11) | (0x1<<9));
@@ -771,7 +776,7 @@ static void wemac_release_board(struct platform_device *pdev,
 		release_mem_region(iomem->start, resource_size(iomem));
 	}
 #else
-
+    
     if (db->gpio_list){
         for(i = 0; i < gpio_num; i++) {
             gpio_free(db->gpio_list[i].gpio.gpio);
@@ -781,7 +786,7 @@ static void wemac_release_board(struct platform_device *pdev,
 #endif
 
 #ifdef PHY_POWER
-
+    
     if (db->mos_gpio){
         gpio_free(db->mos_gpio->gpio.gpio);
         kfree(db->mos_gpio);
@@ -892,7 +897,7 @@ static int wemac_phy_init(wemac_board_info_t *db)
 	u32 reg_val;
 
 #ifdef PHY_POWER
-
+    
     if (db->mos_gpio){
         db->mos_gpio->gpio.data = 1;
         __gpio_set_value(db->mos_gpio->gpio.gpio, db->mos_gpio->gpio.data);
@@ -1389,7 +1394,7 @@ static int wemac_open(struct net_device *dev)
 	/* set up EMAC */
 	emac_setup(dev);
 	wemac_set_rx_mode(dev);
-
+	
 	/* wemac_reset(db); */
 	wemac_init_wemac(dev);
 
@@ -1524,7 +1529,7 @@ static void wemac_shutdown(struct net_device *dev)
 	do{
 		reg_val = wemac_phy_read(dev, db->mii.phy_id, MII_BMCR);
 		/* PHY POWER DOWN */
-		wemac_phy_write(dev, db->mii.phy_id, MII_BMCR, BMCR_PDOWN | reg_val);
+		wemac_phy_write(dev, db->mii.phy_id, MII_BMCR, BMCR_PDOWN | reg_val);	
 	}while(!(wemac_phy_read(dev, db->mii.phy_id, MII_BMCR) & BMCR_PDOWN));
 
 	phy_reg_dump(db);
@@ -1851,13 +1856,13 @@ static void wemac_get_macaddr(wemac_board_info_t *db)
 		ndev->dev_addr[i] = simple_strtoul(p, &p, 16);
 
 #ifdef DYNAMIC_MAC_SYSCONFIG
-
+    
     script_item_u emac_mac;
     if(SCIRPT_ITEM_VALUE_TYPE_STR != script_get_item("dynameic", "MAC", &emac_mac)){
         printk(KERN_WARNING "In sysconfig.fex emac mac address is not valid!\n");
     } else if(!is_valid_ether_addr(ndev->dev_addr)){
         emac_mac.str[12] = '\0';
-        for (i=0; i < 6; i++){
+        for (i=0; i < 6; i++){ 
 			char emac_tmp[3]=":::";
 			memcpy(emac_tmp, (char *)(emac_mac.str+i*2), 2);
 			emac_tmp[2]=':';

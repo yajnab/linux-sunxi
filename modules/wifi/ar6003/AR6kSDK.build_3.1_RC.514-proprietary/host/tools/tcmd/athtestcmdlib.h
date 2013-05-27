@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2006 Atheros Communications Inc.
  * All rights reserved.
- *
- *
+ * 
+ * 
 // The software source and binaries included in this development package are
 // licensed, not sold. You, or your company, received the package under one
 // or more license agreements. The rights granted to you are specifically
@@ -12,19 +12,19 @@
 // portion of this package must be in strict compliance with the license
 // agreement(s) terms.
 // </copyright>
-//
+// 
 // <summary>
 // 	Wifi driver for AR6002
 // </summary>
 //
- *
+ * 
  */
 #ifndef _ATH_TESTCMD_LIB_H
 #define _ATH_TESTCMD_LIB_H
 
 #ifdef __cplusplus
 extern "C" {
-#endif
+#endif 
 
 typedef enum _AthDataRate {
 	ATH_RATE_1M,
@@ -92,6 +92,7 @@ const char *athGetErrorString(void);
 
 #ifdef __cplusplus
 } /* extern "C" */
-#endif
+#endif 
 
-#endif
+#endif 
+

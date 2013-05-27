@@ -88,7 +88,7 @@ extern void apAssFail(const char *str);
 #define HOFFMAN_BANK6       8
 #define HOFFMAN_BANK7       9
 
-//atheros register file struct used by parser, contains some extra fields
+//atheros register file struct used by parser, contains some extra fields 
 //to help manipulation of members during parsing
 typedef struct parseAtherosRegFile {
     A_CHAR      fieldName[MAX_NAME_LENGTH];
@@ -107,7 +107,7 @@ typedef struct parseAtherosRegFile {
 	A_BOOL		valueSigned;
     A_UCHAR     rfRegNumber;
     A_UINT32    maxValue;	//also acts as the mask
-    A_UINT32    indexToModeSection;
+    A_UINT32    indexToModeSection;   
 	A_BOOL		existsInModeSection;
 	A_BOOL		dontReverseField;
 } PARSE_ATHEROS_REG_FILE;

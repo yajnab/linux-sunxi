@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="AR6K_version.h" company="Atheros">
 //    Copyright (c) 2004-2007 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -21,7 +21,7 @@
 // Author(s): ="Atheros"
 //==============================================================================
 #define __VER_MAJOR_ 2
-#define __VER_MINOR_ 1
+#define __VER_MINOR_ 1 
 #define __VER_PATCH_ 0
 
 /* The makear6ksdk script (used for release builds) modifies the following line. */
@@ -46,3 +46,5 @@
  * DO NOT split the following macro into multiple lines as this may confuse the build scripts.
  */
 #define AR6K_SW_VERSION     ( ( __VER_MAJOR_ << VER_MAJOR_BIT_OFFSET ) + ( __VER_MINOR_ << VER_MINOR_BIT_OFFSET ) + ( __VER_PATCH_ << VER_PATCH_BIT_OFFSET ) + ( __BUILD_NUMBER_ << VER_BUILD_NUM_BIT_OFFSET ) )
+
+

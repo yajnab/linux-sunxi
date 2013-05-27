@@ -14,7 +14,7 @@
 #define HCI_CMD_GET_OGF(opcode)     ((opcode >> HCI_CMD_OGF_SHIFT) & HCI_CMD_OGF_MASK)
 
 #define HCI_CMD_OCF_MASK            0x3FF
-#define HCI_CMD_OCF_SHIFT           0
+#define HCI_CMD_OCF_SHIFT           0 
 #define HCI_CMD_GET_OCF(opcode)     (((opcode) >> HCI_CMD_OCF_SHIFT) & HCI_CMD_OCF_MASK)
 
 #define HCI_FORM_OPCODE(ocf, ogf)    ((ocf & HCI_CMD_OCF_MASK) << HCI_CMD_OCF_SHIFT | \
@@ -77,7 +77,7 @@
 #define OCF_HCI_Reset_Failed_Contact_Counter        0x02
 #define OCF_HCI_Read_Link_Quality                   0x03
 #define OCF_HCI_Read_RSSI                           0x05
-#define OCF_HCI_Read_Local_AMP_Info                 0x09
+#define OCF_HCI_Read_Local_AMP_Info                 0x09    
 #define OCF_HCI_Read_Local_AMP_ASSOC                0x0A
 #define OCF_HCI_Write_Remote_AMP_ASSOC              0x0B
 
@@ -152,7 +152,7 @@
 #define HCI_Write_Flow_Control_Mode     HCI_FORM_OPCODE(OCF_HCI_Write_Flow_Control_Mode, OGF_LINK_POLICY)
 #define HCI_Write_BE_Flush_Timeout      HCI_FORM_OPCODE(OCF_HCI_Write_BE_Flush_Timeout, OGF_LINK_POLICY)
 #define HCI_Read_BE_Flush_Timeout       HCI_FORM_OPCODE(OCF_HCI_Read_BE_Flush_Timeout, OGF_LINK_POLICY)
-#define HCI_Short_Range_Mode            HCI_FORM_OPCODE(OCF_HCI_Short_Range_Mode, OGF_LINK_POLICY)
+#define HCI_Short_Range_Mode            HCI_FORM_OPCODE(OCF_HCI_Short_Range_Mode, OGF_LINK_POLICY)            
 
 
 /*===== Info Commands =====================*/
@@ -567,7 +567,7 @@ typedef struct  amp_assoc_cmd_resp_t{
 enum PAL_HCI_CMD_STATUS {
     PAL_HCI_CMD_PROCESSED,
     PAL_HCI_CMD_IGNORED
-};
+}; 
 
 
 /*============= HCI Error Codes =======================*/
@@ -601,7 +601,7 @@ enum PAL_HCI_CMD_STATUS {
 /*============= HCI Error Codes End =======================*/
 
 
-/* Following are event return parameters.. part of HCI events
+/* Following are event return parameters.. part of HCI events 
  */
 typedef struct  timeout_read_t {
     A_UINT8     status;

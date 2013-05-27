@@ -5,7 +5,7 @@
 //
 // Return codes
 //
-typedef enum
+typedef enum 
 {
     HCIUTILS_SUCCESS,               // Success
     HCIUTILS_FAILURE,               // Generic Failure
@@ -16,7 +16,7 @@ typedef enum
 //
 // Notification Type - Or to get notification for both types
 //
-typedef enum
+typedef enum 
 {
     HCIUTILS_COMMAND=0x1,
     HCIUTILS_EVENT =0x2
@@ -27,8 +27,8 @@ typedef enum
 //
 #define HCIUTILS_NOTIFICATION_OPCODE_ALL        0xffff
 
-typedef struct
-{
+typedef struct 
+{    
     tHCIUTILS_NOTIFICATION_TYPE     tType;
     unsigned short                  nOpCode;
     void *                          p_notification_data_buf;
@@ -40,7 +40,7 @@ typedef void ( *tHCIUTILS_EVENT_CALLBACK) ( tHCIUTILS_NOTIFICATION * pEvent);
 
 tHCIUTILS_STATUS HCIUTILS_RegisterHCINotification
     (
-        tHCIUTILS_NOTIFICATION_TYPE t_type,
+        tHCIUTILS_NOTIFICATION_TYPE t_type, 
         unsigned short              nOpCode,
         tHCIUTILS_EVENT_CALLBACK    eventCallback ,
         void *                      p_appdata
@@ -48,7 +48,7 @@ tHCIUTILS_STATUS HCIUTILS_RegisterHCINotification
 
 void HCIUTILS_UnRegisterHCINotification
     (
-        tHCIUTILS_NOTIFICATION_TYPE t_type,
+        tHCIUTILS_NOTIFICATION_TYPE t_type, 
         unsigned short              nOpCode
     );
 
@@ -59,7 +59,7 @@ typedef enum
 
 }tHCIUTILS_HCI_CMD;
 
-typedef struct
+typedef struct 
 {
     unsigned char       first;
     unsigned char       last;
@@ -79,3 +79,4 @@ void HCIUTILS_SendCmd
 
 
 #endif //__HCI_UTILS_H__
+

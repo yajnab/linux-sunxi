@@ -14,7 +14,7 @@ extern "C" {
 
 #ifndef WIN32
 #include <unistd.h>
-#ifndef EILSEQ
+#ifndef EILSEQ  
     #define EILSEQ EIO
 #endif	// EILSEQ
 #endif	// #ifndef WIN32
@@ -52,7 +52,7 @@ extern "C" {
 
 #define MAX_NUM_PARAMS_IN_ART_ANI_OPTIMIZATION_LEVEL 20  // max_num in NI/BI/SI
 
-typedef struct _artAniSetup
+typedef struct _artAniSetup 
 {
 	A_UINT32   Enabled;
 	A_UINT32   Reuse;
@@ -71,7 +71,7 @@ typedef struct _artAniSetup
 } ART_ANI_SETUP;
 
 typedef struct _artAniOptLevel {
-    A_INT32 paramVal[MAX_NUM_PARAMS_IN_ART_ANI_OPTIMIZATION_LEVEL];
+    A_INT32 paramVal[MAX_NUM_PARAMS_IN_ART_ANI_OPTIMIZATION_LEVEL];    
 	A_CHAR	levelName[16];
 } ART_ANI_OPTIMIZATION_LEVEL;
 

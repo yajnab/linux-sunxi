@@ -23,7 +23,7 @@
 
 #ifdef ANDROID
 #include <cutils/log.h>
-#endif
+#endif 
 
 
 #define SIGMA_DUT_PORT 9000
@@ -36,7 +36,7 @@ unsigned short wfa_defined_debug = WFA_DEBUG_ERR | WFA_DEBUG_WARNING | WFA_DEBUG
 int                     g_debug_level = 0;
 
 
-#ifdef ANDROID
+#ifdef ANDROID 
 static const char TAGS[] = "sigma_dut";
 
 
@@ -63,21 +63,21 @@ void sigma_dut_hexdump(int level, const char *title, const unsigned char *buf, s
 	//	return;
 	//wpa_debug_print_timestamp();
 
-        sigma_dut_print(DUT_MSG_DEBUG, "%s - hexdump(len=%lu): %s", title, (unsigned long)len,
+        sigma_dut_print(DUT_MSG_DEBUG, "%s - hexdump(len=%lu): %s", title, (unsigned long)len, 
 		(show) ? (buf ? "......" : " [NULL]") : " [REMOVED]");
 
-	if (buf) {
+    	if (buf) {
 		char line[82];
 		i = 0;
 		while (i<len) {
 			int j, next=0;
 			for (j=0; j<27 && i<len; ++j, ++i) {
-				next += sprintf(line+next, "%02X ", buf[i]);
+				next += sprintf(line+next, "%02X ", buf[i]);				
 			}
-                     sigma_dut_print(DUT_MSG_DEBUG, "%s %s", TAGS, line);
+                     sigma_dut_print(DUT_MSG_DEBUG, "%s %s", TAGS, line);        
 		}
-              sigma_dut_print(DUT_MSG_DEBUG, "%s %s", TAGS, "--------------------------------------------------------------------------------");
-	}
+              sigma_dut_print(DUT_MSG_DEBUG, "%s %s", TAGS, "--------------------------------------------------------------------------------");        
+	} 	
 }
 
 
@@ -104,7 +104,7 @@ void send_resp_debug(enum sigma_status status, char *buf)
 			status, buf);
 
 }
-
+	       
 
 struct sigma_dut *sigma_dut_ptr(void)
 {
@@ -174,7 +174,7 @@ static int open_socket(struct sigma_dut *dut, int port)
 		goto fail;
 	}
 
-sigma_dut_print( DUT_MSG_INFO, "%s succeed", __func__);
+sigma_dut_print( DUT_MSG_INFO, "%s succeed", __func__);    
 
 	return 0;
 
@@ -377,7 +377,7 @@ static void process_conn(struct sigma_dut *dut, struct sigma_conn *conn)
 	sigma_dut_print( DUT_MSG_DEBUG, "Received %d bytes",
 			(int) res);
 
-	for (;;) {
+    	for (;;) {
 		for (i = conn->pos; i < conn->pos + res; i++) {
 			if (conn->buf[i] == '\r' || conn->buf[i] == '\n')
 				break;
@@ -444,41 +444,41 @@ static void process_conn2(struct sigma_dut *dut, struct sigma_conn *conn)
 			(int) res);
 
 
-        ///////////////////////
+        ///////////////////////  
         nbytes = (int)res;
         memset(xcCmdBuf, 0, WFA_BUFF_1K);
-        memcpy(xcCmdBuf, conn->buf + conn->pos, nbytes);
-//sigma_dut_hexdump(DUT_MSG_DEBUG, "sigma", xcCmdBuf , nbytes, 1);
+        memcpy(xcCmdBuf, conn->buf + conn->pos, nbytes); 
+//sigma_dut_hexdump(DUT_MSG_DEBUG, "sigma", xcCmdBuf , nbytes, 1);        
 
        /* command received */
-       wfaDecodeTLV(xcCmdBuf, nbytes, &xcCmdTag, &cmdLen, parmsVal);
-       memset(respBuf, 0, WFA_RESP_BUF_SZ);
+       wfaDecodeTLV(xcCmdBuf, nbytes, &xcCmdTag, &cmdLen, parmsVal);    
+       memset(respBuf, 0, WFA_RESP_BUF_SZ); 
        respLen = 0;
 //sigma_dut_print(DUT_MSG_DEBUG, "%s - 1 :  cmdtag : %d, cmdlen : %d\n", __func__, xcCmdTag, cmdLen);
-
+       
 
        /* reset two commond storages used by control functions */
        memset(gCmdStr, 0, WFA_CMD_STR_SZ);
        memset(&gGenericResp, 0, sizeof(dutCmdResponse_t));
 
        /* command process function defined in wfa_ca.c and wfa_tg.c */
-       if((xcCmdTag != 0 && xcCmdTag > WFA_STA_NEW_COMMANDS_START && xcCmdTag < WFA_STA_NEW_COMMANDS_END) &&
+       if((xcCmdTag != 0 && xcCmdTag > WFA_STA_NEW_COMMANDS_START && xcCmdTag < WFA_STA_NEW_COMMANDS_END) && 
                   gWfaCmdFuncTbl[xcCmdTag - WFA_STA_NEW_COMMANDS_START + (WFA_STA_COMMANDS_END - 1)] != NULL)
        {
-sigma_dut_print(DUT_MSG_DEBUG, "%s - 2 : idx : %d\n", __func__, xcCmdTag - WFA_STA_NEW_COMMANDS_START + (WFA_STA_COMMANDS_END - 1));
+sigma_dut_print(DUT_MSG_DEBUG, "%s - 2 : idx : %d\n", __func__, xcCmdTag - WFA_STA_NEW_COMMANDS_START + (WFA_STA_COMMANDS_END - 1));       
        /* since the new commands are expanded to new block */
    gWfaCmdFuncTbl[xcCmdTag - WFA_STA_NEW_COMMANDS_START + (WFA_STA_COMMANDS_END - 1)](cmdLen, parmsVal, &respLen, (BYTE *)respBuf);
        }
-
+      
        else if((xcCmdTag != 0 && xcCmdTag < WFA_STA_COMMANDS_END) && gWfaCmdFuncTbl[xcCmdTag] != NULL)
        {
-sigma_dut_print(DUT_MSG_DEBUG, "%s - 3 : idx : %d\n", __func__, xcCmdTag);
+sigma_dut_print(DUT_MSG_DEBUG, "%s - 3 : idx : %d\n", __func__, xcCmdTag);              
        /* commands in the old block */
            gWfaCmdFuncTbl[xcCmdTag](cmdLen, parmsVal, &respLen, (BYTE *)respBuf);
        }
        else
        {       // no command defined
-sigma_dut_print(DUT_MSG_DEBUG, "%s - 4 : idx : %d\n", __func__, 0);
+sigma_dut_print(DUT_MSG_DEBUG, "%s - 4 : idx : %d\n", __func__, 0);                     
    gWfaCmdFuncTbl[0](cmdLen, parmsVal, &respLen, (BYTE *)respBuf);
        }
 
@@ -487,7 +487,7 @@ sigma_dut_print(DUT_MSG_DEBUG, "%s - 4 : idx : %d\n", __func__, 0);
        {
            sigma_dut_print( DUT_MSG_INFO, "wfa-wfaCtrlSend Error\n");
        }
-
+    
 }
 
 
@@ -522,7 +522,7 @@ static void run_loop(struct sigma_dut *dut)
 
 		sigma_dut_print( DUT_MSG_DEBUG, "Waiting for next "
 				"command (can_accept=%d)", can_accept);
-		res = select(maxfd + 1, &rfds, NULL, NULL, NULL);
+		res = select(maxfd + 1, &rfds, NULL, NULL, NULL);   
 		if (res < 0) {
 			perror("select");
 			sleep(1);
@@ -559,18 +559,18 @@ static void run_loop(struct sigma_dut *dut)
 		}
 
 		for (i = 0; i < MAX_CONNECTIONS; i++) {
-//sigma_dut_print( DUT_MSG_DEBUG, "%s : idx : %d, s : %d\n", __func__, i, conn[i].s);
+//sigma_dut_print( DUT_MSG_DEBUG, "%s : idx : %d, s : %d\n", __func__, i, conn[i].s);            
 			if (conn[i].s < 0)
 				continue;
 			if (FD_ISSET(conn[i].s, &rfds))
-#if 0 // by bbelief
+#if 0 // by bbelief                
 				process_conn(dut, &conn[i]);
 #else
                             process_conn2(dut, &conn[i]);
 #endif
-//sigma_dut_print( DUT_MSG_DEBUG, "##-7\n");
+//sigma_dut_print( DUT_MSG_DEBUG, "##-7\n");            
 		}
-//sigma_dut_print( DUT_MSG_DEBUG, "##-8\n");
+//sigma_dut_print( DUT_MSG_DEBUG, "##-8\n");        
 	}
 }
 
@@ -603,7 +603,7 @@ int main(int argc, char *argv[])
 			break;
 		case 'p':
 			port = atoi(optarg);
-//sigma_dut_print(DUT_MSG_INFO, "'%s - 2 : port : %d'", __func__, port);
+//sigma_dut_print(DUT_MSG_INFO, "'%s - 2 : port : %d'", __func__, port);                        
 			break;
 		case 'q':
 			g_debug_level++;

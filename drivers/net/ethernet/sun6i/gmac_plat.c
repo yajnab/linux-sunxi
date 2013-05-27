@@ -106,7 +106,7 @@ static int gmac_sys_request(struct platform_device *pdev, struct gmac_priv *priv
 {
 	int ret = 0;
 #ifndef CONFIG_GMAC_CLK_SYS
-	struct resource *io_clk;
+	struct resource *io_clk; 
 #endif
 #ifndef CONFIG_GMAC_SCRIPT_SYS
 	struct resource *io_gpio;
@@ -446,3 +446,4 @@ struct platform_device gmac_device = {
 		.platform_data = &gmac_platdata,
 	},
 };
+

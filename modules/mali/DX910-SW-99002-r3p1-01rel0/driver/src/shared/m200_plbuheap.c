@@ -51,7 +51,7 @@ MALI_CHECK_RESULT mali_plbuheap* _mali_plbuheap_alloc( mali_base_ctx_handle base
 	heap->init_size = (u32)_mali_sys_config_string_get_s64("MALI_FRAME_HEAP_SIZE", MALI_PLBUHEAP_SIZE_STATIC, 4096, MALI_PLBUHEAP_SIZE_STATIC);
 	heap->plbu_heap = _mali_mem_alloc( base_ctx, heap_size, 1024, MALI_PP_READ | MALI_GP_WRITE );
 #endif
-
+	
 	if( MALI_NO_HANDLE == heap->plbu_heap )
 	{
 		_mali_plbuheap_free( heap );
@@ -77,7 +77,7 @@ void _mali_plbuheap_add_usecount(mali_plbuheap* heap)
 {
 	MALI_DEBUG_ASSERT_POINTER( heap );
 	MALI_DEBUG_ASSERT_HANDLE( heap->plbu_heap );
-
+	
 	_mali_sys_atomic_inc(&heap->use_count);
 }
 
@@ -85,11 +85,11 @@ void _mali_plbuheap_dec_usecount(mali_plbuheap* heap)
 {
 	MALI_DEBUG_ASSERT_POINTER( heap );
 	MALI_DEBUG_ASSERT_HANDLE( heap->plbu_heap );
-
+	
 	if( _mali_sys_atomic_dec_and_return(&heap->use_count) == 0 )
 	{
 		#if !defined(HARDWARE_ISSUE_3251)
-		if(heap->reset)
+		if(heap->reset) 
 		{
 			heap->reset = MALI_FALSE;
 			_mali_mem_heap_reset( heap->plbu_heap );
@@ -97,3 +97,4 @@ void _mali_plbuheap_dec_usecount(mali_plbuheap* heap)
 		#endif
 	}
 }
+

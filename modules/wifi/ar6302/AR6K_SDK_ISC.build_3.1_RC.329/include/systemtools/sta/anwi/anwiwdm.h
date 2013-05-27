@@ -4,7 +4,7 @@
 
 /*
  * anwiWdm.h - this header file contains all the
- * declarations for the anwi WDM driver.
+ * declarations for the anwi WDM driver. 
  *
  * Revisions
  *

@@ -21,3 +21,5 @@ config GPIO_SW
 	depends on GPIO_SW_CLASS
 	default m
 endif # GPIO_SW
+
+

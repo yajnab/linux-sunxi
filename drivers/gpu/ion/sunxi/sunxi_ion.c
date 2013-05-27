@@ -20,7 +20,7 @@
 #include "../ion_priv.h"
 #include <linux/sunxi_ion.h>
 #include <linux/module.h>
-#include <linux/uaccess.h>
+#include <linux/uaccess.h>  
 
 struct ion_heap *sunxi_tiler_heap_create(struct ion_platform_heap *data);
 struct ion_heap *ion_heap_create(struct ion_platform_heap *heap_data);
@@ -135,18 +135,18 @@ int sunxi_ion_probe(struct platform_device *pdev)
 
 	sunxi_ion_device = ion_device_create(sunxi_ion_ioctl);
     printk("%s, line %d, sunxi_ion_device 0x%08x\n", __func__, __LINE__, (u32)sunxi_ion_device);
-	if (IS_ERR_OR_NULL(sunxi_ion_device))
+	if (IS_ERR_OR_NULL(sunxi_ion_device)) 
     {
 		kfree(heaps);
 		return PTR_ERR(sunxi_ion_device);
 	}
 
 	/* create the heaps as specified in the board file */
-	for (i = 0; i < num_heaps; i++)
+	for (i = 0; i < num_heaps; i++) 
     {
 		struct ion_platform_heap *heap_data = &pdata->heaps[i];
         printk("%s, line %d, sunxi_ion_device 0x%08x\n", __func__, __LINE__, (u32)heap_data->type);
-		if ((int)heap_data->type == (int)SUNXI_ION_HEAP_TYPE_TILER)
+		if ((int)heap_data->type == (int)SUNXI_ION_HEAP_TYPE_TILER) 
         {
             printk(KERN_DEBUG "%s, line %d, heap_data->id 0x%08x\n", __func__, __LINE__, (u32)heap_data->id);
 			heaps[i] = sunxi_tiler_heap_create(heap_data);
@@ -159,8 +159,8 @@ int sunxi_ion_probe(struct platform_device *pdev)
 				tiler_heap = heaps[i];
 			}
             printk("%s, line %d, tiler_heap 0x%08x\n", __func__, __LINE__, (u32)tiler_heap);
-		}
-        else
+		} 
+        else 
 		{
 			heaps[i] = ion_heap_create(heap_data);
 		}
@@ -237,3 +237,4 @@ static void __exit ion_exit(void)
 MODULE_LICENSE("GPL");
 subsys_initcall(ion_init);
 module_exit(ion_exit);
+

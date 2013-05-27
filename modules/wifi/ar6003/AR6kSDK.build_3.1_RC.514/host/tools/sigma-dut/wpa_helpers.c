@@ -24,22 +24,22 @@ char * get_main_ifname(void)
 	      struct stat s;
 
 sigma_dut_print(DUT_MSG_INFO, "%s -1", __func__);
-
+    
 	      //if (stat("/sys/module/mac80211", &s) == 0 &&
 	      if (stat("/sys/module/ar6000", &s) == 0 &&
 		  if_nametoindex("wlan0")) {
-sigma_dut_print(DUT_MSG_INFO, "%s -2", __func__);
+sigma_dut_print(DUT_MSG_INFO, "%s -2", __func__);		  
 		      /*
 		       * Likely a dual-radio AP device; use wlan0 for STA/P2P
 		       * operations.
 		       */
 		      return "wlan0";
 	      }
-sigma_dut_print(DUT_MSG_INFO, "%s -3", __func__);
+sigma_dut_print(DUT_MSG_INFO, "%s -3", __func__);          
 	      return "wlan1";
       }
       if (if_nametoindex("wlan0") > 0){
-sigma_dut_print(DUT_MSG_INFO, "%s -4", __func__);
+sigma_dut_print(DUT_MSG_INFO, "%s -4", __func__);        
 	      return "wlan0";
       }
       return "unknown";
@@ -75,7 +75,7 @@ int wpa_command(const char *ifname, const char *cmd)
 
 	sigma_dut_print(DUT_MSG_INFO, "wpa_command(ifname='%s', cmd='%s')\n", ifname, cmd);
 	//snprintf(buf, sizeof(buf), "/var/run/wpa_supplicant/%s", ifname);
-	snprintf(buf, sizeof(buf), "%s%s", local_cli_dir, ifname);
+	snprintf(buf, sizeof(buf), "%s%s", local_cli_dir, ifname);        
 	ctrl = wpa_ctrl_open(buf);
 	if (ctrl == NULL) {
 		sigma_dut_print(DUT_MSG_INFO, "wpa_command: wpa_ctrl_open(%s) failed\n", buf);
@@ -230,7 +230,7 @@ int get_wpa_status(const char *ifname, const char *field, char *obuf,
 		wpa_ctrl_close(ctrl);
 		return -1;
 	}
-
+    
 	wpa_ctrl_close(ctrl);
 	buf[len] = '\0';
 
@@ -249,16 +249,16 @@ int get_wpa_status(const char *ifname, const char *field, char *obuf,
 			pos++;
 			continue;
 		}
-
+        
 		pos += flen + 1;
 		end = strchr(pos, '\n');
 		if (end == NULL)
 			return -1;
-
+        
 		*end++ = '\0';
 		if (end - pos > obuf_size)
 			return -1;
-
+        
 		memcpy(obuf, pos, end - pos);
 		return 0;
 	}

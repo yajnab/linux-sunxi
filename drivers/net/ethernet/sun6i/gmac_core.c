@@ -1743,3 +1743,4 @@ module_exit(gmac_remove);
 MODULE_DESCRIPTION("SUN6I 10/100/1000Mbps Ethernet device driver");
 MODULE_AUTHOR("Shuge <shugeLinux@gmail.com>");
 MODULE_LICENSE("GPL v2");
+

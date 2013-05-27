@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="wlan_recv_beacon.c" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -164,7 +164,7 @@ wlan_parse_beacon(A_UINT8 *buf, int framelen, struct ieee80211_common_ie *cie)
             cie->ie_erp = frm[2];
             break;
         case IEEE80211_ELEMID_RSN:
-            /*
+            /* 
              * Some APs, like TP-LINK, will report a RSN with zero unicast cipher suites in probe resp.
              */
             if ((frm[1]<2+4+2) || (LE_READ_2(frm+2+2+4)==0)) {

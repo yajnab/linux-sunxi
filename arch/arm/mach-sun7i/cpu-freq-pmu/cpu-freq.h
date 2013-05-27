@@ -64,3 +64,5 @@ struct sun5i_cpu_freq_t {
 extern struct cpufreq_frequency_table sun5i_freq_tbl[];
 
 #endif  /* #ifndef __CPU_FREQ_H__ */
+
+

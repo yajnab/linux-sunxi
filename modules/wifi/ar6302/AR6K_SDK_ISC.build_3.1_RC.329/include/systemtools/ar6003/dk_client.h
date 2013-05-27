@@ -1,8 +1,8 @@
-// dk_client.h - contains definitions of dk structures
+// dk_client.h - contains definitions of dk structures  
 
 // Copyright (c) 2000 Atheros Communications, Inc., All Rights Reserved
 // $ATH_LICENSE_TARGET_C$
-
+ 
 // modification history
 // --------------------
 // 000	00jan02 	sharmat		created (copied from windows client)
@@ -75,13 +75,13 @@ typedef struct dkDevInfo {
 
 #ifdef __cplusplus
 extern "C" {
-#endif //__cplusplus
+#endif //__cplusplus 
 
 
 extern A_INT32 mdk_main(A_INT32 debugMode, A_UINT16 cport);
 
 #ifdef __cplusplus
 }
-#endif // __cplusplus
+#endif // __cplusplus 
 
-#endif //__INCdk_clienth
+#endif //__INCdk_clienth 

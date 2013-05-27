@@ -35,3 +35,4 @@ config MALI400_UMP
 	depends on MALI400
 	---help---
 	  This enables support for the UMP memory sharing API in the Mali driver.
+

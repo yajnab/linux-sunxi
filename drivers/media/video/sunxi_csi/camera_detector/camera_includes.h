@@ -43,7 +43,7 @@ typedef unsigned char   __bool;
 
 typedef enum {
     CAMERA_FACING_BACK  = 0,
-    CAMERA_FACING_FRONT = 1,
+    CAMERA_FACING_FRONT = 1,    
 }__camera_facing_e;
 
 typedef enum {
@@ -65,34 +65,34 @@ typedef struct
 
 typedef struct {
     __u8                    name[MAX_CAMERA_NAME_LEN];
-
+    
     __u32                   i2c_id;
     __u32                   i2c_addr;
-
+    
     __bool                  pwr_pin_used;
     __camera_gpio_set_t     pwr_pin[1];
-
+    
     __bool                  stby_pin_used;
     __camera_gpio_set_t     stby_pin[1];
-
+    
     __bool                  reset_pin_used;
     __camera_gpio_set_t     reset_pin[1];
-
+    
     __bool                  af_pwr_pin_used;
     __camera_gpio_set_t     af_pwr_pin[1];
-
+    
     __u8                    iovdd_str[MAX_VDD_STR_LEN];
     struct regulator        *iovdd;
-
+    
     __u8                    avdd_str[MAX_VDD_STR_LEN];
     struct regulator        *avdd;
-
+    
     __u8                    dvdd_str[MAX_VDD_STR_LEN];
     struct regulator        *dvdd;
-
+    
     __camera_facing_e       facing;
     __u8                    drv_node_name[MAX_NODE_NAME_LEN];
-
+    
     struct clk              *module_clk;
     struct clk              *clk_src;
     __hdle                  clk_pin_hdle;

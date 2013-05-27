@@ -1,6 +1,6 @@
 /*******************************************************************************
   Copyright © 2012, Shuge
-		Author: shuge  <shugeLinux@gmail.com>
+ 		Author: shuge  <shugeLinux@gmail.com>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms and conditions of the GNU General Public License,
@@ -392,3 +392,4 @@ const struct gmac_ring_mode_ops ring_mode_ops = {
 #endif
 
 #endif
+

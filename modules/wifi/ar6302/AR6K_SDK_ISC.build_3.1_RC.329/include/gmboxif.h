@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // Copyright (c) 2009-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -28,7 +28,7 @@
 #endif
 
 /* GMBOX interface definitions */
-
+    
 #define AR6K_GMBOX_CREDIT_COUNTER       1   /* we use credit counter 1 to track credits */
 #define AR6K_GMBOX_CREDIT_SIZE_COUNTER  2   /* credit counter 2 is used to pass the size of each credit */
 
@@ -69,7 +69,7 @@ typedef PREPACK struct {
 #define MBOX_SIG_HCI_BRIDGE_PWR_SAV_ON    3
 #define MBOX_SIG_HCI_BRIDGE_PWR_SAV_OFF   4
 
-/* Host interrupts target to change baud rate and
+/* Host interrupts target to change baud rate and 
  * baud rate info is stored in scratch registers 4 and 5
  */
 #define LSB_SCRATCH_IDX     4
@@ -80,3 +80,4 @@ typedef PREPACK struct {
 #endif
 
 #endif /* __GMBOXIF_H__ */
+

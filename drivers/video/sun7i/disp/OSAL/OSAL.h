@@ -10,14 +10,14 @@
 *
 * Author 		: javen
 *
-* Description 	: Êìç‰ΩúÁ≥ªÁªüÈÄÇÈÖçÂ±Ç
+* Description 	: ≤Ÿ◊˜œµÕ≥  ≈‰≤„
 *
 * History 		:
 *      <author>    		<time>       	<version >    		<desc>
 *       javen     	   2010-09-07          1.0         create this word
 *
 *************************************************************************************
-*/
+*/ 
 #ifndef  __OSAL_H__
 #define  __OSAL_H__
 
@@ -53,3 +53,5 @@ typedef struct
 //#define __OSAL_DEBUG__
 
 #endif   //__OSAL_H__
+
+

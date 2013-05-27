@@ -1,7 +1,7 @@
-#
+# 
 # Minimal build invocation:
-#
-#     make (all | clean | clobber)
+#   
+#     make (all | clean | clobber)  
 #
 # Extended Make invocation:
 #
@@ -12,18 +12,18 @@
 #     2. The <build type> must match an entry in localmake.linux.inc.
 #     3. The localmake.linux.inc can be overridden using an include file outside the build tree.
 #        This file (name and path) can be set via the ATH_MAKE_INCLUDE_OVERRIDE variable.
-#        ** If ATH_MAKE_INCLUDE_OVERRIDE is used, you can define all build variables in that file
+#        ** If ATH_MAKE_INCLUDE_OVERRIDE is used, you can define all build variables in that file 
 #        instead of using command line arguments **.  This feature is provided for developers
 #        that may want to customize the build using a single include file.
 #
 #        For example :
-#
+#             
 #            " make ATH_MAKE_INCLUDE_OVERRIDE=$HOME/mymake.inc "
-#
+#        
 #             could be used, as long as "mymake.inc" defines all the required variables (see below)
 #
-#  Required Variables:
-#
+#  Required Variables:  
+#      
 #      ATH_OS_SUB_TYPE - on linux, this must be "linux_2_4" for 2.4 kernels or left blank for 2.6 kernels.
 #      ATH_LINUXPATH - linux kernel source path
 #      ATH_CROSS_COMPILE_TYPE - optional cross compiler path , leave blank for local gcc compilation
@@ -103,7 +103,7 @@ export  COMPILED_BIN_OBJECTS_PATH
 all: isc fw tla gpl
 
 common:
-ifndef ATH_BUILD_TYPE
+ifndef ATH_BUILD_TYPE 
 	@echo "Please edit the $(_LOCALMAKE_INCLUDE) file"
 	exit 1
 endif
@@ -153,7 +153,7 @@ ifdef PKGDIR_TLA
 			cp -f $(ARTROOTDIR)/devlib/Linux_cust/libdevlib.so $(COMPILED_IMAGE_OBJECTS_PATH); \
 			fi \
 		fi \
-	fi
+	fi	
 
 	if [ -e $(ARTROOTDIR) ];   \
 	then \

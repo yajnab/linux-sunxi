@@ -56,7 +56,7 @@
 #define ARMV7_C1_Z_BIT      ( 1 << 11 )
 #define ARMV7_C1_I_BIT      ( 1 << 12 )
 
-	.extern resume1_c_part
+    	.extern resume1_c_part
 	.text
 	.arm
 /*********************************the begin of initializing system********************************/
@@ -85,6 +85,6 @@ _start:
 	bl set_pll
 	bl  resume0_c_part
 
-	b .                                 ;// infinite loop
+ 	b .                                 ;// infinite loop
 
 	.end

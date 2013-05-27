@@ -149,7 +149,7 @@ dhd_customer_gpio_wlan_ctrl(int onoff)
 	switch (onoff) {
 		case WLAN_RESET_OFF:
 			WL_TRACE(("%s: call customer specific GPIO to insert WLAN RESET\n",
-				__FUNCTION__));
+				__FUNCTION__));    
 #ifdef CUSTOMER_AW
 			mmc_pm_gpio_ctrl("bcm40181_shdn", 0);
 			mmc_pm_gpio_ctrl("bcm40181_vcc_en", 0);
@@ -223,7 +223,7 @@ dhd_customer_gpio_wlan_ctrl(int onoff)
 //			IW8101_wlan_power_on(NORMAL);
 			/* Lets customer power to get stable */
 #ifdef CUSTOMER_AW
-			sw_mci_rescan_card(SDIO_ID, 1);
+            		sw_mci_rescan_card(SDIO_ID, 1);
 #endif
 			break;
 	}

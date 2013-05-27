@@ -64,3 +64,4 @@ void standby_delay(int cycle);
 void standby_delay_cycle(int cycle);
 
 #endif  //__COMMON_H__
+

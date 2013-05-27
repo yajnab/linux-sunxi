@@ -16,15 +16,12 @@
 *********************************************************************************************************
 */
 #ifdef __STANDBY_MODULE__
-#include "pm_types.h"
+#include "pm_types.h" 
 #include "pm.h"
 #elif defined(__KERNEL__)
 #include <linux/module.h>
 #include "pm_i.h"
 #endif
-
-static void *GicDDisc;
-static void *GicCDisc;
 
 /*
 *********************************************************************************************************
@@ -39,14 +36,16 @@ static void *GicCDisc;
 */
 __s32 mem_int_init(void)
 {
-	__u32 i = 0;
+	__u32 i = 0; 
+    void *GicDDisc;
+    void *GicCDisc;
 	GicDDisc = (void *)IO_ADDRESS(AW_GIC_DIST_BASE);
 	GicCDisc = (void *)IO_ADDRESS(AW_GIC_CPU_BASE);
-
+	
 	//printk("gic iar == 0x%x. \n", *(volatile __u32	 *)(IO_ADDRESS(AW_GIC_CPU_BASE)+0x0c));
 
 	/* initialise interrupt enable and mask for mem */
-
+	
 	/*
 	 * Disable all interrupts.  Leave the PPI and SGIs alone
 	 * as these enables are banked registers.
@@ -69,12 +68,12 @@ __s32 mem_int_init(void)
 	i = *(volatile __u32   *)(GicCDisc + 0x0c);
 
 	if(i != 0x3ff){
-		//u need to
+		//u need to 
 		*(volatile __u32 *)(GicCDisc + 0x10) = i;
 		printk("notice: gic iar == 0x%x. \n", i);
 	}
-
-
+	
+	
 	return 0;
 }
 
@@ -94,7 +93,11 @@ __s32 mem_int_exit(void)
 {
 	int i = 0;
 	volatile __u32 enable_bit = 0;
-
+    void *GicDDisc;
+    void *GicCDisc;
+	GicDDisc = (void *)IO_ADDRESS(AW_GIC_DIST_BASE);
+	GicCDisc = (void *)IO_ADDRESS(AW_GIC_CPU_BASE);
+	
 	//all the disable-int-src pending, need to be clear
 	for(i = 0; i < GIC_400_ENABLE_LEN; i += 4){
 		enable_bit = *(volatile __u32 *)(GicDDisc + GIC_DIST_ENABLE_SET + i);
@@ -120,6 +123,8 @@ __s32 mem_enable_int(enum interrupt_source_e src)
 {
 	__u32   tmpGrp = (__u32)src >> 5;
 	__u32   tmpSrc = (__u32)src & 0x1f;
+    void *GicDDisc;
+    void *GicCDisc;
 
 	GicDDisc = (void *)IO_ADDRESS(AW_GIC_DIST_BASE);
 	GicCDisc = (void *)IO_ADDRESS(AW_GIC_CPU_BASE);
@@ -151,6 +156,8 @@ __s32 mem_query_int(enum interrupt_source_e src)
 	__s32   result = 0;
 	__u32   tmpGrp = (__u32)src >> 5;
 	__u32   tmpSrc = (__u32)src & 0x1f;
+    void *GicDDisc;
+    void *GicCDisc;
 
 	GicDDisc = (void *)IO_ADDRESS(AW_GIC_DIST_BASE);
 	GicCDisc = (void *)IO_ADDRESS(AW_GIC_CPU_BASE);
@@ -162,3 +169,4 @@ __s32 mem_query_int(enum interrupt_source_e src)
 
 	return result? 0:-1;
 }
+

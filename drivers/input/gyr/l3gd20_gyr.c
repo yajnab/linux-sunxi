@@ -250,7 +250,7 @@ struct l3gd20_data {
 	struct workqueue_struct *irq2_work_queue;
 
 	bool polling_enabled;
-
+	
 	#ifdef CONFIG_HAS_EARLYSUSPEND
 	struct early_suspend early_suspend;
 	#endif
@@ -267,31 +267,31 @@ static int gyr_fetch_sysconfig_para(void)
 	int device_used = -1;
 	script_item_u	val;
 	script_item_value_type_e  type;
-
-
+	
+		
 	dprintk(DEBUG_INIT, "========%s===================\n", __func__);
 
-
+	
 	type = script_get_item("gy_para", "gy_used", &val);
-
+ 
 	if (SCIRPT_ITEM_VALUE_TYPE_INT != type) {
 		pr_err("%s: type err  device_used = %d. \n", __func__, val.val);
 		goto script_get_err;
 	}
 	device_used = val.val;
-
+	
 	if (1 == device_used) {
-		type = script_get_item("gy_para", "gy_twi_id", &val);
+		type = script_get_item("gy_para", "gy_twi_id", &val);	
 		if(SCIRPT_ITEM_VALUE_TYPE_INT != type){
 			pr_err("%s: type err twi_id = %d. \n", __func__, val.val);
 			goto script_get_err;
 		}
 		twi_id = val.val;
-
+		
 		dprintk(DEBUG_INIT, "%s: twi_id is %d. \n", __func__, twi_id);
 
 		ret = 0;
-
+		
 	} else {
 		pr_err("%s: gsensor_unused. \n",  __func__);
 		ret = -1;
@@ -308,7 +308,7 @@ script_get_err:
 
 /**
  * gyr_detect - Device detection callback for automatic device creation
- * return value:
+ * return value:  
  *                    = 0; success;
  *                    < 0; err
  */
@@ -319,14 +319,14 @@ static int gyr_detect(struct i2c_client *client, struct i2c_board_info *info)
 	int err = -1;
 	u8 buf[1];
 	u8 cmd;
-
+	
 	dprintk(DEBUG_INIT, "enter func %s. \n", __FUNCTION__);
-
+	
 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA))
 		return -ENODEV;
 
 	if(twi_id == adapter->nr){
-		for(i2c_num = 0; i2c_num < (sizeof(i2c_address)/sizeof(i2c_address[0]));i2c_num++){
+		for(i2c_num = 0; i2c_num < (sizeof(i2c_address)/sizeof(i2c_address[0]));i2c_num++){	    
 			client->addr = i2c_address[i2c_num];
 
 			dprintk(DEBUG_INIT, "check i2c addr: %x .\n", client->addr);
@@ -342,12 +342,12 @@ static int gyr_detect(struct i2c_client *client, struct i2c_board_info *info)
 
 			err = i2c_master_recv(client, buf, 1);
 
-			dprintk(DEBUG_INIT, "check i2c addr: %x after recv cmd.\n", client->addr);
+			dprintk(DEBUG_INIT, "check i2c addr: %x after recv cmd.\n", client->addr);			
 
 			if (err < 0) {
 				dev_warn(&client->dev, "Error reading WHO_AM_I: is device"
 					" available/working?\n");
-
+				
 			}else	if (buf[0] != status_registers.who_am_i.value) {
 				dev_err(&client->dev,
 					"device unknown. Expected: 0x%02x,"
@@ -359,7 +359,7 @@ static int gyr_detect(struct i2c_client *client, struct i2c_board_info *info)
 			}
 
 		}
-
+	
 		pr_info("%s:l3gd20 Device not found, \
 			 maybe the other e_compass equipment! \n",__func__);
 		return -ENODEV;
@@ -792,13 +792,13 @@ static void l3gd20_report_values(struct l3gd20_data *gyr,
 						struct l3gd20_triple *data)
 {
 	struct input_dev *input = gyr->input_poll_dev->input;
-
+	
 	input_report_abs(input, ABS_X, data->x);
 	input_report_abs(input, ABS_Y, data->y);
 	input_report_abs(input, ABS_Z, data->z);
 	dprintk(DEBUG_REPORT_DATA, "gyr->input_poll_dev->input x = %d, y = %d, z = %d. \n", \
 		data->x, data->y, data->z);
-
+	
 	input_sync(input);
 }
 
@@ -994,7 +994,7 @@ static ssize_t attr_polling_rate_store(struct device *dev,
 		gyro->input_poll_dev->poll_interval = interval_ms;
 	gyro->pdata->poll_interval = interval_ms;
 	dprintk(DEBUG_CONTROL_INFO, "gyro->pdata->poll_interval = %d. \n", gyro->pdata->poll_interval);
-
+	
 	l3gd20_update_odr(gyro, interval_ms);
 	mutex_unlock(&gyro->lock);
 	return size;
@@ -1753,7 +1753,7 @@ static int l3gd20_remove(struct i2c_client *client)
 #ifdef CONFIG_HAS_EARLYSUSPEND
 	unregister_early_suspend(&gyro->early_suspend);
 #endif
-
+	
 	l3gd20_disable(gyro);
 	l3gd20_input_cleanup(gyro);
 
@@ -1776,7 +1776,7 @@ static void l3gd20_early_suspend(struct early_suspend *h)
 	dprintk(DEBUG_SUSPEND, "l3gd20 early suspend\n");
 
 	l3gd20_disable(data);
-
+	
 	if (atomic_read(&data->enabled)) {
 		mutex_lock(&data->lock);
 		l3gd20_register_update(data, buf, CTRL_REG1,
@@ -1808,7 +1808,7 @@ static void l3gd20_late_resume(struct early_suspend *h)
 static int l3gd20_suspend(struct device *dev)
 {
 	int err = 0;
-
+	
 	struct i2c_client *client = to_i2c_client(dev);
 	struct l3gd20_data *data = i2c_get_clientdata(client);
 	u8 buf[2];
@@ -1816,7 +1816,7 @@ static int l3gd20_suspend(struct device *dev)
 	dprintk(DEBUG_SUSPEND, "l3gd20 suspend\n");
 
 	l3gd20_disable(data);
-
+	
 	if (atomic_read(&data->enabled)) {
 		mutex_lock(&data->lock);
 		err = l3gd20_register_update(data, buf, CTRL_REG1,
@@ -1830,13 +1830,13 @@ static int l3gd20_suspend(struct device *dev)
 static int l3gd20_resume(struct device *dev)
 {
 	int err = 0;
-
+	
 	struct i2c_client *client = to_i2c_client(dev);
 	struct l3gd20_data *data = i2c_get_clientdata(client);
 	u8 buf[2];
 
 	dprintk(DEBUG_SUSPEND, "l3gd20 resume\n");
-
+	
 	l3gd20_enable(data);
 	if (atomic_read(&data->enabled)) {
 		mutex_lock(&data->lock);
@@ -1910,3 +1910,4 @@ module_exit(l3gd20_exit);
 MODULE_DESCRIPTION("l3gd20 digital gyroscope sysfs driver");
 MODULE_AUTHOR("Matteo Dameno, Carmine Iascone, STMicroelectronics");
 MODULE_LICENSE("GPL");
+

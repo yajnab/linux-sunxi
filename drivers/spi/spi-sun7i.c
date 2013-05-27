@@ -503,7 +503,7 @@ static int sun7i_spi_prepare_dma(struct sun7i_spi *aw_spi, enum spi_dma_dir dma_
             spi_err("%s: spi%d request dma tx failed\n", __func__, bus_num);
             return -EINVAL;
         }
-
+ 
         done_cb.func = sun7i_spi_dma_cb_tx;
         done_cb.parg = aw_spi;
         ret = sw_dma_ctl(aw_spi->dma_hdle_tx, DMA_OP_SET_FD_CB, (void *)&done_cb);
@@ -904,7 +904,7 @@ static int sun7i_spi_xfer(struct spi_device *spi, struct spi_transfer *t)
                     }
                 }
                 if (poll_time <= 0) {
-                    spi_err("%s: spi%d cpu receive data time out\n",
+                    spi_err("%s: spi%d cpu receive data time out\n", 
                             __func__, spi->master->bus_num);
                 }
                 break;
@@ -982,7 +982,7 @@ static int sun7i_spi_xfer(struct spi_device *spi, struct spi_transfer *t)
     if (SPI_DMA_WDEV & dma_dir) {
         sun7i_spi_release_dma(aw_spi, SPI_DMA_WDEV);
     }
-
+    
     if (aw_spi->duplex_flag != DUPLEX_NULL) {
         aw_spi->duplex_flag = DUPLEX_NULL;
     }
@@ -1028,17 +1028,17 @@ static void sun7i_spi_work(struct work_struct *work)
                     break; /* fail, quit */
                 spi_dbg("[spi-%d]: xfer setup \n", aw_spi->master->bus_num);
             }
-
+            
             /* first active the cs */
             if (cs_change)
                 aw_spi->cs_control(spi, 1);
             /* update the new cs value */
             cs_change = t->cs_change;
-
+            
             /* full duplex mode */
             if (t->rx_buf && t->tx_buf)
                 spi_clear_dhb(aw_spi->base_addr);
-
+            
             /*
              * do transfer
              * > 64 : dma ;  <= 64 : cpu
@@ -1047,18 +1047,18 @@ static void sun7i_spi_work(struct work_struct *work)
             status = sun7i_spi_xfer(spi, t);
             if (status)
                 break; /* fail quit, zero means succeed */
-
+            
             /* accmulate the value in the message */
             msg->actual_length += t->len;
             /* may be need to delay */
             if (t->delay_usecs)
                 udelay(t->delay_usecs);
-
+            
             /* if zero, keep active, otherwise deactived. */
             if (cs_change)
                 aw_spi->cs_control(spi, 0);
         }
-
+        
         /*
          * spi message complete,succeed or failed
          * return value
@@ -1070,12 +1070,12 @@ static void sun7i_spi_work(struct work_struct *work)
         if (status || !cs_change) {
             aw_spi->cs_control(spi, 0);
         }
-
+        
         /* restore default value. */
         sun7i_spi_xfer_setup(spi, NULL);
         spin_lock_irq(&aw_spi->lock);
     }
-
+    
     /* set spi to free */
     aw_spi->busy = SPI_FREE;
     spin_unlock_irq(&aw_spi->lock);
@@ -2056,7 +2056,7 @@ static int __init spi_sun7i_init(void)
     if (sun7i_spi_register_spidev()) {
         spi_err("%s: register spi devices board info failed\n", __func__);
     }
-
+    
     sun7i_spi_norflash();
 
     if (spi_used & SPI0_USED_MASK)

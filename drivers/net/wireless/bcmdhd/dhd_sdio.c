@@ -149,7 +149,7 @@
 DHD_SPINWAIT_SLEEP_INIT(sdioh_spinwait_sleep);
 #if defined(OOB_INTR_ONLY)
 extern void bcmsdh_set_irq(int flag);
-#endif
+#endif 
 #ifdef PROP_TXSTATUS
 extern void dhd_wlfc_txcomplete(dhd_pub_t *dhd, void *txp, bool success);
 extern void dhd_wlfc_trigger_pktcommit(dhd_pub_t *dhd);
@@ -423,25 +423,11 @@ static bool forcealign;
 #define FW_TYPE_G       0
 #define FW_TYPE_AG      1
 
-const static char *bcm40183b1_fw_name[] = {
-        "fw_bcm40183b1.bin",
-        "fw_bcm40183b1_apsta.bin",
-        "fw_bcm40183b1_p2p.bin",
-        "fw_bcm40183b1_mfg.bin"
-};
-
 const static char *bcm40183b2_fw_name[] = {
         "fw_bcm40183b2.bin",
         "fw_bcm40183b2_apsta.bin",
         "fw_bcm40183b2_p2p.bin",
         "fw_bcm40183b2_mfg.bin"
-};
-
-const static char *bcm40183b1ag_fw_name[] = {
-        "fw_bcm40183b1_ag.bin",
-        "fw_bcm40183b1_ag_apsta.bin",
-        "fw_bcm40183b1_ag_p2p.bin",
-        "fw_bcm40183b1_ag_mfg.bin"
 };
 
 const static char *bcm40183b2ag_fw_name[] = {
@@ -465,10 +451,25 @@ const static char *bcm40181a2_fw_name[] = {
         "fw_bcm40181a2_mfg.bin"
 };
 
-#define BCM4330B1_CHIP_REV      3
+const static char *bcm43341b0ag_fw_name[] = {
+        "fw_bcm43341b0_ag.bin",
+        "fw_bcm43341b0_ag_apsta.bin",
+        "fw_bcm43341b0_ag_p2p.bin",
+        "fw_bcm43341b0_ag_mfg.bin"
+};
+
+const static char *bcm43241b4ag_fw_name[] = {
+        "fw_bcm43241b4_ag.bin",
+        "fw_bcm43241b4_ag_apsta.bin",
+        "fw_bcm43241b4_ag_p2p.bin",
+        "fw_bcm43241b4_ag_mfg.bin"
+};
+
 #define BCM4330B2_CHIP_REV      4
 #define BCM43362A0_CHIP_REV     0
 #define BCM43362A2_CHIP_REV     1
+#define BCM43341B0_CHIP_REV     2
+#define BCM43241B4_CHIP_REV     5
 
 #define ALIGNMENT  4
 
@@ -701,7 +702,7 @@ dhdsdio_sr_cap(dhd_bus_t *bus)
 			data = SI_ENUM_BASE + OFFSETOF(chipcregs_t, chipcontrol_data);
 			bcmsdh_reg_write(bus->sdh, addr, 4, 3);
 			core_capext = bcmsdh_reg_read(bus->sdh, data, 4);
-	} else if (bus->sih->chip == BCM4330_CHIP_ID) {
+	} else if (bus->sih->chip == BCM4330_CHIP_ID || bus->sih->chip == BCM43362_CHIP_ID) {
 			core_capext = FALSE;
 	} else if (bus->sih->chip == BCM4335_CHIP_ID) {
 		core_capext = TRUE;
@@ -1083,7 +1084,7 @@ dhdsdio_htclk(dhd_bus_t *bus, bool on, bool pendok)
 
 #if defined(OOB_INTR_ONLY)
 		pendok = FALSE;
-#endif
+#endif 
 	clkctl = 0;
 	sdh = bus->sdh;
 
@@ -1504,7 +1505,7 @@ dhd_enable_oob_intr(struct dhd_bus *bus, bool enable)
 	dhdsdio_clkctl(bus, CLK_SDONLY, FALSE);
 #endif /* !defined(HW_OOB) */
 }
-#endif
+#endif 
 
 /* Writes a HW/SW header into the packet and sends it. */
 /* Assumes: (a) header space already there, (b) caller holds lock */
@@ -4955,7 +4956,7 @@ dhdsdio_readframes(dhd_bus_t *bus, uint maxframes, bool *finished)
 				pktq_mlen(&bus->txq, ~bus->flowcontrol) && DATAOK(bus)) {
 				dhdsdio_sendfromq(bus, dhd_txbound);
 			}
-	}
+     	}
 #endif /* DHDTHREAD */
 
 		/* Handle glomming separately */
@@ -7039,12 +7040,21 @@ dhd_bus_select_firmware_name_by_chip(struct dhd_bus *bus, char *dst, char *src)
 	static uint chip, chiprev, first=1;
 	int i;
 
-	if(src[0] == '\0') {
-		printf("src firmware path is null\n");
-		return;
+	if (src[0] == '\0') {
+#ifdef CONFIG_BCMDHD_FW_PATH
+		bcm_strncpy_s(src, sizeof(fw_path), CONFIG_BCMDHD_FW_PATH, MOD_PARAM_PATHLEN-1);
+		if (src[0] == '\0')
+#endif
+		{
+			printf("src firmware path is null\n");
+			return;
+		}
 	}
 
 	strcpy(dst, src);
+#ifndef FW_PATH_AUTO_SELECT
+	return;
+#endif
 
 	/* find out the last '/' */
 	i = strlen(dst);
@@ -7068,42 +7078,35 @@ dhd_bus_select_firmware_name_by_chip(struct dhd_bus *bus, char *dst, char *src)
 		first = 0;
 	}
 
-	if (ag_type == FW_TYPE_G) {
-		switch (chip) {
-			case BCM4330_CHIP_ID:
-				if (chiprev==BCM4330B1_CHIP_REV)
-					strcpy(&dst[i+1], bcm40183b1_fw_name[fw_type]);
-				else
+	switch (chip) {
+		case BCM4330_CHIP_ID:
+			if (ag_type == FW_TYPE_G) {
+				if (chiprev == BCM4330B2_CHIP_REV)
 					strcpy(&dst[i+1], bcm40183b2_fw_name[fw_type]);
 				break;
-			case BCM43362_CHIP_ID:
-				if (chiprev==BCM43362A0_CHIP_REV)
-					strcpy(&dst[i+1], bcm40181a0_fw_name[fw_type]);
-				else
-					strcpy(&dst[i+1], bcm40181a2_fw_name[fw_type]);
-				break;
-		}
-	} else {
-		switch (chip) {
-			case BCM4330_CHIP_ID:
-				if (chiprev==BCM4330B1_CHIP_REV)
-					strcpy(&dst[i+1], bcm40183b1ag_fw_name[fw_type]);
-				else
+			} else {
+				if (chiprev == BCM4330B2_CHIP_REV)
 					strcpy(&dst[i+1], bcm40183b2ag_fw_name[fw_type]);
 				break;
-		}
+			}
+		case BCM43362_CHIP_ID:
+			if (chiprev == BCM43362A0_CHIP_REV)
+				strcpy(&dst[i+1], bcm40181a0_fw_name[fw_type]);
+			else
+				strcpy(&dst[i+1], bcm40181a2_fw_name[fw_type]);
+			break;
+		case BCM43341_CHIP_ID:
+			if (chiprev == BCM43341B0_CHIP_REV)
+				strcpy(&dst[i+1], bcm43341b0ag_fw_name[fw_type]);
+			break;
+		case BCM4324_CHIP_ID:
+			if (chiprev == BCM43241B4_CHIP_REV)
+				strcpy(&dst[i+1], bcm43241b4ag_fw_name[fw_type]);
+			break;
 	}
 
 	printf("%s: firmware_path=%s\n", __FUNCTION__, dst);
 }
-
-#if defined(RSSIOFFSET) || 1
-void dhd_bus_get_chip_ver(struct dhd_bus *bus, uint *chip, uint *chiprev)
-{
-	*chip = bus->sih->chip;
-	*chiprev = bus->sih->chiprev;
-}
-#endif
 
 bool
 dhd_bus_download_firmware(struct dhd_bus *bus, osl_t *osh,
@@ -7723,7 +7726,7 @@ dhd_bus_devreset(dhd_pub_t *dhdp, uint8 flag)
 #if defined(OOB_INTR_ONLY)
 			/* Clean up any pending IRQ */
 			bcmsdh_set_irq(FALSE);
-#endif
+#endif 
 
 			/* Clean tx/rx buffer pointers, detach from the dongle */
 			dhdsdio_release_dongle(bus, bus->dhd->osh, TRUE, TRUE);
@@ -7757,9 +7760,7 @@ dhd_bus_devreset(dhd_pub_t *dhdp, uint8 flag)
 			                        (uint32 *)SI_ENUM_BASE,
 			                        bus->cl_devid)) {
 				/* Attempt to download binary to the dongle */
-				DHD_ERROR(("[%s %d]: firmware_path = %s\n", __FUNCTION__, __LINE__, firmware_path));
 				COPY_FW_PATH_BY_CHIP(bus, fw_path, firmware_path); // terence
-				DHD_ERROR(("[%s %d]\n", __FUNCTION__, __LINE__));
 				if (dhdsdio_probe_init(bus, bus->dhd->osh, bus->sdh) &&
 					dhdsdio_download_firmware(bus, bus->dhd->osh, bus->sdh)) {
 
@@ -7769,7 +7770,7 @@ dhd_bus_devreset(dhd_pub_t *dhdp, uint8 flag)
 #if defined(OOB_INTR_ONLY)
 						bcmsdh_set_irq(TRUE);
 						dhd_enable_oob_intr(bus, TRUE);
-#endif
+#endif 
 
 						bus->dhd->dongle_reset = FALSE;
 						bus->dhd->up = TRUE;
@@ -7805,21 +7806,13 @@ dhd_bus_devreset(dhd_pub_t *dhdp, uint8 flag)
 				__FUNCTION__));
 			DHD_ERROR(("Will call dhd_bus_start instead\n"));
 			sdioh_start(NULL, 1);
-			DHD_ERROR(("[%s %d]\n", __FUNCTION__, __LINE__));
-			if (dhdsdio_probe_attach(bus, bus->dhd->osh, bus->sdh,
-			                        (uint32 *)SI_ENUM_BASE,
-			                        bus->cl_devid)) { // terence 20120615: fix for 43362 OOB initial
-				if (dhdsdio_probe_init(bus, bus->dhd->osh, bus->sdh)) {
-				    DHD_ERROR(("[%s %d]: firmware_path = %s\n", __FUNCTION__, __LINE__, firmware_path));
-					COPY_FW_PATH_BY_CHIP(bus, fw_path, firmware_path); // terence
-					DHD_ERROR(("[%s %d]\n", __FUNCTION__, __LINE__));
-					if ((bcmerror = dhd_bus_start(dhdp)) != 0)
-						DHD_ERROR(("%s: dhd_bus_start fail with %d\n",
-							__FUNCTION__, bcmerror));
-				} else
-					DHD_ERROR(("%s: dhdsdio_probe_init fail\n", __FUNCTION__));
-			} else
-				DHD_ERROR(("%s: dhdsdio_probe_attach fail\n", __FUNCTION__));
+#if defined(HW_OOB)
+			bcmsdh_config_hw_oob_intr(bus->sdh, bus->sih->chip); // terence 20120615: fix for OOB initial issue
+#endif
+			COPY_FW_PATH_BY_CHIP(bus, fw_path, firmware_path);
+			if ((bcmerror = dhd_bus_start(dhdp)) != 0)
+				DHD_ERROR(("%s: dhd_bus_start fail with %d\n",
+					__FUNCTION__, bcmerror));
 		}
 	}
 	return bcmerror;

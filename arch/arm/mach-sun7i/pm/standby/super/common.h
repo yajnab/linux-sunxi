@@ -58,10 +58,11 @@ static inline __u64 mem_uldiv(__u64 dividend, __u32 divisior)
 
 void mem_memcpy(void *dest, void *src, int n);
 
-/*notice: all the delay cycle is measured by 60M hz
+/*notice: all the delay cycle is measured by 60M hz 
  *when in super mem, the os is running in 1008M
  *so, the delay cycle need reconsideration.
  */
 void mem_delay(int cycle);
 
 #endif  //__COMMON_H__
+

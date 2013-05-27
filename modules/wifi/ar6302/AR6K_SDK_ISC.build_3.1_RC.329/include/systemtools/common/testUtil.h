@@ -11,3 +11,5 @@ A_BOOL verifyChecksum(A_UINT16* stream, A_UINT32 len);
 A_UINT16 computeChecksumOnly(A_UINT16 *pHalf, A_UINT16 length);
 
 #endif // _TEST_UTIL_H
+
+

@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="wmi_thin.h" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -42,7 +42,7 @@ extern "C" {
 
 
 typedef enum {
-    WMI_THIN_CONFIG_CMDID =  0x8000, // WMI_THIN_RESERVED_START
+    WMI_THIN_CONFIG_CMDID =  0x8000, // WMI_THIN_RESERVED_START 
     WMI_THIN_SET_MIB_CMDID,
     WMI_THIN_GET_MIB_CMDID,
     WMI_THIN_JOIN_CMDID,
@@ -76,7 +76,7 @@ typedef enum{
 
 
 /* MAC Header Build Rules */
-/*  These values allow the host to configure the
+/*  These values allow the host to configure the 
  *  target code that is responsible for constructing
  *  the MAC header.  In cases where the MAC header
  *  is provided by the host framework, the target
@@ -98,19 +98,19 @@ typedef enum{
                                  WMI_WRT_POWER | WMI_WRT_MORE | WMI_WRT_WEP | WMI_WRT_BSSID | \
                                  WMI_WRT_QOS | WMI_WRT_SEQNO | WMI_GUARD_TX)
 
-/* WMI_THIN_CONFIG_TXCOMPLETE -- Used to configure the params and content for
- *  TX Complete messages the will come from the Target.  these messages are
- *  disabled by default but can be enabled using this structure and the
+/* WMI_THIN_CONFIG_TXCOMPLETE -- Used to configure the params and content for 
+ *  TX Complete messages the will come from the Target.  these messages are 
+ *  disabled by default but can be enabled using this structure and the 
  *  WMI_THIN_CONFIG_CMDID. */
 typedef PREPACK struct {
     A_UINT8     version; /* the versioned type of messages to use or 0 to disable */
     A_UINT8     countThreshold; /* msg count threshold triggering a tx complete message */
-    A_UINT16    timeThreshold; /* timeout interval in MSEC triggering a tx complete message */
+    A_UINT16    timeThreshold; /* timeout interval in MSEC triggering a tx complete message */       
 } POSTPACK WMI_THIN_CONFIG_TXCOMPLETE;
 
-/* WMI_THIN_CONFIG_DECRYPT_ERR -- Used to configure behavior for received frames
+/* WMI_THIN_CONFIG_DECRYPT_ERR -- Used to configure behavior for received frames 
  *  that have decryption errors.  The default behavior is to discard the frame
- *  without notification. Alternately, the MAC Header is forwarded to the host
+ *  without notification. Alternately, the MAC Header is forwarded to the host 
  *  with the failed status. */
 typedef PREPACK struct {
     A_UINT8     enable; /* 1 == send decrypt errors to the host, 0 == don't */
@@ -118,38 +118,38 @@ typedef PREPACK struct {
 } POSTPACK WMI_THIN_CONFIG_DECRYPT_ERR;
 
 /* WMI_THIN_CONFIG_TX_MAC_RULES -- Used to configure behavior for transmitted
- *  frames that require partial MAC header construction. These rules
+ *  frames that require partial MAC header construction. These rules 
  *  are used by the target to indicate which fields need to be written. */
 typedef PREPACK struct {
-    A_UINT32    rules; /* combination of WMI_WRT_... values */
+    A_UINT32    rules; /* combination of WMI_WRT_... values */     
 } POSTPACK WMI_THIN_CONFIG_TX_MAC_RULES;
 
 /* WMI_THIN_CONFIG_RX_FILTER_RULES -- Used to configure behavior for received
  *  frames as to which frames should get forwarded to the host and which
  *  should get processed internally. */
 typedef PREPACK struct {
-    A_UINT32    rules; /* combination of WMI_FILT_... values */
+    A_UINT32    rules; /* combination of WMI_FILT_... values */     
 } POSTPACK WMI_THIN_CONFIG_RX_FILTER_RULES;
 
 
 /* WMI_THIN_CONFIG_CIPHER_ENCAP -- Used to configure behavior for both
- * TX and RX frames regarding security cipher encapsulation. The host may specify
- * whether or not the firmware is responsible for cipher
+ * TX and RX frames regarding security cipher encapsulation. The host may specify 
+ * whether or not the firmware is responsible for cipher 
  * encapsulation.  If the firmware is responsible it will add the security header
  * and trailer for TX frames and remove the header and trailer for Rx frames. Also,
  * the firmware will examine the resource counter if any and behave appropriately when
- * a bad value is detected.  If the host indicates responsibility for encapsulation
- * then it is responsible for all aspects of encapsulation, however the device will
- * still perform the encryption and decryption of the frame payload if a key has
+ * a bad value is detected.  If the host indicates responsibility for encapsulation 
+ * then it is responsible for all aspects of encapsulation, however the device will 
+ * still perform the encryption and decryption of the frame payload if a key has 
  * been provided. */
 typedef PREPACK struct {
-    A_UINT8     enable; /* enables/disables firmware cipher encapsulation */
+    A_UINT8     enable; /* enables/disables firmware cipher encapsulation */     
     A_UINT8     reserved[3]; /* align padding */
 } POSTPACK WMI_THIN_CONFIG_CIPHER_ENCAP;
 
 /* WMI_THIN_CONFIG_CMD -- Used to contain some combination of the above
- *  WMI_THIN_CONFIG_... structures. The actual combination is indicated
- *  by the value of cfgField. Each bit in this field corresponds to
+ *  WMI_THIN_CONFIG_... structures. The actual combination is indicated 
+ *  by the value of cfgField. Each bit in this field corresponds to 
  *  one of the above structures. */
 typedef PREPACK struct {
 #define WMI_THIN_CFG_TXCOMP         0x00000001
@@ -158,7 +158,7 @@ typedef PREPACK struct {
 #define WMI_THIN_CFG_FILTER_RULES   0x00000008
 #define WMI_THIN_CFG_CIPHER_ENCAP   0x00000010
     A_UINT32    cfgField;   /* combination of WMI_THIN_CFG_... describes contents of config command */
-    A_UINT16    length;     /* length in bytes of appended sub-commands */
+    A_UINT16    length;     /* length in bytes of appended sub-commands */        
     A_UINT8     reserved[2];   /* align padding */
 } POSTPACK WMI_THIN_CONFIG_CMD;
 
@@ -191,7 +191,7 @@ enum {
     /*MIB_ID_COUNTERS_TABLE*/
     /*MIB_ID_ETHERTYPE_FILTER*/
     /*MIB_ID_BC_UDP_FILTER*/
-
+       
 };
 
 typedef PREPACK struct {
@@ -223,7 +223,7 @@ typedef PREPACK struct {
 typedef PREPACK struct {
 #define FRAME_FILTER_PROMISCUOUS 0x00000001
 #define FRAME_FILTER_BSSID       0x00000002
-    A_UINT32 filterMask;
+    A_UINT32 filterMask; 
 } POSTPACK WMI_THIN_MIB_RXFRAME_FILTER;
 
 
@@ -247,7 +247,7 @@ typedef PREPACK struct {
     A_UINT16 numElements;
     A_UINT8 entrySize; // sizeof(WMI_THIN_MIB_BEACON_FILTER_TABLE) on host cpu may be 2 may be 4
     A_UINT8 reserved;
-} POSTPACK WMI_THIN_MIB_BEACON_FILTER_TABLE_HEADER;
+} POSTPACK WMI_THIN_MIB_BEACON_FILTER_TABLE_HEADER; 
 
 typedef PREPACK struct {
     A_UINT32 count; /* num beacons between deliveries */
@@ -272,12 +272,12 @@ typedef PREPACK struct {
     A_UINT32 rxRateField;
     A_UINT32 beamForming;
     A_UINT8 addr[ATH_MAC_LEN];
-    A_UINT8 enable;
+    A_UINT8 enable;        
     A_UINT8 stbc;
-    A_UINT8 maxAMPDU;
+    A_UINT8 maxAMPDU;    
     A_UINT8 msduSpacing;
-    A_UINT8 mcsFeedback;
-    A_UINT8 antennaSelCap;
+    A_UINT8 mcsFeedback;   
+    A_UINT8 antennaSelCap;    
 } POSTPACK WMI_THIN_MIB_HT_CAP;
 
 typedef PREPACK struct {
@@ -308,13 +308,13 @@ typedef PREPACK struct {
     A_UINT8 reserved[3];
 } POSTPACK WMI_THIN_MIB_PREAMBLE;
 
-typedef PREPACK struct {
+typedef PREPACK struct {    
     A_UINT16    length;     /* the length in bytes of the appended MIB data */
     A_UINT8     mibID;      /* the ID of the MIB element being set */
     A_UINT8     reserved; /* align padding */
 } POSTPACK WMI_THIN_SET_MIB_CMD;
 
-typedef PREPACK struct {
+typedef PREPACK struct {    
     A_UINT8     mibID;      /* the ID of the MIB element being set */
     A_UINT8     reserved[3]; /* align padding */
 } POSTPACK WMI_THIN_GET_MIB_CMD;
@@ -327,14 +327,14 @@ typedef PREPACK struct {
     A_UINT8     networkType; /* INFRA_NETWORK | ADHOC_NETWORK */
     A_UINT8     ssidLength; /* 0 - 32 */
     A_UINT8     probe;      /* != 0 : issue probe req at start */
-    A_UINT8     reserved;   /* alignment */
-    A_UCHAR     ssid[WMI_MAX_SSID_LEN];
+    A_UINT8     reserved;   /* alignment */    
+    A_UCHAR     ssid[WMI_MAX_SSID_LEN];    
     A_UINT8     bssid[ATH_MAC_LEN];
 } POSTPACK WMI_THIN_JOIN_CMD;
 
 typedef PREPACK struct {
     A_UINT16 dtim; /* dtim interval in num beacons */
-    A_UINT16 aid; /* 80211 association ID from Assoc resp */
+    A_UINT16 aid; /* 80211 association ID from Assoc resp */   
 } POSTPACK WMI_THIN_CONNECT_CMD;
 
 typedef PREPACK struct {
@@ -345,9 +345,9 @@ typedef enum {
     WMI_THIN_EVENTID_RESERVED_START           = 0x8000,
     WMI_THIN_GET_MIB_EVENTID,
     WMI_THIN_JOIN_EVENTID,
-
+    
     /* Add new THIN EVENTID's here */
-    WMI_THIN_EVENTID_RESERVED_END           = 0x8fff
+    WMI_THIN_EVENTID_RESERVED_END           = 0x8fff    
 } WMI_THIN_EVENT_ID;
 
 /* Possible values for WMI_THIN_JOIN_EVENT.result */

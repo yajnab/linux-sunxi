@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="a_drv_api.h" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -135,7 +135,7 @@ extern "C" {
     ar6000_disconnect_event((devt), (reason), (bssid), (assocRespLen), (assocInfo), (protocolReasonStatus))
 
 #ifdef ATH_SUPPORT_DFS
-
+    
 #define A_WMI_DFS_ATTACH_EVENT(devt, capinfo) \
     ar6000_dfs_attach_event((devt),(capinfo))
 
@@ -165,8 +165,8 @@ extern "C" {
 
 #define A_WMI_DFS_SET_DEBUGLEVEL_EVENT(devt, value) \
     ar6000_dfs_set_debuglevel_event((devt), (value))
-
-#endif /* ATH_SUPPORT_DFS */
+    
+#endif /* ATH_SUPPORT_DFS */ 
 
 #define A_WMI_TKIP_MICERR_EVENT(devt, keyid, ismcast)   \
     ar6000_tkip_micerr_event((devt), (keyid), (ismcast))

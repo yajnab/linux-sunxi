@@ -36,3 +36,4 @@ task LegacyRegsTop::stop_xactor() {
 task LegacyRegsTop::reset_xactor(integer rstType) {
   super.reset_xactor(rstType);
 }
+

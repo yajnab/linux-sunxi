@@ -66,6 +66,9 @@
 #define CONFIG_SW_SYSMEM_RESERVED_BASE 0x43000000
 #define CONFIG_SW_SYSMEM_RESERVED_SIZE 75776
 
+#define VE_CLK_HIGH_WATER  (500)//400MHz
+#define VE_CLK_LOW_WATER   (100) //160MHz
+
 int g_dev_major = CEDARDEV_MAJOR;
 int g_dev_minor = CEDARDEV_MINOR;
 module_param(g_dev_major, int, S_IRUGO);//S_IRUGO represent that g_dev_major can be read,but canot be write
@@ -80,7 +83,7 @@ struct clk *dram_veclk = NULL;
 struct clk *avs_moduleclk = NULL;
 struct clk *hosc_clk = NULL;
 
-static unsigned long pll4clk_rate = 720000000;
+static unsigned long pll4clk_rate = 300000000;
 
 extern unsigned long ve_start;
 extern unsigned long ve_size;
@@ -196,10 +199,10 @@ static LIST_HEAD(run_task_list);
 static LIST_HEAD(del_task_list);
 static spinlock_t cedar_spin_lock;
 #define CEDAR_RUN_LIST_NONULL	-1
-#define CEDAR_NONBLOCK_TASK  0      //éžé˜»å¡ž
+#define CEDAR_NONBLOCK_TASK  0      //·Ç×èÈû
 #define CEDAR_BLOCK_TASK 1
-#define CLK_REL_TIME 10000	//10ç§’
-#define TIMER_CIRCLE 50		//50æ¯«ç§’
+#define CLK_REL_TIME 10000	//10Ãë
+#define TIMER_CIRCLE 50		//50ºÁÃë
 #define TASK_INIT      0x00
 #define TASK_TIMEOUT   0x55
 #define TASK_RELEASE   0xaa
@@ -281,8 +284,8 @@ void cedardev_insert_task(struct cedarv_engine_task* new_task)
 		new_task->is_first_task = 1;
 
 	/*
-	 * éåŽ†run_task_listé“¾è¡¨ï¼Œå¦‚æžœæ’å…¥çš„ä»»åŠ¡ä¼˜å…ˆçº§æ¯”é“¾è¡¨èŠ‚ç‚¹ä¸­çš„ä»»åŠ¡ä¼˜å…ˆçº§é«˜ï¼Œå¹¶ä¸”å½“å‰æ’å…¥ä»»åŠ¡ä¸æ˜¯ç¬¬ä¸€ä¸ªæ’å…¥çš„ä»»åŠ¡ã€‚
-	 * é‚£ä¹ˆå°±å°†ä¼˜å…ˆçº§é«˜çš„ä»»åŠ¡æ”¾äºŽå‰é¢ï¼Œé˜Ÿåˆ—ä¸­çš„ä»»åŠ¡é‡‡å–ä»Žé«˜åˆ°åº•çš„ä¼˜å…ˆçº§é˜Ÿåˆ—æŽ’é˜Ÿã€‚
+	 * ±éÀúrun_task_listÁ´±í£¬Èç¹û²åÈëµÄÈÎÎñÓÅÏÈ¼¶±ÈÁ´±í½ÚµãÖÐµÄÈÎÎñÓÅÏÈ¼¶¸ß£¬²¢ÇÒµ±Ç°²åÈëÈÎÎñ²»ÊÇµÚÒ»¸ö²åÈëµÄÈÎÎñ¡£
+	 * ÄÇÃ´¾Í½«ÓÅÏÈ¼¶¸ßµÄÈÎÎñ·ÅÓÚÇ°Ãæ£¬¶ÓÁÐÖÐµÄÈÎÎñ²ÉÈ¡´Ó¸ßµ½µ×µÄÓÅÏÈ¼¶¶ÓÁÐÅÅ¶Ó¡£
 	 */
 	list_for_each_entry(task_entry, &run_task_list, list) {
 		if((task_entry->is_first_task == 0) && (task_entry->running == 0)
@@ -299,7 +302,7 @@ void cedardev_insert_task(struct cedarv_engine_task* new_task)
 	printk("\n");
 	#endif
 
-	/* æ¯æ¬¡æ’å…¥ä¸€ä¸ªä»»åŠ¡ï¼Œå°±å°†å½“å‰çš„è®¡æ—¶å™¨æ—¶é—´é‡ç½®ä¸ºç³»ç»Ÿå½“å‰çš„jiffies */
+	/* Ã¿´Î²åÈëÒ»¸öÈÎÎñ£¬¾Í½«µ±Ç°µÄ¼ÆÊ±Æ÷Ê±¼äÖØÖÃÎªÏµÍ³µ±Ç°µÄjiffies */
 	mod_timer(&cedar_devp->cedar_engine_timer, jiffies + 0);
 	spin_unlock_irqrestore(&cedar_spin_lock, flags);
 }
@@ -311,8 +314,8 @@ int cedardev_del_task(int task_id)
 
 	spin_lock_irqsave(&cedar_spin_lock, flags);
 	/*
-	 * éåŽ†run_task_listé“¾è¡¨
-	 * å¦‚æžœæ‰¾åˆ°å¯¹åº”çš„idå·ï¼Œé‚£ä¹ˆå°±å°†run_task_listé“¾è¡¨ä¸­çš„ä»»åŠ¡ç§»åˆ°del_task_listé“¾è¡¨çš„è¡¨å¤´ã€‚
+	 * ±éÀúrun_task_listÁ´±í
+	 * Èç¹ûÕÒµ½¶ÔÓ¦µÄidºÅ£¬ÄÇÃ´¾Í½«run_task_listÁ´±íÖÐµÄÈÎÎñÒÆµ½del_task_listÁ´±íµÄ±íÍ·¡£
 	 */
 	list_for_each_entry(task_entry, &run_task_list, list) {
 		if (task_entry->t.ID == task_id && task_entry->status != TASK_RELEASE) {
@@ -324,7 +327,7 @@ int cedardev_del_task(int task_id)
 		}
 	}
 	spin_unlock_irqrestore(&cedar_spin_lock, flags);
-	/* æ‰¾ä¸åˆ°å¯¹åº” ID */
+	/* ÕÒ²»µ½¶ÔÓ¦ ID */
 	return -1;
 }
 
@@ -334,7 +337,7 @@ int cedardev_check_delay(int check_prio)
 	int timeout_total = 0;
 	unsigned long flags;
 
-	/* èŽ·å–æ€»çš„ç­‰å¾…æ—¶é—´ */
+	/* »ñÈ¡×ÜµÄµÈ´ýÊ±¼ä */
 	spin_lock_irqsave(&cedar_spin_lock, flags);
 	list_for_each_entry(task_entry, &run_task_list, list) {
 		if((task_entry->t.task_prio >= check_prio) || (task_entry->running == 1)
@@ -382,10 +385,10 @@ static void cedar_engine_for_events(unsigned long arg)
 	list_for_each_entry_safe(task_entry, task_entry_tmp, &del_task_list, list) {
 		info.si_signo = SIG_CEDAR;
 		info.si_code = task_entry->t.ID;
-		if (task_entry->status == TASK_TIMEOUT) { /* è¡¨ç¤ºä»»åŠ¡timeoutåˆ é™¤ */
+		if (task_entry->status == TASK_TIMEOUT) { /* ±íÊ¾ÈÎÎñtimeoutÉ¾³ý */
 			info.si_errno = TASK_TIMEOUT;
 			send_sig_info(SIG_CEDAR, &info, task_entry->task_handle);
-		} else if(task_entry->status == TASK_RELEASE) { /* è¡¨ç¤ºä»»åŠ¡æ­£å¸¸è¿è¡Œå®Œæ¯•åˆ é™¤ */
+		} else if(task_entry->status == TASK_RELEASE) { /* ±íÊ¾ÈÎÎñÕý³£ÔËÐÐÍê±ÏÉ¾³ý */
 			info.si_errno = TASK_RELEASE;
 			send_sig_info(SIG_CEDAR, &info, task_entry->task_handle);
 		}
@@ -393,14 +396,14 @@ static void cedar_engine_for_events(unsigned long arg)
 		kfree(task_entry);
 	}
 
-	/* æ¿€æ´»é“¾è¡¨ä¸­çš„task */
+	/* ¼¤»îÁ´±íÖÐµÄtask */
 	if(!list_empty(&run_task_list)){
 		task_entry = list_entry(run_task_list.next, struct cedarv_engine_task, list);
 		if(task_entry->running == 0){
 			task_entry->running = 1;
 			info.si_signo = SIG_CEDAR;
 			info.si_code = task_entry->t.ID;
-			info.si_errno = TASK_INIT; /* ä»»åŠ¡å·²ç»å¯åŠ¨ */
+			info.si_errno = TASK_INIT; /* ÈÎÎñÒÑ¾­Æô¶¯ */
 			send_sig_info(SIG_CEDAR, &info, task_entry->task_handle);
 		}
 		mod_timer(&cedar_devp->cedar_engine_timer, jiffies + msecs_to_jiffies(TIMER_CIRCLE));
@@ -438,14 +441,14 @@ long cedardev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 			return -EFAULT;
 		}
 		spin_lock_irqsave(&cedar_spin_lock, flags);
-		/* å¦‚æžœtaskä¸ºéžé˜»å¡žçŠ¶æ€ï¼Œè¯·æ±‚è€…å¯ä»¥ç«‹å³è¿”å›ž */
+		/* Èç¹ûtaskÎª·Ç×èÈû×´Ì¬£¬ÇëÇóÕß¿ÉÒÔÁ¢¼´·µ»Ø */
 		if(!list_empty(&run_task_list) && ( task_ret.block_mode == CEDAR_NONBLOCK_TASK)){
 			spin_unlock_irqrestore(&cedar_spin_lock, flags);
-			return CEDAR_RUN_LIST_NONULL; /* run_task_listé‡Œé¢æœ‰ä»»åŠ¡ï¼Œè¿”å›ž-1 */
+			return CEDAR_RUN_LIST_NONULL; /* run_task_listÀïÃæÓÐÈÎÎñ£¬·µ»Ø-1 */
 		}
 		spin_unlock_irqrestore(&cedar_spin_lock, flags);
 
-		/* å¦‚æžœtaskä¸ºé˜»å¡žçŠ¶æ€ï¼Œå°†taskæ’å…¥run_task_listé“¾è¡¨ä¸­ */
+		/* Èç¹ûtaskÎª×èÈû×´Ì¬£¬½«task²åÈërun_task_listÁ´±íÖÐ */
 		task_ptr = kmalloc(sizeof(struct cedarv_engine_task), GFP_KERNEL);
 		if(!task_ptr){
 			printk("get mem for IOCTL_ENGINE_REQ\n");
@@ -464,8 +467,8 @@ long cedardev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 
 		enable_cedar_hw_clk();
 		/*
-		 * æ’å…¥run_task_listé“¾è¡¨ä¸­çš„ä»»åŠ¡æ˜¯ç¬¬ä¸€ä¸ªä»»åŠ¡ï¼Œè¿”å›ž1ï¼Œä¸æ˜¯ç¬¬ä¸€ä¸ªä»»åŠ¡è¿”å›ž0.
-		 * hx modify 2011-7-28 16:59:16ï¼ï¼ï¼
+		 * ²åÈërun_task_listÁ´±íÖÐµÄÈÎÎñÊÇµÚÒ»¸öÈÎÎñ£¬·µ»Ø1£¬²»ÊÇµÚÒ»¸öÈÎÎñ·µ»Ø0.
+		 * hx modify 2011-7-28 16:59:16£¡£¡£¡
 		 */
 		return task_ptr->is_first_task;
 	#else
@@ -478,7 +481,7 @@ long cedardev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 	#ifdef USE_CEDAR_ENGINE
 		rel_taskid = (int)arg;
 		/*
-		 * åˆ©ç”¨ä»»åŠ¡çš„idå·è¿›è¡Œä»»åŠ¡çš„åˆ é™¤æ“ä½œã€‚è¿”å›žå€¼æ„ä¹‰ï¼šæ‰¾ä¸åˆ°å¯¹åº”IDï¼Œè¿”å›ž-1;æ‰¾åˆ°å¯¹åº”IDï¼Œè¿”å›ž0ã€‚
+		 * ÀûÓÃÈÎÎñµÄidºÅ½øÐÐÈÎÎñµÄÉ¾³ý²Ù×÷¡£·µ»ØÖµÒâÒå£ºÕÒ²»µ½¶ÔÓ¦ID£¬·µ»Ø-1;ÕÒµ½¶ÔÓ¦ID£¬·µ»Ø0¡£
 		 */
 		ret = cedardev_del_task(rel_taskid);
 	#else
@@ -491,16 +494,16 @@ long cedardev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 	{
 		struct cedarv_engine_task_info task_info;
 		/*
-		 * ä»Žç”¨æˆ·ç©ºé—´ä¸­èŽ·å–è¦æŸ¥è¯¢çš„ä»»åŠ¡ä¼˜å…ˆçº§ï¼Œé€šè¿‡ä»»åŠ¡ä¼˜å…ˆçº§ï¼Œç»Ÿè®¡éœ€è¦ç­‰å¾…çš„æ€»æ—¶é—´total_time.
-		 * åœ¨è¿™ä¸ªæŽ¥å£ä¸­ï¼ŒåŒæ—¶ä¹Ÿç»™ç”¨æˆ·ä¼ é€’äº†å½“å‰ä»»åŠ¡çš„frametimeï¼ˆè¿™æ ·åšå¯ä»¥å‡å°‘æŽ¥å£ï¼Œä½†æ˜¯ç”¨æˆ·ç©ºé—´è¦å¤šè®¾ç½®ä¸€ä¸ª
-		 * ç©ºçš„frametimeå€¼ï¼‰å¯¹äºŽå½“å‰taskçš„frametimeï¼Œä¹Ÿå¯ä»¥ç”¨é¢å¤–çš„æŽ¥å£èŽ·å–ï¼Œä½†æ˜¯è¿™æ ·åšï¼Œ
-		 * frametimeå’Œtotal_timeå°±å¤„äºŽä¸åŒæŽ¥å£ä¸­ã€‚å¥½å¤„ï¼Ÿï¼Ÿï¼Ÿ
+		 * ´ÓÓÃ»§¿Õ¼äÖÐ»ñÈ¡Òª²éÑ¯µÄÈÎÎñÓÅÏÈ¼¶£¬Í¨¹ýÈÎÎñÓÅÏÈ¼¶£¬Í³¼ÆÐèÒªµÈ´ýµÄ×ÜÊ±¼ätotal_time.
+		 * ÔÚÕâ¸ö½Ó¿ÚÖÐ£¬Í¬Ê±Ò²¸øÓÃ»§´«µÝÁËµ±Ç°ÈÎÎñµÄframetime£¨ÕâÑù×ö¿ÉÒÔ¼õÉÙ½Ó¿Ú£¬µ«ÊÇÓÃ»§¿Õ¼äÒª¶àÉèÖÃÒ»¸ö
+		 * ¿ÕµÄframetimeÖµ£©¶ÔÓÚµ±Ç°taskµÄframetime£¬Ò²¿ÉÒÔÓÃ¶îÍâµÄ½Ó¿Ú»ñÈ¡£¬µ«ÊÇÕâÑù×ö£¬
+		 * frametimeºÍtotal_time¾Í´¦ÓÚ²»Í¬½Ó¿ÚÖÐ¡£ºÃ´¦£¿£¿£¿
 		 */
 		if(copy_from_user(&task_info, (void __user*)arg, sizeof(struct cedarv_engine_task_info))){
 			printk("IOCTL_ENGINE_CHECK_DELAY copy_from_user fail\n");
 			return -EFAULT;
 		}
-		task_info.total_time = cedardev_check_delay(task_info.task_prio); /* task_info.task_prioæ˜¯ä¼ é€’è¿‡æ¥çš„ä¼˜å…ˆçº§ */
+		task_info.total_time = cedardev_check_delay(task_info.task_prio); /* task_info.task_prioÊÇ´«µÝ¹ýÀ´µÄÓÅÏÈ¼¶ */
 		#ifdef CEDAR_DEBUG
 		printk("%s,%d,%d\n", __func__, __LINE__, task_info.total_time);
 		#endif
@@ -508,8 +511,8 @@ long cedardev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 		spin_lock_irqsave(&cedar_spin_lock, flags);
 		if(!list_empty(&run_task_list)){
 			/*
-			 * èŽ·å–run_task_listé“¾è¡¨ä¸­çš„ç¬¬ä¸€ä¸ªä»»åŠ¡ï¼Œä¹Ÿå°±æ˜¯å½“å‰è¿è¡Œçš„ä»»åŠ¡ï¼Œ
-			 * é€šè¿‡å½“å‰è¿è¡Œçš„ä»»åŠ¡èŽ·å–frametimeæ—¶é—´
+			 * »ñÈ¡run_task_listÁ´±íÖÐµÄµÚÒ»¸öÈÎÎñ£¬Ò²¾ÍÊÇµ±Ç°ÔËÐÐµÄÈÎÎñ£¬
+			 * Í¨¹ýµ±Ç°ÔËÐÐµÄÈÎÎñ»ñÈ¡frametimeÊ±¼ä
 			 */
 			struct cedarv_engine_task *task_entry;
 			#ifdef CEDAR_DEBUG
@@ -524,8 +527,8 @@ long cedardev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 		}
 		spin_unlock_irqrestore(&cedar_spin_lock, flags);
 		/*
-		 * å°†ä»»åŠ¡ä¼˜å…ˆçº§ï¼Œtotal_time,frametimeæ‹·è´åˆ°ç”¨æˆ·ç©ºé—´ã€‚ä»»åŠ¡ä¼˜å…ˆçº§è¿˜æ˜¯ç”¨æˆ·è®¾ç½®çš„å€¼ï¼Œtotal_timeæ˜¯éœ€è¦ç­‰å¾…çš„æ€»æ—¶é—´ï¼Œ
-		 * frametimeæ˜¯å½“å‰ä»»åŠ¡çš„è¿è¡Œæ—¶é—´.å…¶å®žå½“å‰ä»»åŠ¡çš„ä¿¡æ¯æœ€å¥½ç”¨å¦ä¸€ä¸ªæŽ¥å£å®žçŽ°.å‡å°‘è€¦åˆåº¦å’ŒæŽ¥å£çš„æ‹“å±•æ€§.
+		 * ½«ÈÎÎñÓÅÏÈ¼¶£¬total_time,frametime¿½±´µ½ÓÃ»§¿Õ¼ä¡£ÈÎÎñÓÅÏÈ¼¶»¹ÊÇÓÃ»§ÉèÖÃµÄÖµ£¬total_timeÊÇÐèÒªµÈ´ýµÄ×ÜÊ±¼ä£¬
+		 * frametimeÊÇµ±Ç°ÈÎÎñµÄÔËÐÐÊ±¼ä.ÆäÊµµ±Ç°ÈÎÎñµÄÐÅÏ¢×îºÃÓÃÁíÒ»¸ö½Ó¿ÚÊµÏÖ.¼õÉÙñîºÏ¶ÈºÍ½Ó¿ÚµÄÍØÕ¹ÐÔ.
 		 */
 		if (copy_to_user((void *)arg, &task_info, sizeof(struct cedarv_engine_task_info))){
 			printk("IOCTL_ENGINE_CHECK_DELAY copy_to_user fail\n");
@@ -547,7 +550,7 @@ long cedardev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 		wait_event_interruptible_timeout(wait_ve, cedar_devp->irq_flag, ve_timeout*HZ);
 		//printk("%s,%d,ve_timeout:%d,cedar_devp->irq_value:%d\n", __func__, __LINE__, ve_timeout, cedar_devp->irq_value);
 		cedar_devp->irq_flag = 0;
-		/* è¿”å›ž1ï¼Œè¡¨ç¤ºä¸­æ–­è¿”å›žï¼Œè¿”å›ž0ï¼Œè¡¨ç¤ºtimeoutè¿”å›ž */
+		/* ·µ»Ø1£¬±íÊ¾ÖÐ¶Ï·µ»Ø£¬·µ»Ø0£¬±íÊ¾timeout·µ»Ø */
 		return cedar_devp->irq_value;
 
 	case IOCTL_ENABLE_VE:
@@ -560,7 +563,7 @@ long cedardev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 
 	case IOCTL_RESET_VE:
 		clk_disable(dram_veclk);
-		pr_info("%s(%d): IOCTL_RESET_VE to check, liugang added 2013-2-19\n", __func__, __LINE__);
+		//pr_info("%s(%d): IOCTL_RESET_VE to check, liugang added 2013-2-19\n", __func__, __LINE__);
 		clk_reset(ve_moduleclk, AW_CCU_CLK_RESET);
 		clk_reset(ve_moduleclk, AW_CCU_CLK_NRESET);
 		clk_enable(dram_veclk);
@@ -569,6 +572,7 @@ long cedardev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 	case IOCTL_SET_VE_FREQ:
 	{
 		int arg_rate = (int)arg;
+#if 0
 		if(arg_rate >= 320)
 			clk_set_rate(ve_moduleclk, pll4clk_rate/3); //ve_moduleclk rate is 320khz
 		else if((arg_rate >= 240) && (arg_rate < 320))
@@ -577,6 +581,23 @@ long cedardev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 			clk_set_rate(ve_moduleclk, pll4clk_rate/6); //ve_moduleclk rate is 160khz
 		else
 			printk("IOCTL_SET_VE_FREQ set ve freq error,%s,%d\n", __func__, __LINE__);
+#else
+		if(arg_rate >= VE_CLK_LOW_WATER &&
+				arg_rate <= VE_CLK_HIGH_WATER &&
+				clk_get_rate(ve_moduleclk)/1000000 != arg_rate) {
+			if(!clk_set_rate(ve_pll4clk, arg_rate*1000000)) {
+				pll4clk_rate = clk_get_rate(ve_pll4clk);
+				if(clk_set_rate(ve_moduleclk, pll4clk_rate)) {
+					printk("set ve clock failed\n");
+				}
+
+			} else {
+				printk("set pll4 clock failed\n");
+			}
+		}
+		ret = clk_get_rate(ve_moduleclk);
+		//printk("pll4 clk %lu, ve clk %ld\n", clk_get_rate(ve_pll4clk), ret);
+#endif
 		break;
 	}
 
@@ -928,7 +949,7 @@ static int __init cedardev_init(void)
 		return -EFAULT;
 	}
 	/* default the ve freq to 160M by lys 2011-12-23 15:25:34 */
-	clk_set_rate(ve_moduleclk, pll4clk_rate/6);
+	clk_set_rate(ve_moduleclk, pll4clk_rate);
 	/* geting dram clk for ve! */
 	dram_veclk = clk_get(NULL, CLK_DRAM_VE);
 	if(!dram_veclk || IS_ERR(dram_veclk)){
@@ -970,8 +991,8 @@ static int __init cedardev_init(void)
 	cedar_devp->class = class_create(THIS_MODULE, "cedar_dev");
 	cedar_devp->dev   = device_create(cedar_devp->class, NULL, devno, NULL, "cedar_dev");
 	/*
-	 * åœ¨cedar drvåˆå§‹åŒ–çš„æ—¶å€™ï¼Œåˆå§‹åŒ–å®šæ—¶å™¨å¹¶è®¾ç½®å®ƒçš„æˆå‘˜
-	 * åœ¨æœ‰ä»»åŠ¡æ’å…¥run_task_listçš„æ—¶å€™ï¼Œå¯åŠ¨å®šæ—¶å™¨ï¼Œå¹¶è®¾ç½®å®šæ—¶å™¨çš„æ—¶é’Ÿä¸ºå½“å‰ç³»ç»Ÿçš„jiffiesï¼Œå‚è€ƒcedardev_insert_task
+	 * ÔÚcedar drv³õÊ¼»¯µÄÊ±ºò£¬³õÊ¼»¯¶¨Ê±Æ÷²¢ÉèÖÃËüµÄ³ÉÔ±
+	 * ÔÚÓÐÈÎÎñ²åÈërun_task_listµÄÊ±ºò£¬Æô¶¯¶¨Ê±Æ÷£¬²¢ÉèÖÃ¶¨Ê±Æ÷µÄÊ±ÖÓÎªµ±Ç°ÏµÍ³µÄjiffies£¬²Î¿¼cedardev_insert_task
 	 */
 	setup_timer(&cedar_devp->cedar_engine_timer, cedar_engine_for_events, (unsigned long)cedar_devp);
 	setup_timer(&cedar_devp->cedar_engine_timer_rel, cedar_engine_for_timer_rel, (unsigned long)cedar_devp);

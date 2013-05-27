@@ -54,7 +54,7 @@ static __s32 _mem_twi_soft_reset(void)
 
 	twi_reg->reg_reset |= 0x1;
 	while(twi_reg->reg_reset&0x1);
-
+	
 	return 0;
 }
 
@@ -165,7 +165,7 @@ static int _mem_twi_stop(void)
 
     twi_reg->reg_ctl = (twi_reg->reg_ctl & 0xc0) | 0x10;/* set stop+clear int flag */
 
-    nop_read = twi_reg->reg_ctl;/* apbæ—¶é’Ÿä½æ—¶å¿…é¡»å‡è¯»ä¸€æ¬¡stop bit,ä¸‹ä¸€ä¸ªå‘¨æœŸæ‰ç”Ÿæ•ˆ */
+    nop_read = twi_reg->reg_ctl;/* apbÊ±ÖÓµÍÊ±±ØĞë¼Ù¶ÁÒ»´Îstop bit,ÏÂÒ»¸öÖÜÆÚ²ÅÉúĞ§ */
     nop_read = nop_read;
     // 1. stop bit is zero.
     while((twi_reg->reg_ctl & 0x10)&&(--timeout));
@@ -205,18 +205,18 @@ static int _mem_twi_stop(void)
 void setup_twi_env(void)
 {
 	__ccmu_reg_list_t	*CmuReg = (__ccmu_reg_list_t *)SW_VA_CCM_IO_BASE;
-
+	
 	/*clk module : setting clk ratio, enable gating*/
 	*(volatile __u32 *)&CmuReg->Apb1ClkDiv = 0; //24M osc
 	*(volatile __u32 *)&CmuReg->Apb1Gate |= 0x01;
-
+	
 
 	/*setting gpio: twi0 sda, sck */
 	*(volatile __u32 *)(SW_VA_PORTC_IO_BASE + 0x24) |= 0x22;
 
 	/*twi module: twi ctrl , bus-en bit*/
 	*(volatile __u32 *)(SW_VA_TWI0_IO_BASE + 0x0c) |= 0x40;
-
+	
 	return;
 
 }
@@ -243,12 +243,12 @@ __s32 twi_byte_rw(enum twi_op_type_e op, __u8 saddr, __u8 baddr, __u8 *data)
     unsigned int   timeout;
     int   ret = -1;
 
-    twi_reg->reg_efr = 0;/* æ ‡å‡†è¯»å†™å¿…é¡»ç½®0 */
+    twi_reg->reg_efr = 0;/* ±ê×¼¶ÁĞ´±ØĞëÖÃ0 */
 
     state_tmp = twi_reg->reg_status;
     if(state_tmp != 0xf8)
     {
-	printk("(state_tmp) = 0x%x. %d\n",(state_tmp), __LINE__);
+    	printk("(state_tmp) = 0x%x. %d\n",(state_tmp), __LINE__);
         goto stop_out;
     }
 
@@ -263,17 +263,17 @@ __s32 twi_byte_rw(enum twi_op_type_e op, __u8 saddr, __u8 baddr, __u8 *data)
     while((!(twi_reg->reg_ctl & 0x08))&&(--timeout));
     if(timeout == 0)
     {
-	//busy_waiting();
-	printk("(twi_reg->reg_ctl) = 0x%x. \n",(twi_reg->reg_ctl));
+    	//busy_waiting();
+    	printk("(twi_reg->reg_ctl) = 0x%x. \n",(twi_reg->reg_ctl));
 	printk("(twi_reg->reg_status) = 0x%x. \n",(twi_reg->reg_status));
-
-	//print_call_info();
+	
+    	//print_call_info();
         goto stop_out;
     }
     state_tmp = twi_reg->reg_status;
     if(state_tmp != 0x08)
     {
-	printk("(state_tmp) = 0x%x. %d\n",(state_tmp), __LINE__);
+    	printk("(state_tmp) = 0x%x. %d\n",(state_tmp), __LINE__);
         goto stop_out;
     }
 
@@ -284,13 +284,13 @@ __s32 twi_byte_rw(enum twi_op_type_e op, __u8 saddr, __u8 baddr, __u8 *data)
     while((!(twi_reg->reg_ctl & 0x08))&&(--timeout));
     if(timeout == 0)
     {
-	printk("(timeout) = 0x%x. \n",(timeout));
+    	printk("(timeout) = 0x%x. \n",(timeout));
         goto stop_out;
     }
     state_tmp = twi_reg->reg_status;
     if(state_tmp != 0x18)
     {
-	printk("(state_tmp) = 0x%x. %d\n",(state_tmp), __LINE__);
+    	printk("(state_tmp) = 0x%x. %d\n",(state_tmp), __LINE__);
         goto stop_out;
     }
 
@@ -301,13 +301,13 @@ __s32 twi_byte_rw(enum twi_op_type_e op, __u8 saddr, __u8 baddr, __u8 *data)
     while((!(twi_reg->reg_ctl & 0x08))&&(--timeout));
     if(timeout == 0)
     {
-	printk("(state_tmp) = 0x%x. %d\n",(state_tmp), __LINE__);
+    	printk("(state_tmp) = 0x%x. %d\n",(state_tmp), __LINE__);
         goto stop_out;
     }
     state_tmp = twi_reg->reg_status;
     if(state_tmp != 0x28)
     {
-	printk("(state_tmp) = 0x%x. %d\n",(state_tmp), __LINE__);
+    	printk("(state_tmp) = 0x%x. %d\n",(state_tmp), __LINE__);
         goto stop_out;
     }
 
@@ -395,7 +395,7 @@ stop_out:
 			_mem_twi_soft_reset();
 		}
 	}
-
+	
 	_mem_twi_stop();
 
 	return ret;
@@ -424,7 +424,7 @@ __s32 twi_byte_rw_nommu(enum twi_op_type_e op, __u8 saddr, __u8 baddr, __u8 *dat
     int   ret = -1;
 
     twi_reg = (__twic_reg_t *)SW_PA_TWI0_IO_BASE;
-    twi_reg->reg_efr = 0;/* æ ‡å‡†è¯»å†™å¿…é¡»ç½®0 */
+    twi_reg->reg_efr = 0;/* ±ê×¼¶ÁĞ´±ØĞëÖÃ0 */
 
     state_tmp = twi_reg->reg_status;
     if(state_tmp != 0xf8)
@@ -443,7 +443,7 @@ __s32 twi_byte_rw_nommu(enum twi_op_type_e op, __u8 saddr, __u8 baddr, __u8 *dat
     while((!(twi_reg->reg_ctl & 0x08))&&(--timeout));
     if(timeout == 0)
     {
-	//busy_waiting();
+    	//busy_waiting();
         goto stop_out;
     }
     state_tmp = twi_reg->reg_status;
@@ -561,3 +561,4 @@ stop_out:
 
     return ret;
 }
+

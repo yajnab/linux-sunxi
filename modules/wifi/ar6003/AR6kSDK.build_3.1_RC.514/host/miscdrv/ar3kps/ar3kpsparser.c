@@ -49,8 +49,8 @@
 #define MAX_RADIO_CFG_TABLE_SIZE  244
 #define RAMPS_MAX_PS_TAGS_PER_FILE        50
 
-#define PS_MAX_LEN                        500
-#define LINE_SIZE_MAX                     (PS_MAX_LEN *2)
+#define PS_MAX_LEN                        500 
+#define LINE_SIZE_MAX                     (PS_MAX_LEN *2) 
 
 /* Constant values used by parser */
 #define BYTES_OF_PS_DATA_PER_LINE         16
@@ -72,7 +72,7 @@
 #define TO_LOWER(c) (IS_BETWEEN((c), 'A', 'Z') ? ((c) - 'A' + 'a') : (c))
 #define IS_BLANK(c) ((c) == ' ')
 #define CONV_DEC_DIGIT_TO_VALUE(c) ((c) - '0')
-#define CONV_HEX_DIGIT_TO_VALUE(c) (IS_DIGIT(c) ? ((c) - '0') : (IS_BETWEEN((c), 'A', 'Z') ? ((c) - 'A' + 10) : ((c) - 'a' + 10)))
+#define CONV_HEX_DIGIT_TO_VALUE(c) (IS_DIGIT(c) ? ((c) - '0') : (IS_BETWEEN((c), 'A', 'Z') ? ((c) - 'A' + 10) : ((c) - 'a' + 10))) 
 #define CONV_VALUE_TO_HEX(v) ((A_UINT8)( ((v & 0x0F) <= 9) ? ((v & 0x0F) + '0') : ((v & 0x0F) - 10 + 'A') ) )
 
 
@@ -144,7 +144,7 @@ char * AthGetLine(char * buffer, int maxlen, A_UCHAR *srcbuffer,A_UINT32 len,A_U
 static A_STATUS AthPSCreateHCICommand(A_UCHAR Opcode, A_UINT32 Param1,PSCmdPacket *PSPatchPacket,A_UINT32 *index);
 
 /* Function to reads the next character from the input buffer */
-char AthReadChar(A_UCHAR *buffer, A_UINT32 len,A_UINT32 *pos)
+char AthReadChar(A_UCHAR *buffer, A_UINT32 len,A_UINT32 *pos) 
 {
     char Ch;
     if(buffer == NULL || *pos >=len )
@@ -157,7 +157,7 @@ char AthReadChar(A_UCHAR *buffer, A_UINT32 len,A_UINT32 *pos)
     }
 }
 /* PS parser helper function */
-unsigned int uGetInputDataFormat(char* pCharLine, ST_PS_DATA_FORMAT *pstFormat)
+unsigned int uGetInputDataFormat(char* pCharLine, ST_PS_DATA_FORMAT *pstFormat) 
 {
     if(pCharLine[0] != '[') {
         pstFormat->eDataType = eHex;
@@ -200,7 +200,7 @@ unsigned int uGetInputDataFormat(char* pCharLine, ST_PS_DATA_FORMAT *pstFormat)
             }
             else {                            //[H:
                 AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Illegal Data format\n"));
-                return 1;
+                return 1;                    
             }
         }
         else if(pCharLine[2]==']') {    //[H]
@@ -211,7 +211,7 @@ unsigned int uGetInputDataFormat(char* pCharLine, ST_PS_DATA_FORMAT *pstFormat)
         }
         else {                      //[H
             AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Illegal Data format\n"));
-            return 1;
+            return 1;            
         }
         break;
 
@@ -238,7 +238,7 @@ unsigned int uGetInputDataFormat(char* pCharLine, ST_PS_DATA_FORMAT *pstFormat)
             }
             else {                            //[A:
                 AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Illegal Data format 2\n"));
-                return 1;
+                return 1;                    
             }
         }
         else if(pCharLine[2]==']') {    //[H]
@@ -249,7 +249,7 @@ unsigned int uGetInputDataFormat(char* pCharLine, ST_PS_DATA_FORMAT *pstFormat)
         }
         else {                      //[H
             AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Illegal Data format 3\n"));
-            return 1;
+            return 1;            
         }
         break;
 
@@ -276,7 +276,7 @@ unsigned int uGetInputDataFormat(char* pCharLine, ST_PS_DATA_FORMAT *pstFormat)
             }
             else {                            //[A:
                 AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Illegal Data format 6\n"));
-                return 1;
+                return 1;                    
             }
         }
         else if(pCharLine[2]==']') {    //[H]
@@ -287,10 +287,10 @@ unsigned int uGetInputDataFormat(char* pCharLine, ST_PS_DATA_FORMAT *pstFormat)
         }
         else {                      //[H
             AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Illegal Data format 7\n"));
-            return 1;
+            return 1;            
         }
         break;
-
+    
         default:
         AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Illegal Data format 8\n"));
         return 1;
@@ -309,7 +309,7 @@ unsigned int uReadDataInSection(char *pCharLine, ST_PS_DATA_FORMAT stPS_DataForm
             return (0x0FFF);
         }
         pTokenPtr++;
-
+            
 
     }
     if(stPS_DataFormat.eDataType == eHex) {
@@ -367,8 +367,8 @@ A_STATUS AthParseFilesUnified(A_UCHAR *srcbuffer,A_UINT32 srclen, int FileFormat
          {
             continue;
          }
-
-         if ((pCharLine[0] == '#')) {
+         
+         if ((pCharLine[0] == '#')) { 
              if (stReadStatus.uSection != 0)
              {
                  AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("error\n"));
@@ -401,7 +401,7 @@ A_STATUS AthParseFilesUnified(A_UCHAR *srcbuffer,A_UINT32 srclen, int FileFormat
 
             continue;
     }
-
+         
          switch(ParseSection)
          {
              case RAM_PS_SECTION:
@@ -415,9 +415,9 @@ A_STATUS AthParseFilesUnified(A_UCHAR *srcbuffer,A_UINT32 srclen, int FileFormat
                              A_FREE(Buffer);
                      }
                         return A_ERROR;
-                    }
+                    }    
                     //pCharLine +=5;
-                    PsTagEntry[TagCount].TagId = uReadDataInSection(pCharLine, stPS_DataFormat);
+                    PsTagEntry[TagCount].TagId = uReadDataInSection(pCharLine, stPS_DataFormat);                            
                     AR_DEBUG_PRINTF(ATH_DEBUG_ERR,(" TAG ID %d \n",PsTagEntry[TagCount].TagId));
 
                     //AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("tag # %x\n", PsTagEntry[TagCount].TagId);
@@ -429,7 +429,7 @@ A_STATUS AthParseFilesUnified(A_UCHAR *srcbuffer,A_UINT32 srclen, int FileFormat
                  }
                  else if (stReadStatus.uSection == 2) //TagLength
                  {
-
+            
                     if(uGetInputDataFormat(pCharLine, &stPS_DataFormat)) {
                         AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("uGetInputDataFormat fail \n"));
                      if(Buffer != NULL) {
@@ -505,14 +505,14 @@ A_STATUS AthParseFilesUnified(A_UCHAR *srcbuffer,A_UINT32 srclen, int FileFormat
                     }
 
                     stReadStatus.uLineCount++;
-
+                    
                     if(ByteCount == 0) {
                         stReadStatus.uSection = 0;
                         stReadStatus.uCharCount = 0;
                         stReadStatus.uLineCount = 0;
                         stReadStatus.uByteCount = 0;
                     }
-                    else {
+                    else { 
                         stReadStatus.uCharCount = 0;
                     }
 
@@ -526,7 +526,7 @@ A_STATUS AthParseFilesUnified(A_UCHAR *srcbuffer,A_UINT32 srclen, int FileFormat
                        //Sleep (3000);
                        //exit(1);
                     }
-
+        
                  }
              }
 
@@ -575,14 +575,14 @@ A_STATUS GetNextTwoChar(A_UCHAR *srcbuffer,A_UINT32 len, A_UINT32 *pos, char * b
     ch = AthReadChar(srcbuffer,len,pos);
     if(ch != '\0' && IS_HEX(ch)) {
         buffer[0] =  ch;
-    } else
+    } else 
     {
         return A_ERROR;
     }
     ch = AthReadChar(srcbuffer,len,pos);
     if(ch != '\0' && IS_HEX(ch)) {
         buffer[1] =  ch;
-    } else
+    } else 
     {
         return A_ERROR;
     }
@@ -699,9 +699,9 @@ A_STATUS AthDoParsePS(A_UCHAR *srcbuffer, A_UINT32 srclen)
     {
         AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("File Open Operation Successful\n"));
 
-        status = AthParseFilesUnified(srcbuffer,srclen,MB_FILEFORMAT_PATCH);
+        status = AthParseFilesUnified(srcbuffer,srclen,MB_FILEFORMAT_PATCH); 
     }
-
+    
 
 
         if(Tag_Count == 0){
@@ -759,7 +759,7 @@ char * AthGetLine(char * buffer, int maxlen, A_UCHAR *srcbuffer,A_UINT32 len,A_U
 
         if(CharRead == 13) {
         } else if(CharRead == 10) {
-            buffer[count] ='\0';
+            buffer[count] ='\0';  
             flag = A_ERROR;
             return buffer;
         }else {
@@ -790,7 +790,7 @@ int AthCreateCommandList(PSCmdPacket **HciPacketList, A_UINT32 *numPackets)
 {
 
     A_UINT8 count;
-    A_UINT32 NumcmdEntry = 0;
+    A_UINT32 NumcmdEntry = 0; 
 
     A_UINT32 Crc = 0;
     *numPackets = 0;
@@ -801,7 +801,7 @@ int AthCreateCommandList(PSCmdPacket **HciPacketList, A_UINT32 *numPackets)
     if(Tag_Count > 0)
             Crc |= RAM_PS_REGION;
     AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("PS Thread Started CRC %x Patch Count %d  Tag Count %d \n",Crc,Patch_Count,Tag_Count));
-
+    
     if(Patch_Count || Tag_Count ){
     NumcmdEntry+=(2 + Patch_Count + Tag_Count); /* CRC Packet + PS Reset Packet  + Patch List + PS List*/
         if(Patch_Count > 0) {
@@ -825,11 +825,11 @@ int AthCreateCommandList(PSCmdPacket **HciPacketList, A_UINT32 *numPackets)
         if(Tag_Count > 0){
             AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("*** PS Write**** \r\n"));
                 AthPSCreateHCICommand(PS_WRITE,Tag_Count,*HciPacketList,numPackets);
-        }
+        }    
     }
     if(!BDADDR){
         AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("BD ADDR not present \r\n"));
-
+    
     }
     AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("PS Count %d Patch Count %d",Tag_Count, Patch_Count));
     for(count = 0; count < Patch_Count; count++) {
@@ -842,9 +842,9 @@ int AthCreateCommandList(PSCmdPacket **HciPacketList, A_UINT32 *numPackets)
         A_FREE(PsTagEntry[count].TagData);
     }
 
-/*
- *  SDIO Transport uses synchronous mode of data transfer
- *  So, AthPSOperations() call returns only after receiving the
+/* 
+ *  SDIO Transport uses synchronous mode of data transfer 
+ *  So, AthPSOperations() call returns only after receiving the 
  *  command complete event.
  */
     return *numPackets;
@@ -859,7 +859,7 @@ static A_STATUS AthPSCreateHCICommand(A_UCHAR Opcode, A_UINT32 Param1,PSCmdPacke
     A_UCHAR *HCI_PS_Command;
     A_UINT32 Length;
     int i,j;
-
+    
     switch(Opcode)
     {
     case WRITE_PATCH:
@@ -881,7 +881,7 @@ static A_STATUS AthPSCreateHCICommand(A_UCHAR Opcode, A_UINT32 Param1,PSCmdPacke
                  PSPatchPacket[*index].packetLen = RamPatch[i].Len+HCI_COMMAND_HEADER;
                  (*index)++;
 
-
+          
          }
 
     break;
@@ -983,7 +983,7 @@ A_STATUS AthFreeCommandList(PSCmdPacket **HciPacketList, A_UINT32 numPackets)
     }
     for(i = 0; i < numPackets;i++) {
         A_FREE((*HciPacketList)[i].Hcipacket);
-    }
+    }  
     A_FREE(*HciPacketList);
     return A_OK;
 }

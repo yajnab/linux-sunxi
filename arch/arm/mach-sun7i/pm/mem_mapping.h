@@ -8,7 +8,7 @@
 *                                             All Rights Reserved
 *
 * File    : mem_mapping.h
-* By      :
+* By      : 
 * Version : v1.0
 * Date    : 2012-5-31 14:34
 * Descript:
@@ -19,3 +19,4 @@
 #define __MEM_MAPPING_H__
 
 #endif  /* __MEM_MAPPING_H__ */
+

@@ -73,3 +73,4 @@ extern wait_queue_head_t g_dtc_queue[];
 extern atomic_t g_adma_done;
 
 #endif /* __SUN7I_DMA_TEST_H */
+

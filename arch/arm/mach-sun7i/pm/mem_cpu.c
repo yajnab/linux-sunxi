@@ -20,19 +20,19 @@ static struct saved_context default_copro_value = {
 	/* CR1 */
 #ifdef CORTEX_A8
 	.cr = 0x00C52078,		/* Control */
-	.acr = 0x00000002,		/* Auxiliary Control Register*/
+	.acr = 0x00000002,		/* Auxiliary Control Register*/	
 	.cacr = 0x00000000,		/* Coprocessor Access Control */
-	.sccfgr = 0x00000000,		/* Secure Config Register*/
+	.sccfgr = 0x00000000,		/* Secure Config Register*/	
 	.scdbgenblr = 0x00000000,	/* Secure Debug Enable Register*/
-	.nonscacctrlr= 0x00000000,	/* Nonsecure Access Control Register*/
+	.nonscacctrlr= 0x00000000,	/* Nonsecure Access Control Register*/	
 #elif defined(CORTEX_A9)
 #elif defined(CORTEX_A7)
 	.cr = 0x00C50878,		/* Control */
-	.acr = 0x00006040,		/* Auxiliary Control Register: needed for smp*/
+	.acr = 0x00006040,		/* Auxiliary Control Register: needed for smp*/	
 	.cacr = 0x00000000,		/* Coprocessor Access Control */
-	.sccfgr = 0x00000000,		/* Secure Config Register*/
+	.sccfgr = 0x00000000,		/* Secure Config Register*/	
 	.scdbgenblr = 0x00000000,	/* Secure Debug Enable Register*/
-	.nonscacctrlr= 0x00000000,	/* Nonsecure Access Control Register*/
+	.nonscacctrlr= 0x00000000,	/* Nonsecure Access Control Register*/	
 #endif
 
 	/* CR2 */
@@ -80,7 +80,7 @@ static struct saved_context default_copro_value = {
 	.i_tlblr = 0x00000000,		/* Instruction TLB Lockdown Register */
 #elif defined(CORTEX_A7)
 #endif
-	.prrr = 0x000A81A4,		/* Primary Region Remap Register: tex[0], c, b = 010, + A => normal memory
+	.prrr = 0x000A81A4,		/* Primary Region Remap Register: tex[0], c, b = 010, + A => normal memory 
 					*                        tex[0], c, b = 100 || 101, + 1 => strong order or device
 					*/
 	.nrrr = 0x44E048E0,		/* Normal Memory Remap Register */
@@ -95,7 +95,7 @@ static struct saved_context default_copro_value = {
 	.pleiear = 0x00000000,		/* PLE Internal End Address */
 	.plecidr = 0x00000000,		/* PLE Context ID */
 #elif defined(CORTEX_A7)
-#endif
+#endif	
 
 	/* CR12 */
 #ifdef CORTEX_A8
@@ -104,7 +104,7 @@ static struct saved_context default_copro_value = {
 #elif defined(CORTEX_A9)
 #elif defined(CORTEX_A7)
 
-#endif
+#endif	
 
 	/* CR13 */
 	.fcse = 0x00000000,		/* FCSE PID */
@@ -112,7 +112,7 @@ static struct saved_context default_copro_value = {
 	.urwtpid = 0x00000000,		/* User read/write Thread and Process ID */
 	.urotpid = 0x00000000,		/* User read-only Thread and Process ID */
 	.potpid = 0x00000000,		/* Privileged only Thread and Process ID */
-
+	
 };
 
 /*__save_processor_state: store the co-processor state into to location point by ctxt
@@ -124,7 +124,7 @@ void __save_processor_state(struct saved_context *ctxt)
 	//save_mem_status(0x101);
 	//busy_waiting();
 	asm volatile ("mrc p15, 2, %0, c0, c0, 0" : "=r"(ctxt->cssr));
-
+	
 	/* CR1 */
 #ifdef CORTEX_A8
 	//save_mem_status(0x102);
@@ -214,7 +214,7 @@ void __save_processor_state(struct saved_context *ctxt)
 #endif
 	asm volatile ("mrc p15, 0, %0, c10, c2, 0" : "=r"(ctxt->prrr));
 	asm volatile ("mrc p15, 0, %0, c10, c2, 1" : "=r"(ctxt->nrrr));
-
+	
 	/* CR11 */
 #ifdef CORTEX_A8
 	asm volatile ("mrc p15, 0, %0, c11, c1, 0" : "=r"(ctxt->pleuar));
@@ -229,7 +229,7 @@ void __save_processor_state(struct saved_context *ctxt)
 	/* CR12 */
 #ifdef CORTEX_A8
 	asm volatile ("mrc p15, 0, %0, c12, c0, 0" : "=r"(ctxt->snsvbar));
-	asm volatile ("mrc p15, 0, %0, c12, c0, 1" : "=r"(ctxt->monvecbar));
+	asm volatile ("mrc p15, 0, %0, c12, c0, 1" : "=r"(ctxt->monvecbar));	
 #elif defined(CORTEX_A9)
 	asm volatile ("mrc p15, 0, %0, c12, c0, 0" : "=r"(ctxt->vbar));
 	asm volatile ("mrc p15, 0, %0, c12, c0, 1" : "=r"(ctxt->mvbar));
@@ -289,13 +289,13 @@ void __restore_processor_state(struct saved_context *ctxt)
 	asm volatile ("mcr p15, 0, %0, c2, c0, 2" : : "r"(ctxt->ttbcr));
 	asm volatile ("dsb");
 	asm volatile ("isb");
-
+	
 	//flush_tlb_all();
 	/* CR3 */
 	asm volatile ("mcr p15, 0, %0, c3, c0, 0" : : "r"(ctxt->dacr));
 	/* CR7 */
 	asm volatile ("mcr p15, 0, %0, c7, c4, 0" : : "r"(ctxt->par));
-
+		
 	/* CR9 */
 	asm volatile ("mcr p15, 0, %0, c9, c12, 5" : : "r"(ctxt->pcsr));
 	asm volatile ("mcr p15, 0, %0, c9, c13, 0" : : "r"(ctxt->ccr));
@@ -306,14 +306,14 @@ void __restore_processor_state(struct saved_context *ctxt)
 	asm volatile ("mcr p15, 0, %0, c9, c14, 2" : : "r"(ctxt->iecr));
 #ifdef CORTEX_A8
 	asm volatile ("mcr p15, 1, %0, c9, c0, 0" : : "r"(ctxt->l2clr));
-	asm volatile ("mcr p15, 1, %0, c9, c0, 2" : : "r"(ctxt->l2cauxctrlr));
+	asm volatile ("mcr p15, 1, %0, c9, c0, 2" : : "r"(ctxt->l2cauxctrlr)); 
 #elif defined(CORTEX_A7)
 #endif
 
 	/* CR10 */
 	asm volatile ("mcr p15, 0, %0, c10, c2, 0" : : "r"(ctxt->prrr));
 	asm volatile ("mcr p15, 0, %0, c10, c2, 1" : : "r"(ctxt->nrrr));
-
+	
 	/* CR11 */
 #ifdef CORTEX_A8
 	asm volatile ("mcr p15, 0, %0, c11, c1, 0" : : "r"(ctxt->pleuar));
@@ -328,7 +328,7 @@ void __restore_processor_state(struct saved_context *ctxt)
 	/* CR12 */
 #ifdef CORTEX_A8
 	asm volatile ("mcr p15, 0, %0, c12, c0, 0" : : "r"(ctxt->snsvbar));
-	asm volatile ("mcr p15, 0, %0, c12, c0, 1" : : "r"(ctxt->monvecbar));
+	asm volatile ("mcr p15, 0, %0, c12, c0, 1" : : "r"(ctxt->monvecbar));	
 #elif defined(CORTEX_A9)
 	asm volatile ("mcr p15, 0, %0, c12, c0, 0" : : "r"(ctxt->vbar));
 	asm volatile ("mcr p15, 0, %0, c12, c0, 1" : : "r"(ctxt->mvbar));
@@ -345,7 +345,7 @@ void __restore_processor_state(struct saved_context *ctxt)
 	asm volatile ("mcr p15, 0, %0, c13, c0, 2" : : "r"(ctxt->urwtpid));
 	asm volatile ("mcr p15, 0, %0, c13, c0, 3" : : "r"(ctxt->urotpid));
 	asm volatile ("mcr p15, 0, %0, c13, c0, 4" : : "r"(ctxt->potpid));
-
+	
 	/* CR15 */
 #ifdef CORTEX_A9
 	asm volatile ("mcr p15, 5, %0, c15, c7, 2" : : "r"(ctxt->mtlbar));
@@ -363,8 +363,8 @@ void disable_cache_invalidate(void)
 	__u32 val = *(volatile __u32 *)(CPU_CONFIG_REG);
 	val &=  (~0x3);
 	val |= 0x03;	//disable invalidate
-	*(volatile __u32 *)(CPU_CONFIG_REG) = val;
-
+	*(volatile __u32 *)(CPU_CONFIG_REG) = val; 
+	
 	return;
 }
 
@@ -392,8 +392,8 @@ void set_copro_default(void)
 	asm volatile ("mcr p15, 0, %0, c1, c1, 0" : : "r"(ctxt->sccfgr)); //?
 	asm volatile ("mcr p15, 0, %0, c1, c1, 1" : : "r"(ctxt->scdbgenblr)); //?
 	asm volatile ("mcr p15, 0, %0, c1, c1, 2" : : "r"(ctxt->nonscacctrlr)); //?
-#endif
-
+#endif	
+	
 	/* CR2 */
 	asm volatile ("mcr p15, 0, %0, c2, c0, 0" : : "r"(ctxt->ttb_0r));
 	//flush_tlb_all();
@@ -411,7 +411,7 @@ void set_copro_default(void)
 	asm volatile ("mcr p15, 0, %0, c6, c0, 2" : : "r"(ctxt->i_far));
 	/* CR7 */
 	asm volatile ("mcr p15, 0, %0, c7, c4, 0" : : "r"(ctxt->par));
-
+	
 	/* CR9 */
 	asm volatile ("mcr p15, 0, %0, c9, c14, 0" : : "r"(ctxt->uer));
 	asm volatile ("mcr p15, 0, %0, c9, c14, 1" : : "r"(ctxt->iesr));
@@ -430,7 +430,7 @@ void set_copro_default(void)
 #endif
 	asm volatile ("mcr p15, 0, %0, c10, c2, 0" : : "r"(ctxt->prrr));
 	asm volatile ("mcr p15, 0, %0, c10, c2, 1" : : "r"(ctxt->nrrr));
-
+		
 	/* CR11 */
 #ifdef CORTEX_A8
 	asm volatile ("mcr p15, 0, %0, c11, c1, 0" : : "r"(ctxt->pleuar));
@@ -458,6 +458,8 @@ void set_copro_default(void)
 	asm volatile ("mcr p15, 0, %0, c13, c0, 2" : : "r"(ctxt->urwtpid));
 	asm volatile ("mcr p15, 0, %0, c13, c0, 3" : : "r"(ctxt->urotpid));
 	asm volatile ("mcr p15, 0, %0, c13, c0, 4" : : "r"(ctxt->potpid));
+	asm volatile ("dsb");
+	asm volatile ("isb");
 	return;
 }
 
@@ -489,3 +491,4 @@ void set_ttbr0(void)
 	asm volatile ("isb");
 	return;
 }
+

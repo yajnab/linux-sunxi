@@ -27,7 +27,7 @@ typedef enum {
     ATH_RATE_HT40_108M,
     ATH_RATE_HT40_121_5M,
     ATH_RATE_HT40_135M,
-
+   
     MASK_RATE_MAX,
 } _AthDataRate;
 
@@ -37,3 +37,4 @@ typedef enum {
     ATH_HT40Minus,
     ATH_HT40Plus,
 } _AthHtMode;
+

@@ -1881,7 +1881,7 @@ static int hci_send_frame(struct sk_buff *skb)
 
     /* Notify the registered devices about a new send */
     hci_notify(hdev, HCI_DEV_WRITE);
-
+    
 	return hdev->send(skb);
 }
 

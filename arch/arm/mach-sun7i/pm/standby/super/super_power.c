@@ -215,9 +215,9 @@ __s32 mem_power_init(__u32 wakeup_src)
                 printk("mem_power_init. %d\n", __LINE__);
 				return -1;
 			}
-	}
+	}	
 
-	/*æŠŠ44Hå¯„å­˜å™¨çš„bit6(æŒ‰é”®ä¸Šå‡æ²¿è§¦å‘)ç½®1*/
+	/*°Ñ44H¼Ä´æÆ÷µÄbit6(°´¼üÉÏÉıÑØ´¥·¢)ÖÃ1*/
 	if(wakeup_src & AXP_WAKEUP_ASCEND){
 			if(twi_byte_rw(TWI_OP_RD, AXP_ADDR,AXP20_IRQEN5, &reg_val)){
                 printk("mem_power_init. %d\n", __LINE__);
@@ -229,8 +229,8 @@ __s32 mem_power_init(__u32 wakeup_src)
 				return -1;
 			}
 	}
-
-	/*æŠŠ44Hå¯„å­˜å™¨çš„bit5(ä¸‹é™æ²¿è§¦å‘)ç½®1*/
+	
+	/*°Ñ44H¼Ä´æÆ÷µÄbit5(ÏÂ½µÑØ´¥·¢)ÖÃ1*/
 	if(wakeup_src & AXP_WAKEUP_DESCEND){
 			if(twi_byte_rw(TWI_OP_RD, AXP_ADDR,AXP20_IRQEN5, &reg_val)){
                 printk("mem_power_init. %d\n", __LINE__);
@@ -242,7 +242,7 @@ __s32 mem_power_init(__u32 wakeup_src)
 				return -1;
 			}
 	}
-
+	
 	/* enable low voltage warning */
 	if(wakeup_src & AXP_WAKEUP_LOWBATT){
 			if(twi_byte_rw(TWI_OP_RD, AXP_ADDR,AXP20_IRQEN4, &reg_val)){
@@ -261,7 +261,7 @@ __s32 mem_power_init(__u32 wakeup_src)
 				return -1;
 			}
 	}
-
+		
 	return 0;
 }
 
@@ -313,9 +313,9 @@ __s32 mem_power_exit(__u32 wakeup_src)
 			if(twi_byte_rw(TWI_OP_WR, AXP_ADDR,AXP20_IRQEN3, &reg_val) ){
 				return -1;
 			}
-	}
+	}	
 
-	/*æŠŠ44Hå¯„å­˜å™¨çš„bit6(æŒ‰é”®ä¸Šå‡æ²¿è§¦å‘)ç½®1*/
+	/*°Ñ44H¼Ä´æÆ÷µÄbit6(°´¼üÉÏÉıÑØ´¥·¢)ÖÃ1*/
 	if(wakeup_src & AXP_WAKEUP_ASCEND){
 			if(twi_byte_rw(TWI_OP_RD, AXP_ADDR,AXP20_IRQEN5, &reg_val)){
 				return -1;
@@ -325,8 +325,8 @@ __s32 mem_power_exit(__u32 wakeup_src)
 				return -1;
 			}
 	}
-
-	/*æŠŠ44Hå¯„å­˜å™¨çš„bit5(ä¸‹é™æ²¿è§¦å‘)ç½®1*/
+	
+	/*°Ñ44H¼Ä´æÆ÷µÄbit5(ÏÂ½µÑØ´¥·¢)ÖÃ1*/
 	if(wakeup_src & AXP_WAKEUP_DESCEND){
 			if(twi_byte_rw(TWI_OP_RD, AXP_ADDR,AXP20_IRQEN5, &reg_val)){
 				return -1;
@@ -336,7 +336,7 @@ __s32 mem_power_exit(__u32 wakeup_src)
 				return -1;
 			}
 	}
-
+		
 	/* enable low voltage warning */
 	if(wakeup_src & AXP_WAKEUP_LOWBATT){
 			if(twi_byte_rw(TWI_OP_RD, AXP_ADDR,AXP20_IRQEN4, &reg_val)){
@@ -348,16 +348,16 @@ __s32 mem_power_exit(__u32 wakeup_src)
 			}
 
 	}
-
+	
 	return 0;
 }
 
 /*
  * mem_power_off
  *
- * Description:config wakeup signal.
+ * Description:config wakeup signal. 
  *             turn off power for cpu-1v2, int-1v2, vcc-3v3 , but avcc-3v , dram-1v5.
- *             turn off 2*[csi ldo(low dropout regulator)]
+ *             turn off 2*[csi ldo(low dropout regulator)] 
  *
  * Arguments  : none;
  *
@@ -369,7 +369,7 @@ __s32 mem_power_off(void)
 	__u8 reg_val = 0;
 #if 1
 	/*config wakeup signal*/
-	/*æŠŠ31Hå¯„å­˜å™¨çš„bit3(æŒ‰é”®ã€gpioå”¤é†’ä½)ç½®1: low battery to power off*/
+	/*°Ñ31H¼Ä´æÆ÷µÄbit3(°´¼ü¡¢gpio»½ĞÑÎ»)ÖÃ1: low battery to power off*/
 	if(twi_byte_rw(TWI_OP_RD, AXP_ADDR,0x31, &reg_val)){
 		return -1;
 	}
@@ -380,7 +380,7 @@ __s32 mem_power_off(void)
 
 #if 1
 	/*power off*/
-	/*æŠŠ12Hå¯„å­˜å™¨çš„bit0ã€1ã€3ã€4ã€6ç½®0*/
+	/*°Ñ12H¼Ä´æÆ÷µÄbit0¡¢1¡¢3¡¢4¡¢6ÖÃ0*/
 	if(twi_byte_rw(TWI_OP_RD, AXP_ADDR,0x12, &reg_val)){
 		return -1;
 	}
@@ -392,7 +392,7 @@ __s32 mem_power_off(void)
 
 #if 0
 	/*power off*/
-	/*æŠŠ12Hå¯„å­˜å™¨çš„bit1ã€3ã€4ã€6ç½®0*/
+	/*°Ñ12H¼Ä´æÆ÷µÄbit1¡¢3¡¢4¡¢6ÖÃ0*/
 	if(twi_byte_rw(TWI_OP_RD, AXP_ADDR,0x12, &reg_val)){
 		return -1;
 	}
@@ -412,16 +412,16 @@ __s32 mem_power_off(void)
 	 * wfi have been  changed.
 	 */
 	while(1);
-
+	
 	return -1;
 }
 
 /*
  * mem_power_off_nommu
  *
- * Description:config wakeup signal.
+ * Description:config wakeup signal. 
  *             turn off power for cpu-1v2, int-1v2, vcc-3v3 , but avcc-3v , dram-1v5.
- *             turn off 2*[csi ldo(low dropout regulator)]
+ *             turn off 2*[csi ldo(low dropout regulator)] 
  *
  * Arguments  : none;
  *
@@ -433,7 +433,7 @@ __s32 mem_power_off_nommu(void)
 	__u8 reg_val = 0;
 #if 1
 	/*config wakeup signal*/
-	/*æŠŠ31Hå¯„å­˜å™¨çš„bit3(æŒ‰é”®ã€gpioå”¤é†’ä½)ç½®1*/
+	/*°Ñ31H¼Ä´æÆ÷µÄbit3(°´¼ü¡¢gpio»½ĞÑÎ»)ÖÃ1*/
 	if(0 != twi_byte_rw_nommu(TWI_OP_RD, AXP_ADDR,0x31, &reg_val)){
 		//print_call_info_nommu();
 		return -1;
@@ -446,7 +446,7 @@ __s32 mem_power_off_nommu(void)
 #if 1
 	/*power off*/
 	//printk_nommu("notify pmu to power off. \n");
-	/*æŠŠ12Hå¯„å­˜å™¨çš„bit0ã€1ã€3ã€4ã€6ç½®0*/
+	/*°Ñ12H¼Ä´æÆ÷µÄbit0¡¢1¡¢3¡¢4¡¢6ÖÃ0*/
 	if(twi_byte_rw_nommu(TWI_OP_RD, AXP_ADDR,0x12, &reg_val)){
 		//print_call_info_nommu();
 		return -3;
@@ -459,7 +459,7 @@ __s32 mem_power_off_nommu(void)
 
 #if 0
 	/*power off*/
-	/*æŠŠ12Hå¯„å­˜å™¨çš„bit1ã€3ã€4ã€6ç½®0*/
+	/*°Ñ12H¼Ä´æÆ÷µÄbit1¡¢3¡¢4¡¢6ÖÃ0*/
 	if(twi_byte_rw(TWI_OP_RD, AXP_ADDR,0x12, &reg_val)){
 		return -1;
 	}
@@ -479,6 +479,9 @@ __s32 mem_power_off_nommu(void)
 	 * wfi have been  changed.
 	 */
 	while(1);
-
+	
 	return -5;
 }
+
+
+

@@ -111,20 +111,20 @@ static __mclk_set_inf  MCLK_INF[] =
 {
 	//88.2k bitrate    //2
     { 88200, 128,  2, 1}, { 88200, 256,  2, 1},
-
+	
 	 //22.05k bitrate   //8
     { 22050, 128,  8, 1}, { 22050, 256,  8, 1},
-    { 22050, 512,  8, 1},
-
+    { 22050, 512,  8, 1}, 
+	
 	// 24k bitrate   //8
     { 24000, 128,  8, 0}, { 24000, 256, 8, 0}, { 24000, 512, 8, 0},
-
+ 
     // 32k bitrate   //2.048MHz   24/4 = 6
     { 32000, 128,  6, 0}, { 32000, 192,  6, 0}, { 32000, 384,  6, 0},
     { 32000, 768,  6, 0},
 
      // 48K bitrate   3.072  Mbit/s   16/4 = 4
-    { 48000, 128,  4, 0}, { 48000, 256,  16, 0}, { 48000, 512, 4, 0},
+    { 48000, 128,  4, 0}, { 48000, 256,  4, 0}, { 48000, 512, 4, 0},   
 
     // 96k bitrate  6.144MHZ   8/4 = 2
     { 96000, 128 , 2, 0}, { 96000, 256,  2, 0},
@@ -147,10 +147,10 @@ static s32 get_clock_divder(u32 sample_rate, u32 sample_width, u32 * mclk_div, u
 	u32 i, j, ret = -EINVAL;
 
 	for(i=0; i< 100; i++) {
-		 if((MCLK_INF[i].samp_rate == sample_rate) &&
-			((MCLK_INF[i].mult_fs == 256) || (MCLK_INF[i].mult_fs == 128))) {
+		 if((MCLK_INF[i].samp_rate == sample_rate) && 
+		 	((MCLK_INF[i].mult_fs == 256) || (MCLK_INF[i].mult_fs == 128))) {
 			  for(j=0; j<ARRAY_SIZE(BCLK_INF); j++) {
-					if((BCLK_INF[j].bitpersamp == sample_width) &&
+					if((BCLK_INF[j].bitpersamp == sample_width) && 
 						(BCLK_INF[j].mult_fs == MCLK_INF[i].mult_fs)) {
 						 *mclk_div = MCLK_INF[i].clk_div;
 						 *mpll = MCLK_INF[i].mpll;
@@ -162,7 +162,7 @@ static s32 get_clock_divder(u32 sample_rate, u32 sample_width, u32 * mclk_div, u
 			  }
 		 }
 		 else if(MCLK_INF[i].samp_rate == 0xffffffff)
-			break;
+		 	break;
 	}
 
 	return ret;
@@ -180,7 +180,7 @@ static int sun7i_sndspdif_hw_params(struct snd_pcm_substream *substream,
 	u32 mclk_div=0, mpll=0, bclk_div=0, mult_fs=0;
 
 	get_clock_divder(rate, 32, &mclk_div, &mpll, &bclk_div, &mult_fs);
-
+	
 	ret = snd_soc_dai_set_fmt(codec_dai, SND_SOC_DAIFMT_I2S |
 			SND_SOC_DAIFMT_NB_NF | SND_SOC_DAIFMT_CBS_CFS);
 	if (ret < 0)
@@ -205,19 +205,19 @@ static int sun7i_sndspdif_hw_params(struct snd_pcm_substream *substream,
 	ret = snd_soc_dai_set_sysclk(cpu_dai, 0 , mpll, 0);
 	if (ret < 0)
 		return ret;
-
+		
 	ret = snd_soc_dai_set_sysclk(codec_dai, 0 , mpll, 0);
 	if (ret < 0)
 		return ret;
-
+		
 	ret = snd_soc_dai_set_clkdiv(cpu_dai, SUN7I_DIV_MCLK, mclk_div);
 	if (ret < 0)
 		return ret;
-
+		
 	ret = snd_soc_dai_set_clkdiv(cpu_dai, SUN7I_DIV_BCLK, bclk_div);
 	if (ret < 0)
 		return ret;
-
+		
 	ret = snd_soc_dai_set_clkdiv(codec_dai, 0, mult_fs);
 	if (ret < 0)
 		return ret;
@@ -261,21 +261,21 @@ static int __init sun7i_sndspdif_init(void)
     spdif_used=val.val;
     if (spdif_used) {
 		sun7i_sndspdif_device = platform_device_alloc("soc-audio", 1);
-
+		
 		if(!sun7i_sndspdif_device)
 			return -ENOMEM;
-
+			
 		platform_set_drvdata(sun7i_sndspdif_device, &snd_soc_sun7i_sndspdif);
-
-		ret = platform_device_add(sun7i_sndspdif_device);
-		if (ret) {
+		
+		ret = platform_device_add(sun7i_sndspdif_device);				
+		if (ret) {			
 			platform_device_put(sun7i_sndspdif_device);
 		}
 	} else {
 		printk("[SPDIF]sun7i_sndspdif cannot find any using configuration for controllers, return directly!\n");
         return 0;
 	}
-
+		
 	return ret;
 }
 
@@ -285,7 +285,7 @@ static void __exit sun7i_sndspdif_exit(void)
 		spdif_used = 0;
 		platform_device_unregister(sun7i_sndspdif_device);
 	}
-
+	
 }
 
 module_init(sun7i_sndspdif_init);
@@ -294,3 +294,4 @@ module_exit(sun7i_sndspdif_exit);
 MODULE_AUTHOR("ALL WINNER");
 MODULE_DESCRIPTION("SUN7I_SNDSPDIF ALSA SoC audio driver");
 MODULE_LICENSE("GPL");
+

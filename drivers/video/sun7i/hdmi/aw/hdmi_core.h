@@ -5,6 +5,7 @@
 #include "hdmi_interface.h"
 
 extern volatile __u32 HDMI_BASE;
+extern __u32 hdmi_print;
 
 #define HDMI_WUINT32(offset,value)  writel(value, HDMI_BASE + offset)
 #define HDMI_RUINT32(offset)        readl(HDMI_BASE + offset)
@@ -25,33 +26,33 @@ extern volatile __u32 HDMI_BASE;
 typedef struct video_timing
 {
 	__s32 VIC;
-	__s32 PCLK;
+	__s32 PCLK; 
 	__s32 AVI_PR;
-
-	__s32 INPUTX;
-	__s32 INPUTY;
-	__s32 HT;
-	__s32 HBP;
-	__s32 HFP;
-	__s32 HPSW;
-	__s32 VT;
-	__s32 VBP;
-	__s32 VFP;
-	__s32 VPSW;
+	 
+	__s32 INPUTX; 	
+	__s32 INPUTY; 	
+	__s32 HT; 		
+	__s32 HBP; 	
+	__s32 HFP; 	
+	__s32 HPSW; 	
+	__s32 VT; 		
+	__s32 VBP; 	
+	__s32 VFP; 	
+	__s32 VPSW; 	
 
 }HDMI_VIDE_INFO;
 
 typedef struct audio_timing
 {
 
-	__s32 audio_en;
-	__s32 sample_rate;
-	__s32 channel_num;
-
-	__s32 CTS;
-	__s32 ACR_N;
-	__s32 CH_STATUS0;
-	__s32 CH_STATUS1;
+ 	__s32 audio_en;
+ 	__s32 sample_rate;
+ 	__s32 channel_num;
+	 
+	__s32 CTS; 	
+	__s32 ACR_N; 	
+	__s32 CH_STATUS0; 		
+	__s32 CH_STATUS1; 	 	
 
 }HDMI_AUDIO_INFO;
 
@@ -77,3 +78,4 @@ extern 	__u8		EDID_Buf[1024];
 extern 	__u8		Device_Support_VIC[512];
 
 #endif
+

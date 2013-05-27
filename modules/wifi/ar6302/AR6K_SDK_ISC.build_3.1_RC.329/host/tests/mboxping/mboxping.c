@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="mboxping.c" company="Atheros">
 //    Copyright (c) 2004-2007 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -127,7 +127,7 @@ usage(void)
 
 
 void NotifyError(char *description)
-{
+{  
     int errno_save = errno;
     printf("** Error stream test, send stream: %d loopback on: %d  reason: ",mboxTx, mboxRx);
     errno = errno_save;
@@ -145,8 +145,8 @@ static inline int GetLength(void)
             /* scale the size */
         value = ((float)g_Size * (float)rand()) / (float)RAND_MAX;
         return ((int)value < MIN_PACKET_LEN) ? MIN_PACKET_LEN : (int)value;
-    }
-
+    }         
+    
     return g_Size;
 }
 
@@ -287,12 +287,12 @@ main (int argc, char **argv) {
     }
 
     do {
-
+        
         if (!((options & (MBOXTX | MBOXRX | PKTSIZE)) == (MBOXTX | MBOXRX | PKTSIZE))) {
             usage();
-            break;
+            break;    
         }
-
+        
         if (randomLength) {
             printf("randomized packet lengths have been selected, range : %d to %d bytes \n",
                 MIN_PACKET_LEN, g_Size);
@@ -315,87 +315,87 @@ main (int argc, char **argv) {
         IndicateTrafficActivity(mboxTx, TRUE);
 
         signal(SIGINT, finish);
-
+        
         if (flagtxperf) {
             unsigned char txperfbuffer[MAX_PACKET_LEN];
             int            size;
-
-            printf("Running Tx Perf Test ... \n");
-
+            
+            printf("Running Tx Perf Test ... \n"); 
+            
             if (!(options & DURATION)) {
-                printf(" *** must set duration for tx perf test !\n");
-                break;
+                printf(" *** must set duration for tx perf test !\n");   
+                break; 
             }
-
+            
             if (randomLength) {
-                printf(" *** Tx perf is using random lengths, performance measurement will not be made \n");
+                printf(" *** Tx perf is using random lengths, performance measurement will not be made \n"); 
             }
                 /* send small dummy ping packet to reset recv count for this test */
-            fillpacket(txperfbuffer, sizeof(EPPING_HEADER),EPPING_CMD_RESET_RECV_CNT,CMD_FLAGS_NO_DROP,NULL,0);
-            sendpacket(txperfbuffer, sizeof(EPPING_HEADER));
+            fillpacket(txperfbuffer, sizeof(EPPING_HEADER),EPPING_CMD_RESET_RECV_CNT,CMD_FLAGS_NO_DROP,NULL,0);       
+            sendpacket(txperfbuffer, sizeof(EPPING_HEADER));    
                 /* set timer to stop and collect stats */
             signal(SIGALRM, txperffinish);
             alarm(duration);
-
+            
             while (!txperfdone) {
                  size = GetLength();
                     /* send packets down as quickly as possible. flag that these packets should
                      * not be echoed.
-                     *
-                     * When the duration expires the finisher function will grab the statistics */
-                fillpacket(txperfbuffer, size, EPPING_CMD_NO_ECHO, 0, NULL, 0);
+                     * 
+                     * When the duration expires the finisher function will grab the statistics */ 
+                fillpacket(txperfbuffer, size, EPPING_CMD_NO_ECHO, 0, NULL, 0);       
                 sendpacket(txperfbuffer, size);
-                numTxPerfTransmitted++;
+                numTxPerfTransmitted++;   
             }
-
-            break;
+                        
+            break;    
         }
-
+        
         if (flagrxperf) {
             unsigned char rxperfbuffer[MAX_PACKET_LEN];
             EPPING_CONT_RX_PARAMS  rxParams;
-
+            
             printf ("Running RX perf test, rx burst count: %d \n",rxperfburstcnt);
-
+            
             if (!(options & DURATION)) {
-                printf(" *** must set duration for rx perf test !\n");
-                break;
+                printf(" *** must set duration for rx perf test !\n");   
+                break; 
             }
-
+            
             if (g_Size > MAX_PACKET_LEN) {
-                printf(" *** Packet size (%d) is too large for RX test !\n",g_Size);
-                break;
+                printf(" *** Packet size (%d) is too large for RX test !\n",g_Size);  
+                break;    
             }
             memset(&rxParams, 0, sizeof(rxParams));
             rxParams.BurstCnt = (A_UINT16)rxperfburstcnt;
             rxParams.PacketLength = (A_UINT16)g_Size;
-
+            
             if (verifyMode) {
                 rxParams.Flags |= EPPING_CONT_RX_DATA_CRC;
                 if (verfRandomData) {
-                    rxParams.Flags |= EPPING_CONT_RX_RANDOM_DATA;
+                    rxParams.Flags |= EPPING_CONT_RX_RANDOM_DATA;    
                 }
-                printf(" *** verify mode requested, may slow down throughput results \n");
-            }
-
+                printf(" *** verify mode requested, may slow down throughput results \n");   
+            }             
+            
             if (randomLength) {
-                rxParams.Flags |= EPPING_CONT_RX_RANDOM_LEN;
-                printf(" *** Rx Perf mode using random lengths, throughput calculation will not be made. \n");
+                rxParams.Flags |= EPPING_CONT_RX_RANDOM_LEN;                
+                printf(" *** Rx Perf mode using random lengths, throughput calculation will not be made. \n");     
             }
-
+                
                 /* send initial command packet to configure the test */
-            fillpacket(rxperfbuffer,
-                       sizeof(EPPING_HEADER),
+            fillpacket(rxperfbuffer, 
+                       sizeof(EPPING_HEADER), 
                        EPPING_CMD_CONT_RX_START,
                        CMD_FLAGS_NO_DROP,
                        (A_UINT8*)&rxParams,
-                       sizeof(rxParams));
-
-            sendpacket(rxperfbuffer, sizeof(EPPING_HEADER));
+                       sizeof(rxParams));  
+                            
+            sendpacket(rxperfbuffer, sizeof(EPPING_HEADER));    
                 /* set timer to stop and collect stats */
             signal(SIGALRM, rxperffinish);
             alarm(duration);
-
+            
             while (!rxperfdone) {
                 memset(rxperfbuffer, 0, sizeof(EPPING_HEADER));
                 if ((length = recvfrom(sockfd, rxperfbuffer, MAX_PACKET_LEN, 0, NULL, NULL)) < 0) {
@@ -404,12 +404,12 @@ main (int argc, char **argv) {
                 }
                 rxperf_prpack(rxperfbuffer, length);
             }
-
-            break;
+            
+            break;    
         }
-
+        
         /* normal mbox ping handling... */
-
+        
         if (preload)
         {
             signal(SIGALRM, finish);
@@ -438,9 +438,9 @@ main (int argc, char **argv) {
                 }
             }
         }
-
+    
     } while (FALSE);
-
+    
     exit(0);
 }
 
@@ -455,9 +455,9 @@ void IndicateTrafficActivity(int StreamID, A_BOOL Active)
     TRAFFIC_IOCTL_DATA ioctlData;
 
     if (StreamID >= HCI_TRANSPORT_STREAM_NUM) {
-        return;
+        return;    
     }
-
+    
     memset(&ifr,0,sizeof(ifr));
     memset(&ioctlData,0,sizeof(ioctlData));
 
@@ -645,27 +645,27 @@ void fillpacket(unsigned char *txpacket, int size, A_UINT16 Cmd, A_UINT16 Flags,
     pktHeader->StreamEcho_h = mboxRx;     /* Receive mailbox number */
     pktHeader->StreamEchoSent_t = 0xDE;   /* fill in some values other than zero */
     pktHeader->StreamRecv_t = 0xAD;
-
+    
     SET_EPPING_PACKET_MAGIC(pktHeader);
-
+    
     pktHeader->Cmd_h = Cmd;
     pktHeader->CmdFlags_h = Flags;
-
+    
     if (flagDelay) {
             /* tell the target to delay this packet */
         pktHeader->CmdFlags_h |= CMD_FLAGS_DELAY_ECHO;
     }
-
+    
     if (cmdParams != NULL) {
         if (cmdParamLength > sizeof(pktHeader->CmdBuffer_h)) {
             printf(" invalid length for ping cmd buffer!!! %d max = %d \n",cmdParamLength, sizeof(pktHeader->CmdBuffer_h));
-            exit(1);
+            exit(1);    
         }
-        memcpy(pktHeader->CmdBuffer_h, cmdParams, cmdParamLength);
+        memcpy(pktHeader->CmdBuffer_h, cmdParams, cmdParamLength);  
     }
-
+    
     memcpy(&pktHeader->HostContext_h, &ident, sizeof(A_UINT32)); /* Process ID */
-
+    
     if (!flagtxperf) {
         timerclear(&tv);
         if (gettimeofday(&tv, NULL) < 0) {
@@ -677,17 +677,17 @@ void fillpacket(unsigned char *txpacket, int size, A_UINT16 Cmd, A_UINT16 Flags,
 
     pktHeader->StreamNo_h = mboxTx; /* IP TOS Offset */
     pktHeader->SeqNo = numTransmitted;
-
+    
     numTransmitted += 1;
-
+    
     remainingLength = size - sizeof(EPPING_HEADER);
-    dataBytes = 0;
+    dataBytes = 0;        
     pDataBuffer = &txpacket[sizeof(EPPING_HEADER)];
 
-#if 0
+#if 0    
         /* NOTE:when using loopback testing in the HCI bridge with full framer support, we can only send
             ACL packets   */
-
+            
         /* the EPPING header has some space for us to stick in an HCI packet header */
     if (size <= 248) {
         BT_HCI_EVENT_HEADER *pEvt = (BT_HCI_EVENT_HEADER *)&pktHeader->_HCIRsvd[0];
@@ -696,24 +696,24 @@ void fillpacket(unsigned char *txpacket, int size, A_UINT16 Cmd, A_UINT16 Flags,
         pEvt->EventCode = 0xDE;
         pEvt->ParamLength = (A_UINT8)size - sizeof(BT_HCI_EVENT_HEADER);
             /* if this is echo'd back to us, we want it recv'd on this channel */
-        pktHeader->_HCIRsvd[HCI_RSVD_EXPECTED_PKT_TYPE_RECV_OFFSET] = HCI_UART_EVENT_PKT;
+        pktHeader->_HCIRsvd[HCI_RSVD_EXPECTED_PKT_TYPE_RECV_OFFSET] = HCI_UART_EVENT_PKT; 
     } else {
 
 #endif
-
-    {
+    
+    {    
         BT_HCI_ACL_HEADER *pAcl = (BT_HCI_ACL_HEADER *)&pktHeader->_HCIRsvd[0];
         pAcl->Length = (A_UINT16)size - sizeof(BT_HCI_ACL_HEADER);
         pAcl->Flags_ConnHandle = 0x0FFF;
             /* if this packet is echo'd back to us, we want it recv'd on this channel */
         pktHeader->_HCIRsvd[HCI_RSVD_EXPECTED_PKT_TYPE_RECV_OFFSET] = HCI_UART_ACL_PKT;
     }
-
+                
     if (verifyMode & (remainingLength > 0)) {
         unsigned char* pBuffer;
-
+        
             /* save start of buffer */
-        pBuffer = pDataBuffer;
+        pBuffer = pDataBuffer;        
             /* seed the random number generator */
         srand((tv.tv_usec + numTransmitted));
             /* fill the remainder with data */
@@ -740,14 +740,14 @@ void fillpacket(unsigned char *txpacket, int size, A_UINT16 Cmd, A_UINT16 Flags,
             dataBytes++;
             remainingLength--;
         }
-    }
-
+    } 
+    
     pktHeader->DataLength = dataBytes;
-
+        
     CRC16 = CalcCRC16(&txpacket[EPPING_HDR_CRC_OFFSET], EPPING_HDR_BYTES_CRC);
-
+    
         /* save hdr CRC */
-    pktHeader->HeaderCRC = CRC16;
+    pktHeader->HeaderCRC = CRC16; 
 }
 
 
@@ -757,7 +757,7 @@ void sendpacket(unsigned char *txpacket, int size)
     struct timeval socktimeout;
     int ret;
     fd_set  writeset;
-
+    
     FD_ZERO(&writeset);
     FD_SET(sockfd,&writeset);
     memset(&socktimeout,0,sizeof(socktimeout));
@@ -805,12 +805,12 @@ pinger(void)
 {
     unsigned char txpacket[MAX_PACKET_LEN];
     int size;
-
-
+    
+    
     size = GetLength();
-
+         
     fillpacket(txpacket, size, EPPING_CMD_ECHO_PACKET,0,NULL,0);
-
+  
     if (dumpdata) {
         DumpBuffer(txpacket,size,"TX Data Dump");
     }
@@ -878,56 +878,56 @@ void txperffinish(int signo)
     unsigned int  numTxPerfReceived = 0;
     EPPING_HEADER *pktHeader;
     int     length;
-
+    
     txperfdone = TRUE;
-
+         
         /* send a small dummy ping packet grab the recv count */
-    fillpacket(cmdbuffer, sizeof(EPPING_HEADER), EPPING_CMD_CAPTURE_RECV_CNT, CMD_FLAGS_NO_DROP, NULL, 0);
-    sendpacket(cmdbuffer, sizeof(EPPING_HEADER));
-
+    fillpacket(cmdbuffer, sizeof(EPPING_HEADER), EPPING_CMD_CAPTURE_RECV_CNT, CMD_FLAGS_NO_DROP, NULL, 0);       
+    sendpacket(cmdbuffer, sizeof(EPPING_HEADER));    
+       
     printf("(stream:%d) waiting for recv count response from target \n",mboxTx);
-
+    
     for (;;) {
         memset(recvbuffer, '\0', MAX_PACKET_LEN);
         if ((length = recvfrom(sockfd, recvbuffer, MAX_PACKET_LEN, 0, NULL, NULL)) < 0) {
             NotifyError("recvfrom");
             exit(1);
         }
-
+        
         if (length < sizeof(EPPING_HEADER)) {
             printf ("!!! got : %d\n", length);
-            continue;
+            continue;    
         }
-
+        
         pktHeader = (EPPING_HEADER *)recvbuffer;
-
+       
         if (IS_EPPING_PACKET(pktHeader)) {
             if ((pktHeader->HostContext_h == ident) && (pktHeader->Cmd_h == EPPING_CMD_CAPTURE_RECV_CNT)) {
                 memcpy(&numTxPerfReceived, pktHeader->CmdBuffer_t, sizeof(numTxPerfReceived));
-                break;
+                break;    
             }
         }
     }
-
+          
     putchar('\n');
     fflush(stdout);
     printf("\n---- Tx PERF Statistics ----\n");
-    printf("Packets transmitted: %d , received by target : %d  (loss : %.2f %%) stream : %d \n",
-        numTxPerfTransmitted, numTxPerfReceived,
-        (float) ((((float)numTxPerfTransmitted-(float)numTxPerfReceived)*100) / (float)numTxPerfTransmitted),
+    printf("Packets transmitted: %d , received by target : %d  (loss : %.2f %%) stream : %d \n", 
+        numTxPerfTransmitted, numTxPerfReceived, 
+        (float) ((((float)numTxPerfTransmitted-(float)numTxPerfReceived)*100) / (float)numTxPerfTransmitted), 
         mboxTx);
-
-
+        
+      
     printf("\n");
 
     if (numTxPerfReceived && !randomLength) {
-        printf("Throughput = %.2f pkts/sec, bytes per pkt: %d,  %.2f Mbps\n",
+        printf("Throughput = %.2f pkts/sec, bytes per pkt: %d,  %.2f Mbps\n", 
                 (float)numTxPerfReceived/duration,
                 g_Size,
-                ((float)numTxPerfReceived/(float)duration)*(float)g_Size*8.0/1000000.0);
+                ((float)numTxPerfReceived/(float)duration)*(float)g_Size*8.0/1000000.0);            
     }
-
-
+  
+    
     fflush(stdout);
 
         /* we are done, mark the traffic on this stream as inactive */
@@ -942,37 +942,37 @@ void rxperffinish(int signo)
     unsigned char recvbuffer[MAX_PACKET_LEN];
     int           length;
     EPPING_HEADER *pktHeader;
-
+    
     rxperfdone = TRUE;
-
+    
         /* stop the continous RX */
-    fillpacket(cmdbuffer, sizeof(EPPING_HEADER), EPPING_CMD_CONT_RX_STOP, CMD_FLAGS_NO_DROP, NULL, 0);
-    sendpacket(cmdbuffer, sizeof(EPPING_HEADER));
+    fillpacket(cmdbuffer, sizeof(EPPING_HEADER), EPPING_CMD_CONT_RX_STOP, CMD_FLAGS_NO_DROP, NULL, 0);       
+    sendpacket(cmdbuffer, sizeof(EPPING_HEADER));    
 
     printf("(stream:%d) waiting for continous RX STOP response from target \n",mboxRx);
-
+    
     for (;;) {
         memset(recvbuffer, '\0', MAX_PACKET_LEN);
         if ((length = recvfrom(sockfd, recvbuffer, MAX_PACKET_LEN, 0, NULL, NULL)) < 0) {
             NotifyError("recvfrom");
             exit(1);
         }
-
+        
         if (length < sizeof(EPPING_HEADER)) {
             printf ("!!! got : %d\n", length);
-            continue;
+            continue;    
         }
-
+        
         pktHeader = (EPPING_HEADER *)recvbuffer;
-
+       
         if (IS_EPPING_PACKET(pktHeader)) {
                 /* look for command echo */
             if ((pktHeader->HostContext_h == ident) && (pktHeader->Cmd_h == EPPING_CMD_CONT_RX_STOP)) {
-                break;
+                break;    
             }
         }
     }
-
+    
     fflush(stdout);
     printf("\n---- Rx PERF Statistics ----\n");
     printf("Packets received from target : %d  stream : %d \n", numReceived,mboxRx);
@@ -982,10 +982,10 @@ void rxperffinish(int signo)
     printf("\n");
 
     if (numReceived && !randomLength) {
-        printf("Throughput = %.2f pkts/sec, bytes per pkt: %d,   %.2f Mbps\n",
+        printf("Throughput = %.2f pkts/sec, bytes per pkt: %d,   %.2f Mbps\n", 
                 (float)numReceived/duration,
                 g_Size,
-                ((float)numReceived/(float)duration)*(float)g_Size*8.0/1000000.0);
+                ((float)numReceived/(float)duration)*(float)g_Size*8.0/1000000.0);            
     }
 
     fflush(stdout);
@@ -1007,20 +1007,20 @@ A_BOOL verifyheader(A_UINT8 *buffer, int length)
     A_BOOL good = FALSE;
     EPPING_HEADER *pktHeader;
     A_UINT16      verfCRC16, CRC16;
-
+    
     pktHeader = (EPPING_HEADER *)buffer;
-
+        
     do {
-
+        
         if (length < sizeof(EPPING_HEADER)) {
-            break;
+            break; 
         }
-
+    
         if (!IS_EPPING_PACKET(pktHeader)) {
                 /* not a EPPING packet */
             break;
         }
-
+        
                     /* CRC check only the fixed portion of the header, the target alters some of the fields */
         CRC16 = CalcCRC16(&buffer[EPPING_HDR_CRC_OFFSET],EPPING_HDR_BYTES_CRC);
             /* save hdr CRC */
@@ -1032,19 +1032,19 @@ A_BOOL verifyheader(A_UINT8 *buffer, int length)
             crcErrors++;
             break;
         }
-
+    
         if (pktHeader->DataLength > (length - sizeof(EPPING_HEADER))) {
             printf(" DataLength reports %d bytes but packet has only %d remaining\n",
             pktHeader->DataLength, length - sizeof(EPPING_HEADER));
             DumpBuffer(buffer,length,"Bad data length");
             exit(1);
         }
-
-
+        
+    
         good = TRUE;
-
+        
     } while (FALSE);
-
+    
     return good;
 }
 
@@ -1054,9 +1054,9 @@ A_BOOL verifypacket(A_UINT8 *buffer, int length)
     unsigned short crc16, verifyCrc16;
     int crcLength;
     EPPING_HEADER *pktHeader;
-
+    
     pktHeader = (EPPING_HEADER *)buffer;
-
+    
         /* get data CRC */
     crc16 = pktHeader->DataCRC;
 
@@ -1079,14 +1079,14 @@ A_BOOL verifypacket(A_UINT8 *buffer, int length)
             }
             DumpBuffer(buffer,length,"buffer CRC error");
         } else {
-            return TRUE;
+            return TRUE;    
         }
 
     } else {
         printf("*** not enough bytes to calculate CRC!! \n");
-    }
-
-    return FALSE;
+    } 
+    
+    return FALSE;   
 }
 
 
@@ -1101,15 +1101,15 @@ pr_pack(unsigned char *buffer, int length)
     EPPING_HEADER *pktHeader;
 
     if (!verifyheader(buffer, length)) {
-        return;
+        return;    
     }
-
+    
     gettimeofday(&tv, NULL);
-    pktHeader = (EPPING_HEADER *)buffer;
-    txh = pktHeader->StreamNo_h;
-    rxh = pktHeader->StreamEcho_h;
-    txt = pktHeader->StreamEchoSent_t;
-    rxt = pktHeader->StreamRecv_t;
+    pktHeader = (EPPING_HEADER *)buffer;      
+    txh = pktHeader->StreamNo_h;   
+    rxh = pktHeader->StreamEcho_h; 
+    txt = pktHeader->StreamEchoSent_t; 
+    rxt = pktHeader->StreamRecv_t;    
     pid = pktHeader->HostContext_h;
 
 //    if ((pid != ident) || (txh != rxt) || (rxh != txt)) {
@@ -1117,7 +1117,7 @@ pr_pack(unsigned char *buffer, int length)
             /* not our packet, could be another instance running */
         return;
     }
-
+    
     /* the target is suppose to echo these back */
     if (txt != mboxTx) {
         printf(" Target did not echo send stream correctly, was:%d  should be %d\n",
@@ -1142,7 +1142,7 @@ pr_pack(unsigned char *buffer, int length)
     utmax = (triptime > utmax) ? triptime : utmax;
 
     seq = pktHeader->SeqNo;
-
+    
     if (preload) {
         if (!quiet) {
             printf(".");
@@ -1156,7 +1156,7 @@ pr_pack(unsigned char *buffer, int length)
                 seq, numReceived, mboxTx, mboxRx);
 
     }
-
+    
     numReceived++;
 
     if (dumpdata) {
@@ -1166,7 +1166,7 @@ pr_pack(unsigned char *buffer, int length)
     if (verifyMode) {
         if (!verifypacket(buffer, length)) {
              printf("Sequence Number: %d, buffer CRC error (stream TX:%d: stream RX:%d)\n",
-                 seq, mboxTx, mboxRx);
+                 seq, mboxTx, mboxRx);    
         }
     }
 }
@@ -1177,29 +1177,29 @@ void rxperf_prpack(unsigned char *buffer, int length)
     EPPING_HEADER *pktHeader;
 
     if (!verifyheader(buffer, length)) {
-        return;
+        return;    
     }
-
-    pktHeader = (EPPING_HEADER *)buffer;
-
+    
+    pktHeader = (EPPING_HEADER *)buffer;      
+   
     if (pktHeader->StreamNo_h != mboxRx) {
             /* not ours */
-        return;
+        return;    
     }
-
+    
     seq = pktHeader->SeqNo;
-
+    
     if (seq < numReceived) {
         printf("** RxPerf, Sequence Number: %d, should be >= %d \n", seq, numReceived);
     }
 
     if (!randomLength) {
         if (length != g_Size) {
-             printf("**Ping packet is not expected size (%d) should be %d bytes \n", length, g_Size);
-             DumpBuffer(buffer,length,"Bad Packet");
+             printf("**Ping packet is not expected size (%d) should be %d bytes \n", length, g_Size);   
+             DumpBuffer(buffer,length,"Bad Packet"); 
         }
     }
-
+    
     numReceived++;
 
     if (dumpdata) {
@@ -1212,3 +1212,4 @@ void rxperf_prpack(unsigned char *buffer, int length)
         }
     }
 }
+

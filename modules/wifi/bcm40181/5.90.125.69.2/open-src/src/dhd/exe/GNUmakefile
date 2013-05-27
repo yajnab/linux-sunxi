@@ -46,7 +46,7 @@ CFLAGS += -DDONGLEOVERLAYS
 # This should be one of values recognized in src/Makerules
 
 ifneq ($(findstring $(TARGETENV), "linux linuxmips linuxmips_be linux26mips linuxarm linuxarm_le android"),)
-
+ 
 # $(TARGETARCH) is set based on TARGETENV in src/Makerules.* files
 DHD_OBJS := dhdu.o dhdu_linux.o bcmutils.o bcmwifi.o wlu_client_shared.o wlu_pipe_linux.o wlu_pipe.o miniopt.o bcm_app_utils.o
 DHD_EXE  := dhd
@@ -64,7 +64,7 @@ vpath %.c $(SRCBASE)/wl/exe
 all: $(DHD_EXE)
 
 clean:
-	 rm -fr $(DHD_EXE) $(DHD_OBJS) $(TARGETARCH)
+	 rm -fr $(DHD_EXE) $(DHD_OBJS) $(TARGETARCH) 
 
 $(DHD_EXE): $(DHD_OBJS)
 	$(CC) $(LDFLAGS) -o $@ $^

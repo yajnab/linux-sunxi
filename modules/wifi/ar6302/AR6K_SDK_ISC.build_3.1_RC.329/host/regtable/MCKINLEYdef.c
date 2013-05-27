@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2010 Atheros Communications, Inc.
  * All rights reserved.
+ * 
  *
- *
- *
+ * 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -18,7 +18,7 @@
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
 //
- *
+ * 
  */
 #if defined(MCKINLEY_HEADERS_DEF) || defined(ATHR_WIN_DEF)
 #define AR6002 1

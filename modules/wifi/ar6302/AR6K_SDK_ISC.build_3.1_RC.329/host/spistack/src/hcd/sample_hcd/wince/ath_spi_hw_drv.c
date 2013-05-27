@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="ath_spi_hw_drv.c" company="Atheros">
 //    Copyright (c) 2008 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -46,28 +46,28 @@ SDHCD_HW_DEVICE   g_HWDevice;
 
 SDHCD_HW_DEVICE *InitializeSPIHW(PTSTR pRegPath)
 {
-
-    PSDHCD_DEVICE   pDevice;
-    SDHCD_HW_DEVICE *pHWDevice;
-    DWORD           threadId;
+    
+    PSDHCD_DEVICE   pDevice;   
+    SDHCD_HW_DEVICE *pHWDevice;                  
+    DWORD           threadId;  
     SDIO_STATUS     status = SDIO_STATUS_SUCCESS;
-
-    do {
+     
+    do {      
             /* for now this is a static, single instance allocation */
         pHWDevice = &g_HWDevice;
-        ZERO_POBJECT(pHWDevice);
-        pDevice = &pHWDevice->SpiCommon;
+        ZERO_POBJECT(pHWDevice);       
+        pDevice = &pHWDevice->SpiCommon; 
         pHWDevice->pDevice = pDevice;
             /* set the HW portion */
-        pDevice->pHWDevice = pHWDevice;
-        pHWDevice = GET_HW_DEVICE(pDevice);
+        pDevice->pHWDevice = pHWDevice; 
+        pHWDevice = GET_HW_DEVICE(pDevice);         
         SET_SDIO_STACK_VERSION(&pDevice->Hcd);
         pDevice->Hcd.pName = SDIO_RAW_BD_BASE;
         pDevice->Hcd.Attributes = 0;
         pDevice->Hcd.pContext = pDevice;
         pDevice->Hcd.pRequest = HcdRequest;
         pDevice->Hcd.pConfigure = HcdConfig;
-
+        
             /* TODO : adjust these to match controller hardware */
         pDevice->OperationalClock = 12000000;  /* 12 mhz */
         pDevice->Hcd.MaxBytesPerBlock = 4096;  /* used as a hint to indicate max size of common buffer */
@@ -76,44 +76,44 @@ SDHCD_HW_DEVICE *InitializeSPIHW(PTSTR pRegPath)
         pDevice->PowerUpDelay = 100;
             /* set all the supported frame widths the controller can do
              * 8/16/24/32 bit frames */
-        pDevice->SpiHWCapabilitiesFlags = HW_SPI_FRAME_WIDTH_8  |
-                                          HW_SPI_FRAME_WIDTH_16 |
+        pDevice->SpiHWCapabilitiesFlags = HW_SPI_FRAME_WIDTH_8  | 
+                                          HW_SPI_FRAME_WIDTH_16 | 
                                           HW_SPI_FRAME_WIDTH_24 |
                                           HW_SPI_FRAME_WIDTH_32;
 
-
+  
         pDevice->MiscFlags |= MISC_FLAG_DUMP_STATE_ON_SHUTDOWN | MISC_FLAG_RESET_SPI_IF_SHUTDOWN;
-
+        
         SDLIB_InitializeWorkerTask(&pHWDevice->IOCompleteWorkTask,
                                    IOCompleteWork,
                                    pHWDevice);
-
+        
         pHWDevice->pWorker = SDLIB_CreateWorker(WORKER_THREAD_PRIORITY);
-
+        
         if (NULL == pHWDevice->pWorker) {
             status = SDIO_STATUS_NO_RESOURCES;
-            break;
+            break;    
         }
-
+        
         /* TODO : allocate hardware resources (I/O , interrupt, DMA etc..) */
 
 
 
         /*************************************/
-
+        
         status = HcdInitialize(pDevice);
-
+   
             /* initialize common layer */
         if (!SDIO_SUCCESS(status)) {
             DBG_PRINT(SDDBG_ERROR, ("SPI - failed to init common layer, status =%d\n", status));
             break;
-        }
-
+        } 
+                       
         pHWDevice->InitStateMask |= SDHC_COMMON_INIT;
-
+        
              /* create the interrupt event */
         pHWDevice->hIstEventSPIGpioIRQ = CreateEvent(NULL, FALSE, FALSE, NULL);
-
+        
         if (NULL == pHWDevice->hIstEventSPIGpioIRQ) {
             status = SDIO_STATUS_NO_RESOURCES;
             break;
@@ -133,7 +133,7 @@ SDHCD_HW_DEVICE *InitializeSPIHW(PTSTR pRegPath)
             break;
         }
         */
-
+        
             /* create the IST thread */
         pHWDevice->hIstSPIGpioIRQ = CreateThread(NULL,
                                      0,
@@ -141,23 +141,23 @@ SDHCD_HW_DEVICE *InitializeSPIHW(PTSTR pRegPath)
                                      (LPVOID)pHWDevice,
                                      0,
                                      &threadId);
-
+                                     
         if (NULL == pHWDevice->hIstSPIGpioIRQ) {
             status = SDIO_STATUS_NO_RESOURCES;
             DBG_PRINT(SDDBG_ERROR,("SPI HCD: Failed to Create IST! \n"));
             break;
         }
-
+        
            /* register with the SDIO bus driver */
         if (!SDIO_SUCCESS((status = SDIO_RegisterHostController(&pDevice->Hcd)))) {
             DBG_PRINT(SDDBG_ERROR, ("SPI HCD: Probe - failed to register with host, status =%d\n",status));
             break;
-        }
-
+        }   
+          
         pHWDevice->InitStateMask |= SDHC_REGISTERED;
-
+                           
     } while (FALSE);
-
+     
     if (!SDIO_SUCCESS(status)) {
         if (pHWDevice != NULL) {
             CleanupSPIHW(pHWDevice);
@@ -166,33 +166,33 @@ SDHCD_HW_DEVICE *InitializeSPIHW(PTSTR pRegPath)
     } else {
         DBG_PRINT(SDDBG_ERROR, ("SPI - HCD ready! \n"));
     }
-
+    
     DBG_PRINT(SDDBG_TRACE, ("-SPI HCD: Setup - status : %d\n", status));
-    return SDIO_SUCCESS(status) ? pHWDevice : NULL;
-}
+    return SDIO_SUCCESS(status) ? pHWDevice : NULL;  
+}    
 
 void CleanupSPIHW(SDHCD_HW_DEVICE *pHWDevice)
 {
     pHWDevice->ShutDown = TRUE;
-
+                       
     if (pHWDevice->InitStateMask & SDHC_COMMON_INIT) {
             /* deinit common layer */
         HcdDeinitialize(pHWDevice->pDevice);
     }
-
+    
     if (pHWDevice->InitStateMask & SDHC_REGISTERED) {
         SDIO_UnregisterHostController(&pHWDevice->pDevice->Hcd);
     }
-
+    
     if (pHWDevice->pWorker != NULL) {
-        SDLIB_FlushWorkTask(pHWDevice->pWorker,&pHWDevice->IOCompleteWorkTask);
+        SDLIB_FlushWorkTask(pHWDevice->pWorker,&pHWDevice->IOCompleteWorkTask);    
         SDLIB_DestroyWorker(pHWDevice->pWorker);
     }
-
+    
     if (pHWDevice->hIstEventSPIGpioIRQ != NULL) {
             /* make sure interrupt asssociated with the event is disabled */
         if (pHWDevice->SysIntrSPIGpioIRQ != 0) {
-            InterruptDisable(pHWDevice->SysIntrSPIGpioIRQ);
+            InterruptDisable(pHWDevice->SysIntrSPIGpioIRQ);            
         }
         if (pHWDevice->hIstSPIGpioIRQ != NULL) {
                 /* wake IST */
@@ -205,12 +205,12 @@ void CleanupSPIHW(SDHCD_HW_DEVICE *pHWDevice)
         CloseHandle(pHWDevice->hIstEventSPIGpioIRQ);
         pHWDevice->hIstEventSPIGpioIRQ = NULL;
     }
-
+    
     /* TODO : free hardware resources */
 
 
     /*********************************/
-
+    
     ZERO_OBJECT(g_HWDevice);
     DBG_PRINT(SDDBG_TRACE, ("SPI HCD: CleanupDevice\n"));
 }
@@ -220,14 +220,14 @@ void CleanupSPIHW(SDHCD_HW_DEVICE *pHWDevice)
 SDIO_STATUS HW_SpiSetUpDMA(PSDHCD_DEVICE    pDevice)
 {
     PSDHCD_HW_DEVICE pHWDevice = GET_HW_DEVICE(pDevice);
-
-    /* TODO see PSDHCD_DEVICE definition to get buffer variables to do
-     * the DMA transfer .
-     *
+  
+    /* TODO see PSDHCD_DEVICE definition to get buffer variables to do 
+     * the DMA transfer .  
+     * 
      * Setup DMA hardware to do the transfer (direction, length, common buffer or direct)
      * If the driver performs common-buffer DMA, the hardware layer is responsible
      * for copying the data to/from pCurrentBuffer (see below) */
-
+   
     if (pHWDevice->CommonBufferDMA && !pDevice->CurrentTransferDirRx) {
             /* write direction using common buffer DMA , must transfer to common buffer now */
         HcdCommonBufferCopy(pDevice->CurrentDmaWidth,
@@ -235,19 +235,19 @@ SDIO_STATUS HW_SpiSetUpDMA(PSDHCD_DEVICE    pDevice)
                             pDevice->pCurrentBuffer,
                             pDevice->CurrentTransferLength,
                             pDevice->HostDMABufferCopyMode);
-
+        
     }
-
-    return SDIO_STATUS_PENDING;
+    
+    return SDIO_STATUS_PENDING;   
 }
 
     /* set the clock rate for the SPI transactions */
 void HW_SetClock(PSDHCD_DEVICE pDevice, PUINT32 pClockRate)
 {
     PSDHCD_HW_DEVICE pHWDevice = GET_HW_DEVICE(pDevice);
-
+    
     /* TODO set the clock rate to the closest (or less) rate*/
-
+    
 }
 
     /* enable disable SPI (via GPIO) interrupt detection */
@@ -255,62 +255,62 @@ void HW_EnableDisableSPIIRQ(PSDHCD_DEVICE pDevice, BOOL Enable, BOOL FromIrq)
 {
    PSDHCD_HW_DEVICE pHWDevice = GET_HW_DEVICE(pDevice);
    /* TODO */
-
+    
 }
 
     /* start the DMA operation on the SPI host controller */
 void HW_StartDMA(PSDHCD_DEVICE pDevice)
 {
     PSDHCD_HW_DEVICE pHWDevice = GET_HW_DEVICE(pDevice);
-
+    
     /* TODO The hardware driver should enable DMA hardware.  DMA should complete asynchronously
      * through an interrupt or some callback implemented in the platform.  When the DMA
      * completes, the HW layer must indicate DMA completion using HcdDmaCompletion()
      * If common buffer was employed, the HW layer must call HcdCommonBufferCopy() which
      * copies from the HW's DMA buffer to the bus request buffer and performs any necessary
      * byte swapping see SampleCompleteDMATransferCallback() */
-
+    
     do {
-
+        
         if (pHWDevice->CommonBufferDMA) {
                 /* common buffer DMA case */
             if (pDevice->CurrentTransferDirRx) {
-                /* handle read dma */
+                /* handle read dma */    
             } else {
-                /* handle write dma */
+                /* handle write dma */    
             }
-
+            
         } else {
                  /* scatter gather DMA case */
-
+                 
             if (pDevice->CurrentTransferDirRx) {
-                /* handle read dma */
+                /* handle read dma */    
             } else {
-                /* handle write dma */
+                /* handle write dma */    
             }
-
+            
         }
-
+        
     } while (FALSE);
 }
 
 void SampleCompleteDMATransferCallback(pContext)
 {
     PSDHCD_HW_DEVICE pHWDevice = (PSDHCD_HW_DEVICE)pContext;
-    PSDHCD_DEVICE    pDevice;
+    PSDHCD_DEVICE    pDevice;  
     SDIO_STATUS      status = SDIO_STATUS_SUCCESS;
 
     DBG_PRINT(ATH_SPI_TRACE_DATA, ("SPI  DMA COMPLETE - \n"));
-
+   
     /* TODO : driver should check if DMA completed successfully, this is platform dependent */
-
-    pDevice = pHWDevice->pDevice;
-
+    
+    pDevice = pHWDevice->pDevice;  
+    
     do {
         if (!SDIO_SUCCESS(status)) {
             break;
-        }
-
+        }        
+        
         if (pHWDevice->CommonBufferDMA && pDevice->CurrentTransferDirRx) {
                 /* copy common buffer back for RX */
             HcdCommonBufferCopy(pDevice->CurrentDmaWidth,
@@ -318,14 +318,14 @@ void SampleCompleteDMATransferCallback(pContext)
                                 pHWDevice->pDmaCommonBuffer,
                                 pDevice->CurrentTransferLength,
                                 pDevice->HostDMABufferCopyMode);
-
+            
         }
-
+        
     } while (FALSE);
-
-    return;
-}
-
+            
+    return;    
+}   
+    
 /*
  * StopDMATransfer - stop DMA transfer
 */
@@ -339,55 +339,55 @@ void HW_StopDMATransfer(PSDHCD_DEVICE pDevice)
 SDIO_STATUS HW_QueueDeferredCompletion(PSDHCD_DEVICE pDevice)
 {
     PSDHCD_HW_DEVICE pHWDevice = GET_HW_DEVICE(pDevice);
-
+    
     SDLIB_QueueWorkTask(pHWDevice->pWorker,&pHWDevice->IOCompleteWorkTask);
 
-    return SDIO_STATUS_SUCCESS;
+    return SDIO_STATUS_SUCCESS;  
 }
 
-    /* SPI token input output */
+    /* SPI token input output */   
 SDIO_STATUS HW_InOut_Token(PSDHCD_DEVICE pDevice,
                            UINT32        OutToken,
                            UINT8         DataSize,
-                           PUINT32       pInToken)
-{
+                           PUINT32       pInToken) 
+{   
     PSDHCD_HW_DEVICE pHWDevice = GET_HW_DEVICE(pDevice);
     SDIO_STATUS      status = SDIO_STATUS_SUCCESS;
     UINT32           inTokenVal = 0xFFFFFFFF;
     UINT32           mask;
-
+    
     /* TODO , this function must issue the token WITHOUT interrupts (polling).  Token
      * issue must be fast and low overhead.  For larger transfers, the common layer will
      * call the HW DMA setup and start APIs */
-
+    
     do {
-        if (DataSize == ATH_TRANS_DS_16) {
-            /* do 16 bit frame */
+        if (DataSize == ATH_TRANS_DS_16) {        
+            /* do 16 bit frame */     
             mask = 0xFFFF;
-        } else if (DataSize == ATH_TRANS_DS_32) {
-            /* do 32 bit frame */
+        } else if (DataSize == ATH_TRANS_DS_32) {   
+            /* do 32 bit frame */           
             mask = 0xFFFFFFFF;
-        } else if (DataSize == ATH_TRANS_DS_8) {
-            /* do 8 bit frame */
+        } else if (DataSize == ATH_TRANS_DS_8) { 
+            /* do 8 bit frame */            
             mask = 0xFF;
-        } else if (DataSize == ATH_TRANS_DS_24) {
-            /* do 24 bit frame */
+        } else if (DataSize == ATH_TRANS_DS_24) { 
+            /* do 24 bit frame */ 
             mask = 0xFFFFFF;
         } else {
-            DBG_ASSERT(FALSE);
+            DBG_ASSERT(FALSE); 
             status = SDIO_STATUS_INVALID_PARAMETER;
-            break;
+            break;  
         }
-
+    
         /* TODO .. issue SPI frame, inTokenVal is the SPI value returned from the device */
-
+        
         if (pInToken != NULL) {
             *pInToken = inTokenVal & mask;
         }
-
+        
     } while (FALSE);
-
-    return status;
+    
+    return status;                                                                        
 }
 
     /* debugging from common layer */
@@ -399,7 +399,7 @@ void HW_SetDebugSignal(PSDHCD_DEVICE pDevice, INT PinNo, BOOL ON)
 
 
 void HW_ToggleDebugSignal(PSDHCD_DEVICE pDevice, int PinNo)
-{
+{ 
     PSDHCD_HW_DEVICE pHWDevice = GET_HW_DEVICE(pDevice);
     /* OPTIONAL GPIO toggling for timming analysis */
 }
@@ -407,7 +407,7 @@ void HW_ToggleDebugSignal(PSDHCD_DEVICE pDevice, int PinNo)
 void HW_UsecDelay(PSDHCD_DEVICE pDevice, UINT32 uSeconds)
 {
     PSDHCD_HW_DEVICE pHWDevice = GET_HW_DEVICE(pDevice);
-
+    
     /* TODO */
 }
 
@@ -424,8 +424,8 @@ void HW_StopTimer(PSDHCD_DEVICE pDevice)
 
 static VOID IOCompleteWork(PVOID pContext)
 {
-    PSDHCD_HW_DEVICE pHWDevice = (PSDHCD_HW_DEVICE)pContext;
-
+    PSDHCD_HW_DEVICE pHWDevice = (PSDHCD_HW_DEVICE)pContext; 
+    
     SDIO_HandleHcdEvent(&pHWDevice->pDevice->Hcd, EVENT_HCD_TRANSFER_DONE);
 }
 
@@ -436,20 +436,20 @@ static DWORD SpiGpioIRQInterruptThread(LPVOID pContext)
     PSDHCD_HW_DEVICE pHWDevice = (PSDHCD_HW_DEVICE)pContext;
 
     DBG_PRINT(SDDBG_TRACE, ("SpiGpioIRQInterruptThread: Initializing. Context 0x%X \n",pContext));
-
+    
     CeSetThreadPriority(GetCurrentThread(), SPI_IRQ_THREAD_PRIORITY);
-
+    
     while (TRUE) {
-        WaitForSingleObject(pHWDevice->hIstEventSPIGpioIRQ,INFINITE);
+        WaitForSingleObject(pHWDevice->hIstEventSPIGpioIRQ,INFINITE); 
         if (pHWDevice->ShutDown) {
-            DBG_PRINT(SDDBG_TRACE, ("SpiGpioIRQInterruptThread: Shutting down \n"));
+            DBG_PRINT(SDDBG_TRACE, ("SpiGpioIRQInterruptThread: Shutting down \n"));            
             break;
         }
-
+        
         HcdSpiInterrupt(pHWDevice->pDevice);
-
+            
             /* ack kernel/OAL that interrupt has been acknowledged */
-        InterruptDone(pHWDevice->SysIntrSPIGpioIRQ);
+        InterruptDone(pHWDevice->SysIntrSPIGpioIRQ); 
     }
 
     return 0;
@@ -458,5 +458,9 @@ static DWORD SpiGpioIRQInterruptThread(LPVOID pContext)
 void HW_PowerUpDown(PVOID pContext, BOOL powerUp)
 {
     PSDHCD_HW_DEVICE pHWDevice = (PSDHCD_HW_DEVICE)pContext;
-
+	
 }
+
+
+
+

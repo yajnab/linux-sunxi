@@ -4,7 +4,7 @@
  * All rights reserved.
  *
  *
- *
+ * 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -19,9 +19,9 @@
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
 //
- *
+ * 
  */
-
+ 
 #include <sys/types.h>
 #include <sys/file.h>
 #include <sys/ioctl.h>
@@ -85,13 +85,13 @@ void DumpModuleDebugInfo(char *name)
 {
     struct  debuginfocmd {
         int    cmd;
-        struct drv_debug_module_s modinfo;
+        struct drv_debug_module_s modinfo; 
     } command;
 
     memset(&command,0,sizeof(command));
-
+    
     command.cmd = AR6000_XIOCTL_DUMP_MODULE_DEBUG_INFO;
-    strncpy(command.modinfo.modulename,name,sizeof(command.modinfo.modulename));
+    strncpy(command.modinfo.modulename,name,sizeof(command.modinfo.modulename)); 
     printf("Dumping module : %s info.... \n",name);
     do_ioctl(&command);
 }
@@ -100,14 +100,14 @@ void SetDebugBitMask(char *name,unsigned int mask)
 {
     struct  debuginfocmd {
         int    cmd;
-        struct drv_debug_module_s modinfo;
+        struct drv_debug_module_s modinfo; 
     } command;
 
     memset(&command,0,sizeof(command));
-
+    
     command.cmd = AR6000_XIOCTL_MODULE_DEBUG_SET_MASK;
     command.modinfo.mask = mask;
-    strncpy(command.modinfo.modulename,name,sizeof(command.modinfo.modulename));
+    strncpy(command.modinfo.modulename,name,sizeof(command.modinfo.modulename)); 
     printf("Setting module : %s mask to: 0x%X \n", module_name, mask);
     do_ioctl(&command);
 }
@@ -116,14 +116,14 @@ unsigned int GetDebugBitMask(char *name)
 {
     struct  debuginfocmd {
         int    cmd;
-        struct drv_debug_module_s modinfo;
+        struct drv_debug_module_s modinfo; 
     } command;
 
     memset(&command,0,sizeof(command));
-
+    
     command.cmd = AR6000_XIOCTL_MODULE_DEBUG_GET_MASK;
-    strncpy(command.modinfo.modulename,name,sizeof(command.modinfo.modulename));
-    do_ioctl(&command);
+    strncpy(command.modinfo.modulename,name,sizeof(command.modinfo.modulename)); 
+    do_ioctl(&command);    
     printf("Got module : %s mask : 0x%X \n", module_name, command.modinfo.mask);
     return command.modinfo.mask;
 }
@@ -131,7 +131,7 @@ unsigned int GetDebugBitMask(char *name)
 void SetDebugBitNo(char *name,unsigned int bit)
 {
     unsigned int mask = GetDebugBitMask(name);
-
+    
     mask |= (1 << bit);
     SetDebugBitMask(name, mask);
 }
@@ -139,7 +139,7 @@ void SetDebugBitNo(char *name,unsigned int bit)
 void ClearDebugBitNo(char *name,unsigned int bit)
 {
     unsigned int mask = GetDebugBitMask(name);
-
+    
     mask &= ~(1 << bit);
     SetDebugBitMask(name, mask);
 }
@@ -156,13 +156,13 @@ typedef enum {
 int
 main (int argc, char **argv)
 {
-
+ 
     int c;
     int gotname = 0;
     MASK_ACTION action = MASK_ACTION_NONE;
     unsigned int bitmask;
     unsigned int bitpos;
-
+    
     prog_name = argv[0];
 
     if (argc == 1) {
@@ -176,7 +176,7 @@ main (int argc, char **argv)
 
     memset(ifr.ifr_name, '\0', sizeof(ifr.ifr_name));
     strcpy(ifr.ifr_name, "eth1"); /* default */
-
+  
     while (1) {
         int option_index = 0;
         static struct option long_options[] = {
@@ -216,7 +216,7 @@ main (int argc, char **argv)
             bitpos = strtoul(optarg, NULL, 0);
             if (bitpos > 31) {
                 printf(" bit number is too high");
-                break;
+                break;    
             }
             action = MASK_ACTION_SET_BIT;
             break;
@@ -227,9 +227,9 @@ main (int argc, char **argv)
             bitpos = strtoul(optarg, NULL, 0);
             if (bitpos > 31) {
                 printf(" bit number is too high");
-                break;
+                break;    
             }
-
+            
             action = MASK_ACTION_CLR_BIT;
             break;
         }
@@ -256,44 +256,44 @@ main (int argc, char **argv)
         }
         }
     }
-
+    
     if (action == MASK_ACTION_NONE) {
         usage();
-        exit(1);
+        exit(1);  
     }
-
+    
     if (action != MASK_ACTION_DUMP_ALL_INFO) {
         if (!gotname) {
-            printf("** must specify module name\n");
+            printf("** must specify module name\n");     
             usage();
             exit(1);
         }
     }
-
+    
     switch (action) {
-
+        
         case MASK_ACTION_DUMP_ALL_INFO :
             DumpModuleDebugInfo("all");
-            break;
+            break;    
         case MASK_ACTION_DUMP_INFO:
             DumpModuleDebugInfo(module_name);
             break;
         case MASK_ACTION_CLR_BIT :
             ClearDebugBitNo(module_name,bitpos);
             DumpModuleDebugInfo(module_name);
-            break;
+            break;   
         case MASK_ACTION_SET_BIT :
             SetDebugBitNo(module_name,bitpos);
             DumpModuleDebugInfo(module_name);
-            break;
+            break;    
         case MASK_ACTION_SET_MASK :
             SetDebugBitMask(module_name,bitmask);
             DumpModuleDebugInfo(module_name);
-            break;
+            break;    
         default:
-            break;
-    }
-
+            break;   
+    }  
+    
 
     exit(0);
 }

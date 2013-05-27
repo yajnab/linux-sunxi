@@ -52,7 +52,7 @@ int cmd_sta_p2p_reset_test(void)
 	wpa_command(get_station_ifname(), "P2P_SET ps 96");
 	wpa_command(get_station_ifname(), "P2P_SET ps 0");
 	wpa_command(intf, "SET ampdu 1");
-#if 0
+#if 0    
 	run_system(dut, "iptables -F INPUT");
 	if (dut->arp_ipaddr[0]) {
 		snprintf(buf, sizeof(buf), "ip nei del %s dev %s",
@@ -82,9 +82,9 @@ int cmd_sta_set_p2p_test(void)
 	const char *intf = "wlan0";
 	char buf[256];
 
-
+        
 sigma_dut_print(DUT_MSG_INFO, "%s : %s", __func__, get_main_ifname());
-
+        
 
         wpa_command(intf, "P2P_SET disabled 0");
         if (wpa_command(intf, "P2P_FIND") < 0)
@@ -93,8 +93,8 @@ sigma_dut_print(DUT_MSG_INFO, "%s : %s", __func__, get_main_ifname());
         snprintf(buf, sizeof(buf), "P2P_SET discoverability %d",
 			 1);
 		if (wpa_command(intf, buf) < 0)
-			return -2;
-
+			return -2;        
+                
 
 	return 1;
 }
@@ -444,7 +444,7 @@ int cmd_sta_set_p2p(struct sigma_dut *dut, caStaSetP2p_t *command, dutCmdRespons
 	const char *val;
 	const char *noa_dur, *noa_int, *noa_count;
 	const char *ext_listen_int, *ext_listen_period;
-        dut->Concurrency = 0;
+        dut->Concurrency = 0; 
 
 	if (command->listen_chn_flag) {
 		dut->listen_chn =  command->listen_chn;
@@ -527,7 +527,7 @@ int cmd_sta_set_p2p(struct sigma_dut *dut, caStaSetP2p_t *command, dutCmdRespons
 
 	//val = get_param(cmd, "Concurrency");
 	if (command->concurrency_flag) {
-            dut->Concurrency = command->concurrency;
+            dut->Concurrency = command->concurrency; 
 		/* TODO */
 	}
 
@@ -733,8 +733,8 @@ int cmd_sta_start_autonomous_go(struct sigma_dut *dut, caStaStartAutoGo_t *comma
 	snprintf(resp, sizeof(resp), "GroupID,%s", grpid);
 	send_resp(dut, conn, SIGMA_COMPLETE, resp);
 
-#if 1
-        // Fetch the group ID and store into 	infoResp->cmdru.grpid
+#if 1        
+        // Fetch the group ID and store into 	infoResp->cmdru.grpid 
 	strcpy(&cmdresp->cmdru.grpid[0], grpid);
 #endif
 
@@ -782,7 +782,7 @@ int cmd_sta_p2p_connect(struct sigma_dut *dut, caStaP2pConnect_t *command, dutCm
 		 devid,
 		 dut->wps_method == WFA_CS_WPS_PBC ?
 		 "pbc" : dut->wps_pin);
-	if (wpa_command(intf, buf) < 0) {
+	if (wpa_command(intf, buf) < 0) {        
 		send_resp(dut, conn, SIGMA_ERROR, "ErrorCode,Failed to join "
 			  "the group");
 		if (ctrl) {
@@ -871,7 +871,7 @@ sigma_dut_print( DUT_MSG_DEBUG, "%s -1, intent_val : %d\n", __func__, intent_val
 		return -1;
 
 sigma_dut_print( DUT_MSG_DEBUG, "%s -2\n", __func__);
-
+    
 
 	if (init_go_neg)
 		init = init_go_neg;
@@ -890,7 +890,7 @@ sigma_dut_print( DUT_MSG_DEBUG, "%s -3 : init : %d\n", __func__, init);
 			freq = 5000 + chan * 5;
 	}
 
-sigma_dut_print( DUT_MSG_DEBUG, "%s -4\n", __func__);
+sigma_dut_print( DUT_MSG_DEBUG, "%s -4\n", __func__);    
 
 	if (dut->wps_method == WFA_CS_WPS_NOT_READY) {
 		send_resp(dut, conn, SIGMA_ERROR, "ErrorCode,WPS parameters "
@@ -907,7 +907,7 @@ sigma_dut_print( DUT_MSG_DEBUG, "%s -4\n", __func__);
 	}
 
     sigma_dut_print( DUT_MSG_DEBUG, "%s -6\n", __func__);
-
+    
 
 	if (ssid_param)
 		snprintf(buf, sizeof(buf), "P2P_SET ssid_postfix %s",
@@ -1050,17 +1050,17 @@ sigma_dut_print( DUT_MSG_DEBUG, "%s -4\n", __func__);
 	send_resp(dut, conn, SIGMA_COMPLETE, resp);
 
 #if 1
-	// Fetch the device mode and put in 	infoResp->cmdru.p2presult
+	// Fetch the device mode and put in 	infoResp->cmdru.p2presult 
 	//strcpy(infoResp->cmdru.p2presult, "GO");
 
-	// Fetch the device grp id and put in 	infoResp->cmdru.grpid
+	// Fetch the device grp id and put in 	infoResp->cmdru.grpid 
 	//strcpy(infoResp->cmdru.grpid, "AA:BB:CC:DD:EE:FF_DIRECT-SSID");
-
+	
 	strcpy(cmdresp->cmdru.grpFormInfo.result, gtype);
 	strcpy(cmdresp->cmdru.grpFormInfo.grpId, grpid);
 #endif
 
-
+            
 	return 0;
 }
 
@@ -1194,7 +1194,7 @@ int cmd_sta_accept_p2p_invitation_req(struct sigma_dut *dut,
 	const char *grpid = command->grpId;
 	int                 reinvoke = command->reinvoke;
 
-
+    
 	char buf[100];
 
 	if (devid == NULL || grpid == NULL)
@@ -1325,9 +1325,9 @@ int cmd_sta_wps_read_pin(struct sigma_dut *dut, caStaWpsReadPin_t *command,
 	send_resp(dut, conn, SIGMA_COMPLETE, resp);
 
 #if 1
-	// Fetch the device PIN and put in 	infoResp->cmdru.wpsPin
+ 	// Fetch the device PIN and put in 	infoResp->cmdru.wpsPin 
 	//strcpy(infoResp->cmdru.wpsPin, "12345678");
-	strcpy(&(cmdresp->cmdru.wpsPin[0]), pin);
+	strcpy(&(cmdresp->cmdru.wpsPin[0]), pin);   
 #endif
 
 	return 0;
@@ -1362,10 +1362,10 @@ int cmd_sta_wps_read_label(struct sigma_dut *dut,
 	send_resp(dut, conn, SIGMA_COMPLETE, resp);
 
 #if 1
-	// Fetch the device Label and put in	infoResp->cmdru.wpsPin
+	// Fetch the device Label and put in	infoResp->cmdru.wpsPin 
 	//strcpy(infoResp->cmdru.wpsPin, "12345678");
 	strcpy(&cmdresp->cmdru.wpsPin[0], pin);
-#endif
+#endif    
 
 	return 0;
 }
@@ -1378,16 +1378,16 @@ int cmd_sta_wps_enter_pin(struct sigma_dut *dut,
 	/* const char *intf = get_param(cmd, "Interface"); */
 	const char *grpid = command->grpId;
 	const char *pin = command->wpsPin;
-        char *ifname;
+        char *ifname;  
 
 	if (pin == NULL)
 		return -1;
-        ifname = get_main_ifname();
-
-        if(dut->Concurrency) {
-            wpa_command(ifname, "P2P_STOP_FIND");
-            wpa_command(ifname, "P2P_FIND");
-        }
+        ifname = get_main_ifname();        
+                                                                      
+        if(dut->Concurrency) {                                                                   
+            wpa_command(ifname, "P2P_STOP_FIND");                                                
+            wpa_command(ifname, "P2P_FIND");                                                     
+        } 
 
 	if (grpid) {
 		char buf[100];
@@ -1443,11 +1443,11 @@ int cmd_sta_get_psk(struct sigma_dut *dut, caStaGetPsk_t *command,
 	send_resp(dut, conn, SIGMA_COMPLETE, resp);
 
 #if 1
-	// Fetch the device PP and SSID  and put in 	infoResp->cmdru.pskInfo
+	// Fetch the device PP and SSID  and put in 	infoResp->cmdru.pskInfo 
 	//strcpy(infoResp->cmdru.wpsPin, "12345678");
 	strcpy(&cmdresp->cmdru.pskInfo.passPhrase[0], passphrase);
-	strcpy(&cmdresp->cmdru.pskInfo.ssid[0], grp->ssid);
-#endif
+	strcpy(&cmdresp->cmdru.pskInfo.ssid[0], grp->ssid);	
+#endif    
 
 	return 0;
 }
@@ -1582,7 +1582,7 @@ int cmd_sta_get_p2p_ip_config(struct sigma_dut *dut,
 	send_resp(dut, conn, SIGMA_COMPLETE, resp);
 
 #if 1
-	// Fetch the device IP config  and put in 	infoResp->cmdru
+	// Fetch the device IP config  and put in 	infoResp->cmdru 
 	//strcpy(infoResp->cmdru.wpsPin, "12345678");
 
         // 'info' format : dhcp,%d,ip,%s,mask,%s,primary-dns,%s
@@ -1592,8 +1592,8 @@ int cmd_sta_get_p2p_ip_config(struct sigma_dut *dut,
 	strcpy(&(ifinfo->mask[0]), "255.255.255.0");
 	strcpy(&(ifinfo->dns[0][0]), "192.165.100.1");
 	strcpy(&(ifinfo->mac[0]), macaddr);
-#endif
-
+#endif	    
+    
 	return 0;
 }
 
@@ -1827,5 +1827,5 @@ void p2p_register_cmds(void)
 			  cmd_sta_add_arp_table_entry);
 	sigma_dut_reg_cmd("sta_block_icmp_response", req_intf,
 			  cmd_sta_block_icmp_response);
-#endif
+#endif    
 }

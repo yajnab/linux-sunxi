@@ -2,7 +2,7 @@
 // Copyright (c) 2004-2010 Atheros Communications Inc.
 // All rights reserved.
 //
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -66,7 +66,7 @@ module_param(wowledon, int, 0644);
 #define __user
 /* for linux 2.4 and lower */
 MODULE_PARAM(wowledon,"i");
-#endif
+#endif 
 
 #ifdef CONFIG_HAS_EARLYSUSPEND
 static int screen_is_off;
@@ -88,7 +88,7 @@ int logger_write(const enum logidx index,
     mm_segment_t oldfs;
     struct iovec vec[3];
     int tag_bytes = strlen(tag) + 1, msg_bytes;
-    char *msg;
+    char *msg;      
     va_start(vargs, fmt);
     msg = kvasprintf(GFP_ATOMIC, fmt, vargs);
     va_end(vargs);
@@ -106,13 +106,13 @@ int logger_write(const enum logidx index,
         ret = -E2BIG;
         goto out_free_message;
     }
-
+            
     vec[0].iov_base  = (unsigned char *) &prio;
     vec[0].iov_len    = 1;
     vec[1].iov_base   = (void *) tag;
     vec[1].iov_len    = strlen(tag) + 1;
     vec[2].iov_base   = (void *) msg;
-    vec[2].iov_len    = strlen(msg) + 1;
+    vec[2].iov_len    = strlen(msg) + 1; 
 
     oldfs = get_fs();
     set_fs(KERNEL_DS);
@@ -134,7 +134,7 @@ int logger_write(const enum logidx index,
             kiocb.ki_nbytes = len;
             ret = filp->f_op->aio_write(&kiocb, vec, nr_segs, kiocb.ki_pos);
         }
-
+        
     } while (0);
 
     if (!IS_ERR(filp)) {
@@ -157,9 +157,9 @@ int android_logger_lv(void *module, int mask)
     case ATH_DEBUG_INFO:
         return 4;
     case ATH_DEBUG_WARN:
-        return 5;
-    case ATH_DEBUG_TRC:
-        return 3;
+        return 5; 
+    case ATH_DEBUG_TRC:        
+        return 3; 
     default:
 #ifdef DEBUG
         if (!module) {
@@ -193,7 +193,7 @@ static int android_readwrite_file(const A_CHAR *filename, A_CHAR *rbuf, const A_
             ret = -ENOENT;
             break;
         }
-
+    
         if (length==0) {
             /* Read the length of the file only */
             struct inode    *inode;
@@ -210,7 +210,7 @@ static int android_readwrite_file(const A_CHAR *filename, A_CHAR *rbuf, const A_
 
         if (wbuf) {
             if ( (ret=filp->f_op->write(filp, wbuf, length, &filp->f_pos)) < 0) {
-                AR_DEBUG_PRINTF(ATH_DEBUG_ERR, ("%s: Write %u bytes to file %s error %d\n", __FUNCTION__,
+                AR_DEBUG_PRINTF(ATH_DEBUG_ERR, ("%s: Write %u bytes to file %s error %d\n", __FUNCTION__, 
                                 length, filename, ret));
                 break;
             }
@@ -239,7 +239,7 @@ int android_request_firmware(const struct firmware **firmware_p, const char *nam
     char filename[256];
     const char *raw_filename = name;
 	*firmware_p = firmware = A_MALLOC(sizeof(*firmware));
-    if (!firmware)
+    if (!firmware) 
 		return -ENOMEM;
     A_MEMZERO(firmware, sizeof(*firmware));
 	sprintf(filename, "%s/%s", fwpath, raw_filename);
@@ -251,7 +251,7 @@ int android_request_firmware(const struct firmware **firmware_p, const char *nam
         } else {
             length = ret;
         }
-
+    
         bufsize = ALIGN(length, PAGE_SIZE);
         bmisize = A_ROUND_UP(length, 4);
         bufsize = max(bmisize, bufsize);
@@ -262,13 +262,13 @@ int android_request_firmware(const struct firmware **firmware_p, const char *nam
             ret = -ENOMEM;
             break;
         }
-
+    
         if ( (ret=android_readwrite_file(filename, (char*)firmware->data, NULL, length)) != length) {
             AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("%s: file read error, ret %d request %d\n", __FUNCTION__, ret, length));
             ret = -1;
             break;
         }
-
+    
     } while (0);
 
     if (ret<0) {
@@ -281,7 +281,7 @@ int android_request_firmware(const struct firmware **firmware_p, const char *nam
     } else {
         ret = 0;
     }
-    return ret;
+    return ret;    
 }
 
 void android_release_firmware(const struct firmware *firmware)
@@ -295,7 +295,7 @@ void android_release_firmware(const struct firmware *firmware)
 
 static A_STATUS ar6000_android_avail_ev(void *context, void *hif_handle)
 {
-    A_STATUS ret;
+    A_STATUS ret;    
 #ifdef CONFIG_HAS_WAKELOCK
     wake_lock(&ar6k_init_wake_lock);
 #endif
@@ -311,14 +311,14 @@ static int android_do_ioctl_direct(struct net_device *dev, int cmd, struct ifreq
 {
     int ret = -EIO;
     int  (*do_ioctl)(struct net_device *, struct ifreq *, int);
-#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,29)
+#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,29)    
     do_ioctl =  dev->do_ioctl;
-#else
+#else   
     do_ioctl = dev->netdev_ops->ndo_do_ioctl;
 #endif /* LINUX_VERSION_CODE < KERNEL_VERSION(2,6,29) */
 
     ifr->ifr_ifru.ifru_data = (__force void __user *)data;
-
+    
     if (do_ioctl) {
         mm_segment_t oldfs = get_fs();
         set_fs(KERNEL_DS);
@@ -361,11 +361,11 @@ int android_ioctl_siwpriv(struct net_device *dev,
         if (get_iwstats && arPriv->arConnected) {
             iwStats = get_iwstats(dev);
             if (iwStats) {
-                rssi = iwStats->qual.qual;
+                rssi = iwStats->qual.qual;          
                 if (rssi == 255)
                     rssi = -200;
                 else
-                    rssi += (161 - 256);
+                    rssi += (161 - 256);                
             }
         }
         len = snprintf(buf, data->length, "SSID rssi %d\n", rssi) + 1;
@@ -384,7 +384,7 @@ int android_ioctl_siwpriv(struct net_device *dev,
         int iocmd = SIOCSIWSCAN - SIOCSIWCOMMIT;
         const iw_handler setScan = dev->wireless_handlers->standard[iocmd];
         A_INT32 home_dwell=0, pas_dwell=0;
-        A_UCHAR ssid[IW_ESSID_MAX_SIZE+1] = { 0 };
+        A_UCHAR ssid[IW_ESSID_MAX_SIZE+1] = { 0 };       
         A_INT32 ssid_len = 0;
         A_UINT8 index = 1; /* reserve 1st index for wext */
         char *scanBuf = cmd + 12;
@@ -397,7 +397,7 @@ int android_ioctl_siwpriv(struct net_device *dev,
                 if ((scanBuf + 1) < scanEnd && (scanBuf+1+(int)*(scanBuf+1)) < scanEnd ) {
                     if (ssid_len > 0) {
                         /* setup the last parsed ssid, reserve 1st index for wext */
-                        if (wmi_probedSsid_cmd(arPriv->arWmi, index+1,
+                        if (wmi_probedSsid_cmd(arPriv->arWmi, index+1, 
                                        SPECIFIC_SSID_FLAG, ssid_len, ssid) == A_OK) {
                             ++index;
                             if (arSta->scanSpecificSsid<index) {
@@ -436,7 +436,7 @@ int android_ioctl_siwpriv(struct net_device *dev,
                 break;
             case 'T': /* Scan active type section */
                 break;
-            default:
+            default:                
                 break;
             }
             if (sp == scanBuf) {
@@ -465,7 +465,7 @@ int android_ioctl_siwpriv(struct net_device *dev,
             struct iw_request_info minfo;
             struct iw_scan_req scanreq, *pScanReq = NULL;
             A_MEMZERO(&minfo, sizeof(minfo));
-            A_MEMZERO(&miwr, sizeof(miwr));
+            A_MEMZERO(&miwr, sizeof(miwr));            
             if (ssid_len > 0) {
                 A_MEMZERO(&scanreq, sizeof(scanreq));
                 pScanReq = &scanreq;
@@ -535,25 +535,25 @@ int android_ioctl_siwpriv(struct net_device *dev,
         ((int *)userBuf)[0] = AR6000_XIOCTRL_WMI_GET_POWER_MODE;
         if (android_do_ioctl_direct(dev, AR6000_IOCTL_EXTENDED, &ifr, userBuf)>=0) {
             WMI_POWER_MODE_CMD *getPowerMode = (WMI_POWER_MODE_CMD *)userBuf;
-            len = snprintf(buf, data->length, "powermode = %u\n",
+            len = snprintf(buf, data->length, "powermode = %u\n", 
                            (getPowerMode->powerMode==MAX_PERF_POWER) ? 1/*active*/ : 0/*auto*/) + 1;
-            return (copy_to_user(data->pointer, buf, len)==0) ? len : -1;
+            return (copy_to_user(data->pointer, buf, len)==0) ? len : -1;        
         }
         return -1;
     } else if (strncasecmp(cmd, "SETSUSPENDOPT ", 14)==0) {
         int enable;
         if (sscanf(cmd, "%*s %d", &enable)==1) {
-            /*
-             * We set our suspend mode by wlan_config.h now.
+            /* 
+             * We set our suspend mode by wlan_config.h now. 
              * Should we follow Android command?? TODO
              */
             return 0;
         }
         return -1;
     } else if (strcasecmp(cmd, "SCAN-CHANNELS")==0) {
-        // reply comes back in the form "Scan-Channels = X" where X is the number of channels
+        // reply comes back in the form "Scan-Channels = X" where X is the number of channels        
         int iocmd = SIOCGIWRANGE - SIOCSIWCOMMIT;
-        iw_handler getRange = dev->wireless_handlers->standard[iocmd];
+        iw_handler getRange = dev->wireless_handlers->standard[iocmd];            
         if (getRange) {
             union iwreq_data miwr;
             struct iw_request_info minfo;
@@ -571,9 +571,9 @@ int android_ioctl_siwpriv(struct net_device *dev,
             return (copy_to_user(data->pointer, buf, len)==0) ? len : -1;
         }
         return -1;
-    } else if (strncasecmp(cmd, "SCAN-CHANNELS ", 14)==0 ||
+    } else if (strncasecmp(cmd, "SCAN-CHANNELS ", 14)==0 || 
                strncasecmp(cmd, "COUNTRY ", 8)==0) {
-        /*
+        /* 
          * Set the available channels with WMI_SET_CHANNELPARAMS cmd
          * However, the channels will be limited by the eeprom regulator domain
          * Try to use a regulator domain which will not limited the channels range.
@@ -581,7 +581,7 @@ int android_ioctl_siwpriv(struct net_device *dev,
         int i;
         int chan = 0;
         A_UINT16 *clist;
-        struct ifreq ifr;
+        struct ifreq ifr; 
         char ioBuf[256];
         WMI_CHANNEL_PARAMS_CMD *chParamCmd = (WMI_CHANNEL_PARAMS_CMD *)ioBuf;
         if (strncasecmp(cmd, "COUNTRY ", 8)==0) {
@@ -608,17 +608,17 @@ int android_ioctl_siwpriv(struct net_device *dev,
         chParamCmd->phyMode = WMI_11G_MODE;
         clist = chParamCmd->channelList;
         chParamCmd->numChannels = chan;
-        chParamCmd->scanParam = 1;
+        chParamCmd->scanParam = 1;        
         for (i = 0; i < chan; i++) {
             clist[i] = wlan_ieee2freq(i + 1);
         }
-
+        
         return android_do_ioctl_direct(dev, AR6000_IOCTL_WMI_SET_CHANNELPARAMS, &ifr, ioBuf);
     } else if (strncasecmp(cmd, "BTCOEXMODE ", 11)==0) {
         int mode;
         if (sscanf(cmd, "%*s %d", &mode)==1) {
-            /*
-            * Android disable BT-COEX when obtaining dhcp packet except there is headset is connected
+            /* 
+            * Android disable BT-COEX when obtaining dhcp packet except there is headset is connected 
              * It enable the BT-COEX after dhcp process is finished
              * We ignore since we have our way to do bt-coex during dhcp obtaining.
              */
@@ -650,10 +650,10 @@ int android_ioctl_siwpriv(struct net_device *dev,
     } else if (strcasecmp(cmd, "RXFILTER-START")==0 || strcasecmp(cmd, "RXFILTER-STOP")==0) {
         unsigned int flags = dev->flags;
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 34)
-        int mc_count = dev->mc_count;
+        int mc_count = dev->mc_count;   
 #else
         int mc_count = netdev_mc_count(dev);
-#endif
+#endif           
         if (!(flags & IFF_UP)) {
             return -1;
         }
@@ -685,7 +685,7 @@ static void ar6000_enable_mmchost_detect_change(int enable)
         return;
     }
     length = snprintf(buf, sizeof(buf), "%d\n", enable ? 1 : 0);
-    if (android_readwrite_file("/sys/devices/platform/" MMC_MSM_DEV "/detect_change",
+    if (android_readwrite_file("/sys/devices/platform/" MMC_MSM_DEV "/detect_change", 
                                NULL, buf, length) < 0) {
         /* fall back to polling */
         android_readwrite_file("/sys/devices/platform/" MMC_MSM_DEV "/polling", NULL, buf, length);
@@ -712,7 +712,7 @@ void android_module_init(OSDRV_CALLBACKS *osdrvCallbacks)
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,0)
     if (ifname[0] == '\0')
         strcpy(ifname, def_ifname);
-#endif
+#endif 
 #ifdef CONFIG_HAS_WAKELOCK
     wake_lock_init(&ar6k_init_wake_lock, WAKE_LOCK_SUSPEND, "ar6k_init");
 #endif
@@ -746,14 +746,14 @@ void android_module_exit(void)
 void android_ar6k_check_wow_status(AR_SOFTC_T *ar, struct sk_buff *skb, A_BOOL isEvent)
 {
     AR_SOFTC_DEV_T *arPriv;
-    A_UINT8  i;
+    A_UINT8  i; 
     A_BOOL needWake = FALSE;
-    for(i = 0; i < num_device; i++)
+    for(i = 0; i < num_device; i++) 
     {
         arPriv = ar->arDev[i];
         if (
 #ifdef CONFIG_HAS_EARLYSUSPEND
-            screen_is_off &&
+            screen_is_off && 
 #endif
                 skb && arPriv->arConnected) {
             if (isEvent) {
@@ -788,10 +788,10 @@ void android_ar6k_check_wow_status(AR_SOFTC_T *ar, struct sk_buff *skb, A_BOOL i
                 } else if ( !IEEE80211_IS_BROADCAST(datap->dstMac) ) {
                     if (A_NETBUF_LEN(skb)>=14+20 ) {
 					    /* check if it is mDNS packets */
-                        A_UINT8 *dstIpAddr = (A_UINT8*)(A_NETBUF_DATA(skb)+14+20-4);
+                        A_UINT8 *dstIpAddr = (A_UINT8*)(A_NETBUF_DATA(skb)+14+20-4);                    
                         struct net_device *ndev = arPriv->arNetDev;
                         needWake = ((dstIpAddr[3] & 0xf8) == 0xf8) &&
-                                (arPriv->arNetworkType==AP_NETWORK ||
+                                (arPriv->arNetworkType==AP_NETWORK || 
                                 (ndev->flags & IFF_ALLMULTI || ndev->flags & IFF_MULTICAST));
                     }
                 }else if (arPriv->arNetworkType==AP_NETWORK) {
@@ -803,7 +803,7 @@ void android_ar6k_check_wow_status(AR_SOFTC_T *ar, struct sk_buff *skb, A_BOOL i
                             needWake = (dstPort == 0x43); /* dhcp request */
                         }
                         break;
-                    case 0x0806:
+                    case 0x0806: 
                         needWake = TRUE;
                     default:
                         break;

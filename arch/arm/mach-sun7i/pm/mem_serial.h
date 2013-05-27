@@ -8,7 +8,7 @@
 *                                             All Rights Reserved
 *
 * File    : mem_serial.h
-* By      :
+* By      : 
 * Version : v1.0
 * Date    : 2011-5-31 14:34
 * Descript:
@@ -60,3 +60,4 @@ __u32 serial_gets_nommu(char* buf, __u32 n);
 
 
 #endif  /* __MEM_SERIAL_H__ */
+

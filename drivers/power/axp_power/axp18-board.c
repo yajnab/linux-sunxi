@@ -291,7 +291,7 @@ static struct axp_supply_init_data axp_sply_init_data = {
 };
 
 static struct axp_funcdev_info axp_splydev[]={
-	{   .name = "axp18-supplyer",
+   	{   .name = "axp18-supplyer",
 		.id = AXP18_ID_SUPPLY,
         .platform_data = &axp_sply_init_data,
     },
@@ -323,3 +323,4 @@ module_init(axp_board_init);
 MODULE_DESCRIPTION("Axp regulator test");
 MODULE_AUTHOR("Kyle Cheung");
 MODULE_LICENSE("GPL");
+

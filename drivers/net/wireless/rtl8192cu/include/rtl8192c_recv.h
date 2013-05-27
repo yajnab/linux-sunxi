@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
- *
+ *                                        
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -30,8 +30,11 @@
 #elif defined(PLATFORM_OS_CE)
 	#define NR_RECVBUFF (4)
 #else
-
+#ifdef CONFIG_SINGLE_RECV_BUF
+	#define NR_RECVBUFF (1)
+#else
 	#define NR_RECVBUFF (4)
+#endif //CONFIG_SINGLE_RECV_BUF
 
 	#define NR_PREALLOC_RECV_SKB (8)
 #endif
@@ -118,10 +121,10 @@ typedef struct _Phy_OFDM_Rx_Status_Report_8192cd
 	unsigned char idle_long:1;
 	unsigned char r_ant_train_en:1;
 	unsigned char ANTSELB:1;
-	unsigned char ANTSEL:1;
+	unsigned char ANTSEL:1;	
 #else	// _BIG_ENDIAN_
 	//unsigned char rsvd:4;
-	unsigned char ANTSEL:1;
+	unsigned char ANTSEL:1;	
 	unsigned char ANTSELB:1;
 	unsigned char r_ant_train_en:1;
 	unsigned char idle_long:1;
@@ -174,3 +177,4 @@ void rtl8192c_translate_rx_signal_stuff(union recv_frame *precvframe, struct phy
 void rtl8192c_query_rx_desc_status(union recv_frame *precvframe, struct recv_stat *pdesc);
 
 #endif
+

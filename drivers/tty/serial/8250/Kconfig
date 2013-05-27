@@ -281,5 +281,5 @@ config SERIAL_8250_DW
 
 config SERIAL_8250_SUNXI
 	tristate
-	depends on SERIAL_8250 && ARCH_SUN7I
+	depends on SERIAL_8250 && ARCH_SUN7I && !SERIAL_AW
 	default SERIAL_8250

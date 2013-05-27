@@ -2,7 +2,7 @@
 # I2C gsensor chip drivers configuration
 #
 
-menuconfig GSENSOR
+menuconfig GSENSOR 
 	bool "Gsensor support"
 
 if GSENSOR
@@ -11,9 +11,9 @@ config SENSORS_BMA250
 	tristate "BMA250 acceleration sensor support"
 	depends on I2C
 	help
-	  If you say yes here you get support for Bosch Sensortec's
+	  If you say yes here you get support for Bosch Sensortec's 
 	  acceleration sensors BMA250.
-
+	  
 config SENSORS_LIS3DH_ACC
 	tristate "LIS3DH acceleration sensor support"
 	depends on I2C
@@ -27,7 +27,7 @@ config SENSORS_LIS3DE_ACC
 	default m
 	help
 	  If you say yes here you get support for acceleration sensors LIS3DE.
-
+	  
 config SENSORS_DMARD10
 	tristate "dmard10 acceleration sensor support"
 	depends on I2C
@@ -35,7 +35,7 @@ config SENSORS_DMARD10
 	  If you say yes here you get support for  acceleration sensors DMARD10.
 
 ###### not supported yet ######
-if 0
+if 0  
 config MEMSIC_ECOMPASS
 	tristate "MEMSIC eCompass Driver Support"
 	depends on I2C

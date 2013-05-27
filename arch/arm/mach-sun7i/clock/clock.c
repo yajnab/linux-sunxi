@@ -190,13 +190,10 @@ void clk_disable(struct clk *clk)
         CCU_ERR("%s: invalid handle\n", __func__);
         return;
     }
-    if (0 == clk->enable) {
-        CCU_INF("%s: %s is already disabled\n", __func__, clk->aw_clk->name);
-        return;
-    }
 
     CCU_LOCK(&clk->lock, flags);
-    clk->enable--;
+    if (clk->enable)
+        clk->enable--;
     if (clk->enable) {
         CCU_UNLOCK(&clk->lock, flags);
         CCU_DBG("%s: %s is disabled, count #%d\n", __func__, clk->aw_clk->name, clk->enable);

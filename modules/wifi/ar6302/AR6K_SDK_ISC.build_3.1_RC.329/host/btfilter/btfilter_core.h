@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="btfilter_core.h" company="Atheros">
 //    Copyright (c) 2007 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -150,18 +150,18 @@ ATHBT_STATE_INDICATION FCore_FilterBTEvent(BT_FILTER_CORE_INFO *pCore, A_UINT8 *
 
 /* filter ACL IN and OUT data to obtain BT application states
  * ***** NOTE: the caller must protect this function with locks to protect internal
- *             state.
+ *             state.  
  */
 ATHBT_STATE_INDICATION FCore_FilterACLDataOut(BT_FILTER_CORE_INFO *pCore,
-                                              A_UINT8             *pBuffer,
-                                              int                 Length,
+                                              A_UINT8             *pBuffer, 
+                                              int                 Length, 
                                               ATHBT_STATE         *pNewState);
-
+                                              
 ATHBT_STATE_INDICATION FCore_FilterACLDataIn(BT_FILTER_CORE_INFO *pCore,
-                                             A_UINT8             *pBuffer,
-                                             int                 Length,
+                                             A_UINT8             *pBuffer, 
+                                             int                 Length, 
                                              ATHBT_STATE         *pNewState);
-
+                                      
 /* core state reset, usually called when the WLAN side goes away */
 #define FCore_ResetState(p)  /* doesn't do anything now */
 
@@ -199,3 +199,6 @@ A_STATUS FCore_ModifyControlActionString(BT_FILTER_CORE_INFO         *pCore,
 
 
 #endif /*BTFILTER_INTERNAL_H_*/
+
+
+

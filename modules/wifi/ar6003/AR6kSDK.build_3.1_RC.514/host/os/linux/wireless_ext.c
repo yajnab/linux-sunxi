@@ -2,7 +2,7 @@
 // Copyright (c) 2004-2010 Atheros Communications Inc.
 // All rights reserved.
 //
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -331,7 +331,7 @@ ar6000_scan_node(void *arg, bss_t *ni)
                                           wpa_leader, sizeof(wpa_leader)-1);
 
             if (iwe.u.data.length != 0) {
-                current_ev = IWE_STREAM_ADD_POINT(param->info, current_ev,
+                current_ev = IWE_STREAM_ADD_POINT(param->info, current_ev, 
                                                   end_buf, &iwe, buf);
             }
         }
@@ -350,7 +350,7 @@ ar6000_scan_node(void *arg, bss_t *ni)
                                           rsn_leader, sizeof(rsn_leader)-1);
 
             if (iwe.u.data.length != 0) {
-                current_ev = IWE_STREAM_ADD_POINT(param->info, current_ev,
+                current_ev = IWE_STREAM_ADD_POINT(param->info, current_ev, 
                                                   end_buf, &iwe, buf);
             }
         }
@@ -515,19 +515,19 @@ ar6000_ioctl_siwessid(struct net_device *dev,
         data->length += 1;
     }
 #endif
-    /* Handling AP-STA Concurrency */
+    /* Handling AP-STA Concurrency */ 
     if((ar->arConfNumDev > 1)) {
-        if ((data->flags) &&
-            (arPriv->arNetworkType == INFRA_NETWORK) &&
+        if ((data->flags) && 
+            (arPriv->arNetworkType == INFRA_NETWORK) && 
             ((arPriv->arSsidLen != (data->length - 1)) ||
                  (A_MEMCMP(arPriv->arSsid, ssid, arPriv->arSsidLen) != 0))){
             for(i=0;i<ar->arConfNumDev;i++) {
                 arTempPriv = ar->arDev[i];
                 if((AP_NETWORK == arTempPriv->arNetworkType) &&
-                        (arTempPriv->arConnected)) {
+                        (arTempPriv->arConnected)) { 
                     wmi_disconnect_cmd(arTempPriv->arWmi);
                     /*Restart AP only in non P2P mode*/
-                    if((arTempPriv->arNetworkSubType != SUBTYPE_P2PGO) &&
+                    if((arTempPriv->arNetworkSubType != SUBTYPE_P2PGO) && 
                         (arTempPriv->arNetworkSubType !=SUBTYPE_P2PDEV)){
                         arTempPriv->arHoldConnection = TRUE;
                         ar->arHoldConnection = TRUE;
@@ -571,7 +571,7 @@ ar6000_ioctl_siwessid(struct net_device *dev,
         arPriv->arConnected = FALSE;
         return 0;
     }
-
+   
     /* Added for bug 25178, return an IOCTL error instead of target returning
        Illegal parameter error when either the BSSID or channel is missing
        and we cannot scan during connect.
@@ -607,7 +607,7 @@ ar6000_ioctl_siwessid(struct net_device *dev,
         }
     }
 
-
+  
     if (!data->flags) {
 #ifdef ATH6K_CONFIG_CFG80211
         if (arPriv->arConnected) {
@@ -618,8 +618,8 @@ ar6000_ioctl_siwessid(struct net_device *dev,
 #endif /* ATH6K_CONFIG_CFG80211 */
     }
 
-    if (((arPriv->arSsidLen) ||
-        ((arPriv->arSsidLen == 0) && (arPriv->arConnected || arSta->arConnectPending)) ||
+    if (((arPriv->arSsidLen) || 
+        ((arPriv->arSsidLen == 0) && (arPriv->arConnected || arSta->arConnectPending)) || 
         (!data->flags)))
     {
         if ((!data->flags) ||
@@ -802,7 +802,7 @@ ar6000_ioctl_giwrate(struct net_device *dev,
 {
     AR_SOFTC_DEV_T *arPriv = (AR_SOFTC_DEV_T *)ar6k_priv(dev);
     AR_SOFTC_T     *ar     = arPriv->arSoftc;
-
+    
     int ret = 0;
 
     if (is_iwioctl_allowed(arPriv->arNextMode, info->cmd) != A_OK) {
@@ -819,7 +819,7 @@ ar6000_ioctl_giwrate(struct net_device *dev,
     }
 
     if ((arPriv->arNextMode != AP_NETWORK && !arPriv->arConnected) || ar->arWmiReady == FALSE) {
-        rrq->value = 1000 * 1000;
+        rrq->value = 1000 * 1000;       
         return 0;
     }
 
@@ -1285,15 +1285,15 @@ ar6000_ioctl_siwgenie(struct net_device *dev,
 
     /* get the Information Element and check if it's a WPS IE */
     if (ieLen>=6 &&
-            ((ie[0]==IEEE80211_ELEMID_VENDOR) &&
+            ((ie[0]==IEEE80211_ELEMID_VENDOR) && 
             memcmp(&ie[2], wfa_oui, sizeof(wfa_oui))==0)) {
         /* WPS IE detected, notify target */
         AR_DEBUG_PRINTF(ATH_DEBUG_INFO,("WPS IE detected -- setting WPS flag\n"));
         arPriv->arSta.arConnectCtrlFlags |= CONNECT_WPS_FLAG;
     } else {
         if ((ieLen>=1 && ie[0]==IEEE80211_ELEMID_RSN) ||
-                (ieLen>=6 && ie[0]==IEEE80211_ELEMID_VENDOR &&
-                memcmp(&ie[2], wpa_oui, sizeof(wpa_oui))==0)) {
+                (ieLen>=6 && ie[0]==IEEE80211_ELEMID_VENDOR && 
+                memcmp(&ie[2], wpa_oui, sizeof(wpa_oui))==0)) { 
             ieLen = 0; /* Firmware will set for us. Clear the previous one */
         }
 #ifdef CONFIG_WAPI
@@ -1891,7 +1891,7 @@ ar6000_ioctl_siwencodeext(struct net_device *dev,
         if (ext->ext_flags & IW_ENCODE_EXT_GROUP_KEY) {
             keyUsage |= GROUP_USAGE;
             if(arPriv->arNextMode == AP_NETWORK) {
-                keyUsage &= ~TX_USAGE;
+                keyUsage &= ~TX_USAGE; 
                 arAp->ap_mode_bkey.ik_keyix = index;
                 arAp->ap_mode_bkey.ik_keylen = keyLen;
                 memcpy(arAp->ap_mode_bkey.ik_keydata, keyData, keyLen);
@@ -1910,7 +1910,7 @@ ar6000_ioctl_siwencodeext(struct net_device *dev,
 
         if (((WMI_WPA_PSK_AUTH == arPriv->arAuthMode) || (WMI_WPA2_PSK_AUTH == arPriv->arAuthMode)) &&
             (GROUP_USAGE & keyUsage))
-        {
+        {   
                 A_UNTIMEOUT(&arPriv->arSta.disconnect_timer);
         }
 
@@ -2125,7 +2125,7 @@ ar6000_ioctl_siwfreq(struct net_device *dev,
             /* Auto Channel Selection */
             arPriv->arChannelHint = 0;
     }
-
+    
     arPriv->ap_profile_flag = 1; /* There is a change in profile */
 
     A_PRINTF("channel hint set to %d\n", arPriv->arChannelHint);
@@ -2197,7 +2197,7 @@ ar6000_ioctl_siwmode(struct net_device *dev,
     /*
      * clear SSID during mode switch in connected state
      */
-    if(!(arPriv->arNetworkType == (((*mode) == IW_MODE_INFRA) ? INFRA_NETWORK : ADHOC_NETWORK))
+    if(!(arPriv->arNetworkType == (((*mode) == IW_MODE_INFRA) ? INFRA_NETWORK : ADHOC_NETWORK)) 
                   && (arPriv->arConnected == TRUE) ){
         A_MEMZERO(arPriv->arSsid, sizeof(arPriv->arSsid));
         arPriv->arSsidLen = 0;
@@ -2303,7 +2303,7 @@ ar6000_ioctl_giwrange(struct net_device *dev,
     AR_SOFTC_STA_T *arSta  = &arPriv->arSta;
     struct iw_range *range = (struct iw_range *) extra;
     int i, j, ret = 0;
-    const A_INT32 rateTable[] = {
+    const A_INT32 rateTable[] = { 
         1000, 2000, 5500, 11000,
         6000, 9000, 12000, 18000, 24000, 36000, 48000, 54000,
         6500, 13000, 19500, 26000, 39000, 52000, 58500, 65000 };
@@ -2367,7 +2367,7 @@ ar6000_ioctl_giwrange(struct net_device *dev,
                             0);
 
     range->scan_capa = IW_SCAN_CAPA_ESSID | IW_SCAN_CAPA_CHANNEL;
-
+    
     range->txpower_capa = 0;
 
     range->min_pmp = 1 * 1024;
@@ -2426,7 +2426,7 @@ ar6000_ioctl_giwrange(struct net_device *dev,
         A_INT8 rateIdx;
         if (wmi_validate_bitrate(arPriv->arWmi, rateTable[i], &rateIdx)==A_OK) {
             range->bitrate[j] = wmi_get_rate(i) * 1000;
-            ++j;
+            ++j;            
         }
     }
     range->num_bitrates = j;
@@ -2466,12 +2466,12 @@ ar6000_ioctl_siwpriv(struct net_device *dev,
     extern int android_ioctl_siwpriv(struct net_device *, struct iw_request_info *, struct iw_point *, char*);
     char cmd[5];
     if (data->pointer) {
-        if (copy_from_user(cmd, data->pointer, sizeof(cmd)))
+        if (copy_from_user(cmd, data->pointer, sizeof(cmd))) 
             return -EIO;
     }
 #endif
 
-    if (!ar ||
+    if (!ar || 
             ( (!ar->arWmiReady || (ar->arWlanState != WLAN_ENABLED))
 #ifdef ANDROID_ENV
             && (!data->pointer || strncasecmp(cmd, "START", 5)!=0)
@@ -2702,7 +2702,7 @@ ar6000_ioctl_siwscan(struct net_device *dev,
         } else {
             AR_DEBUG_PRINTF(ATH_DEBUG_WLAN_SCAN,("Scan request is triggered over 5 times. Not scan complete event\n"));
         }
-    }
+    } 
 
     if (!arSta->arUserBssFilter) {
         if (wmi_bssfilter_cmd(arPriv->arWmi, ALL_BSS_FILTER, 0) != A_OK) {
@@ -2717,7 +2717,7 @@ ar6000_ioctl_siwscan(struct net_device *dev,
     }
 
 #if WIRELESS_EXT >= 18
-    if ( req && (data->flags & IW_SCAN_THIS_ESSID) == IW_SCAN_THIS_ESSID ) {
+    if ( req && (data->flags & IW_SCAN_THIS_ESSID) == IW_SCAN_THIS_ESSID ) {   
         if (wmi_probedSsid_cmd(arPriv->arWmi, 0,
              SPECIFIC_SSID_FLAG, req->essid_len, req->essid) == A_OK) {
             if (!arSta->scanSpecificSsid) {
@@ -2735,7 +2735,7 @@ ar6000_ioctl_siwscan(struct net_device *dev,
     }
 
     if ( req && (data->flags & IW_SCAN_THIS_FREQ) == IW_SCAN_THIS_FREQ && req->num_channels>0) {
-        A_UINT8 i;
+        A_UINT8 i;        
         for (i=0; i<req->num_channels; ++i) {
             struct iw_freq *freq = &req->channel_list[i];
             A_UINT16 *dst = &channelList[numChan];
@@ -2760,7 +2760,7 @@ ar6000_ioctl_siwscan(struct net_device *dev,
      */
     GET_CONN_AP_PRIV(ar,arApPriv);
     if((arApPriv) && (arPriv->arConnected)){
-          connChannel = arPriv->arBssChannel;
+          connChannel = arPriv->arBssChannel; 
          if (wmi_startscan_cmd(arPriv->arWmi, WMI_LONG_SCAN, FALSE, FALSE, \
                      0, 0, 1,&connChannel) != A_OK) {
              ret = -EIO;

@@ -1,5 +1,5 @@
 // Copyright (c) 2004-2006 Atheros Communications Inc.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -13,22 +13,22 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
-// Portions of this code were developed with information supplied from the
+// Portions of this code were developed with information supplied from the 
 // SD Card Association Simplified Specifications. The following conditions and disclaimers may apply:
 //
 //  The following conditions apply to the release of the SD simplified specification (“Simplified
-//  Specification”) by the SD Card Association. The Simplified Specification is a subset of the complete
-//  SD Specification which is owned by the SD Card Association. This Simplified Specification is provided
-//  on a non-confidential basis subject to the disclaimers below. Any implementation of the Simplified
+//  Specification”) by the SD Card Association. The Simplified Specification is a subset of the complete 
+//  SD Specification which is owned by the SD Card Association. This Simplified Specification is provided 
+//  on a non-confidential basis subject to the disclaimers below. Any implementation of the Simplified 
 //  Specification may require a license from the SD Card Association or other third parties.
 //  Disclaimers:
-//  The information contained in the Simplified Specification is presented only as a standard
-//  specification for SD Cards and SD Host/Ancillary products and is provided "AS-IS" without any
-//  representations or warranties of any kind. No responsibility is assumed by the SD Card Association for
-//  any damages, any infringements of patents or other right of the SD Card Association or any third
-//  parties, which may result from its use. No license is granted by implication, estoppel or otherwise
-//  under any patent or other rights of the SD Card Association or any third party. Nothing herein shall
-//  be construed as an obligation by the SD Card Association to disclose or distribute any technical
+//  The information contained in the Simplified Specification is presented only as a standard 
+//  specification for SD Cards and SD Host/Ancillary products and is provided "AS-IS" without any 
+//  representations or warranties of any kind. No responsibility is assumed by the SD Card Association for 
+//  any damages, any infringements of patents or other right of the SD Card Association or any third 
+//  parties, which may result from its use. No license is granted by implication, estoppel or otherwise 
+//  under any patent or other rights of the SD Card Association or any third party. Nothing herein shall 
+//  be construed as an obligation by the SD Card Association to disclose or distribute any technical 
 //  information, know-how or other confidential information to any third party.
 //
 //
@@ -41,8 +41,8 @@
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 @file: _sdio_defs.h
 
-@abstract: SD/SDIO definitions
-
+@abstract: SD/SDIO definitions 
+ 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 #ifndef ___SDIO_DEFS_H___
 #define ___SDIO_DEFS_H___
@@ -52,9 +52,9 @@
 #define SD_MAX_BUS_CLOCK    25000000  /* max clock speed in hz */
 #define SD_HS_MAX_BUS_CLOCK 50000000  /* SD high speed max clock speed in hz */
 #define SDIO_LOW_SPEED_MAX_BUS_CLOCK 400000 /* max low speed clock in hz */
-#define SDMMC_MIN_INIT_CLOCKS   80    /* minimun number of initialization clocks */
+#define SDMMC_MIN_INIT_CLOCKS   80    /* minimun number of initialization clocks */  
 #define SDIO_EMPC_CURRENT_THRESHOLD  300  /* SDIO 1.10 , EMPC (mA) threshold, we add some overhead */
-
+                             
 /* commands */
 #define CMD0    0
 #define CMD1    1
@@ -155,7 +155,7 @@
                   SD_CS_ECC_FAILED        | \
                   SD_CS_CARD_INTERNAL_ERR | \
                   SD_CS_GENERAL_ERR )
-
+                  
 #define SD_CS_STATE_IDLE   0
 #define SD_CS_STATE_READY  1
 #define SD_CS_STATE_IDENT  2
@@ -185,7 +185,7 @@
 #define GET_SD_CID_OEMID(pR)      ((((UINT16)(pR)[14]) << 8 )| (UINT16)((pR)[13]))
 #define SDMMC_OCR_VOLTAGE_MASK 0x7FFFFFFF
 /* SD R3 response */
-#define SD_R3_RESPONSE_BYTES 6
+#define SD_R3_RESPONSE_BYTES 6                                            
 #define SD_R3_GET_OCR(pR) ((((UINT32)((pR)[1])) |  \
                            (((UINT32)((pR)[2])) << 8)  |  \
                            (((UINT32)((pR)[3])) << 16) | \
@@ -227,16 +227,16 @@
 #define SDS_SD_CARD_ROM             0x01
 
 /* SD R6 response */
-#define SD_R6_RESPONSE_BYTES 6
-#define SD_R6_GET_RCA(pR) ((UINT16)((pR)[3]) | (((UINT16)((pR)[4])) << 8))
-#define SD_R6_GET_CS(pR)  ((UINT16)((pR)[1]) | (((UINT16)((pR)[2])) << 8))
+#define SD_R6_RESPONSE_BYTES 6 
+#define SD_R6_GET_RCA(pR) ((UINT16)((pR)[3]) | (((UINT16)((pR)[4])) << 8)) 
+#define SD_R6_GET_CS(pR)  ((UINT16)((pR)[1]) | (((UINT16)((pR)[2])) << 8)) 
 
 /* SD Configuration Register (SCR) */
 #define SD_SCR_BYTES            8
 #define SCR_REV_1_0             0x00
 #define SCR_SD_SPEC_1_00        0x00
 #define SCR_SD_SPEC_1_10        0x01
-#define SCR_BUS_SUPPORTS_1_BIT  0x01
+#define SCR_BUS_SUPPORTS_1_BIT  0x01   
 #define SCR_BUS_SUPPORTS_4_BIT  0x04
 #define SCR_SD_SECURITY_MASK    0x70
 #define SCR_SD_NO_SECURITY      0x00
@@ -244,12 +244,12 @@
 #define SCR_SD_SECURITY_2_0     0x20
 #define SCR_DATA_STATUS_1_AFTER_ERASE  0x80
 
-#define GET_SD_SCR_STRUCT_VER(pB) ((pB)[7] >> 4)
-#define GET_SD_SCR_SDSPEC_VER(pB) ((pB)[7] & 0x0F)
-#define GET_SD_SCR_BUSWIDTHS(pB)  ((pB)[6] & 0x0F)
+#define GET_SD_SCR_STRUCT_VER(pB) ((pB)[7] >> 4) 
+#define GET_SD_SCR_SDSPEC_VER(pB) ((pB)[7] & 0x0F) 
+#define GET_SD_SCR_BUSWIDTHS(pB)  ((pB)[6] & 0x0F) 
 #define GET_SD_SCR_BUSWIDTHS_FLAGS(pB)  (pB)[6]
-#define GET_SD_SCR_SECURITY(pB)   (((pB)[6] >> 4) & 0x07)
-#define GET_SD_SCR_DATA_STAT_AFTER_ERASE(pB) (((pB)[6] >> 7) & 0x01)
+#define GET_SD_SCR_SECURITY(pB)   (((pB)[6] >> 4) & 0x07) 
+#define GET_SD_SCR_DATA_STAT_AFTER_ERASE(pB) (((pB)[6] >> 7) & 0x01) 
 
 /* SDIO R4 Response */
 #define SD_SDIO_R4_RESPONSE_BYTES 6
@@ -276,18 +276,18 @@
                                  | SD_R5_INVALID_FUNC | SD_R5_ARG_RANGE_ERR)
 #define SD_R5_ERRORS (SD_R5_CURRENT_CMD_ERRORS)
 
-#define SD_R5_GET_IO_STATE(pR) (((pR)[2] >> 4) & 0x03)
+#define SD_R5_GET_IO_STATE(pR) (((pR)[2] >> 4) & 0x03) 
 #define SD_R5_STATE_DIS 0x00
 #define SD_R5_STATE_CMD 0x01
 #define SD_R5_STATE_TRN 0x02
 
 /* SDIO Modified R6 Response */
 #define SD_SDIO_R6_RESPONSE_BYTES 6
-#define SD_SDIO_R6_GET_RCA(pR)  ((UINT16)((pR)[3]) | ((UINT16)((pR)[4]) << 8))
-#define SD_SDIO_R6_GET_CSTAT(pR)((UINT16)((pR)[1]) | ((UINT16)((pR)[2]) << 8))
+#define SD_SDIO_R6_GET_RCA(pR)  ((UINT16)((pR)[3]) | ((UINT16)((pR)[4]) << 8)) 
+#define SD_SDIO_R6_GET_CSTAT(pR)((UINT16)((pR)[1]) | ((UINT16)((pR)[2]) << 8)) 
 
 /* SPI mode R1 response */
-#define SPI_R1_RESPONSE_BYTES   1
+#define SPI_R1_RESPONSE_BYTES   1    
 #define GET_SPI_R1_RESP_TOKEN(pR) (pR)[0]
 #define SPI_CS_STATE_IDLE       0x01
 #define SPI_CS_ERASE_RESET      (1 << 1)
@@ -314,13 +314,13 @@
 #define SPI_CS_OUT_OF_RANGE        (1 << 7)
 
 /* SPI mode R3 response */
-#define SPI_R3_RESPONSE_BYTES 5
+#define SPI_R3_RESPONSE_BYTES 5                                            
 #define SPI_R3_GET_OCR(pR) ((((UINT32)((pR)[0])) |         \
                             (((UINT32)((pR)[1])) << 8)  |  \
                             (((UINT32)((pR)[2])) << 16) |  \
                             (((UINT32)((pR)[3])) << 24)) & SDMMC_OCR_VOLTAGE_MASK)
 #define SPI_R3_IS_CARD_READY(pR)  (((pR)[3] & 0x80) == 0x80)
-#define GET_SPI_R3_RESP_TOKEN(pR) (pR)[4]
+#define GET_SPI_R3_RESP_TOKEN(pR) (pR)[4]  
 
 /* SPI mode SDIO R4 response */
 #define SPI_SDIO_R4_RESPONSE_BYTES 5
@@ -330,7 +330,7 @@
 #define SPI_SDIO_R4_IS_MEMORY_PRESENT(pR)   (((pR)[3] & 0x08) == 0x08)
 #define SPI_SDIO_R4_GET_IO_FUNC_COUNT(pR)   (((pR)[3] >> 4) & 0x07)
 #define SPI_SDIO_R4_IS_CARD_READY(pR)       (((pR)[3] & 0x80) == 0x80)
-#define GET_SPI_SDIO_R4_RESP_TOKEN(pR)  (pR)[4]
+#define GET_SPI_SDIO_R4_RESP_TOKEN(pR)  (pR)[4]  
 
 /* SPI Mode SDIO R5 response */
 #define SPI_SDIO_R5_RESPONSE_BYTES 2
@@ -346,7 +346,7 @@
 #define CMD52_READ  0
 #define CMD52_WRITE 1
 #define CMD52_READ_AFTER_WRITE 1
-#define CMD52_NORMAL_WRITE     0
+#define CMD52_NORMAL_WRITE     0   
 #define SDIO_SET_CMD52_ARG(arg,rw,func,raw,address,writedata) \
     (arg) = (((rw) & 1u) << 31)          | \
             (((func) & 0x7) << 28)       | \
@@ -359,11 +359,11 @@
     SDIO_SET_CMD52_ARG(arg,CMD52_READ,(func),0,address,0x00)
 #define SDIO_SET_CMD52_WRITE_ARG(arg,func,address,value) \
     SDIO_SET_CMD52_ARG(arg,CMD52_WRITE,(func),CMD52_NORMAL_WRITE,address,value)
-
+        
 /* SDIO COMMAND 53 Definitions */
 #define CMD53_READ          0
 #define CMD53_WRITE         1
-#define CMD53_BLOCK_BASIS   1
+#define CMD53_BLOCK_BASIS   1 
 #define CMD53_BYTE_BASIS    0
 #define CMD53_FIXED_ADDRESS 0
 #define CMD53_INCR_ADDRESS  1
@@ -374,7 +374,7 @@
             (((opcode) & 1) << 26)              | \
             (((address) & 0x1FFFF) << 9)        | \
             ((bytes_blocks) & 0x1FF)
-
+            
 #define SDIO_MAX_LENGTH_BYTE_BASIS  512
 #define SDIO_MAX_BLOCKS_BLOCK_BASIS 511
 #define SDIO_MAX_BYTES_PER_BLOCK    2048
@@ -413,11 +413,11 @@
 #define SDIO_INT_MASTER_ENABLE  0x01
 #define SDIO_INT_ALL_ENABLE     0xFE
 /* Interrupt Pending */
-#define SDIO_INT_PENDING_REG    0x05
+#define SDIO_INT_PENDING_REG    0x05 
 #define SDIO_INT_PEND_MASK      0xFE
 /* I/O Abort */
 #define SDIO_IO_ABORT_REG       0x06
-#define SDIO_IO_RESET           (1 << 3)
+#define SDIO_IO_RESET           (1 << 3) 
 /* Bus Interface */
 #define SDIO_BUS_IF_REG         0x07
 #define CARD_DETECT_DISABLE     0x80
@@ -443,7 +443,7 @@
 #define SDIO_SUSPEND_FUNCTION           0x02 /* suspend the current selected function */
 /* Function select (for bus suspension) */
 #define SDIO_FUNCTION_SELECT_REG        0x0d
-#define SDIO_SUSPEND_FUNCTION_0         0x00
+#define SDIO_SUSPEND_FUNCTION_0         0x00 
 #define SDIO_SUSPEND_MEMORY_FUNC_MASK    0x08
 /* Function Execution */
 #define SDIO_FUNCTION_EXEC_REG          0x0e
@@ -470,9 +470,9 @@ static INLINE UINT32 CalculateFBROffset(UCHAR FuncNo) {
     UINT32 offset = 0;
     while (i) {
         offset += 0x100;
-        i--;
-    }
-    return offset;
+        i--; 
+    }   
+    return offset; 
 }
 /* Function info */
 #define FBR_FUNC_INFO_REG_OFFSET(fbr)   ((fbr) + 0x00)
@@ -515,7 +515,7 @@ static INLINE UINT32 CalculateFBROffset(UCHAR FuncNo) {
 
 /* these structures must be packed */
 
-#include "ctstartpack.h"
+#include "ctstartpack.h"  
 
 /* Manufacturer ID tuple */
 struct SDIO_MANFID_TPL {
@@ -556,7 +556,7 @@ struct SDIO_FUNC_EXT_FUNCTION_TPL {
     UINT8   SbMinPwr;                           /* standby minimum power */
     UINT8   SbAvgPwr;                           /* standby average power */
     UINT8   SbMaxPwr;                           /* standby maximum power */
-    UINT16  MinBandWidth;                       /* minimum bus bandwidth */
+    UINT16  MinBandWidth;                       /* minimum bus bandwidth */    
     UINT16  OptBandWidth;                       /* optimalbus bandwitdh */
 }CT_PACK_STRUCT;
 
@@ -571,25 +571,25 @@ struct SDIO_FUNC_EXT_FUNCTION_TPL_1_1 {
     UINT16  LowPwrAvgPwr;
 }CT_PACK_STRUCT;
 
-#include "ctendpack.h"
+#include "ctendpack.h" 
 
 static INLINE SDIO_STATUS ConvertCMD52ResponseToSDIOStatus(UINT8 CMD52ResponseFlags) {
     if (!(CMD52ResponseFlags & SD_R5_ERRORS)) {
         return SDIO_STATUS_SUCCESS;
     }
     if (CMD52ResponseFlags & SD_R5_ILLEGAL_CMD) {
-        return SDIO_STATUS_DATA_STATE_INVALID;
+        return SDIO_STATUS_DATA_STATE_INVALID;  
     } else if (CMD52ResponseFlags & SD_R5_INVALID_FUNC) {
         return SDIO_STATUS_INVALID_FUNC;
     } else if (CMD52ResponseFlags & SD_R5_ARG_RANGE_ERR) {
-        return SDIO_STATUS_FUNC_ARG_ERROR;
+        return SDIO_STATUS_FUNC_ARG_ERROR; 
     } else {
-        return SDIO_STATUS_DATA_ERROR_UNKNOWN;
-    }
+        return SDIO_STATUS_DATA_ERROR_UNKNOWN;   
+    }    
 }
-
-/* CMD6 mode switch definitions */
-
+         
+/* CMD6 mode switch definitions */         
+    
 #define SD_SWITCH_FUNC_CHECK    0
 #define SD_SWITCH_FUNC_SET      ((UINT32)(1u << 31))
 #define SD_FUNC_NO_SELECT_MASK  0x00FFFFFF
@@ -608,23 +608,23 @@ static INLINE SDIO_STATUS ConvertCMD52ResponseToSDIOStatus(UINT8 CMD52ResponseFl
 #define SD_SWITCH_MAKE_GRP_PATTERN(FuncGrp,FuncNo) \
      ((SD_FUNC_NO_SELECT_MASK & (~(0xF << SD_SWITCH_MAKE_SHIFT(FuncGrp)))) |  \
         (((FuncNo) & 0xF) << SD_SWITCH_MAKE_SHIFT(FuncGrp)))                 \
-
+        
 #define SD_SWITCH_FUNC_ARG_GROUP_CHECK(FuncGrp,FuncNo) \
     (SD_SWITCH_FUNC_CHECK | SD_SWITCH_MAKE_GRP_PATTERN((FuncGrp),(FuncNo)))
 
 #define SD_SWITCH_FUNC_ARG_GROUP_SET(FuncGrp,FuncNo)   \
     (SD_SWITCH_FUNC_SET | SD_SWITCH_MAKE_GRP_PATTERN((FuncGrp),(FuncNo)))
 
-#define SD_SWITCH_FUNC_STATUS_BLOCK_BYTES 64
+#define SD_SWITCH_FUNC_STATUS_BLOCK_BYTES 64 
 
 #define SD_SWITCH_FUNC_STATUS_GET_GRP_BIT_MASK(pBuffer,FuncGrp) \
     (USHORT)((pBuffer)[50 + ((FuncGrp)*2)] | ((pBuffer)[51 + ((FuncGrp)*2)] << 8))
 
 #define SD_SWITCH_FUNC_STATUS_GET_MAX_CURRENT(pBuffer) \
      (USHORT)((pBuffer)[62] | ((pBuffer)[63] << 8))
-
+     
 static INLINE UINT8 SDSwitchGetSwitchResult(PUINT8 pBuffer, UINT8 FuncGrp)
-{
+{ 
     switch (FuncGrp) {
         case 0:
             return (pBuffer[47] & 0xF);
@@ -640,7 +640,7 @@ static INLINE UINT8 SDSwitchGetSwitchResult(PUINT8 pBuffer, UINT8 FuncGrp)
             return (pBuffer[49] >> 4);
         default:
             return 0xF;
-    }
+    }    
 }
 
 #endif

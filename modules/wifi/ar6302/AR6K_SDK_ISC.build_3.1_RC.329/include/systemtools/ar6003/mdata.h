@@ -29,11 +29,11 @@
 #define MAX_RETRIES             0x0000000f
 #define MDK_PKT_TIMEOUT         0x50
 #define MAX_PKT_BODY_SIZE       4031   // 4095 - 64 bytes of fifo used for internal comm (per jsk)
-#define STATS_BINS              65     // should be numRateCodes + 1
+#define STATS_BINS              65     // should be numRateCodes + 1    
 
 
-//802.11 related
-#define FCS_FIELD				4		   /* size of FCS */
+//802.11 related 
+#define FCS_FIELD				4		   /* size of FCS */				
 #define WEP_IV_FIELD			4		   /* wep IV field size */
 #define WEP_ICV_FIELD			4		   /* wep ICV field size */
 #define WEP_FIELDS	(WEP_IV_FIELD + WEP_ICV_FIELD) /* total size of wep fields needed */
@@ -261,7 +261,7 @@ typedef struct MDataFnTable
 	void (*setRetryLimit)(A_UINT32 devNum, A_UINT16 queueIndex);
 	void (*txBeginConfig)(A_UINT32 devNum);
 	void (*beginSendStatsPkt)(A_UINT32 devNum, A_UINT32 DescAddress);
-	void (*setDescriptor)(A_UINT32, MDK_ATHEROS_DESC*, A_UINT32, A_UINT32,
+	void (*setDescriptor)(A_UINT32, MDK_ATHEROS_DESC*, A_UINT32, A_UINT32, 
 								A_UINT32, A_UINT32, A_UINT32);
 
 } MDATA_FNTABLE;
@@ -269,24 +269,24 @@ typedef struct MDataFnTable
 // some temp info need to hold while processing stats
 typedef struct rxStatsTempInfo
 {
-	A_UINT32	descToRead;		// address of next descriptor to check complete
+	A_UINT32	descToRead;		// address of next descriptor to check complete	
     A_UINT32    descRate;       // Rate for this descriptor
 	A_UINT32	status1;		// first status word of descriptor
 	A_UINT32	status2;		// second status word of descriptor
 	A_UINT32	bufferAddr;		// adddress of buffer containing packet
 	A_UINT32	totalBytes;		// count of number of bytes received
-	A_BOOL   	gotHeaderInfo;			// set when get the header info for duplicate processing
-	A_BOOL		controlFrameReceived;	// set to true if this is a control frame
+	A_BOOL   	gotHeaderInfo;			// set when get the header info for duplicate processing 
+	A_BOOL		controlFrameReceived;	// set to true if this is a control frame 
 	A_BOOL		illegalBuffSize;		// set if not able to get addr and sequence because
 										// not fully contained in first buffer of packet
-										//  may add support for this later
-	WLAN_MACADDR addrPacket;			// mac address expect to see on received packet
-	A_BOOL		 gotMacAddr;			// set to true when we have the address for received packets
-	SEQ_CONTROL	 seqCurrentPacket;		// sequence control of current packet received
-	A_BOOL		 retry;					// retry bit of header
-	A_BOOL		 badPacket;				// set on a bad address match
-	A_UINT32	 lastRxSeqNo;			// Last frame's sequence number
-	A_UINT32	 lastRxFragNo;			// Last frame's fragment number
+										//  may add support for this later 
+	WLAN_MACADDR addrPacket;			// mac address expect to see on received packet 
+	A_BOOL		 gotMacAddr;			// set to true when we have the address for received packets 
+	SEQ_CONTROL	 seqCurrentPacket;		// sequence control of current packet received 
+	A_BOOL		 retry;					// retry bit of header 
+	A_BOOL		 badPacket;				// set on a bad address match 
+	A_UINT32	 lastRxSeqNo;			// Last frame's sequence number 
+	A_UINT32	 lastRxFragNo;			// Last frame's fragment number 
 	A_UINT32	 oneBeforeLastRxSeqNo;	// Memory of the sequence no. before last
 	SIG_STRENGTH_STATS sigStrength[STATS_BINS];		// accumulated signal strength stats
     SIG_STRENGTH_STATS ctlAntStrength[3][STATS_BINS];
@@ -324,7 +324,7 @@ typedef struct rxStatsTempInfo
 
 typedef struct txStatsTempInfo
 {
-	A_UINT32	descToRead;		// address of next descriptor to check complete
+	A_UINT32	descToRead;		// address of next descriptor to check complete	
     A_UINT32    descRate;       // Rate for this descriptor
 	A_UINT32	status1;		// first status word of descriptor
 	A_UINT32	status2;		// second status word of descriptor
@@ -356,13 +356,13 @@ typedef struct mdkPacketHeader
 	//A_UINT16 qcuIndex;
 } __ATTRIB_PACK MDK_PACKET_HEADER;
 
-void createTransmitPacket (A_UINT32 devNum,  A_UINT16 mdkType, A_UCHAR *dest,  A_UINT32 numDesc,
-	A_UINT32 dataBodyLength, A_UCHAR *dataPattern, A_UINT32 dataPatternLength, A_UINT32 broadcast,
-	A_UINT16 queueIndex, A_UINT32 *pPktSize, A_UINT32 *pPktAddress);
+void createTransmitPacket (A_UINT32 devNum,  A_UINT16 mdkType, A_UCHAR *dest,  A_UINT32 numDesc, 
+	A_UINT32 dataBodyLength, A_UCHAR *dataPattern, A_UINT32 dataPatternLength, A_UINT32 broadcast, 
+ 	A_UINT16 queueIndex, A_UINT32 *pPktSize, A_UINT32 *pPktAddress);
 
-void createTransmitPacketAggr (A_UINT32 devNum,  A_UINT16 mdkType, A_UCHAR *dest,  A_UINT32 numDesc,
-	A_UINT32 dataBodyLength, A_UCHAR *dataPattern, A_UINT32 dataPatternLength, A_UINT32 broadcast,
-	A_UINT16 queueIndex,  A_UINT32 aggSize, A_UINT32 *pPktSize, A_UINT32 *pPktAddress);
+void createTransmitPacketAggr (A_UINT32 devNum,  A_UINT16 mdkType, A_UCHAR *dest,  A_UINT32 numDesc, 
+	A_UINT32 dataBodyLength, A_UCHAR *dataPattern, A_UINT32 dataPatternLength, A_UINT32 broadcast, 
+ 	A_UINT16 queueIndex,  A_UINT32 aggSize, A_UINT32 *pPktSize, A_UINT32 *pPktAddress);
 
 void writeDescriptor(A_UINT32 devNum, A_UINT32 descAddress, MDK_ATHEROS_DESC *pDesc);
 void
@@ -384,10 +384,10 @@ createEndPacket
 
 void internalRxDataSetup
 (
- A_UINT32 devNum,
- A_UINT32 numDesc,
+ A_UINT32 devNum, 
+ A_UINT32 numDesc, 
  A_UINT32 dataBodyLength,
- A_UINT32 enablePPM,
+ A_UINT32 enablePPM, 		
  A_UINT32 mode
 );
 

@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="testcmd.h" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -38,7 +38,7 @@ extern "C" {
 #define WMI_CMDS_SIZE_MAX 2048
 #define TC_CMDS_GAP       16
 // should add up to the same size as buf[WMI_CMDS_SIZE_MAX]
-//#define TC_CMDS_SIZE_MAX  (WMI_CMDS_SIZE_MAX - sizeof(TC_CMDS_HDR) - WMI_CMD_ID_SIZE - TC_CMDS_GAP)
+//#define TC_CMDS_SIZE_MAX  (WMI_CMDS_SIZE_MAX - sizeof(TC_CMDS_HDR) - WMI_CMD_ID_SIZE - TC_CMDS_GAP)  
 #define TC_CMDS_SIZE_MAX  256
 
 typedef enum {
@@ -134,7 +134,7 @@ typedef enum {
     TCMD_CONT_RX_REPORT,
     TCMD_CONT_RX_SETMAC,
     TCMD_CONT_RX_SET_ANT_SWITCH_TABLE,
-
+ 
     TC_CMD_RESP,
 } TCMD_CONT_RX_ACT;
 
@@ -231,7 +231,7 @@ typedef PREPACK union {
           TCMD_CONT_RX         contRx;
           TCMD_PM              pm;
           // New test cmds from ART/MDK ...
-          TC_CMDS              tcCmds;
+          TC_CMDS              tcCmds;          
           TCMD_SET_REG setReg;
 } POSTPACK TEST_CMD;
 
@@ -240,3 +240,5 @@ typedef PREPACK union {
 #endif
 
 #endif /* TESTCMD_H_ */
+
+

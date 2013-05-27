@@ -95,7 +95,7 @@ extern __u32 image_reg_base[2];
 #define DE_WUINT32IDX(offset,index,value)   (*((volatile __u32 *)(offset+4*index))=(value))
 #define DE_RUINT32IDX(offset,index)         (*((volatile __u32 *)(offset+4*index)))
 
-#define DE_BE_WUINT8(sel,offset,value)        DE_WUINT8(DE_BE_GET_REG_BASE(sel)+(offset),value)
+#define DE_BE_WUINT8(sel,offset,value)        DE_WUINT8(DE_BE_GET_REG_BASE(sel)+(offset),value)  
 #define DE_BE_RUINT8(sel,offset)              DE_RUINT8(DE_BE_GET_REG_BASE(sel)+(offset))
 #define DE_BE_WUINT16(sel,offset,value)       DE_WUINT16(DE_BE_GET_REG_BASE(sel)+(offset),value)
 #define DE_BE_RUINT16(sel,offset)             DE_RUINT16(DE_BE_GET_REG_BASE(sel)+(offset))
@@ -111,6 +111,5 @@ extern __u32 image_reg_base[2];
 extern __u32  csc_tab[192];
 extern __u32  image_enhance_tab[224];
 extern __u32  fir_tab[1792];
-extern __u32  fir_tab_video[1792];
 
 #endif

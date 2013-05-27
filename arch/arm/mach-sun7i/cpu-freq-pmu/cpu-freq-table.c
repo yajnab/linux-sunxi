@@ -80,3 +80,4 @@ struct cpufreq_frequency_table sun5i_freq_tbl[] = {
     /* table end */
     { .frequency = CPUFREQ_TABLE_END,  .index = 0,              },
 };
+

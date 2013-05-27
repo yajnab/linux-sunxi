@@ -24,3 +24,4 @@ extern A_UINT32 rate2bin(A_UINT32 rateCode);
 #endif /* __cplusplus */
 
 #endif
+

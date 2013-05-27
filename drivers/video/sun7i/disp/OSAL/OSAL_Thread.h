@@ -10,7 +10,7 @@
 *
 * Author 		: javen
 *
-* Description 	: çº¿ç¨‹æ“ä½œ
+* Description 	: Ïß³Ì²Ù×÷
 *
 * History 		:
 *      <author>    		<time>       	<version >    		<desc>
@@ -24,3 +24,4 @@
 
 
 #endif   //__OSAL_THREAD_H__
+

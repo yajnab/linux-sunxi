@@ -175,3 +175,4 @@ int __pio_to_irq(struct gpio_chip *chip, unsigned offset)
     PIO_ERR("%s: invalid pio to irq\n", __func__);
     return IRQ_NUM_INVALID;
 }
+

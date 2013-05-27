@@ -12,7 +12,7 @@ typedef struct _cmdQueue {
     A_UINT16  numOfParms;
     A_UINT8   *cmdParmBuf;
 } __ATTRIB_PACK _CMD_QUEUE;
-
+    
 typedef struct _parsedBinCmdStreamInfo {
     A_UINT16     header;
     A_UINT16     numOfCmds;
@@ -29,6 +29,7 @@ typedef struct _parsedBinCmdStreamInfo {
 
 
 extern _PARSED_BIN_CMD_STREAM_INFO CmdStreamInfo;
-extern A_BOOL parseBinCmdStream(A_UINT8 *stream, A_UINT32 readStreamLen, A_UINT8 **pPayload, A_UINT16 *payloadLen);
+extern A_BOOL parseBinCmdStream(A_UINT8 *stream, A_UINT32 readStreamLen, A_UINT8 **pPayload, A_UINT16 *payloadLen); 
 
 #endif // #if !defined(_PARSE_BIN_CMD_STREAM_H)
+

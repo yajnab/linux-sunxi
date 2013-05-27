@@ -19,7 +19,7 @@ bus = dbus.SystemBus()
 manager = dbus.Interface(bus.get_object('org.bluez', '/org/bluez'), 'org.bluez.Manager')
 bus_id = manager.ActivateService('audio')
 audio = dbus.Interface(bus.get_object(bus_id, '/org/bluez/audio'), 'org.bluez.audio.Manager')
-
+    
 if len(sys.argv) == 1 :
 	printusage()
 elif len(sys.argv) > 1 and sys.argv[1] == 'create'  :
@@ -32,17 +32,17 @@ elif len(sys.argv) > 1 and sys.argv[1] == 'start'  :
 	path = audio.DefaultDevice()
 	headset = dbus.Interface (bus.get_object(bus_id, path), 'org.bluez.audio.Headset')
 	if not headset.IsConnected() :
-		headset.Connect()
+		headset.Connect()		
 	if len(sys.argv) > 2 and sys.argv[2] == 'pcm'  :
 		print "Turning on PCM ...."
-		try :
+		try : 
 			headset.Play()
 		except dbus.exceptions.DBusException:
 			print 'Play Failed'
 elif len(sys.argv) > 1 and sys.argv[1] == 'stop'  :
 	path = audio.DefaultDevice()
 	headset = dbus.Interface (bus.get_object(bus_id, path), 'org.bluez.audio.Headset')
-	try :
+	try : 
 		headset.Stop()
 	except dbus.exceptions.DBusException:
 		print 'Stop Failed'
@@ -52,3 +52,8 @@ elif len(sys.argv) > 1 and sys.argv[1] == 'delete'  :
 	path = audio.DefaultDevice()
 	print 'Deleting: %s ' % path
 	audio.RemoveDevice(path)
+
+        
+  
+
+

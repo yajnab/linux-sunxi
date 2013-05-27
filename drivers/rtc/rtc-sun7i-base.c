@@ -21,7 +21,8 @@ static int losc_err_flag = 0;
 static int sunxi_rtc_gettime(struct device *dev, struct rtc_time *rtc_tm)
 {
 	unsigned int have_retried = 0;
-
+	rtc_hh_mm_ss hhmmss = {0};
+	rtc_yy_mm_dd yymmdd = {0};
 	/* only for alarm losc err occur */
 	if(losc_err_flag) {
 		rtc_tm->tm_sec  = 0;
@@ -37,13 +38,15 @@ static int sunxi_rtc_gettime(struct device *dev, struct rtc_time *rtc_tm)
 retry_get_time:
 	pr_info("%s, line %d\n", __func__, __LINE__);
 	/* first to get the date, then time, because the sec turn to 0 will effect the date */
-	rtc_tm->tm_sec  = rtc_reg_list->r_hh_mm_ss.second;
-	rtc_tm->tm_min  = rtc_reg_list->r_hh_mm_ss.minute;
-	rtc_tm->tm_hour = rtc_reg_list->r_hh_mm_ss.hour;
+	hhmmss = rtc_reg_list->r_hh_mm_ss;
+	rtc_tm->tm_sec  = hhmmss.second;
+	rtc_tm->tm_min  = hhmmss.minute;
+	rtc_tm->tm_hour = hhmmss.hour;
 
-	rtc_tm->tm_mday = rtc_reg_list->r_yy_mm_dd.day;
-	rtc_tm->tm_mon  = rtc_reg_list->r_yy_mm_dd.month;
-	rtc_tm->tm_year = rtc_reg_list->r_yy_mm_dd.year;
+	yymmdd = rtc_reg_list->r_yy_mm_dd; 
+	rtc_tm->tm_mday = yymmdd.day;
+	rtc_tm->tm_mon  = yymmdd.month;
+	rtc_tm->tm_year = yymmdd.year;
 
 	/* the only way to work out wether the system was mid-update
 	 * when we read it is to check the second counter, and if it
@@ -71,7 +74,10 @@ static int sunxi_rtc_settime(struct device *dev, struct rtc_time *tm)
 	unsigned int timeout = 0;
 	int actual_year = 0;
 	int line = 0;
-
+	rtc_hh_mm_ss hhmmss = {0};
+	rtc_yy_mm_dd yymmdd = {0};
+	losc_ctrl losctl = {0};
+	
 	pr_info("%s(%d): time to set %d-%d-%d %d:%d:%d\n", __func__, __LINE__, tm->tm_year + 1900,
 		tm->tm_mon + 1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
 
@@ -89,12 +95,14 @@ static int sunxi_rtc_settime(struct device *dev, struct rtc_time *tm)
 	 * register can`t be written, we re-try the entried read
 	 * check at most 3 times
 	 */
+	 losctl = rtc_reg_list->losc_ctl;
 	timeout = 3;
 	do {
-		if(rtc_reg_list->losc_ctl.rtc_yymmdd_acce
-			|| rtc_reg_list->losc_ctl.rtc_hhmmss_acce
-			|| rtc_reg_list->losc_ctl.alm_ddhhmmss_acce) {
+		if(losctl.rtc_yymmdd_acce
+			|| losctl.rtc_hhmmss_acce
+			|| losctl.alm_ddhhmmss_acce) {
 			pr_err("%s(%d): canot change rtc now!\n", __func__, __LINE__);
+			losctl = rtc_reg_list->losc_ctl;
 			msleep(500);
 		}
 	}while(--timeout);
@@ -155,27 +163,44 @@ static int sunxi_rtc_settime(struct device *dev, struct rtc_time *tm)
 		tm->tm_mon, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
 
 	/* set hour, minute, second */
-	writel(0, &rtc_reg_list->r_hh_mm_ss); /* note: must add, or set date maybe err,liugang */
-	rtc_reg_list->r_hh_mm_ss.hour = tm->tm_hour;
-	rtc_reg_list->r_hh_mm_ss.minute = tm->tm_min;
-	rtc_reg_list->r_hh_mm_ss.second = tm->tm_sec;
-	timeout = 0xffff;
-	while(rtc_reg_list->losc_ctl.rtc_hhmmss_acce && (--timeout));
+	//writel(0, &rtc_reg_list->r_hh_mm_ss); /* note: must add, or set date maybe err,liugang */
+	hhmmss = rtc_reg_list->r_hh_mm_ss;
+	hhmmss.hour = tm->tm_hour;
+	hhmmss.minute = tm->tm_min;
+	hhmmss.second = tm->tm_sec;
+	rtc_reg_list->r_hh_mm_ss = hhmmss;
+
+	//at most 1 second
+	timeout = 10*1000;
+	losctl = rtc_reg_list->losc_ctl;
+	while(losctl.rtc_hhmmss_acce && (--timeout)){
+		losctl = rtc_reg_list->losc_ctl;
+		udelay(100);
+	}
 	if(timeout == 0) {
 		dev_err(dev, "%s(%d): fail to set rtc time\n", __func__, __LINE__);
 		return -1;
 	}
 
 	/* set year, month, day */
-	writel(0, &rtc_reg_list->r_yy_mm_dd);
-	rtc_reg_list->r_yy_mm_dd.year = tm->tm_year;
-	rtc_reg_list->r_yy_mm_dd.month = tm->tm_mon;
-	rtc_reg_list->r_yy_mm_dd.day = tm->tm_mday;
+	//writel(0, &rtc_reg_list->r_yy_mm_dd);
+	yymmdd = rtc_reg_list->r_yy_mm_dd; 
+	yymmdd.year = tm->tm_year;
+	yymmdd.month = tm->tm_mon;
+	yymmdd.day = tm->tm_mday;
+
 	/* set leap year bit */
-	if(IS_LEAP_YEAR(actual_year))
-		rtc_reg_list->r_yy_mm_dd.leap = 1;
-	timeout = 0xffff;
-	while(rtc_reg_list->losc_ctl.rtc_yymmdd_acce && (--timeout));
+	if(IS_LEAP_YEAR(actual_year)){
+		yymmdd.leap = 1;
+	}
+	rtc_reg_list->r_yy_mm_dd = yymmdd;
+	
+	timeout = 10*1000;
+	losctl = rtc_reg_list->losc_ctl;
+	while(losctl.rtc_yymmdd_acce && (--timeout)){
+		losctl = rtc_reg_list->losc_ctl;
+		udelay(100);
+	}
 	if(timeout == 0) {
 		dev_err(dev, "%s(%d): fail to set rtc date\n", __func__, __LINE__);
 		return -1;
@@ -191,14 +216,22 @@ static int sunxi_rtc_settime(struct device *dev, struct rtc_time *tm)
 /* update control registers, asynchronous interrupt enable*/
 static void sunxi_rtc_setaie(int to)
 {
+	alarm_enable aenable = {0};
+	alarm_irq_enable airqen = {0};
+	
 	pr_info("%s(%d): para %d\n", __func__, __LINE__, to);
 	switch(to){
 	case 1:
 		/* enable alarm cnt */
-		rtc_reg_list->a_enable.alm_cnt_en = 1;
+		aenable = rtc_reg_list->a_enable;
+		aenable.alm_cnt_en = 1;
+		rtc_reg_list->a_enable = aenable;
 		/* enable alarm cnt irq */
 		pr_info("%s(%d): to check if need enable alarm cnt irq\n", __func__, __LINE__);
-		rtc_reg_list->a_irq_enable.alarm_cnt_irq_en = 1; /* liugang add */
+		
+		airqen= rtc_reg_list->a_irq_enable;
+		airqen.alarm_cnt_irq_en= 1;
+		rtc_reg_list->a_irq_enable = airqen;
 		break;
 	case 0:
 	default:
@@ -215,13 +248,18 @@ static void sunxi_rtc_setaie(int to)
 static int sunxi_rtc_getalarm(struct device *dev, struct rtc_wkalrm *alrm)
 {
 	struct rtc_time *alm_tm = &alrm->time;
-
-	alm_tm->tm_sec  = rtc_reg_list->a_cnt_dd_hh_mm_ss.second;
-	alm_tm->tm_min  = rtc_reg_list->a_cnt_dd_hh_mm_ss.minute;
-	alm_tm->tm_hour = rtc_reg_list->a_cnt_dd_hh_mm_ss.hour;
-	alm_tm->tm_mday = rtc_reg_list->r_yy_mm_dd.day;
-	alm_tm->tm_mon  = rtc_reg_list->r_yy_mm_dd.month;
-	alm_tm->tm_year = rtc_reg_list->r_yy_mm_dd.year;
+	alarm_cnt_dd_hh_mm_ss  acdhms = {0};
+	rtc_yy_mm_dd yymmdd = {0};
+	alarm_irq_enable airqen = {0};
+	
+	acdhms = rtc_reg_list->a_cnt_dd_hh_mm_ss;
+	yymmdd = rtc_reg_list->r_yy_mm_dd; 
+	alm_tm->tm_sec  = acdhms.second;
+	alm_tm->tm_min  = acdhms.minute;
+	alm_tm->tm_hour = acdhms.hour;
+	alm_tm->tm_mday = yymmdd.day;
+	alm_tm->tm_mon  = yymmdd.month;
+	alm_tm->tm_year = yymmdd.year;
 
 	if (alm_tm->tm_year < 70) {
 		pr_info("%s(%d): year < 70, so add 100, to check\n", __func__, __LINE__);
@@ -230,8 +268,8 @@ static int sunxi_rtc_getalarm(struct device *dev, struct rtc_wkalrm *alrm)
 
 	/* month 1~12 in spec while 0~11 in linux system */
 	alm_tm->tm_mon -= 1;
-
-	if(rtc_reg_list->a_irq_enable.alarm_cnt_irq_en) {
+	airqen = rtc_reg_list->a_irq_enable;
+	if(airqen.alarm_cnt_irq_en) {
 		pr_info("%s(%d): rtc_wkalrm->enable condition to check\n", __func__, __LINE__);
 		alrm->enabled = 1;
 	}
@@ -252,7 +290,9 @@ static int sunxi_rtc_setalarm(struct device *dev, struct rtc_wkalrm *alrm)
 	unsigned long time_gap_minute = 0;
 	unsigned long time_gap_second = 0;
 	int ret = 0;
-
+	alarm_cnt_dd_hh_mm_ss acdhms = {0};
+	alarm_irq_enable airqen = {0};
+	
 	pr_info("%s(%d): time to set %d-%d-%d %d:%d:%d\n", __func__, __LINE__, tm->tm_year + 1900,
 		tm->tm_mon + 1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
 
@@ -278,7 +318,7 @@ static int sunxi_rtc_setalarm(struct device *dev, struct rtc_wkalrm *alrm)
 		return -EINVAL;
 	}
 	pr_info("%s(%d): get gap day %d, hour %d, minute %d, second %d\n", __func__, __LINE__,
-		(int)time_gap_day, (int)time_gap_hour, (int)time_gap_minute, (int)time_gap_second);
+ 		(int)time_gap_day, (int)time_gap_hour, (int)time_gap_minute, (int)time_gap_second);
 
 	/* diable alarm irq */
 	sunxi_rtc_setaie(0);
@@ -289,17 +329,18 @@ static int sunxi_rtc_setalarm(struct device *dev, struct rtc_wkalrm *alrm)
 
 	/* rewrite the alarm count value */
 	writel(0, &rtc_reg_list->a_cnt_dd_hh_mm_ss);
-	rtc_reg_list->a_cnt_dd_hh_mm_ss.day = time_gap_day;
-	rtc_reg_list->a_cnt_dd_hh_mm_ss.hour = time_gap_hour;
-	rtc_reg_list->a_cnt_dd_hh_mm_ss.minute = time_gap_minute;
-	rtc_reg_list->a_cnt_dd_hh_mm_ss.second = time_gap_second;
+	acdhms.day = time_gap_day;
+	acdhms.hour = time_gap_hour;
+	acdhms.minute = time_gap_minute;
+	acdhms.second = time_gap_second;
+	rtc_reg_list->a_cnt_dd_hh_mm_ss = acdhms;
 
 	/* disable alarm wk/cnt irq */
 	writel(0x00000000, &rtc_reg_list->a_irq_enable);
-
+	airqen= rtc_reg_list->a_irq_enable;
 	/* enable alarm counter irq */
-	rtc_reg_list->a_irq_enable.alarm_cnt_irq_en = 1;
-
+	airqen.alarm_cnt_irq_en = 1;
+	rtc_reg_list->a_irq_enable = airqen;
 	if(alrm->enabled != 1)
 		pr_err("%s(%d) maybe err: the rtc counter interrupt isnot enable!\n", __func__, __LINE__);
 
@@ -322,24 +363,27 @@ static irqreturn_t sunxi_rtc_alarmirq(int irq, void *id)
 {
 	struct rtc_device *rdev = id;
 	u32 val;
+	alarm_irq_status ais = {0};
 
 	pr_info("%s, line:%d\n", __func__, __LINE__);
 
+	ais =  rtc_reg_list->a_irq_status;
 	/* judge the int is whether ours */
-	val = rtc_reg_list->a_irq_status.cnt_irq_pend | rtc_reg_list->a_irq_status.wk_irq_pend;
+	val = ais.cnt_irq_pend | ais.wk_irq_pend;
 	if(val) {
 		/* clear alarm count pending */
-		if(rtc_reg_list->a_irq_status.cnt_irq_pend)
-			rtc_reg_list->a_irq_status.cnt_irq_pend = 1;
-		WARN_ON(unlikely(rtc_reg_list->a_irq_status.cnt_irq_pend)); /* warn if not cleared success */
+		if(ais.cnt_irq_pend){
+			ais.cnt_irq_pend = 1;
+		}
+		//WARN_ON(unlikely(rtc_reg_list->a_irq_status.cnt_irq_pend)); /* warn if not cleared success */
 
 		/* liugang add, clear alarm wk pending */
-		if(rtc_reg_list->a_irq_status.wk_irq_pend) {
+		if(ais.wk_irq_pend) {
 			pr_info("%s(%d): to check, add clear alarm wk pending, liugang\n", __func__, __LINE__);
-			rtc_reg_list->a_irq_status.wk_irq_pend = 1;
-			WARN_ON(unlikely(rtc_reg_list->a_irq_status.wk_irq_pend));
+			ais.wk_irq_pend = 1;
+			//WARN_ON(unlikely(rtc_reg_list->a_irq_status.wk_irq_pend));
 		}
-
+		rtc_reg_list->a_irq_status = ais;
 		rtc_update_irq(rdev, 1, RTC_AF | RTC_IRQF);
 		return IRQ_HANDLED;
 	} else
@@ -348,19 +392,23 @@ static irqreturn_t sunxi_rtc_alarmirq(int irq, void *id)
 
 int rtc_hw_init(void)
 {
+	losc_ctrl losctl = {0};
 	pr_info("%s(%d): start\n", __func__, __LINE__);
 
 	/*
 	 * select rtc clock source
 	 * on fpga board, internal 32k clk src is the default, and can not be changed
 	 */
-	rtc_reg_list->losc_ctl.clk32k_auto_swt_en = 0; /* disable auto switch */
-	rtc_reg_list->losc_ctl.osc32k_src_sel = 1; /* external 32768hz osc */
-	rtc_reg_list->losc_ctl.key_field = 0x16AA;
-	rtc_reg_list->losc_ctl.ext_losc_gsm = 2; /* external 32768hz osc gsm: 0b10 */
+	 
+	losctl.clk32k_auto_swt_en = 0; /* disable auto switch */
+	losctl.osc32k_src_sel = 1; /* external 32768hz osc */
+	losctl.key_field = 0x16AA;
+	losctl.ext_losc_gsm = 2; /* external 32768hz osc gsm: 0b10 */
+	rtc_reg_list->losc_ctl = losctl;
 	__udelay(100);
 	/* check set result */
-	if(1 != rtc_reg_list->losc_ctl.osc32k_src_sel) {
+	losctl = rtc_reg_list->losc_ctl;
+	if(1 != losctl.osc32k_src_sel) {
 		pr_err("%s(%d) err: set clksrc to external losc failed! rtc time will be wrong\n", __func__, __LINE__);
 		losc_err_flag = 1;
 	}
@@ -379,3 +427,4 @@ int rtc_hw_init(void)
 	pr_info("%s(%d): end\n", __func__, __LINE__);
 	return 0;
 }
+

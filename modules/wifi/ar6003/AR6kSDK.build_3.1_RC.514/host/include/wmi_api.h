@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="wmi_api.h" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -540,10 +540,10 @@ A_STATUS
 wmi_wac_ctrl_req_cmd(struct wmi_t *wmip, WMI_WAC_CTRL_REQ_CMD *param);
 
 #ifdef CONFIG_WLAN_RFKILL
-A_STATUS
+A_STATUS 
 wmi_get_rfkill_mode_cmd(struct wmi_t *wmip);
 
-A_STATUS
+A_STATUS 
 wmi_set_rfkill_mode_cmd(struct wmi_t *wmip,WMI_RFKILL_MODE_CMD *pCmd);
 
 #endif

@@ -31,7 +31,7 @@ void bsp_csi_configure(struct csi_dev *dev,__csi_conf_t *mode)
 							  mode->href      << 1  | /* [1] */
 							  mode->clock     << 0    /* [0] */
       );
-
+  
   t = R(dev->regs+CSI_REG_CONF);
 
 }
@@ -40,7 +40,7 @@ void bsp_csi_configure(struct csi_dev *dev,__csi_conf_t *mode)
 void inline bsp_csi_set_buffer_address(struct csi_dev *dev,__csi_buf_t buf, u32 addr)
 {
 	//bufer0a +4 = buffer0b, bufer0a +8 = buffer1a
-    W(dev->regs+CSI_REG_BUF_0_A + (buf<<2), addr);
+    W(dev->regs+CSI_REG_BUF_0_A + (buf<<2), addr); 
 }
 
 u32 inline bsp_csi_get_buffer_address(struct csi_dev *dev,__csi_buf_t buf)
@@ -108,15 +108,15 @@ void bsp_csi_set_size(struct csi_dev *dev, u32 length_h, u32 length_v, u32 buf_l
 {
 	/* make sure yuv422 input 2 byte(clock) output 1 pixel */
 		u32 t;
-
+		
 		t = R(dev->regs+CSI_REG_RESIZE_H);
 		t = (t&0x0000ffff)|(length_h<<16);
     W(dev->regs+CSI_REG_RESIZE_H, t);
-
+    
     t = R(dev->regs+CSI_REG_RESIZE_H);
     t = (t&0x0000ffff)|(length_v<<16);
     W(dev->regs+CSI_REG_RESIZE_V, t);
-
+    
     W(dev->regs+CSI_REG_BUF_LENGTH, buf_length_h);
 }
 
@@ -125,11 +125,11 @@ void bsp_csi_set_size(struct csi_dev *dev, u32 length_h, u32 length_v, u32 buf_l
 void bsp_csi_set_offset(struct csi_dev *dev,u32 start_h, u32 start_v)
 {
     u32 t;
-
+    
     t = R(dev->regs+CSI_REG_RESIZE_H);
     t = (t&0xffff0000)|start_h;
     W(dev->regs+CSI_REG_RESIZE_H, t);
-
+    
     t = R(dev->regs+CSI_REG_RESIZE_V);
     t = (t&0xffff0000)|start_v;
     W(dev->regs+CSI_REG_RESIZE_V, t);
@@ -167,3 +167,4 @@ void inline bsp_csi_int_clear_status(struct csi_dev *dev,__csi_int_t interrupt)
 {
     W(dev->regs+CSI_REG_INT_STATUS, interrupt);
 }
+

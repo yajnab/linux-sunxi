@@ -1,7 +1,7 @@
 #------------------------------------------------------------------------------
 # <copyright file="makefile" company="Atheros">
 #    Copyright (c) 2005-2010 Atheros Corporation.  All rights reserved.
-#
+# 
 #
 # Permission to use, copy, modify, and/or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -39,3 +39,5 @@ LOCAL_MODULE_TAGS := debug eng optional
 LOCAL_SHARED_LIBRARIES := libcutils
 
 include $(BUILD_EXECUTABLE)
+
+

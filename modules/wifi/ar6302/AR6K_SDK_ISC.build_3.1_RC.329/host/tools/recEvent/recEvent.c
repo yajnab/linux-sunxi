@@ -3,7 +3,7 @@
  * All rights reserved.
  *
  *
- *
+ * 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -44,7 +44,7 @@ extern char *if_indextoname (unsigned int __ifindex, char *__ifname);
 #include "wireless_copy.h"
 #else
 #include <linux/wireless.h>
-#endif
+#endif 
 #include <a_config.h>
 #include <a_osapi.h>
 #include <a_types.h>
@@ -67,13 +67,13 @@ extern char *if_indextoname (unsigned int __ifindex, char *__ifname);
     s = strtok(ctime(&t), "\n"); \
 } while (0);
 
-#ifdef ANDROID
+#ifdef ANDROID 
 #define DEBUG 1
 #include <cutils/log.h>
 #endif
 
 
-#define AR6K_DBG_BUFFER_SIZE 256
+#define AR6K_DBG_BUFFER_SIZE 256 
 
 struct dbg_binary_header {
     A_UINT8     sig;
@@ -105,7 +105,7 @@ FILE *fpout;
 int dbgRecLimit = 1000000; /* Million records is a good default */
 int optionflag;
 char dbglog_id_tag[DBGLOG_MODULEID_NUM_MAX][DBGLOG_DBGID_NUM_MAX][DBGLOG_DBGID_DEFINITION_LEN_MAX];
-const char options[] =
+const char options[] = 
 "Options:\n\
 -f, --logfile=<Output log file> [Mandatory]\n\
 -g, --debug (-gg to print out dbglog info together)\n\
@@ -117,7 +117,7 @@ The options can also be given in the abbreviated form --option=x or -o x. The op
 
 #ifdef DEBUG
 static int debugRecEventLevel = 0;
-#ifdef ANDROID
+#ifdef ANDROID 
 static const char TAGS[] = "recEvent";
 #define RECEVENT_DEBUG_PRINTF(args...)        \
     if (debugRecEventLevel)  __android_log_print(ANDROID_LOG_DEBUG, TAGS, ##args);
@@ -334,9 +334,9 @@ int main(int argc, char** argv)
         header.ver = 0x1;
         header.len = AR6K_DBG_BUFFER_SIZE;
         header.reserved = 0;
-
+    
         fseek(fpout, 0, SEEK_SET);
-        fwrite(&header, sizeof(header), 1, fpout);
+        fwrite(&header, sizeof(header), 1, fpout); 
         /* first 8 bytes contains log header */
         fseek(fpout, 8, SEEK_SET);
     } else {
@@ -446,7 +446,7 @@ event_rtm_newlink(struct nlmsghdr *h, int len)
                 int s = socket(PF_INET, SOCK_DGRAM, 0);
                 struct iw_range range;
                 struct iwreq iwr;
-                if (s>=0) {
+                if (s>=0) {                        
                     memset(&iwr, 0, sizeof(iwr));
                     if_indextoname(ifi->ifi_index, iwr.ifr_name);
                     iwr.u.data.pointer = (caddr_t) &range;
@@ -484,7 +484,7 @@ event_wireless(A_INT8 *data, int len)
     pos = data;
     end = data + len;
 
-    while (pos + IW_EV_LCP_LEN <= end)
+    while (pos + IW_EV_LCP_LEN <= end) 
     {
         /* Event data may be unaligned, so make a local, aligned copy
          * before processing. */
@@ -509,9 +509,9 @@ event_wireless(A_INT8 *data, int len)
             memcpy(&iwe_buf, pos, sizeof(struct iw_event));
             custom += IW_EV_POINT_OFF;
         }
-
+            
         switch (iwe->cmd) {
-        case SIOCGIWAP:
+        case SIOCGIWAP:                
             RECEVENT_DEBUG_PRINTF("event = new AP: "
                "%02x:%02x:%02x:%02x:%02x:%02x %s" ,
                 MAC2STR((__u8 *) iwe->u.ap_addr.sa_data),
@@ -526,7 +526,7 @@ event_wireless(A_INT8 *data, int len)
             break;
         case IWEVCUSTOM:
             if (custom + iwe->u.data.length > end || (iwe->u.data.length < ID_LEN)) {
-                RECEVENT_DEBUG_PRINTF("event = IWEVCUSTOM with wrong length %d remain %d\n",
+                RECEVENT_DEBUG_PRINTF("event = IWEVCUSTOM with wrong length %d remain %d\n", 
                     iwe->u.data.length, (end-custom));
                 return;
             }
@@ -597,7 +597,7 @@ event_wireless(A_INT8 *data, int len)
             break;
         case IWEVGENIE:
             if (custom + iwe->u.data.length > end || (iwe->u.data.length < ID_LEN)) {
-                RECEVENT_DEBUG_PRINTF("event = IWEVGENIE with wrong length %d remain %d\n",
+                RECEVENT_DEBUG_PRINTF("event = IWEVGENIE with wrong length %d remain %d\n", 
                                       iwe->u.data.length, (end-custom));
                 return;
             }
@@ -607,10 +607,10 @@ event_wireless(A_INT8 *data, int len)
             eventid = *((A_UINT16*)buf);
 
             switch (eventid) {
-            case (WMI_BSSINFO_EVENTID):
+            case (WMI_BSSINFO_EVENTID):                    
                 status = app_bssInfo_event_rx((A_UINT8 *)buf + ID_LEN, iwe->u.data.length - ID_LEN);
                 break;
-            case (WMI_CONNECT_EVENTID):
+            case (WMI_CONNECT_EVENTID):                    
                 status = app_connect_event_rx((A_UINT8 *)(buf + ID_LEN), iwe->u.data.length - ID_LEN);
                 break;
             default:
@@ -653,7 +653,7 @@ static void app_data_hexdump(const char *title, const unsigned char *buf, size_t
                 next += sprintf(line+next, "\n");
             }
             RECEVENT_DEBUG_PRINTF("%s", line);
-        }
+        }        
     }
 #endif
 }
@@ -860,13 +860,13 @@ app_target_debug_event_rx(A_INT8 *datap, size_t len)
     static int numOfRec = 0;
 #ifdef ANDROID
     A_INT8 *tmp_buf = (A_INT8*)malloc(len);
-#endif
+#endif 
 #ifdef DBGLOG_DEBUG
     RECEVENT_DEBUG_PRINTF("Application received target debug event: %d\n", len);
 #endif /* DBGLOG_DEBUG */
     count = 0;
 
-#ifdef ANDROID /*Android cannot take casting; crash at run-time*/
+#ifdef ANDROID /*Android cannot take casting; crash at run-time*/   
     if (!tmp_buf) {
         return A_NO_MEMORY;
     }
@@ -875,22 +875,22 @@ app_target_debug_event_rx(A_INT8 *datap, size_t len)
 #else
     buffer = (A_INT32 *)datap;
 #endif
-
+    
     if (optionflag & BINARY_FLAG) {
         /*
-         * If saved in binary format, create a binary
+         * If saved in binary format, create a binary 
          * record and write it without decoding
          */
-
+    
         struct dbg_binary_record rec;
-
+    
         rec.ts = time(NULL);
         rec.length = len;
         memcpy(rec.log, buffer, len);
-        fwrite((void *)&rec, sizeof(rec),1, fpout);
+        fwrite((void *)&rec, sizeof(rec),1, fpout); 
         fflush(fpout);
         numOfRec += len/12; /* assume the average record size is 12 bytes */
-
+    
         /* If exceeded the record limit, go back to beginning */
         if(dbgRecLimit && (numOfRec >= dbgRecLimit)) {
             numOfRec = 0;
@@ -975,6 +975,6 @@ app_target_debug_event_rx(A_INT8 *datap, size_t len)
 #undef BUF_SIZE
 #ifdef ANDROID
     free(tmp_buf);
-#endif
+#endif 
     return A_OK;
 }

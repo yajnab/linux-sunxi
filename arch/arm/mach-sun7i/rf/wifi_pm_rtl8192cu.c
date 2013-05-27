@@ -90,7 +90,7 @@ void rtl8192cu_power(int mode, int *updown)
             *updown = 0;
 		rtl8192cu_msg("usb wifi power state: %s\n", rtl8192cu_powerup ? "on" : "off");
     }
-    return;
+    return;	
 }
 
 static void rtl8192cu_standby(int instadby)

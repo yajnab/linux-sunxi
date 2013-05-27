@@ -8,9 +8,9 @@
 * File    : OSAL_Clock.c
 * By      : Sam.Wu
 * Version : V1.00
-* Date    : 2011/3/25 20:25
-* Description :
-* Update   :  date      author      version     notes
+* Date    : 2011/3/25 20:25 
+* Description :  
+* Update   :  date      author      version     notes    
 ********************************************************************************
 */
 #include "OSAL.h"
@@ -251,7 +251,7 @@ __s32 OSAL_CCMU_GetMclkSrc( __hdle hMclk )
                 struct clk* tmpSysClk = clk_get(NULL, _sysClkName[sysClkNo]);
 
                 if(tmpSysClk == NULL)
-		        continue;
+        	        continue;
 
                 if(hParentClk == tmpSysClk)
                 {
@@ -286,7 +286,7 @@ __s32 OSAL_CCMU_SetMclkDiv( __hdle hMclk, __s32 nDiv )
 
         if(nDiv == 0)
         {
-		return -1;
+        	return -1;
         }
 
         hParentClk  = clk_get_parent(hModClk);
@@ -329,7 +329,7 @@ __u32 OSAL_CCMU_GetMclkDiv( __hdle hMclk )
 
         if(mod_freq == 0)
         {
-		return 0;
+        	return 0;	
         }
 
         return srcRate/mod_freq;
@@ -436,3 +436,4 @@ __s32 OSAL_CCMU_MclkReset(__hdle hMclk, __s32 bReset)
         return 0;
 }
 #endif
+

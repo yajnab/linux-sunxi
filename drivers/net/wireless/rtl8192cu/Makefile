@@ -36,7 +36,6 @@ CONFIG_WIFI_TEST = n
 CONFIG_BT_COEXISTENCE = n
 CONFIG_RTL8192CU_REDEFINE_1X1 = n
 CONFIG_INTEL_WIDI = n
-CONFIG_80211D = y
 CONFIG_WAKE_ON_WLAN = n
 
 CONFIG_PLATFORM_I386_PC = n
@@ -54,7 +53,8 @@ CONFIG_PLATFORM_MSTAR389 = n
 CONFIG_PLATFORM_MT53XX = n
 CONFIG_PLATFORM_ARM_MX51_241H = n
 CONFIG_PLATFORM_ACTIONS_ATJ227X = n
-CONFIG_PLATFORM_ARM_TEGRA3 = n
+CONFIG_PLATFORM_TEGRA3_CARDHU = n
+CONFIG_PLATFORM_TEGRA4_DALMORE = n
 CONFIG_PLATFORM_ARM_TCC8900 = n
 CONFIG_PLATFORM_ARM_TCC8920 = n
 CONFIG_PLATFORM_ARM_RK2818 = n
@@ -65,8 +65,7 @@ CONFIG_PLATFORM_TI_DM365 = n
 CONFIG_PLATFORM_MN10300 = n
 CONFIG_PLATFORM_MSTAR_TITANIA12 = n
 CONFIG_PLATFORM_MSTAR_A3 = n
-CONFIG_PLATFORM_ARM_SUNxI = n
-CONFIG_PLATFORM_ARM_SUN6I = y
+CONFIG_PLATFORM_ARM_SUNxI     =   y
 
 CONFIG_DRVEXT_MODULE = n
 
@@ -89,7 +88,9 @@ MODULE_NAME = 8192ce
 FW_FILES := hal/$(RTL871X)/pci/Hal8192CEHWImg.o
 endif
 
-CHIP_FILES := hal/$(RTL871X)/$(RTL871X)_sreset.o
+CHIP_FILES := \
+	hal/$(RTL871X)/$(RTL871X)_sreset.o \
+	hal/$(RTL871X)/$(RTL871X)_xmit.o
 CHIP_FILES += $(FW_FILES)
 endif
 
@@ -109,6 +110,8 @@ MODULE_NAME = 8192de
 FW_FILES := hal/$(RTL871X)/pci/Hal8192DEHWImg.o
 endif
 
+CHIP_FILES := \
+	hal/$(RTL871X)/$(RTL871X)_xmit.o
 CHIP_FILES += $(FW_FILES)
 endif
 
@@ -163,7 +166,7 @@ _OS_INTFS_FILES :=	os_dep/osdep_service.o \
 			os_dep/linux/rtw_android.o
 
 
-_HAL_INTFS_FILES :=	hal/hal_init.o \
+_HAL_INTFS_FILES :=	hal/hal_intf.o \
 			hal/hal_com.o \
 			hal/$(RTL871X)/$(RTL871X)_hal_init.o \
 			hal/$(RTL871X)/$(RTL871X)_phycfg.o \
@@ -227,11 +230,6 @@ endif
 ifeq ($(CONFIG_INTEL_WIDI), y)
 EXTRA_CFLAGS += -DCONFIG_INTEL_WIDI
 endif
-
-ifeq ($(CONFIG_80211D), y)
-EXTRA_CFLAGS += -DCONFIG_80211D
-endif
-
 
 ifeq ($(CONFIG_PLATFORM_I386_PC), y)
 EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
@@ -388,11 +386,19 @@ KVER  := 2.6.18
 KSRC := /home/cnsd4/Appro/mv_pro_5.0/montavista/pro/devkit/lsp/ti-davinci/linux-dm365
 endif
 
-ifeq ($(CONFIG_PLATFORM_ARM_TEGRA3), y)
-EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN #-DCONFIG_MINIMAL_MEMORY_USAGE
-ARCH ?= arm
-CROSS_COMPILE ?= /media/DATA-1/nvidia/gingerbread/prebuilt/linux-x86/toolchain/arm-eabi-4.4.3/bin/arm-eabi-
-KSRC ?= /media/DATA-1/nvidia/gingerbread/out/debug/target/product/cardhu/obj/KERNEL
+ifeq ($(CONFIG_PLATFORM_TEGRA3_CARDHU), y)
+EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
+ARCH := arm
+CROSS_COMPILE := /home/android_sdk/nvidia/tegra-16r3-partner-android-4.1_20120723/prebuilt/linux-x86/toolchain/arm-eabi-4.4.3/bin/arm-eabi-
+KSRC := /home/android_sdk/nvidia/tegra-16r3-partner-android-4.1_20120723/out/target/product/cardhu/obj/KERNEL
+MODULE_NAME := wlan
+endif
+
+ifeq ($(CONFIG_PLATFORM_TEGRA4_DALMORE), y)
+EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
+ARCH := arm
+CROSS_COMPILE := /home/android_sdk/nvidia/tegra-17r9-partner-android-4.2-dalmore_20130131/prebuilts/gcc/linux-x86/arm/arm-eabi-4.6/bin/arm-eabi-
+KSRC := /home/android_sdk/nvidia/tegra-17r9-partner-android-4.2-dalmore_20130131/out/target/product/dalmore/obj/KERNEL
 MODULE_NAME := wlan
 endif
 
@@ -451,14 +457,6 @@ ifeq ($(CONFIG_PLATFORM_ARM_SUNxI), y)
 EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN -DCONFIG_PLATFORM_ARM_SUNxI
 ARCH := arm
 CROSS_COMPILE := arm-none-linux-gnueabi-
-KVER  := 3.0.8
-#KSRC:= ../lichee/linux-3.0/
-endif
-
-ifeq ($(CONFIG_PLATFORM_ARM_SUN6I), y)
-EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN -DCONFIG_PLATFORM_ARM_SUN6I
-ARCH := arm
-CROSS_COMPILE := arm-none-linux-gnueabi-
 KVER  := 3.3.0
 #KSRC:= ../lichee/linux-3.3/
 endif
@@ -490,6 +488,7 @@ rtk_core :=	core/rtw_cmd.o \
 		core/rtw_rf.o \
 		core/rtw_recv.o \
 		core/rtw_sta_mgt.o \
+		core/rtw_ap.o \
 		core/rtw_xmit.o	\
 		core/rtw_p2p.o \
 		core/rtw_tdls.o \
@@ -514,7 +513,7 @@ obj-$(CONFIG_RTL8192CU_SW) := $(MODULE_NAME).o
 
 else
 
-export CONFIG_RTL8192CU_SW = m
+export CONFIG_RTL8192CU = m
 
 all: modules
 
@@ -551,3 +550,4 @@ clean:
 	cd os_dep/linux ; rm -fr *.mod.c *.mod *.o .*.cmd *.ko
 	cd os_dep ; rm -fr *.mod.c *.mod *.o .*.cmd *.ko
 endif
+

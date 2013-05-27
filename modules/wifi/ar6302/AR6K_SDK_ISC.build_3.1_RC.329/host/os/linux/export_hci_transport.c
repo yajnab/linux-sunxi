@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // Copyright (c) 2009-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -40,7 +40,7 @@ A_STATUS    (*_HCI_TransportSendPkt)(HCI_TRANSPORT_HANDLE HciTrans, HTC_PACKET *
 void        (*_HCI_TransportStop)(HCI_TRANSPORT_HANDLE HciTrans);
 A_STATUS    (*_HCI_TransportStart)(HCI_TRANSPORT_HANDLE HciTrans);
 A_STATUS    (*_HCI_TransportEnableDisableAsyncRecv)(HCI_TRANSPORT_HANDLE HciTrans, A_BOOL Enable);
-A_STATUS    (*_HCI_TransportRecvHCIEventSync)(HCI_TRANSPORT_HANDLE HciTrans,
+A_STATUS    (*_HCI_TransportRecvHCIEventSync)(HCI_TRANSPORT_HANDLE HciTrans, 
                                           HTC_PACKET           *pPacket,
                                           int                  MaxPollMS);
 A_STATUS    (*_HCI_TransportSetBaudRate)(HCI_TRANSPORT_HANDLE HciTrans, A_UINT32 Baud);
@@ -73,13 +73,13 @@ ar6000_get_hif_dev(HIF_DEVICE *device, void *config)
 
     status = HIFConfigureDevice(device,
                                 HIF_DEVICE_GET_OS_DEVICE,
-                                (HIF_DEVICE_OS_DEVICE_INFO *)config,
+                                (HIF_DEVICE_OS_DEVICE_INFO *)config, 
                                 sizeof(HIF_DEVICE_OS_DEVICE_INFO));
     return status;
 }
 
-A_STATUS ar6000_set_uart_config(HIF_DEVICE *hifDevice,
-                                A_UINT32 scale,
+A_STATUS ar6000_set_uart_config(HIF_DEVICE *hifDevice, 
+                                A_UINT32 scale, 
                                 A_UINT32 step)
 {
     A_UINT32 regAddress;
@@ -89,7 +89,7 @@ A_STATUS ar6000_set_uart_config(HIF_DEVICE *hifDevice,
     regAddress = WLAN_UART_BASE_ADDRESS | UART_CLKDIV_ADDRESS;
     regVal = ((A_UINT32)scale << 16) | step;
     /* change the HCI UART scale/step values through the diagnostic window */
-    status = ar6000_WriteRegDiag(hifDevice, &regAddress, &regVal);
+    status = ar6000_WriteRegDiag(hifDevice, &regAddress, &regVal);                     
 
     return status;
 }

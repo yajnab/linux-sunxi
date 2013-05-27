@@ -10,7 +10,7 @@
 *
 * Author 		: javen
 *
-* Description 	: ä¸­æ–­æ“ä½œ
+* Description 	: ÖĞ¶Ï²Ù×÷
 *
 * History 		:
 *      <author>    		<time>       	<version >    		<desc>
@@ -34,22 +34,22 @@ typedef int (*ISRCallback)( int, void* );
 *                     OSAL_RegISR
 *
 * Description:
-*    æ³¨å†Œä¸­æ–­æœåŠ¡ç¨‹åº
+*    ×¢²áÖĞ¶Ï·şÎñ³ÌĞò
 *
 * Parameters:
-*    irqno    	    ï¼šinput.  ä¸­æ–­å·
-*    flags    	    ï¼šinput.  ä¸­æ–­ç±»å‹ï¼Œé»˜è®¤å€¼ä¸º0ã€‚
-*    Handler  	    ï¼šinput.  ä¸­æ–­å¤„ç†ç¨‹åºå…¥å£ï¼Œæˆ–è€…ä¸­æ–­äº‹ä»¶å¥æŸ„
-*    pArg 	        ï¼šinput.  å‚æ•°
-*    DataSize 	    ï¼šinput.  å‚æ•°çš„é•¿åº¦
-*    prio	        ï¼šinput.  ä¸­æ–­ä¼˜å…ˆçº§
+*    irqno    	    £ºinput.  ÖĞ¶ÏºÅ
+*    flags    	    £ºinput.  ÖĞ¶ÏÀàĞÍ£¬Ä¬ÈÏÖµÎª0¡£
+*    Handler  	    £ºinput.  ÖĞ¶Ï´¦Àí³ÌĞòÈë¿Ú£¬»òÕßÖĞ¶ÏÊÂ¼ş¾ä±ú
+*    pArg 	        £ºinput.  ²ÎÊı
+*    DataSize 	    £ºinput.  ²ÎÊıµÄ³¤¶È
+*    prio	        £ºinput.  ÖĞ¶ÏÓÅÏÈ¼¶
 
-*
+* 
 * Return value:
-*     è¿”å›æˆåŠŸæˆ–è€…å¤±è´¥ã€‚
+*     ·µ»Ø³É¹¦»òÕßÊ§°Ü¡£
 *
 * note:
-*    ä¸­æ–­å¤„ç†å‡½æ•°åŸå‹ï¼Œtypedef __s32 (*ISRCallback)( void *pArg)ã€‚
+*    ÖĞ¶Ï´¦Àíº¯ÊıÔ­ĞÍ£¬typedef __s32 (*ISRCallback)( void *pArg)¡£
 *
 *******************************************************************************
 */
@@ -65,13 +65,13 @@ int OSAL_RegISR(__u32 IrqNo,
 *                     OSAL_UnRegISR
 *
 * Description:
-*    æ³¨é”€ä¸­æ–­æœåŠ¡ç¨‹åº
+*    ×¢ÏúÖĞ¶Ï·şÎñ³ÌĞò
 *
 * Parameters:
-*    irqno    	ï¼šinput.  ä¸­æ–­å·
-*    handler  	ï¼šinput.  ä¸­æ–­å¤„ç†ç¨‹åºå…¥å£ï¼Œæˆ–è€…ä¸­æ–­äº‹ä»¶å¥æŸ„
-*    Argment 	ï¼šinput.  å‚æ•°
-*
+*    irqno    	£ºinput.  ÖĞ¶ÏºÅ
+*    handler  	£ºinput.  ÖĞ¶Ï´¦Àí³ÌĞòÈë¿Ú£¬»òÕßÖĞ¶ÏÊÂ¼ş¾ä±ú
+*    Argment 	£ºinput.  ²ÎÊı
+* 
 * Return value:
 *    void
 *
@@ -87,11 +87,11 @@ void OSAL_UnRegISR(__u32 IrqNo, ISRCallback Handler, void *pArg);
 *                     OSAL_InterruptEnable
 *
 * Description:
-*    ä¸­æ–­ä½¿èƒ½
+*    ÖĞ¶ÏÊ¹ÄÜ
 *
 * Parameters:
-*    irqno ï¼šinput.  ä¸­æ–­å·
-*
+*    irqno £ºinput.  ÖĞ¶ÏºÅ
+* 
 * Return value:
 *    void
 *
@@ -107,11 +107,11 @@ void OSAL_InterruptEnable(__u32 IrqNo);
 *                     OSAL_InterruptDisable
 *
 * Description:
-*    ä¸­æ–­ç¦æ­¢
+*    ÖĞ¶Ï½ûÖ¹
 *
 * Parameters:
-*     irqno ï¼šinput.  ä¸­æ–­å·
-*
+*     irqno £ºinput.  ÖĞ¶ÏºÅ
+* 
 * Return value:
 *    void
 *
@@ -123,3 +123,5 @@ void OSAL_InterruptEnable(__u32 IrqNo);
 void OSAL_InterruptDisable(__u32 IrqNo);
 
 #endif   //__OSAL_INT_H__
+
+

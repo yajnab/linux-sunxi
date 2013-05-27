@@ -5,3 +5,4 @@ config RTL8188EU
 	select WEXT_PRIV
 	---help---
 	  Help message of RTL8188EU
+

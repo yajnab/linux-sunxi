@@ -2,13 +2,13 @@
  * Broadcom Dongle Host Driver (DHD), common DHD core.
  *
  * Copyright (C) 1999-2011, Broadcom Corporation
- *
+ * 
  *         Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- *
+ * 
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -16,7 +16,7 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- *
+ * 
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
@@ -1640,7 +1640,7 @@ dhd_preinit_ioctls(dhd_pub_t *dhd)
 			dhd_pkt_filter_enable = FALSE;
 		}
 	}
-#endif
+#endif 
 
 #if !defined(AP) && defined(WL_CFG80211)
 	/* Check if firmware with HostAPD support used */
@@ -1658,7 +1658,7 @@ dhd_preinit_ioctls(dhd_pub_t *dhd)
 				dhd_pkt_filter_enable = FALSE;
 			}
 	}
-#endif
+#endif 
 
 	if ((dhd->op_mode != WFD_MASK) && (dhd->op_mode != HOSTAPD_MASK)) {
 		printf("dhd->op_mode=%d\n", dhd->op_mode);
@@ -1698,8 +1698,8 @@ dhd_preinit_ioctls(dhd_pub_t *dhd)
 		DHD_ERROR(("Firmware version = %s\n", buf));
 	}
 
-#ifdef SOFTAP
-	/* change some parameters when apsta enabled */
+#ifdef SOFTAP	
+	/* change some parameters when apsta enabled */	
 	if ( dhd_apsta ){
 #ifndef AP
 		uint mpc = 0;
@@ -1707,9 +1707,9 @@ dhd_preinit_ioctls(dhd_pub_t *dhd)
 	    uint dtim = 1;
 
 		DHD_ERROR(("APSTA enabling...\n"));
-
+		
 		power_mode = 0;
-
+	
         /* enable apsta mode */
 #ifndef AP
         bcm_mkiovar("apsta", (char *)&dhd_apsta, 4, iovbuf, sizeof(iovbuf));
@@ -1756,7 +1756,7 @@ dhd_preinit_ioctls(dhd_pub_t *dhd)
 	        bcm_mkiovar("wme", (char *)&wme, 4, iovbuf, sizeof(iovbuf));
 	        dhd_wl_ioctl_cmd(dhd, WLC_SET_VAR, iovbuf, sizeof(iovbuf), TRUE, 0);
         }
-#endif
+#endif 
 
 #if defined(KEEP_ALIVE)
 	{
@@ -1765,7 +1765,7 @@ dhd_preinit_ioctls(dhd_pub_t *dhd)
 
 #if defined(SOFTAP)
 	if (ap_fw_loaded == FALSE)
-#endif
+#endif 
 		if ((res = dhd_keep_alive_onoff(dhd)) < 0)
 			DHD_ERROR(("%s set keeplive failed %d\n",
 			__FUNCTION__, res));
@@ -2165,7 +2165,7 @@ bool dhd_check_ap_wfd_mode_set(dhd_pub_t *dhd)
 		((dhd->op_mode & WFD_MASK) == WFD_MASK))
 		return TRUE;
 	else
-#endif /* WL_CFG80211 */
+#endif /* WL_CFG80211 */		
 		return FALSE;
 }
 

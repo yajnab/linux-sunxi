@@ -30,8 +30,8 @@ else
 	#    <NAME>_REL_<MAJ>_<MINOR>_RC<RCNUM>
 	# or
 	#    <NAME>_REL_<MAJ>_<MINOR>_RC<RCNUM>_<INCREMENTAL>
-	#
-
+	#    
+ 
 	CVSTAG="$Name: ROMTERM_REL_4_218_248_15 $"
 
 	# Remove leading cvs "Name: " and trailing " $"
@@ -39,7 +39,7 @@ else
 	CVSTAG=${CVSTAG/% $/}
 
 	# TAG env var is supplied by calling makefile or build process
-	#
+	#    
 	# If the checkout is from a branch tag, cvs checkout or export does
 	# not replace rcs keywords. In such instances TAG env variable can
 	# be used (by uncommenting following line). TAG env variable format
@@ -71,7 +71,7 @@ else
 
 	# Strip 'RC' from front of rcnum if present
 	rcnum=${rcnum/#RC/}
-
+	
 	# strip leading zero off the number (otherwise they look like octal)
 	maj=${maj/#0/}
 	min=${min/#0/}
@@ -89,7 +89,7 @@ else
 
 	if [ ${tagged} -eq 1 ]; then
 	    vernum=`printf "0x%02x%02x%02x%02x" ${maj} ${min} ${rcnum} ${incremental}`
-	else
+	else 
 	    vernum=`printf "0x00%02x%02x%02x" ${tag[7]} ${min} ${rcnum}`
 	fi
 
@@ -105,7 +105,7 @@ else
 
 	echo "maj=${maj}, min=${min}, rc=${rcnum}, inc=${incremental}, build=${build}"
 	echo "Router maj=${maj}, min=${min_router}, rc=${rcnum}, inc=${incremental}, build=${build}"
-
+	
 	sed \
 		-e "s;@EPI_MAJOR_VERSION@;${maj};" \
 		-e "s;@EPI_MINOR_VERSION@;${min};" \

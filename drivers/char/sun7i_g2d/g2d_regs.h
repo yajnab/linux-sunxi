@@ -153,3 +153,4 @@
 #define put_wvalue(n,c)	(*((volatile __u32 *)(n)) = (c))    /* word output */
 
 #endif /* __G2D_MIXER_REGS_H */
+

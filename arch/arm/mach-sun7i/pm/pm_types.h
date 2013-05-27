@@ -8,7 +8,7 @@
  * under the terms of the GNU General Public License version 2 as published by
  * the Free Software Foundation.
  */
-
+ 
 #ifndef __uxx_sxx_name
 #define __uxx_sxx_name
 typedef signed char         __s8;
@@ -32,6 +32,6 @@ typedef unsigned int		size_t;
 #define NULL	(0)
 
 
-#endif
+#endif 
 
 #endif /*_PM_TYPES_H*/

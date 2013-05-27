@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // Copyright (c) 2009-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -213,7 +213,7 @@ static A_STATUS p2p_parse_p2p_ie(const A_UINT8 *data, A_UINT8 len, struct p2p_ie
         if (pos + 3 + attr_len > end) {
             return A_ERROR;
         }
-        if ((status = p2p_parse_subelement(pos[0], pos + 3, attr_len, msg)) !=
+        if ((status = p2p_parse_subelement(pos[0], pos + 3, attr_len, msg)) != 
                               A_OK) {
             return A_ERROR;
         }
@@ -558,7 +558,7 @@ static A_STATUS p2p_parse_wps_ie(const A_UINT8 *data, A_UINT8 len, struct p2p_ie
     if ( (status = wps_parse_msg(data, len, &attr)) != A_OK ) {
         return status;
     }
-
+    
     if (attr.dev_name && attr.dev_name_len < sizeof(p2p_ie->wps_device_name)) {
         A_MEMCPY(p2p_ie->wps_device_name, attr.dev_name, attr.dev_name_len);
         p2p_ie->wps_dev_name_len = attr.dev_name_len;
@@ -571,24 +571,24 @@ static A_STATUS p2p_parse_wps_ie(const A_UINT8 *data, A_UINT8 len, struct p2p_ie
     if (attr.dev_password_id) {
         p2p_ie->dev_password_id = WPA_GET_BE16(attr.dev_password_id);
     }
-
+    
     if(attr.primary_dev_type) {
         p2p_ie->wps_pri_dev_type = attr.primary_dev_type;
-
+        
     }
 
     return status;
 }
-static A_STATUS p2p_get_ie(WMI_BI_FTYPE fType, const A_UINT8 *data, A_UINT32 len, A_UINT32 vendor_type, A_UINT8 **ie, A_UINT32 *ie_len)
+static A_STATUS p2p_get_ie(WMI_BI_FTYPE fType, const A_UINT8 *data, A_UINT32 len, A_UINT32 vendor_type, A_UINT8 **ie, A_UINT32 *ie_len) 
 {
     const A_UINT8 *frm, *efrm;
     A_STATUS status = A_ENODEV;
     struct p2p_ie p2p_ie ;
     A_UINT8 tlv_len;
-
+    
     switch(fType) {
         case BEACON_FTYPE:
-        case PROBERESP_FTYPE:
+        case PROBERESP_FTYPE: 
         /*
          * beacon/probe response frame format
          *  [8] time stamp
@@ -598,7 +598,7 @@ static A_STATUS p2p_get_ie(WMI_BI_FTYPE fType, const A_UINT8 *data, A_UINT32 len
          */
             data += 12;
             len -= 12;
-            break;
+            break; 
         case ACTION_MGMT_FTYPE:
          /* Action frame format:
           *   [1] Category code
@@ -691,7 +691,7 @@ static A_STATUS p2p_parse_ies(const A_UINT8 *data, A_UINT32 len, struct p2p_ie *
 }
 
 /* This function prunes the frame depending on its type to point the data ptr to
- * the IEs portion of the frame & calls the p2p_parse_ies() to parse the P2P &
+ * the IEs portion of the frame & calls the p2p_parse_ies() to parse the P2P & 
  * WPS IEs.
  */
 static A_STATUS p2p_parse(WMI_BI_FTYPE fType, const A_UINT8 *data, A_UINT32 len, struct p2p_ie *p2p_ie)
@@ -700,7 +700,7 @@ static A_STATUS p2p_parse(WMI_BI_FTYPE fType, const A_UINT8 *data, A_UINT32 len,
 
     switch(fType) {
     case BEACON_FTYPE:
-    case PROBERESP_FTYPE:
+    case PROBERESP_FTYPE: 
     /*
      * beacon/probe response frame format
      *  [8] time stamp
@@ -710,7 +710,7 @@ static A_STATUS p2p_parse(WMI_BI_FTYPE fType, const A_UINT8 *data, A_UINT32 len,
      */
         data += 12;
         len -= 12;
-        break;
+        break; 
     case ACTION_MGMT_FTYPE:
     /* Action frame format:
      *   [1] Category code
@@ -734,7 +734,7 @@ static A_STATUS p2p_parse(WMI_BI_FTYPE fType, const A_UINT8 *data, A_UINT32 len,
         A_ASSERT(FALSE);
         break;
     }
-
+    
     status = p2p_parse_ies(data, len, p2p_ie);
 
     return status;
@@ -852,7 +852,7 @@ static void p2p_copy_client_info(struct host_p2p_dev *dev,
 //        }
 //        pos += 2 + pos[1];
 //    }
-//
+//    
 //    if (ie == NULL) {
 //        *buflen = 0;
 //        return A_OK; /* No specified vendor IE found */
@@ -1017,7 +1017,7 @@ static void p2p_add_device_info_from_scan_data(struct p2p_dev_ctx *p2p_dev_ctx, 
     /* TODO: Add group clients if this is a beacon containing grp info attribute
      * in the P2P IE.
      */
-
+      
      /* If the device reported by other then probe req only then DONOT report again.
       * But if this dev is reported ONLY by probe req, report again with mode info.
       */
@@ -1081,7 +1081,7 @@ static void p2p_add_device_info_from_action_frame(struct p2p_dev_ctx
     }
 
     p2p_peer->dev.flags &= ~P2P_DEV_GROUP_CLIENT_ONLY;
-
+    
 
     /* report device to driver & App */
     A_WMI_P2PDEV_EVENT(p2p_dev_ctx->dev, addr, p2p_peer->dev.p2p_device_addr,
@@ -1222,7 +1222,7 @@ void *p2p_init(void *dev)
     /* Allocate the device specific P2P context.
      */
     p2p_dev_ctx = (struct p2p_dev_ctx *)
-                       A_MALLOC_NOWAIT(sizeof(struct p2p_dev_ctx));
+                       A_MALLOC_NOWAIT(sizeof(struct p2p_dev_ctx));    
     if (!p2p_dev_ctx) {
         return NULL;
     }
@@ -1257,7 +1257,7 @@ void *p2p_bssinfo_rx(void *ctx, WMI_BI_FTYPE fType, A_UINT8 *addr, A_UINT16 chan
     } else {
         if (fType == BEACON_FTYPE || fType == PROBERESP_FTYPE) {
             /* If the bssinfo msg is of Beacon|Probe-resp type check if
-             * the device address or device id is present in the msg. if
+             * the device address or device id is present in the msg. if 
              * not ignore scan data without p2p device info or device id.
              */
             if (msg.p2p_device_addr) {
@@ -1285,7 +1285,7 @@ void *p2p_bssinfo_rx(void *ctx, WMI_BI_FTYPE fType, A_UINT8 *addr, A_UINT16 chan
             /* Update device info frm scan data */
             p2p_add_device_info_from_scan_data(p2p_dev_ctx, peer_dev, addr,
                             channel, p2p_dev_addr, &msg, data, len);
-
+             
             p2p_get_ie(fType, data, len, P2P_OUI, &peer_dev->p2p_buf, &peer_dev->p2p_buf_len);
 
             /* Mark the device for SD if any.
@@ -1331,7 +1331,7 @@ void *p2p_bssinfo_rx(void *ctx, WMI_BI_FTYPE fType, A_UINT8 *addr, A_UINT16 chan
                             continue;
                         }
 
-                        dev = p2p_get_device(p2p_dev_ctx, cli->p2p_device_addr);
+                        dev = p2p_get_device(p2p_dev_ctx, cli->p2p_device_addr);                        
                         if (dev) {
                             bss_t *bss=NULL;
                             /* Update device details if what is present is not got directly from the
@@ -1431,7 +1431,7 @@ void *p2p_bssinfo_rx(void *ctx, WMI_BI_FTYPE fType, A_UINT8 *addr, A_UINT16 chan
         else if (fType == PROBEREQ_FTYPE) {
 
             /* Add this peer to device list only if it is a probe req with wildcard SSID. Probe
-             * req frames with non-wildcard SSID shall come from p2p groups & hence not used to
+             * req frames with non-wildcard SSID shall come from p2p groups & hence not used to 
              * populate our device list.
              */
             if (msg.ssid == NULL || msg.ssid[1] != P2P_WILDCARD_SSID_LEN ||
@@ -1475,7 +1475,7 @@ void *p2p_bssinfo_rx(void *ctx, WMI_BI_FTYPE fType, A_UINT8 *addr, A_UINT16 chan
                 peer_dev->dev.flags |= P2P_DEV_SD_SCHEDULE;
             }
 
-            if (peer_dev->dev.flags & P2P_DEV_REPORTED ||
+            if (peer_dev->dev.flags & P2P_DEV_REPORTED || 
                    peer_dev->dev.flags & P2P_DEV_USER_REJECTED) {
                 return (void *)peer_dev;
             }
@@ -1522,7 +1522,7 @@ void p2p_go_neg_req_rx(void *ctx, const A_UINT8 *datap, A_UINT8 len)
         p2p_parse_p2p_ie(ev->p2p_buf, ev->p2p_buflen, &p2p_ie);
         if(p2p_ie.intended_addr){
             A_MEMCPY(peer->dev.interface_addr, p2p_ie.intended_addr, ETH_ALEN);
-        }
+        }            
 
         A_MEMZERO(&p2p_ie, sizeof(struct p2p_ie));
         result = P2P_SC_FAIL_INFO_CURRENTLY_UNAVAILABLE;
@@ -1547,7 +1547,7 @@ void p2p_go_neg_req_rx(void *ctx, const A_UINT8 *datap, A_UINT8 len)
 
     /* The P2P/WPS IEs from the req buffer are copied to the resp. buffer.
      */
-
+    
     /* Send WMI_P2P_GO_NEG_REQ_RSP_CMD with the user result
      * , WPS method to use, go_intent to use.
      */
@@ -1556,7 +1556,7 @@ send_rsp:
         p2p_cmn_ctx->go_intent, peer->dev.wps_method, peer->dev.listen_freq,
             ev->wps_buf, ev->wps_buflen, ev->p2p_buf, ev->p2p_buflen,
                 ev->dialog_token, peer->persistent_grp, ev->sa);
-
+    
     return;
 }
 
@@ -1580,7 +1580,7 @@ void p2p_invite_req_rx(void *ctx, const A_UINT8 *datap, A_UINT8 len)
         status = P2P_SC_FAIL_INFO_CURRENTLY_UNAVAILABLE;
     } else {
     /* if the peer device is present in our dev list, check if the user has
-     * authorized to accept an invitation from this peer to join an active
+     * authorized to accept an invitation from this peer to join an active 
      * group.
      */
         if (!inv_req_ev->is_persistent) {
@@ -1605,7 +1605,7 @@ void p2p_invite_req_rx(void *ctx, const A_UINT8 *datap, A_UINT8 len)
                     is_go = 1;
                 }
             }
-        }
+        } 
     } /* dev != NULL */
 
     /* The P2P/WPS IEs from the req buffer are copied to the resp. buffer.
@@ -1629,7 +1629,7 @@ void p2p_prov_disc_req_rx(void *ctx, const A_UINT8 *datap, A_UINT8 len)
      * ev that the firmware would have sent prior to this event).
      */
     peer = p2p_get_device(p2p_dev_ctx, prov_disc_req_ev->sa);
-
+    
     /* Set up the WPS method in use by the peer in the device context.
      */
     if (peer) {
@@ -1644,8 +1644,8 @@ void p2p_prov_disc_req_rx(void *ctx, const A_UINT8 *datap, A_UINT8 len)
             peer->dev.flags |= P2P_DEV_PD_PEER_DISPLAY;
         }
     }
-
-    /* Report PD request event to the Supplicant so that the user App can
+    
+    /* Report PD request event to the Supplicant so that the user App can 
      * be prompted for any necessary inputs.
      */
 
@@ -1693,8 +1693,8 @@ void p2p_prov_disc_resp_rx(void *ctx, const A_UINT8 *datap, A_UINT8 len)
     }
 
     peer->dev.req_config_methods = 0;
-
-    /* Report PD response event to the Supplicant so that the user App can
+    
+    /* Report PD response event to the Supplicant so that the user App can 
      * be prompted for any necessary inputs.
      */
     A_WMI_P2P_PROV_DISC_RESP_EVENT(p2p_dev_ctx->dev, prov_disc_resp_ev->peer,
@@ -1728,7 +1728,7 @@ A_STATUS p2p_auth_go_neg(void *ctx, WMI_P2P_GO_NEG_START_CMD *auth_go_neg_param)
     if (peer == NULL) {
         /* Unknown peer device.
          */
-        status = A_ERROR;
+        status = A_ERROR;    
     } else {
         /* Mark the peer as authorized by the user & ready for GO Negotiation.
          */
@@ -1736,7 +1736,7 @@ A_STATUS p2p_auth_go_neg(void *ctx, WMI_P2P_GO_NEG_START_CMD *auth_go_neg_param)
         peer->dev.flags &= ~P2P_DEV_USER_REJECTED;
 
         p2p_cmn_ctx->go_intent = auth_go_neg_param->go_intent;
-        peer->persistent_grp  = auth_go_neg_param->persistent_grp;
+        peer->persistent_grp  = auth_go_neg_param->persistent_grp; 
         peer->dev.wps_method = auth_go_neg_param->wps_method;
     }
 
@@ -1754,7 +1754,7 @@ A_STATUS p2p_peer_reject(void *ctx, A_UINT8 *peer_addr)
     if (peer == NULL) {
         /* Unknown peer device.
          */
-        status = A_ERROR;
+        status = A_ERROR;    
     } else {
         peer->dev.flags |= P2P_DEV_USER_REJECTED;
     }
@@ -1775,7 +1775,7 @@ A_STATUS p2p_go_neg_start(void *ctx, WMI_P2P_GO_NEG_START_CMD *go_neg_param)
     if (peer == NULL) {
         /* Unknown peer device.
          */
-        return A_ERROR;
+        return A_ERROR;    
     }
 
     /* Monotonically increasing per device dialog tokens - generated from host
@@ -1792,7 +1792,7 @@ A_STATUS p2p_go_neg_start(void *ctx, WMI_P2P_GO_NEG_START_CMD *go_neg_param)
     peer->dev.flags &= ~P2P_DEV_USER_REJECTED;
 
     peer->dev.wps_method = go_neg_param->wps_method;
-
+    
     if (peer->dev.listen_freq) {
         go_neg_param->listen_freq = peer->dev.listen_freq;
     } else if (peer->dev.oper_freq) {
@@ -1848,7 +1848,7 @@ A_STATUS p2p_invite_cmd(void *ctx, WMI_P2P_INVITE_CMD *invite_param)
     if (peer == NULL) {
         /* Unknown peer device.
          */
-        return A_ERROR;
+        return A_ERROR;    
     }
 
     /* Monotonically increasing per device dialog tokens - generated from host
@@ -1958,7 +1958,7 @@ void p2p_device_free(void *peer_dev)
 {
     struct host_p2p_dev *peer = (struct host_p2p_dev *)peer_dev;
 
-    /* decrement the ref count & free up the node if the ref. cnt becomes
+    /* decrement the ref count & free up the node if the ref. cnt becomes 
      * zero.
      */
     if (--peer->ref_cnt == 0) {
@@ -2024,9 +2024,9 @@ A_STATUS p2p_get_ifaddr (void *ctx, A_UINT8 *dev_addr)
     } else {
          status = A_DEVICE_NOT_FOUND;
     }
-
+    
     return status;
-
+    
 }
 
 A_STATUS p2p_get_devaddr (void *ctx, A_UINT8 *intf_addr)
@@ -2043,9 +2043,9 @@ A_STATUS p2p_get_devaddr (void *ctx, A_UINT8 *intf_addr)
     } else {
          status = A_DEVICE_NOT_FOUND;
     }
-
+    
     return status;
-
+    
 }
 
 A_STATUS wmi_p2p_get_go_params(void *ctx, A_UINT8 *go_dev_addr,
@@ -2332,7 +2332,7 @@ void p2p_sdpd_rx_event_rx(void *ctx, const A_UINT8 *datap, A_UINT8 len)
                     sd_peer->dev.flags &= ~P2P_DEV_SD_SCHEDULE;
                 }
 
-                /* Proceed with the next SD/PD.
+                /* Proceed with the next SD/PD. 
                  */
                 p2p_start_sdpd_event_rx(ctx);
             }
@@ -2340,11 +2340,11 @@ void p2p_sdpd_rx_event_rx(void *ctx, const A_UINT8 *datap, A_UINT8 len)
 
         case WMI_P2P_PD_TYPE_RESP:
 
-            /* Proceed with the next SD/PD.
+            /* Proceed with the next SD/PD. 
              */
             p2p_start_sdpd_event_rx(ctx);
             break;
-
+        
         default:
              break;
     }
@@ -2681,3 +2681,4 @@ void p2p_clear_peers_authorized_flag(void *ctx, const A_UINT8 *addr)
 
     return;
 }
+

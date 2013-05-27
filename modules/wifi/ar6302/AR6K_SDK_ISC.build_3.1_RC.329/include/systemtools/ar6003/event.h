@@ -4,7 +4,7 @@
 
 #ident  "ACI $Id: //depot/sw/releases/olca3.1-RC/include/systemtools/ar6003/event.h#1 $, $Header: //depot/sw/releases/olca3.1-RC/include/systemtools/ar6003/event.h#1 $"
 
-/*
+/* 
 modification history
 --------------------
 00a    10oct00    fjc    Created.
@@ -50,7 +50,7 @@ typedef struct eventStruct {
     struct eventStruct  *pNext;         // pointer to next event
     struct eventStruct  *pLast;         // backward pointer to pervious event
     int free;
-    struct eventArrayStruct  *eventArrayPtr;
+    struct eventArrayStruct  *eventArrayPtr; 	
 #endif
 } EVENT_STRUCT;
 
@@ -90,7 +90,7 @@ void initEventQueue
 void deleteEventQueue
     (
     EVENT_QUEUE        *pQueue,                /* pointer to the queue to delete */
-    A_BOOL        protect
+    A_BOOL        protect  
     );
 
 
@@ -103,27 +103,27 @@ EVENT_STRUCT *createEvent
     A_UINT32    param3,
     EVT_HANDLE  eventHandle ,   // unique handle of event
     EVENT_ARRAY *eventArray ,
-    A_BOOL        protect
+    A_BOOL        protect 
     );
 
 EVENT_STRUCT *copyEvent
     (
     EVENT_STRUCT *pExistingEvent, // pointer to event to copy
-    EVENT_ARRAY *eventArray ,
-    A_BOOL        protect
+    EVENT_ARRAY *eventArray ,	
+    A_BOOL        protect 	
     );
 
 A_UINT16 pushEvent
     (
     EVENT_STRUCT    *pEvent,    // pointer to event to add
     EVENT_QUEUE     *pQueue,     // pointer to queue to add to
-    A_BOOL        protect
+    A_BOOL        protect  
     );
 
 EVENT_STRUCT *popEvent
     (
     EVENT_QUEUE *pQueue , // pointer to queue to add to
-    A_BOOL        protect
+    A_BOOL        protect  
     );
 
 
@@ -137,19 +137,19 @@ A_UINT16 removeEvent
 EVENT_STRUCT *startQueueScan
     (
     EVENT_QUEUE *pQueue ,
-    A_BOOL        protect
+    A_BOOL        protect  
     );
 
 A_UINT16 stopQueueScan
     (
     EVENT_QUEUE *pQueue ,
-    A_BOOL        protect
+    A_BOOL        protect  
     );
 
 A_UINT16 checkForEvents
     (
     EVENT_QUEUE *pQueue ,
-    A_BOOL        protect
+    A_BOOL        protect  
     );
 
 

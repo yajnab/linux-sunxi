@@ -27,3 +27,4 @@ u32 __dtc_case_enq_aftdone(void);
 
 
 #endif /* __TEST_CASE_NORMAL */
+

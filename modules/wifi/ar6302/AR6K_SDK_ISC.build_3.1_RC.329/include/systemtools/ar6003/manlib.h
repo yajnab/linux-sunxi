@@ -17,7 +17,7 @@ extern "C" {
 #include <vxworks.h>
 #endif
 
-#ifndef MDK_AP
+#ifndef MDK_AP 
 #include <stdio.h>
 #endif
 #ifdef SOC_LINUX
@@ -86,7 +86,7 @@ extern "C" {
 #define NO_REMOTE_STATS       0x00000000
 #define ENABLE_STATS_SEND     0x00000001
 #define ENABLE_STATS_RECEIVE  0x00000002
-#define SKIP_STATS_COLLECTION     0x00000004
+#define SKIP_STATS_COLLECTION     0x00000004 
 
 #define SKIP_SOME_STATS		  0x00000010
 #define LEAVE_DESC_STATUS  	  0x00000100
@@ -94,7 +94,7 @@ extern "C" {
 #define NUM_TO_SKIP_M		  0xffff0000
 
 //packet types
-#define MDK_NORMAL_PKT		0x4d64
+#define MDK_NORMAL_PKT		0x4d64         
 #define MDK_LAST_PKT		0x4d65
 #define MDK_TX_STATS_PKT	0x4d66
 #define MDK_RX_STATS_PKT	0x4d67
@@ -109,7 +109,7 @@ extern "C" {
 #define LAST_DESC_LOOP		0x2
 #define LAST_DESC_FIRST		0x3
 
-// Desc info
+// Desc info 
 #define DESC_INFO_NUM_DESC_MASK				0xffff
 #define DESC_INFO_NUM_DESC_BIT_START		0
 #define DESC_INFO_NUM_DESC_WORDS_BIT_START	16
@@ -128,26 +128,26 @@ extern "C" {
 #define BUF_ADDR_INC_CLEAR_BUF_BIT_MASK		(0xf << BUF_ADDR_INC_CLEAR_BUF_BIT_START)
 
 
-#define PROBE_PKT			0x10000
+#define PROBE_PKT			0x10000		
 
 // Defines for tpScale levels
 #define TP_SCALE_LOWEST 0
-#define TP_SCALE_MAX 0
+#define TP_SCALE_MAX 0 
 #define TP_SCALE_50  1
 #define TP_SCALE_25  2
-#define TP_SCALE_12  3
+#define TP_SCALE_12  3  
 #define TP_SCALE_MIN 4
 #define TP_SCALE_HIGHEST 4
 
-#define MAX_MODE				3
-#define QUARTER_CHANNEL_MASK	0x10000  //use the upper half word of turbo flag to specify the quarter channels
+#define MAX_MODE				3		
+#define QUARTER_CHANNEL_MASK	0x10000  //use the upper half word of turbo flag to specify the quarter channels 
 	                                     //(ie cause 2.5 to be added to current freq
 #define CLEAR_QUARTER_CHANNEL_MASK 0xfffeffff
 
 #define NUM_TURBO_MASK_PTS	     512
 #define NUM_BASE_MASK_PTS		 256     // must be .5 * NUM_TURBO_MASK_PTS
 
-#define MAX_TEMP_HARDLIMIT     40
+#define MAX_TEMP_HARDLIMIT     40  
 
 #ifndef SWIG
 
@@ -199,10 +199,10 @@ extern "C" {
 #define  TXGAIN_TABLE_GAININHALFDB_MASK          0x7F
 #define  TXGAIN_TABLE_GAININHALFDB_MASKFULL      0x7F000
 
-// The following ifdef block is the standard way of creating macros which make exporting
+// The following ifdef block is the standard way of creating macros which make exporting 
 // from a DLL simpler. All files within this DLL are compiled with the MLIB_EXPORTS
 // symbol defined on the command line. this symbol should not be defined on any project
-// that uses this DLL. This way any other project whose source files include this file see
+// that uses this DLL. This way any other project whose source files include this file see 
 // MLIB_API functions as being imported from a DLL, wheras this DLL sees symbols
 // defined with this macro as being exported.
 #ifdef WIN32
@@ -212,7 +212,7 @@ extern "C" {
 #define MANLIB_API __declspec( dllimport )
 #endif
 #else	// #ifdef WIN32
-#define MANLIB_API
+#define MANLIB_API  
 #endif	// #ifdef WIN32
 
 #ifdef __ATH_DJGPPDOS__
@@ -221,7 +221,7 @@ extern "C" {
 #endif //__ATH_DJGPPDOS__
 
 // Non-ANSI definitions
-#if !defined(VXWORKS) && !defined (WIN32)
+#if !defined(VXWORKS) && !defined (WIN32) 
 #ifndef HANDLE
 typedef	long HANDLE;
 #endif
@@ -246,22 +246,22 @@ typedef struct ISREvent {
 	A_UINT32 valid;
 	A_UINT32 ISRValue;
 	A_UINT32 additionalInfo[5];
-} ISR_EVENT;
+} ISR_EVENT; 
 
 
 typedef struct txStats {
 	A_UINT32 goodPackets;
 	A_UINT32 underruns;
-#ifndef NART_BUILD
+#ifndef NART_BUILD	
 	A_UINT32 ackSigStrengthMin;
 	A_UINT32 ackSigStrengthMax;
 	A_UINT32 ackSigStrengthAvg;
 	A_UINT32 throughput;
 #else
     A_UINT32 otherError;
-#endif
+#endif	
 	A_UINT32 excessiveRetries;
-#ifndef NART_BUILD
+#ifndef NART_BUILD	
 	A_UINT32 shortRetry1;
 	A_UINT32 shortRetry2;
 	A_UINT32 shortRetry3;
@@ -279,11 +279,11 @@ typedef struct txStats {
 #else
     int shortRetry[MRETRY];
 	int longRetry[MRETRY];
-#endif
+#endif	
 	A_UINT32 newThroughput;
 	A_UINT32 startTime;
 	A_UINT32 endTime;
-#ifndef NART_BUILD
+#ifndef NART_BUILD	
 	A_UINT32 firstPktGood;
 	A_UINT32 AckRSSIPerAntMin[4];
 	A_UINT32 AckRSSIPerAntMax[4];
@@ -313,14 +313,14 @@ typedef struct txStats {
 	// evm histogram for bad packets
 	//
 	int badevm[MSTREAM][MEVM];
-#endif
+#endif	
 	A_UINT32 TXAnt[2];
 	A_UINT32 BFCount; // for falcon. total number of bemformed packets
 } TX_STATS_STRUCT;
 
 typedef struct rxStats {
 	A_UINT32 goodPackets;
-#ifndef NART_BUILD
+#ifndef NART_BUILD	
 	A_INT32 DataSigStrengthMin;
 	A_INT32 DataSigStrengthMax;
 	A_INT32 DataSigStrengthAvg;
@@ -342,7 +342,7 @@ typedef struct rxStats {
 	A_UINT32 startTime;
 	A_UINT32 endTime;
 	A_UINT32 byteCount;
-
+	
 #ifndef NART_BUILD
 	A_INT32 RSSIPerAntMin[4];
 	A_INT32 RSSIPerAntMax[4];
@@ -372,21 +372,21 @@ typedef struct rxStats {
 	// evm histogram for bad packets
 	//
 	int badevm[MSTREAM][MEVM];
-#endif
+#endif	
 	A_UINT32 Chain0AntSel[2];
 	A_UINT32 Chain1AntSel[2];
 	A_UINT32 Chain0AntReq[2];
 	A_UINT32 Chain1AntReq[2];
 	A_UINT32 ChainStrong[2];
-#ifndef NART_BUILD
-	A_UINT32 evm_stream0, evm_stream1;
-#endif
+#ifndef NART_BUILD	
+	A_UINT32 evm_stream0, evm_stream1;	
+#endif	
 	A_UINT32 total_pkt;
 	A_UINT32 badPackets;
-#ifndef NART_BUILD
+#ifndef NART_BUILD	
 	A_UINT32 otherError;
-	A_UINT32 phyError;
-#endif
+	A_UINT32 phyError;  
+#endif	
 } RX_STATS_STRUCT;
 
 typedef struct rxStatsSnapshot {
@@ -412,7 +412,7 @@ typedef struct subDevInfo {
     A_CHAR	     libRevStr[128];
     A_UINT32         aRevID;    //analog revID
     A_UINT32         hwDevID;    //pci devID read from hardware
-	A_UINT32		 swDevID;    //software based ID
+	A_UINT32		 swDevID;    //software based ID 
 								 //more unique than pci devID to identify chipsets
     A_UINT32		 bbRevID;  //baseband devision
     A_UINT32	     macRev;   // The Mac revision number
@@ -423,8 +423,8 @@ typedef struct subDevInfo {
 
 //Structure to hold library params that can be tweeked from outside
 //setup a structure, so number of params can be increased without changing
-//library calls.
-//IMPORTANT NOTE: only add 32bit values to this or fix the endian swapping in
+//library calls. 
+//IMPORTANT NOTE: only add 32bit values to this or fix the endian swapping in 
 //dk_client.c.  It is assuming this will grow 32 bit params only
 typedef enum _LINK_RX_MODE{NO_MODE = 0, TX_MODE, RX_MODE, WAIT_MODE, LOOP_MODE, SIGGEN_MODE,PROM_MODE} LINK_RX_MODE;
 
@@ -434,8 +434,8 @@ typedef struct _libParams
 	A_UINT32 beanie2928Mode;		//set derby to 2928 rather than 3.168
 	A_UINT32 enableXR;
 	A_UINT32 loadEar;
-	A_UINT32 artAniEnable;          // enable ART Automatic Noise Immunity
-	A_UINT32 artAniReuse;           // reuse ANI levels for that channel
+	A_UINT32 artAniEnable;          // enable ART Automatic Noise Immunity 
+	A_UINT32 artAniReuse;           // reuse ANI levels for that channel 
 	A_UINT32 eepStartLocation;       // start location of 2nd eeprom_block if exists
 	A_UINT32 chainSelect;            // chainSelect for falcon
 	A_UINT32 flashCalSectorErased;   // whether to erase cal sector on flash for falcon
@@ -462,7 +462,7 @@ typedef struct _libParams
     A_UINT32 ht40_enable;           // Enable dyanamic HT20/40 mode
     A_UINT32 rateMaskMcs20;         // Add MCS 20 Rate Masks
     A_UINT32 rateMaskMcs40;         // Add MCS 40 Rate Masks
-    A_UINT32 enablePdadcLogging;    // log closed loop power to pdadc curves to file
+    A_UINT32 enablePdadcLogging;    // log closed loop power to pdadc curves to file 
     A_UINT32 verifyPdadcTable;      // set to true if want to verify pdadc table on eeprom load
     A_UINT32 pdadcDelta;            // delta to check for pdadc table
     A_UINT32 femBandSel;            // FEM Band Select Pin to control LNA
@@ -480,8 +480,8 @@ typedef struct _libParams
     A_INT32  pwrTableOffset;        // pdadc vs pwr table offset for calibration
     A_UINT32 fracN5g;               // fracN flag from eep file or eeprom
     A_INT32  tempSensSlope;         // temperature sensor slope for kiwi olpc
-    A_UINT32 fast_DIV_enable;       //
-    A_UINT32 LNA;                   //
+    A_UINT32 fast_DIV_enable;       // 
+    A_UINT32 LNA;                   // 
     A_INT32  tempSensSlopePalOn;    // temperature sensor slope for kiwi olpc, PAL ON
     A_UINT32 enable_xlnabias;       // to enable the xlna bias for kite
     A_UINT32 calPdadc_ch1;          // pdadc for chain 1 measured during calibration and stored in the eeprom
@@ -574,7 +574,7 @@ typedef struct reset_args_s {
     H_BOOL            bChanChange;
     A_UINT32          ht40Enable;
     A_UINT32          halFriendly;
-}   reset_args_t;
+}   reset_args_t; 
 
 /* channelFlags */
     #define CHANNEL_CW_INT    0x00002 /* CW interference detected on channel */
@@ -594,8 +594,8 @@ typedef struct reset_args_s {
     #define CHANNEL_HT40MINUS 0x40000 /* HT40 channel with extention channel below */
 
 /* privFlags */
-    #define CHANNEL_INTERFERENCE    0x01 /* Software use: channel interference
-                                        used for as AR as well as RADAR
+    #define CHANNEL_INTERFERENCE    0x01 /* Software use: channel interference 
+                                        used for as AR as well as RADAR 
                                         interference detection */
     #define CHANNEL_DFS             0x02 /* DFS required on channel */
     #define CHANNEL_4MS_LIMIT       0x04 /* 4msec packet limit on this channel */
@@ -649,18 +649,18 @@ typedef struct iq_factor {
 
 typedef struct DeviceMap {
 	A_UINT32 DEV_MEMORY_ADDRESS; // Base location of memory access functions
-	A_UINT32 DEV_MEMORY_RANGE;   // Range in bytes for memory access
+	A_UINT32 DEV_MEMORY_RANGE;   // Range in bytes for memory access 
 	A_UINT32 DEV_REG_ADDRESS;    // Base location of register access functions
-	A_UINT32 DEV_REG_RANGE;      // Range in bytes for memory access
+	A_UINT32 DEV_REG_RANGE;      // Range in bytes for memory access 
 	A_UINT32 DEV_CFG_ADDRESS;    // Base location of PCIconfig access functions
-	A_UINT32 DEV_CFG_RANGE;      // Range in bytes for PCIconfig access
+	A_UINT32 DEV_CFG_RANGE;      // Range in bytes for PCIconfig access 
 
 	A_UINT16  devIndex;	// device index of the low level structure
 
 	void (* OSmemRead)(A_UINT32 devNum, A_UINT32 address, A_UCHAR *memBytes, A_UINT32 length);
 	void (* OSmemWrite)(A_UINT32 devNum, A_UINT32 address, A_UCHAR *memBytes, A_UINT32 length);
 	A_UINT32 (* OSregRead)(A_UINT32 devNum, A_UINT32 address);
-	void (* OSregWrite)(A_UINT32 devNum, A_UINT32 address, A_UINT32 regValue);
+	void (* OSregWrite)(A_UINT32 devNum, A_UINT32 address, A_UINT32 regValue);   
 	A_UINT32 (* OScfgRead)(A_UINT32 devNum, A_UINT32 address);
 	void (* OScfgWrite)(A_UINT32 devNum, A_UINT32 address, A_UINT32 cfgValue);
 	ISR_EVENT (* getISREvent)(A_UINT32 devNum); // Get a pointer to the latest ISREvent struct
@@ -678,12 +678,12 @@ typedef struct DeviceMap {
     void (* r_createDescriptors)(A_UINT32 devNumIndex, A_UINT32 descBaseAddress, A_UINT32 descInfo, A_UINT32 bufAddrIncrement, A_UINT32 descOp, A_UINT32 *descWords);
     A_UINT32 (*send_generic_fn_call_cmd) (A_UINT32 devNum, void *stGenericFnCall);
     A_UINT32 (* OSapRegRead32)(A_UINT16 devNum, A_UINT32 address);
-    void (* OSapRegWrite32)(A_UINT16 devNum, A_UINT32 address, A_UINT32 regValue);
+    void (* OSapRegWrite32)(A_UINT16 devNum, A_UINT32 address, A_UINT32 regValue);   
     A_UINT32 (* OSmem32Read)(A_UINT32 devNum, A_UINT32 address);
     void (* OSmem32Write)(A_UINT32 devNum, A_UINT32 address, A_UINT32 regValue);
     A_UINT32 (* r_whalResetDevice)(A_UINT32 devNum, A_UCHAR *mac, A_UCHAR *bss, A_UINT32 freq, A_UINT32 turbo, A_UINT8 wlanMode);
 
-} DEVICE_MAP;
+} DEVICE_MAP;   
 
 #define  PAPRD_EN_2G   0x1
 #define  PAPRD_EN_5G   0x2
@@ -732,11 +732,11 @@ MANLIB_API A_UINT32 spurConvertChanToIndex( A_UINT32 freq, A_INT32 is2GHz ,A_INT
 MANLIB_API void rereadProm(A_UINT32 devNum);
 MANLIB_API void setResetParams(A_UINT32 devNum, A_CHAR *pFilename, A_BOOL eePromLoad, A_BOOL eePromHeaderLoad, A_UCHAR mode, A_UINT16 initCodeFlag);
 MANLIB_API void changeField(A_UINT32 devNum, A_CHAR *fieldName, A_UINT32 newValue);
-MANLIB_API void dumpPciRegValues(A_UINT32 devNum);
-MANLIB_API void displayPciRegWrites(A_UINT32 devNum);
-MANLIB_API void getField(A_UINT32 devNum, A_CHAR   *fieldName, A_UINT32 *baseValue,
+MANLIB_API void dumpPciRegValues(A_UINT32 devNum); 
+MANLIB_API void displayPciRegWrites(A_UINT32 devNum); 
+MANLIB_API void getField(A_UINT32 devNum, A_CHAR   *fieldName, A_UINT32 *baseValue,	
  A_UINT32 *turboValue);
-MANLIB_API void readField(A_UINT32	devNum, A_CHAR *fieldName, A_UINT32	*pUnsignedValue,
+MANLIB_API void readField(A_UINT32	devNum, A_CHAR *fieldName, A_UINT32	*pUnsignedValue, 
 						  A_INT32 *pSignedValue, A_BOOL	*pSignedFlag);
 MANLIB_API void writeField(A_UINT32 devNum, A_CHAR *fieldName, A_UINT32 newValue);
 MANLIB_API void updateAntenna(A_UINT32 devNum, A_UINT32 antenna, A_UCHAR mode, A_UINT32 turbo);
@@ -764,18 +764,18 @@ MANLIB_API void useMDKMemory(A_UINT32 devNum, A_UCHAR *pExtAllocMap, A_UINT16 *p
 MANLIB_API void iq_calibration(A_UINT32 devNum, IQ_FACTOR *iq_coeff);
 
 // Data Frame Functions
-MANLIB_API void txDataAggSetup(A_UINT32 devNum, A_UINT32 rateMask, A_UCHAR *dest,
-							A_UINT32 numDescPerRate, A_UINT32 dataBodyLength,
-							A_UCHAR *dataPattern, A_UINT32 dataPatternLength,
+MANLIB_API void txDataAggSetup(A_UINT32 devNum, A_UINT32 rateMask, A_UCHAR *dest, 
+							A_UINT32 numDescPerRate, A_UINT32 dataBodyLength, 
+							A_UCHAR *dataPattern, A_UINT32 dataPatternLength, 
 							A_UINT32 retries, A_UINT32 antenna, A_UINT32 broadcast, A_UINT32 aggSize);
 
-MANLIB_API void txDataSetup(A_UINT32 devNum, A_UINT32 rateMask, A_UCHAR *dest,
-							A_UINT32 numDescPerRate, A_UINT32 dataBodyLength,
-							A_UCHAR *dataPattern, A_UINT32 dataPatternLength,
+MANLIB_API void txDataSetup(A_UINT32 devNum, A_UINT32 rateMask, A_UCHAR *dest, 
+							A_UINT32 numDescPerRate, A_UINT32 dataBodyLength, 
+							A_UCHAR *dataPattern, A_UINT32 dataPatternLength, 
 							A_UINT32 retries, A_UINT32 antenna, A_UINT32 broadcast);
-MANLIB_API void txDataSetupNoEndPacket(A_UINT32 devNum, A_UINT32 rateMask, A_UCHAR *dest,
-							A_UINT32 numDescPerRate, A_UINT32 dataBodyLength,
-							A_UCHAR *dataPattern, A_UINT32 dataPatternLength,
+MANLIB_API void txDataSetupNoEndPacket(A_UINT32 devNum, A_UINT32 rateMask, A_UCHAR *dest, 
+							A_UINT32 numDescPerRate, A_UINT32 dataBodyLength, 
+							A_UCHAR *dataPattern, A_UINT32 dataPatternLength, 
 							A_UINT32 retries, A_UINT32 antenna, A_UINT32 broadcast);
 MANLIB_API void txDataBegin(A_UINT32 devNum, A_UINT32 timeout, A_UINT32 remoteStats);
 MANLIB_API void txDataStart(A_UINT32 devNum);
@@ -800,7 +800,7 @@ MANLIB_API void LinkRxSetup(A_UINT32 devNum, A_UINT32 numDesc, A_UINT32 dataBody
 MANLIB_API void LinkRxStart(A_UINT32 devNum, int promiscuous);
 
 
-MANLIB_API void LinkRxComplete(A_UINT32 devNum, A_UINT32 waitTime, A_UINT32 timeout, A_UINT32 remoteStats,
+MANLIB_API void LinkRxComplete(A_UINT32 devNum, A_UINT32 waitTime, A_UINT32 timeout, A_UINT32 remoteStats, 
 	A_UINT32 enableCompare, A_UCHAR *dataPattern, A_UINT32 dataPatternLength, int (*done)());
 
 
@@ -850,9 +850,9 @@ MANLIB_API void rxDataBegin(A_UINT32 devNum, A_UINT32 waitTime, A_UINT32 timeout
 				A_UINT32 enableCompare, A_UCHAR *dataPattern, A_UINT32 dataPatternLength);
 MANLIB_API void rxDataBeginSG(A_UINT32 devNum, A_UINT32 waitTime, A_UINT32 timeout, A_UINT32 remoteStats,
                                 A_UINT32 enableCompare, A_UCHAR *dataPattern, A_UINT32 dataPatternLength, A_UINT32 sgpacketnumber);
-MANLIB_API void LinkRxComplete(A_UINT32 devNum, A_UINT32 waitTime, A_UINT32 timeout, A_UINT32 remoteStats,
+MANLIB_API void LinkRxComplete(A_UINT32 devNum, A_UINT32 waitTime, A_UINT32 timeout, A_UINT32 remoteStats, 
 A_UINT32 enableCompare, A_UCHAR *dataPattern, A_UINT32 dataPatternLength, int (*done)());
-MANLIB_API void LinkRxComplete_promiscous(A_UINT32 devNum, A_UINT32 waitTime, A_UINT32 timeout, A_UINT32 remoteStats,
+MANLIB_API void LinkRxComplete_promiscous(A_UINT32 devNum, A_UINT32 waitTime, A_UINT32 timeout, A_UINT32 remoteStats, 
 A_UINT32 enableCompare, A_UCHAR *dataPattern, A_UINT32 dataPatternLength, int (*done)());
 
 
@@ -919,13 +919,13 @@ MANLIB_API void PushTxGainTbl(A_UINT32 devNum, A_UINT32 pcdac);
 
 MANLIB_API void setQueue
 (
-	A_UINT32 devNum,
+	A_UINT32 devNum, 
 	A_UINT32 qcuNumber
 );
 
 MANLIB_API void mapQueue
 (
-	A_UINT32 devNum,
+	A_UINT32 devNum, 
 	A_UINT32 qcuNumber,
 	A_UINT32 dcuNumber
 );
@@ -939,7 +939,7 @@ MANLIB_API A_INT32 getFieldForMode
 (
  A_UINT32 devNum,
  A_CHAR   *fieldName,
- A_UINT32  mode,			//desired mode
+ A_UINT32  mode,			//desired mode 
  A_UINT32  turbo		//Flag for base or turbo value
 );
 
@@ -953,7 +953,7 @@ MANLIB_API void changeMultipleFieldsAllModes
 MANLIB_API void changeRegValueField
 (
  A_UINT32 devNum,
- A_CHAR *fieldName,
+ A_CHAR *fieldName, 
  A_UINT32 newValue
 );
 
@@ -1003,7 +1003,7 @@ MANLIB_API A_UINT16 getPowerIndex
 	A_INT32 twicePower
 );
 
-MANLIB_API A_UINT16 getInterpolatedValue
+MANLIB_API A_UINT16 getInterpolatedValue 
 (
  A_UINT16	target,
  A_UINT16	srcLeft,
@@ -1033,13 +1033,13 @@ MANLIB_API void setChain
 	A_UINT32 phase
 );
 
-MANLIB_API A_BOOL updateMacAddrAR5513
+MANLIB_API A_BOOL updateMacAddrAR5513 
 (
 	A_UINT32 devNum,
 	A_UINT8  wmacAddr[6] // wmac addr [0]-->lsb, [5]-->msb
 );
 
-MANLIB_API A_BOOL updateSectorChunkAR5513
+MANLIB_API A_BOOL updateSectorChunkAR5513 
 (
 	A_UINT32 devNum,
 	A_UINT32 *pData, // intended for pci config data
@@ -1048,7 +1048,7 @@ MANLIB_API A_BOOL updateSectorChunkAR5513
 	A_UINT32 dataOffset
 );
 
-MANLIB_API A_BOOL updateSingleEepromValueAR5513
+MANLIB_API A_BOOL updateSingleEepromValueAR5513 
 (
 	A_UINT32 devNum,
 	A_UINT32 address,
@@ -1057,7 +1057,7 @@ MANLIB_API A_BOOL updateSingleEepromValueAR5513
 
 MANLIB_API A_BOOL flashWriteSectorAr5513
 (
- A_UINT32 devNum,
+ A_UINT32 devNum, 
  A_UINT32 sectorNum,
  A_UINT32 *retList,
  A_UINT32 retListSize
@@ -1065,7 +1065,7 @@ MANLIB_API A_BOOL flashWriteSectorAr5513
 
 MANLIB_API A_BOOL flashReadSectorAr5513
 (
- A_UINT32 devNum,
+ A_UINT32 devNum, 
  A_UINT32 sectorNum,
  A_UINT32 *retList,
  A_UINT32 retListSize
@@ -1099,7 +1099,7 @@ MANLIB_API void
 getCtlPowerInfo
 (
  A_UINT32 devNum,
- CTL_POWER_INFO *pCtlStruct
+ CTL_POWER_INFO *pCtlStruct	
 );
 
 MANLIB_API A_BOOL isFalconEmul(A_UINT32 devNum);
@@ -1210,7 +1210,7 @@ MANLIB_API void TestPaprdDebugPrint(A_UINT32 devNum);
 #endif //_DEBUG_BOTH
 MANLIB_API void setCurTgtPwr(A_UINT32 devNum, A_INT16 power_t2);
 MANLIB_API void dumpTPCStats(A_UINT32 devNum);
-#ifndef ENABLE_ALPHATHERMTBL
+#ifndef ENABLE_ALPHATHERMTBL	
 MANLIB_API A_BOOL readAlphaThermTable4TestingOnly(A_UINT32 devNum);
 #endif
 MANLIB_API void setCurRateAr6003(A_UINT32 devNum, A_UINT32 curRate);
@@ -1232,7 +1232,7 @@ extern MANLIB_API A_UINT32  debugBitmap;
 #define  DEBUG_BIT7       0x00000080
 #define  DEBUG_BIT8       0x00000100
 #define  DEBUG_BIT9       0x00000200
-#define  DEBUG_BIT10      0x00000400
+#define  DEBUG_BIT10      0x00000400 
 #define  DEBUG_BIT11      0x00000800
 #define  DEBUG_BIT27      0x08000000
 #define  DEBUG_BIT31      0x80000000
@@ -1243,7 +1243,7 @@ extern MANLIB_API A_UINT32  debugBitmap;
 enum DebugCounter {
     RESERVED = 0,
     XTAL_SPECIFIC_CFG,
-
+    
     OTP_READ_ERROR_AFTER_WRITE,
     OTP_WROTE_BAD_STREAM,
     OTP_READ_ERROR,
@@ -1255,7 +1255,7 @@ enum DebugCounter {
 
     STABILIZE_POWER_TIMEOUT,
 
-    PWR_INTERPOLATED,
+    PWR_INTERPOLATED, 
 
     DESIRED_SCALE_OUTOFRANGE,
 
@@ -1310,3 +1310,4 @@ MANLIB_API void InitChipDependentConstants(char *ChipName);
 #endif
 
 #endif // #define __INCmanlibh
+

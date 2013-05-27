@@ -1587,7 +1587,7 @@ int serial8250_handle_irq(struct uart_port *port, unsigned int iir)
 	}
 	if (!(debug_mask & 0x1))
 		debug_mask &= (1 << 29);
-
+		
 	spin_lock_irqsave(&up->port.lock, flags);
 	status = serial_inp(up, UART_LSR);
 
@@ -2487,8 +2487,8 @@ serial8250_do_set_termios(struct uart_port *port, struct ktermios *termios,
 	 *Because our platform hardware so much ugly which likes my English
 	 *I must check line status to ensure it no busy when set LCR value,
 	 *if miserable the line status is busy,it must set UART_FORCE_CFG bit
-	 *first before set LCR without DLAB,it also viable if  you only want
-	 *to set DLAB to set baud. More informations can be get for sw spec
+	 *first before set LCR without DLAB,it also viable if  you only want 
+	 *to set DLAB to set baud. More informations can be get for sw spec 
 	 * */
 		if(serial_inp(up, UART_USR)&0x01)
 				serial_outp(up, UART_HALT, UART_FORCE_CFG);
@@ -2501,7 +2501,7 @@ serial8250_do_set_termios(struct uart_port *port, struct ktermios *termios,
 		serial_outp(up, UART_HALT, UART_FORCE_CFG);
 	serial_dl_write(up, quot);
 	serial_outp(up,UART_SCH,quot & 0xff);
-
+	
 	/*
 	 * LCR DLAB must be set to enable 64-byte FIFO mode. If the FCR
 	 * is written without DLAB set, this mode will be disabled.
@@ -2513,7 +2513,7 @@ serial8250_do_set_termios(struct uart_port *port, struct ktermios *termios,
 	serial_outp(up, UART_LCR, cval);
 
 	/*
-	 *When baud and LCR be set finish, it must set UART_FORCE_UPDATE bit
+	 *When baud and LCR be set finish, it must set UART_FORCE_UPDATE bit 
 	 *to let operations take effect, the UART_FORCE_UPDATE will clear
 	 *by self when update successfully
 	 * */
@@ -3198,9 +3198,13 @@ static int serial8250_suspend(struct platform_device *dev, pm_message_t state)
 		struct uart_8250_port *up = &serial8250_ports[i];
 
 		if (up->port.type != PORT_UNKNOWN && up->port.dev == &dev->dev){
+#ifdef CONFIG_SERIAL_8250_SUNXI
 			sunxi_8250_backup_reg(i,&up->port);
+#endif
 			uart_suspend_port(&serial8250_reg, &up->port);
-			sw_serial_do_pm(&up->port,3,0);
+			if (console_suspend_enabled){
+				sw_serial_do_pm(&up->port,3,0);
+			}
 		}
 	}
 	return 0;
@@ -3214,9 +3218,10 @@ static int serial8250_resume(struct platform_device *dev)
 		struct uart_8250_port *up = &serial8250_ports[i];
 
 		if (up->port.type != PORT_UNKNOWN && up->port.dev == &dev->dev){
-
 			sw_serial_do_pm(&up->port,0,3);
+#ifdef CONFIG_SERIAL_8250_SUNXI
 			sunxi_8250_comeback_reg(i,&up->port);
+#endif
 			serial8250_resume_port(i);
 		}
 	}

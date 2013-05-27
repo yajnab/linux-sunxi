@@ -177,3 +177,4 @@ void gmac_clean_desc3(dma_desc_t *p);
 int gmac_set_16kib_bfsize(int mtu);
 
 #endif //__GMAC_DESC_H__
+

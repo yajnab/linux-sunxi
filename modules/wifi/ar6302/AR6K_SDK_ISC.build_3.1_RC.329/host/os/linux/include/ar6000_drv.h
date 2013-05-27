@@ -2,7 +2,7 @@
 // Copyright (c) 2004-2010 Atheros Communications Inc.
 // All rights reserved.
 //
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -408,9 +408,9 @@ typedef enum _HTC_RAW_STREAM_ID {
 typedef struct {
     int currPtr;
     int length;
-    A_UINT8       _Pad1[A_CACHE_LINE_PAD];
+    A_UINT8       _Pad1[A_CACHE_LINE_PAD];	
     unsigned char data[HTC_RAW_BUFFER_SIZE];
-    A_UINT8       _Pad2[A_CACHE_LINE_PAD];
+    A_UINT8       _Pad2[A_CACHE_LINE_PAD];	
     HTC_PACKET    HTCPacket;
 } raw_htc_buffer;
 

@@ -13,7 +13,7 @@ loop2:
 	mov	r0, r3
 	subs	r1, r1, #1
 	bhi	loop2
-
+	
 	pop     {r0-r3}
 	mov     pc, lr
 
@@ -24,3 +24,5 @@ loop3:
 	subs    r0, r0, #1
 	bhi	loop3
 	mov     pc, lr
+	
+	

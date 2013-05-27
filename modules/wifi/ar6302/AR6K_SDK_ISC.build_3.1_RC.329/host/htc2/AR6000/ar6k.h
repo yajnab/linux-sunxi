@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="ar6k.h" company="Atheros">
 //    Copyright (c) 2007-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -94,14 +94,14 @@ typedef struct AR6K_ASYNC_REG_IO_BUFFER {
     A_UINT8       _Pad2[A_CACHE_LINE_PAD];
 } AR6K_ASYNC_REG_IO_BUFFER;
 
-typedef struct _AR6K_GMBOX_INFO {
+typedef struct _AR6K_GMBOX_INFO { 
     void        *pProtocolContext;
     A_STATUS    (*pMessagePendingCallBack)(void *pContext, A_UINT8 LookAheadBytes[], int ValidBytes);
     A_STATUS    (*pCreditsPendingCallback)(void *pContext, int NumCredits,  A_BOOL CreditIRQEnabled);
     void        (*pTargetFailureCallback)(void *pContext, A_STATUS Status);
     void        (*pStateDumpCallback)(void *pContext);
-    A_BOOL      CreditCountIRQEnabled;
-} AR6K_GMBOX_INFO;
+    A_BOOL      CreditCountIRQEnabled;    
+} AR6K_GMBOX_INFO; 
 
 typedef struct _AR6K_DEVICE {
     A_MUTEX_T                   Lock;
@@ -119,9 +119,9 @@ typedef struct _AR6K_DEVICE {
     HTC_PACKET_QUEUE            RegisterIOList;
     AR6K_ASYNC_REG_IO_BUFFER    RegIOBuffers[AR6K_MAX_REG_IO_BUFFERS];
     void                        (*TargetFailureCallback)(void *Context);
-    A_STATUS                    (*MessagePendingCallback)(void *Context,
-                                                          A_UINT32 LookAheads[],
-                                                          int NumLookAheads,
+    A_STATUS                    (*MessagePendingCallback)(void *Context, 
+                                                          A_UINT32 LookAheads[], 
+                                                          int NumLookAheads, 
                                                           A_BOOL *pAsyncProc,
                                                           int *pNumPktsFetched);
     HIF_DEVICE_IRQ_PROCESSING_MODE  HifIRQProcessingMode;
@@ -131,12 +131,12 @@ typedef struct _AR6K_DEVICE {
     A_BOOL                          DSRCanYield;
     int                             CurrentDSRRecvCount;
     HIF_DEVICE_SCATTER_SUPPORT_INFO HifScatterInfo;
-    DL_LIST                         ScatterReqHead;
-    A_BOOL                          ScatterIsVirtual;
+    DL_LIST                         ScatterReqHead; 
+    A_BOOL                          ScatterIsVirtual;    
     int                             MaxRecvBundleSize;
     int                             MaxSendBundleSize;
     AR6K_GMBOX_INFO                 GMboxInfo;
-    A_BOOL                          GMboxEnabled;
+    A_BOOL                          GMboxEnabled; 
     AR6K_GMBOX_CTRL_REGISTERS       GMboxControlRegisters;
     int                             RecheckIRQStatusCnt;
 } AR6K_DEVICE;
@@ -182,7 +182,7 @@ static INLINE A_STATUS DevSendPacket(AR6K_DEVICE *pDev, HTC_PACKET *pPacket, A_U
        /* adjust the length to be a multiple of block size if appropriate */
     paddedLength = DEV_CALC_SEND_PADDED_LEN(pDev, SendLength);
 
-#if 0
+#if 0                    
     if (paddedLength > pPacket->BufferLength) {
         A_ASSERT(FALSE);
         if (pPacket->Completion != NULL) {
@@ -192,7 +192,7 @@ static INLINE A_STATUS DevSendPacket(AR6K_DEVICE *pDev, HTC_PACKET *pPacket, A_U
         return A_EINVAL;
     }
 #endif
-
+    
     AR_DEBUG_PRINTF(ATH_DEBUG_SEND,
                 ("DevSendPacket, Padded Length: %d Mbox:0x%X (mode:%s)\n",
                 paddedLength,
@@ -210,13 +210,13 @@ static INLINE A_STATUS DevSendPacket(AR6K_DEVICE *pDev, HTC_PACKET *pPacket, A_U
         pPacket->Status = status;
     } else {
         if (status == A_PENDING) {
-            status = A_OK;
-        }
+            status = A_OK;    
+        }    
     }
 
     return status;
 }
-
+                    
 static INLINE A_STATUS DevRecvPacket(AR6K_DEVICE *pDev, HTC_PACKET *pPacket, A_UINT32 RecvLength) {
     A_UINT32 paddedLength;
     A_STATUS status;
@@ -224,7 +224,7 @@ static INLINE A_STATUS DevRecvPacket(AR6K_DEVICE *pDev, HTC_PACKET *pPacket, A_U
 
         /* adjust the length to be a multiple of block size if appropriate */
     paddedLength = DEV_CALC_RECV_PADDED_LEN(pDev, RecvLength);
-
+                    
     if (paddedLength > pPacket->BufferLength) {
         A_ASSERT(FALSE);
         AR_DEBUG_PRINTF(ATH_DEBUG_ERR,
@@ -260,46 +260,46 @@ static INLINE A_STATUS DevRecvPacket(AR6K_DEVICE *pDev, HTC_PACKET *pPacket, A_U
 
 #define DEV_CHECK_RECV_YIELD(pDev) \
             ((pDev)->CurrentDSRRecvCount >= (pDev)->HifIRQYieldParams.RecvPacketYieldCount)
-
+            
 #define IS_DEV_IRQ_PROC_SYNC_MODE(pDev) (HIF_DEVICE_IRQ_SYNC_ONLY == (pDev)->HifIRQProcessingMode)
 #define IS_DEV_IRQ_PROCESSING_ASYNC_ALLOWED(pDev) ((pDev)->HifIRQProcessingMode != HIF_DEVICE_IRQ_SYNC_ONLY)
 
 /**************************************************/
 /****** Scatter Function and Definitions
- *
- *
+ * 
+ *  
  */
-
+  
 A_STATUS DevCopyScatterListToFromDMABuffer(HIF_SCATTER_REQ *pReq, A_BOOL FromDMA);
-
-    /* copy any READ data back into scatter list */
+    
+    /* copy any READ data back into scatter list */        
 #define DEV_FINISH_SCATTER_OPERATION(pR)                      \
     if (A_SUCCESS((pR)->CompletionStatus) &&                  \
         !((pR)->Request & HIF_WRITE) &&                       \
          ((pR)->ScatterMethod == HIF_SCATTER_DMA_BOUNCE)) {   \
          (pR)->CompletionStatus = DevCopyScatterListToFromDMABuffer((pR),FROM_DMA_BUFFER); \
     }
-
+    
     /* copy any WRITE data to bounce buffer */
-static INLINE A_STATUS DEV_PREPARE_SCATTER_OPERATION(HIF_SCATTER_REQ *pReq)  {
+static INLINE A_STATUS DEV_PREPARE_SCATTER_OPERATION(HIF_SCATTER_REQ *pReq)  { 
     if ((pReq->Request & HIF_WRITE) && (pReq->ScatterMethod == HIF_SCATTER_DMA_BOUNCE)) {
-        return DevCopyScatterListToFromDMABuffer(pReq,TO_DMA_BUFFER);
+        return DevCopyScatterListToFromDMABuffer(pReq,TO_DMA_BUFFER);    
     } else {
-        return A_OK;
+        return A_OK;    
     }
 }
-
-
+        
+    
 A_STATUS DevSetupMsgBundling(AR6K_DEVICE *pDev, int MaxMsgsPerTransfer);
 
 A_STATUS DevCleanupMsgBundling(AR6K_DEVICE *pDev);
 
-
+                                  
 #define DEV_GET_MAX_MSG_PER_BUNDLE(pDev)        (pDev)->HifScatterInfo.MaxScatterEntries
 #define DEV_GET_MAX_BUNDLE_LENGTH(pDev)         (pDev)->HifScatterInfo.MaxTransferSizePerScatterReq
 #define DEV_ALLOC_SCATTER_REQ(pDev)             \
     (pDev)->HifScatterInfo.pAllocateReqFunc((pDev)->ScatterIsVirtual ? (pDev) : (pDev)->HIFDevice)
-
+    
 #define DEV_FREE_SCATTER_REQ(pDev,pR)           \
     (pDev)->HifScatterInfo.pFreeReqFunc((pDev)->ScatterIsVirtual ? (pDev) : (pDev)->HIFDevice,(pR))
 
@@ -328,8 +328,8 @@ void     DumpAR6KDevState(AR6K_DEVICE *pDev);
 
 /**************************************************/
 /****** GMBOX functions and definitions
- *
- *
+ * 
+ *  
  */
 
 #ifdef ATH_AR6K_ENABLE_GMBOX
@@ -348,7 +348,7 @@ void     DevNotifyGMboxTargetFailure(AR6K_DEVICE *pDev);
 
 static INLINE A_STATUS DevSetupGMbox(AR6K_DEVICE *pDev) {
     pDev->GMboxEnabled = FALSE;
-    return A_OK;
+    return A_OK;    
 }
 
 #endif

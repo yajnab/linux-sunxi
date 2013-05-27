@@ -58,3 +58,4 @@ enum gpio_test_case_e {
 #define PIO_ASSERT_RET(x, ret, pos)	if(!(x)) {ret = __LINE__; goto pos;}
 
 #endif /* __SUN7I_GPIO_TEST_H */
+

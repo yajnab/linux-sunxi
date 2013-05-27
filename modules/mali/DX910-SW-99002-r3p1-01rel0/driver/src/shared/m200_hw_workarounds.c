@@ -222,3 +222,5 @@ mali_err_code _mali_frame_builder_workaround_for_bug_4126( mali_frame_builder* f
 	return MALI_ERR_NO_ERROR;
 }
 #endif /* HW issue 4126 */
+
+

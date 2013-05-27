@@ -16,7 +16,7 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif // __cplusplus
+#endif // __cplusplus 
 
 #include "mIds.h"
 
@@ -26,7 +26,7 @@ extern "C" {
 
 #ifndef A_ASSERT
 #ifdef KERPLUG
-#include <crtdbg.h>
+#include <crtdbg.h> 
 #define A_ASSERT _ASSERT
 #else
 
@@ -65,7 +65,7 @@ extern "C" {
 #else
 #define DLL_EXPORT __declspec( dllexport )
 #endif
-#else
+#else 
 #define DLL_EXPORT
 #endif
 
@@ -127,7 +127,7 @@ typedef void * DRV_HANDLE;
 #if 0
 //#ifdef PHOENIX
 
-#undef APP_HANDLE
+#undef APP_HANDLE 
 #undef DRV_HANDLE
 #undef IN
 #undef A_DATA_CACHE_INVAL
@@ -139,7 +139,7 @@ typedef void * DRV_HANDLE;
 #define athUsbDrvInit(a, b, c, d, e, f, g) TRUE
 #define athUsbDrvRecv(a, b, c) TRUE
 #define athUsbDrvSend(a, b, c) TRUE
-#define A_DATA_CACHE_INVAL(a, b)
+#define A_DATA_CACHE_INVAL(a, b) 
 
 
 #endif
@@ -148,7 +148,7 @@ typedef struct osSockInfo {
 	A_CHAR   hostname[128];
 	A_UINT16  port_num;
 	A_UINT32 ip_addr;
-#if defined(ECOS) || defined(ATHOS)
+#if defined(ECOS) || defined(ATHOS) 
 #if defined(USB_COMN) || defined(MBOX_COMN)
 	DRV_HANDLE sockfd;
 #endif //USB_COM
@@ -171,7 +171,7 @@ typedef struct osSockInfo {
 
 #if defined(ART_BUILD ) || defined(__ATH_DJGPPDOS__) || defined(SOC_AP)
 A_UINT16 uilog ( char *filename, A_BOOL append);
-A_UINT16 uiWriteToLog ( char *string );
+A_UINT16 uiWriteToLog ( char *string );       
 #else
 A_UINT16 uilog ( char *filename);
 #endif
@@ -228,7 +228,7 @@ A_INT16 statsPrintf ( FILE *pFile, const char *format, ...);
 
 DLL_EXPORT void dk_quiet
 (
-	A_UINT16 Mode // 0 for off, 1 for on
+    	A_UINT16 Mode // 0 for off, 1 for on
 );
 
 A_UINT32 map_file(A_STATUS *status, A_UCHAR **memPtr, A_UCHAR *filename);
@@ -236,7 +236,7 @@ A_UINT32 map_file(A_STATUS *status, A_UCHAR **memPtr, A_UCHAR *filename);
 
 A_STATUS osThreadCreate
 (
-	void            threadFunc(void * param),
+	void            threadFunc(void * param), 
 	void 		*param,
 	A_CHAR*		threadName,
 	A_INT32 	threadPrio,
@@ -278,7 +278,7 @@ void OSmemWrite
 
 A_STATUS onlyOneRunning
 (
-	char *prog1,
+	char *prog1, 
 	char *prog2
 );
 
@@ -310,14 +310,14 @@ A_UINT32 milliTime ( void);
 #endif
 
 void milliSleep
-(
+(	
 	A_UINT32 millitime
 );
 
 A_UINT32 semInit
 (
 	void
-);
+); 
 
 A_INT32 semLock
 (
@@ -347,9 +347,9 @@ A_INT32 semClose
 #endif
 
 
-// added this event id for the dk_client side. The event id assigned to  an event,
-// is dervied from the nextEventId stored in the dk_master data structure.
-// Events created in the client side cannot read this value.
+// added this event id for the dk_client side. The event id assigned to  an event, 
+// is dervied from the nextEventId stored in the dk_master data structure. 
+// Events created in the client side cannot read this value. 
 // So a fixed event id is used in such cases. This is used in the resetDevice function
 // in devlib (for remote clients).
 #define DEVLIB_EVENT_ID	0xfe
@@ -380,7 +380,7 @@ A_INT32 semClose
 					     //stats that get sent to dk master,
 					     //the number of duplicate packet
 					     //statistics gets added to it.
-					     //consists of 8 phy stats, 3 misc
+					     //consists of 8 phy stats, 3 misc 
 #define RX_DUP_PACKETS			0x00000020
 #define RX_THROUGHPUT			0x00000040
 
@@ -395,7 +395,7 @@ A_INT32 semClose
 
 //experimental DEV_IDs
 #define DEV_BEANIE_MAUI2_EXPERIMENT 0xe011
-#define DEV_E2_PCI          0x0101
+#define DEV_E2_PCI          0x0101 
 #define DEV_E5_PCI          0x0102
 #define DEV_E7_PCI          0x0103
 #define DEV_E7_PCI_PA       0x0104
@@ -447,7 +447,7 @@ A_INT32 semClose
 
 
 
-#define MAX_DK_STA_NUM	32
+#define MAX_DK_STA_NUM	32 
 #define BUFF_BLOCK_SIZE			0x100  			/* size of a buffer block */
 
 #define COM_PORT_NUM        0
@@ -469,14 +469,14 @@ A_INT32 semClose
 #define READ_BUF_SIZE                   512
 #define WRITE_BUF_SIZE                  512
 //#define WRITE_BUF_SIZE                  32
-#define COM_ERROR_GETHANDLE             1
+#define COM_ERROR_GETHANDLE             1    
 #define COM_ERROR_BUILDDCB              2
 #define COM_ERROR_CONFIGDEVICE          4
 #define COM_ERROR_CONFIGBUFFERS         8
 #define COM_ERROR_SETDTR                16
 #define COM_ERROR_CLEARDTR              32
 #define COM_ERROR_PURGEBUFFERS          64
-#define COM_ERROR_READ                  128
+#define COM_ERROR_READ                  128 
 #define COM_ERROR_WRITE                 256
 #define COM_ERROR_MASK                  512
 #define COM_ERROR_TIMEOUT               1024
@@ -585,7 +585,7 @@ struct host_interest_s {
         /* NOTE: byte [0] = tx pin, [1] = rx pin, [2] = rts pin, [3] = cts pin */
     A_UINT32               hi_hci_uart_baud_scale_val;                /* 0x90 */
     A_UINT32               hi_hci_uart_baud_step_val;                 /* 0x94 */
-
+      
     A_UINT32               hi_allocram_start;                         /* 0x98 */
     A_UINT32               hi_allocram_sz;                            /* 0x9c */
     A_UINT32               hi_hci_bridge_flags;                       /* 0xa0 */
@@ -636,4 +636,4 @@ struct host_interest_s {
 }
 #endif // __cplusplus
 
-#endif // __INCdk_commonh
+#endif // __INCdk_commonh 

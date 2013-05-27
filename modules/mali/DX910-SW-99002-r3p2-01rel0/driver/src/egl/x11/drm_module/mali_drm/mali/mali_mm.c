@@ -1,9 +1,9 @@
 /*
  * Copyright (C) 2010, 2012 ARM Limited. All rights reserved.
- *
+ * 
  * This program is free software and is provided to you under the terms of the GNU General Public License version 2
  * as published by the Free Software Foundation, and any use by you of this program is subject to the terms of such GNU licence.
- *
+ * 
  * A copy of the licence is included with the program, and can also be obtained from Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
@@ -104,7 +104,7 @@ static int mali_drm_alloc(struct drm_device *dev, struct drm_file *file_priv, vo
 			      (unsigned long)file_priv);
 
 	mutex_unlock(&dev->struct_mutex);
-	if (item)
+	if (item) 
 	{
 		mem->offset = dev_priv->vram_offset + (item->mm->offset(item->mm, item->mm_info) << MALI_MM_ALIGN_SHIFT);
 		mem->free = item->user_hash.key;
@@ -237,13 +237,13 @@ void mali_reclaim_buffers_locked(struct drm_device * dev, struct drm_file *file_
 	printk(KERN_ERR "DRM: %s\n", __func__);
 
 	mutex_lock(&dev->struct_mutex);
-	if (drm_sman_owner_clean(&dev_priv->sman, (unsigned long)file_priv))
+	if (drm_sman_owner_clean(&dev_priv->sman, (unsigned long)file_priv)) 
 	{
 		mutex_unlock(&dev->struct_mutex);
 		return;
 	}
 
-	if (dev->driver->dma_quiescent)
+	if (dev->driver->dma_quiescent) 
 	{
 		dev->driver->dma_quiescent(dev);
 	}

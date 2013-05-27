@@ -28,7 +28,7 @@
 #include <linux/pda_power.h>
 #include <linux/io.h>
 #include <linux/i2c.h>
-
+ 
 #include <asm/mach-types.h>
 #include <asm/mach/arch.h>
 #include <asm/mach/time.h>
@@ -85,12 +85,19 @@ static struct platform_device sw_dmac_device = {
 			  },
 };
 
+struct platform_device sw_pdev_nand =
+{
+	.name = "sw_nand",
+	.id = -1,
+};
 static struct platform_device *sw_pdevs[] __initdata = {
 	&debug_uart,
 	&sw_dmac_device,
+	&sw_pdev_nand,
 };
 
 void sw_pdev_init(void)
 {
 	platform_add_devices(sw_pdevs, ARRAY_SIZE(sw_pdevs));
 }
+

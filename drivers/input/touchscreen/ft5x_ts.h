@@ -9,7 +9,7 @@
 //#define UPDRAGE _IO(UPDRAGE_FLAG,0)
 #define I2C_MINORS 	256
 #define I2C_MAJOR 	125
-
+                                
 #undef  AW_GPIO_INT_API_ENABLE
 //#define AW_FPGA_SIM
 #ifdef AW_FPGA_SIM
@@ -23,7 +23,7 @@ struct ft5x_ts_platform_data{
 };
 
 enum ft5x_ts_regs {
-	FT5X0X_REG_PMODE	= 0xA5,	/* Power Consume Mode		*/
+	FT5X0X_REG_PMODE	= 0xA5,	/* Power Consume Mode		*/	
 };
 
 //FT5X0X_REG_PMODE
@@ -47,3 +47,4 @@ enum ft5x_ts_regs {
 
 
 #endif
+

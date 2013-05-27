@@ -10,7 +10,7 @@
 *
 * Author 		: javen
 *
-* Description 	: DMA Êìç‰ΩúÈõÜ
+* Description 	: DMA ≤Ÿ◊˜ºØ
 *
 * History 		:
 *      <author>    		<time>       	<version >    		<desc>
@@ -22,7 +22,7 @@
 #define  __SW_UDC_DMA_H__
 
 //---------------------------------------------------------------
-//  ÂÆè ÂÆö‰πâ
+//  ∫Í ∂®“Â
 //---------------------------------------------------------------
 #ifdef  SW_UDC_DMA
 #define  is_udc_support_dma()       1
@@ -31,7 +31,7 @@
 #endif
 
 //---------------------------------------------------------------
-//  ÂáΩÊï∞ ÂÆö‰πâ
+//  ∫Ø ˝ ∂®“Â
 //---------------------------------------------------------------
 void sw_udc_switch_bus_to_dma(struct sw_udc_ep *ep, u32 is_tx);
 void sw_udc_switch_bus_to_pio(struct sw_udc_ep *ep, __u32 is_tx);
@@ -49,3 +49,4 @@ __s32 sw_udc_dma_probe(struct sw_udc *dev);
 __s32 sw_udc_dma_remove(struct sw_udc *dev);
 
 #endif   //__SW_UDC_DMA_H__
+

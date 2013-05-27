@@ -202,3 +202,4 @@ int hotplug_early_suspend_exit(void)
     wake_lock_destroy(&ealysuspend_hotplug_work);
     return 0;
 }
+

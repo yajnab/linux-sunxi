@@ -590,8 +590,8 @@ config KEYBOARD_SW_KEYBOARD
         tristate "softwinnner KEY BOARD support"
         help
           Say Y here to enable the keyboard, support 7 keys.
-          based on verify board.
-
+          based on verify board. 
+          
 config IR_SUN6I
        tristate "sun6i IR  support"
 

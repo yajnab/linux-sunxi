@@ -134,3 +134,4 @@ extern struct kmem_cache *g_buf_cache;
 #define DMA_CHAN_UNLOCK(lock, flag)	spin_unlock_irqrestore((lock), (flag))
 
 #endif  /* __DMA_COMMON_H */
+

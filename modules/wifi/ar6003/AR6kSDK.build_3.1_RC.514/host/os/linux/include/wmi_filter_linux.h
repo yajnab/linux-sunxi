@@ -2,7 +2,7 @@
 // Copyright (c) 2004-2010 Atheros Communications Inc.
 // All rights reserved.
 //
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -131,7 +131,7 @@ A_UINT8 pioctl_filter[] = {
 };
 
 /* Submode for the sake of filtering XIOCTLs are broadly set to 2 types.
- * P2P Submode & Non-P2P submode. IOCLT cmds can be marked to be valid only in
+ * P2P Submode & Non-P2P submode. IOCLT cmds can be marked to be valid only in 
  * P2P Submode or Non-P2P submode or both. The bits- b5,b6,b7 are used to encode
  * this information in the IOCTL filters. The LSBits b0-b4 are used to encode
  * the mode information.

@@ -1,9 +1,9 @@
 /*
  * Copyright (C) 2012 ARM Limited. All rights reserved.
- *
+ * 
  * This program is free software and is provided to you under the terms of the GNU General Public License version 2
  * as published by the Free Software Foundation, and any use by you of this program is subject to the terms of such GNU licence.
- *
+ * 
  * A copy of the licence is included with the program, and can also be obtained from Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
@@ -120,7 +120,7 @@ _mali_osk_errcode_t _mali_ukk_sw_counters_report(_mali_uk_sw_counters_report_s *
  *
  * @param counter_id The counter ID.
  * @param event_id Event ID that the counter should count (HW counter value from TRM).
- *
+ * 
  * @return 1 on success, 0 on failure.
  */
 int _mali_profiling_set_event(u32 counter_id, s32 event_id)
@@ -198,9 +198,9 @@ int _mali_profiling_set_event(u32 counter_id, s32 event_id)
 }
 
 /**
- * Called by gator.ko to retrieve the L2 cache counter values for the first L2 cache.
+ * Called by gator.ko to retrieve the L2 cache counter values for the first L2 cache. 
  * The L2 cache counters are unique in that they are polled by gator, rather than being
- * transmitted via the tracepoint mechanism.
+ * transmitted via the tracepoint mechanism. 
  *
  * @param src0 First L2 cache counter ID.
  * @param val0 First L2 cache counter value.

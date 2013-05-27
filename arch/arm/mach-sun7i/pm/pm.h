@@ -9,7 +9,7 @@
  * the Free Software Foundation.
  */
 
-//#include "pm_types.h"
+//#include "pm_types.h" 
 #include "pm_config.h"
 #include "pm_errcode.h"
 #include "pm_debug.h"
@@ -31,6 +31,7 @@
 #define PM_STANDBY_PRINT_RESUME         (1U << 1)
 #define PM_STANDBY_PRINT_CACHE_TLB_MISS (1U << 2)
 #define PM_STANDBY_PRINT_REG            (1U << 3)
+#define PM_STANDBY_PRINT_CHECK_CRC            (1U << 4)
 
 #ifdef CONFIG_ARCH_SUN4I
 #define INT_REG_LENGTH	((0x90+0x4)>>2)
@@ -79,7 +80,7 @@ struct mmu_state {
 	__u32  ttb_0r;	/* Translation Table Base 0 */
 	__u32  ttb_1r;	/* Translation Table Base 1 */
 	__u32  ttbcr;	/* Translation Talbe Base Control */
-
+	
 	/* CR3 */
 	__u32 dacr;	/* Domain Access Control */
 
@@ -87,6 +88,30 @@ struct mmu_state {
 	__u32 prrr;	/* Primary Region Remap Register */
 	__u32 nrrr;	/* Normal Memory Remap Register */
 };
+
+typedef struct _boot_dram_para_t
+{
+    unsigned int           dram_baseaddr;
+    unsigned int           dram_clk;
+    unsigned int           dram_type;
+    unsigned int           dram_rank_num;
+    unsigned int           dram_chip_density;
+    unsigned int           dram_io_width;
+    unsigned int		   dram_bus_width;
+    unsigned int           dram_cas;
+    unsigned int           dram_zq;
+    unsigned int           dram_odt_en;
+    unsigned int 		   dram_size;
+    unsigned int           dram_tpr0;
+    unsigned int           dram_tpr1;
+    unsigned int           dram_tpr2;
+    unsigned int           dram_tpr3;
+    unsigned int           dram_tpr4;
+    unsigned int           dram_tpr5;
+    unsigned int 		   dram_emr1;
+    unsigned int           dram_emr2;
+    unsigned int           dram_emr3;
+}standy_dram_para_t;
 
 /**
 *@brief struct of super mem
@@ -108,8 +133,31 @@ struct aw_mem_para{
 	struct clk_div_t clk_div;
 	struct pll_factor_t pll_factor;
 	struct mmu_state saved_mmu_state;
-	struct saved_context saved_cpu_context;
+//	struct saved_context saved_cpu_context;
+    standy_dram_para_t      dram_para;
 };
+
+/**
+*@brief struct of standby
+*/
+struct aw_standby_para{
+	unsigned int event_enable;     /**<event type for system wakeup    */
+	unsigned int event;          /**<event type for system wakeup    */
+	unsigned int axp_src;        /**<axp event type for system wakeup    */
+	unsigned int axp_enable;     /**<axp event type for system wakeup    */
+	signed int   time_off;       /**<time to power off from now, based on second */
+};
+
+
+/**
+*@brief struct of power management info
+*/
+struct aw_pm_info{
+    struct aw_standby_para  standby_para;   /* standby parameter            */
+    struct aw_pmu_arg       pmu_arg;        /**<args used by main function  */
+    standy_dram_para_t      dram_para;
+};
+
 
 typedef  int (*super_standby_func)(void);
 typedef  int (*normal_standby_func)(struct aw_pm_info *arg);
@@ -153,3 +201,4 @@ void set_ttbr0(void);
 extern void invalidate_dcache(void);
 
 #endif /*_PM_H*/
+

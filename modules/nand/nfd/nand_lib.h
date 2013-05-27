@@ -2,15 +2,15 @@
 #define __NAND_LIB_H__
 
 //---------------------------------------------------------------
-//  nand driver ÁâàÊú¨Âè∑
+//  nand driver ∞Ê±æ∫≈
 //---------------------------------------------------------------
 #define  NAND_VERSION_0                 0x02
-#define  NAND_VERSION_1                 0x11
+#define  NAND_VERSION_1                 0x12
 
 //---------------------------------------------------------------
-//  ÁªìÊûÑ‰Ωì ÂÆö‰πâ
+//  Ω·ππÃÂ ∂®“Â
 //---------------------------------------------------------------
-typedef struct
+typedef struct 
 {
 	__u32        ChipCnt;                            //the count of the total nand flash chips are currently connecting on the CE pin
     __u32       ChipConnectInfo;                    //chip connect information, bit == 1 means there is a chip connecting on the CE pin
@@ -25,7 +25,7 @@ typedef struct
     __u32       BlkCntPerDie;                       //the count of the physic blocks in one die, include valid block and invalid block
     __u32       OperationOpt;                       //the mask of the operation types which current nand flash can support support
     __u32        FrequencePar;                       //the parameter of the hardware access clock, based on 'MHz'
-    __u32        EccMode;                            //the Ecc Mode for the nand flash chip, 0: bch-16, 1:bch-28, 2:bch_32
+    __u32        EccMode;                            //the Ecc Mode for the nand flash chip, 0: bch-16, 1:bch-28, 2:bch_32   
     __u32        NandChipId[8];                      //the nand chip id of current connecting nand chip
     __u32       ValidBlkRatio;                      //the ratio of the valid physical blocks, based on 1024
 	__u32 		good_block_ratio;					//good block ratio get from hwscan
@@ -62,7 +62,7 @@ struct nand_disk{
 };
 
 //---------------------------------------------------------------
-//  ÂáΩÊï∞ ÂÆö‰πâ
+//  ∫Ø ˝ ∂®“Â
 //---------------------------------------------------------------
 
 //for logic
@@ -160,11 +160,11 @@ extern int mbr2disks(struct nand_disk* disk_array);
 
 
 
-/*
+/* 
 *   Description:
 *   1. if u wanna set dma callback hanlder(sleep during dma transfer) to free cpu for other tasks,
 *      one must call the interface before nand flash initialization.
-      this option is also protected by dma poll method,wakup(succeed or timeout) then check
+      this option is also protected by dma poll method,wakup(succeed or timeout) then check 
       dma transfer complete or still running.
 *   2. if u use dma poll method,no need to call the interface.
 *

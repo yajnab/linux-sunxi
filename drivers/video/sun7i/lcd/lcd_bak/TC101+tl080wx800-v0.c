@@ -10,7 +10,7 @@ static void  LCD_close_cmd(__u32 sel);
 //#define LCD_PARA_USE_CONFIG
 
 #ifdef LCD_PARA_USE_CONFIG
-static __u8 g_gamma_tbl[][2] =
+static __u8 g_gamma_tbl[][2] = 
 {
 //{input value, corrected value}
     {0, 0},
@@ -36,18 +36,18 @@ static __u8 g_gamma_tbl[][2] =
 static void LCD_cfg_panel_info(__panel_para_t * info)
 {
     __u32 i = 0, j=0;
-
+    
     memset(info,0,sizeof(__panel_para_t));
 
     info->lcd_x             = 1280;
     info->lcd_y             = 768;
     info->lcd_dclk_freq     = 68;       //MHz
-
+    
     info->lcd_pwm_not_used  = 0;
     info->lcd_pwm_ch        = 0;
     info->lcd_pwm_freq      = 10000;     //Hz
     info->lcd_pwm_pol       = 0;
-
+    
     info->lcd_if            = 0;        //0:hv(sync+de); 1:8080; 2:ttl; 3:lvds
 
     info->lcd_hbp           = 3;      //hsync back porch
@@ -57,7 +57,7 @@ static void LCD_cfg_panel_info(__panel_para_t * info)
     info->lcd_vt            = 1580;  //vysnc total cycle *2
     info->lcd_hv_vspw       = 0;        //vysnc plus width
 
-    info->lcd_hv_if         = 0;        //0:hv parallel 1:hv serial
+    info->lcd_hv_if         = 0;        //0:hv parallel 1:hv serial 
     info->lcd_hv_smode      = 0;        //0:RGB888 1:CCIR656
     info->lcd_hv_s888_if    = 0;        //serial RGB format
     info->lcd_hv_syuv_if    = 0;        //serial YUV format
@@ -76,7 +76,7 @@ static void LCD_cfg_panel_info(__panel_para_t * info)
     if(info->lcd_gamma_correction_en)
     {
         __u32 items = sizeof(g_gamma_tbl)/2;
-
+        
         for(i=0; i<items-1; i++)
         {
             __u32 num = g_gamma_tbl[i+1][0] - g_gamma_tbl[i][0];
@@ -142,18 +142,18 @@ static void LCD_bl_close(__u32 sel)
 }
 
 #define IIC_SCLB_LOW()	        LCD_GPIO_write(0, 0, 0)
-#define IIC_SCLB_HIGH()	        LCD_GPIO_write(0, 0, 1)
+#define IIC_SCLB_HIGH()	        LCD_GPIO_write(0, 0, 1)		
 
 #define IIC_SDAB_INPUT_SETUP()	LCD_GPIO_set_attr(0, 1, 0)
 #define IIC_SDAB_OUTPUT_SETUP()	LCD_GPIO_set_attr(0, 1, 1)
-#define CHECK_SDAB_HIGH()       LCD_GPIO_read(0, 1)
-#define IIC_SDAB_LOW()          LCD_GPIO_write(0, 1, 0)
-#define IIC_SDAB_HIGH()	        LCD_GPIO_write(0, 1, 1)
+#define CHECK_SDAB_HIGH()       LCD_GPIO_read(0, 1)		 
+#define IIC_SDAB_LOW()          LCD_GPIO_write(0, 1, 0)			
+#define IIC_SDAB_HIGH()	        LCD_GPIO_write(0, 1, 1)		
 
 static __bool i2cB_clock( void )
 {
 	__bool sample = 0;
-
+	
 	IIC_SCLB_HIGH();
 	LCD_delay_us(5) ;
 	IIC_SCLB_LOW();
@@ -234,7 +234,7 @@ static void i2cBStop(void)
 static __bool i2cBTransmit(__u8 value)
 {
 	register __u8 i ;
-
+	
 	for ( i=0 ; i<8 ; i++ )
 	{
 		if((value&0x80)==0x80)
@@ -254,7 +254,7 @@ static __bool i2cBTransmit(__u8 value)
 static __bool i2cBTransmitSubAddr(__u16 value)
 {
 	register __u8 i ;
-
+	
 	for ( i=0 ; i<8 ; i++ )
 	{
 		if((value&0x80)==0x80)
@@ -275,7 +275,7 @@ static __bool i2cBLocateSubAddr(__u8 slave_addr, __u16 sub_addr)
 {
 	register __u8 i;
 	__u8 sub_addr_hi,sub_addr_low;
-
+	
 	sub_addr_hi = sub_addr >>8;
 	sub_addr_low = sub_addr;
 	for (i=0; i<3; i++)
@@ -363,3 +363,4 @@ void LCD_get_panel_funs_0(__lcd_panel_fun_t * fun)
     fun->cfg_close_flow = LCD_close_flow;
     fun->lcd_user_defined_func = LCD_user_defined_func;
 }
+

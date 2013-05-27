@@ -25,3 +25,5 @@ ATH_AR6K_BUILTIN_HCI_TRANSPORT := yes
 2.驱动包编译成功后，将附件固件放在默认路径ath6k/AR6003/hw2.0/下，
 （该目录也可根据自己的需要在驱动代码AR6kSDK.3.0_RC.205\host\os\linux\include\ar6000_drv.h
 中进行修改。）然后insmod ar6000.ko即可。
+
+

@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2006 Atheros Communications Inc.
  * All rights reserved.
- *
- *
+ * 
+ * 
 // The software source and binaries included in this development package are
 // licensed, not sold. You, or your company, received the package under one
 // or more license agreements. The rights granted to you are specifically
@@ -12,12 +12,12 @@
 // portion of this package must be in strict compliance with the license
 // agreement(s) terms.
 // </copyright>
-//
+// 
 // <summary>
 // 	Wifi driver for AR6002
 // </summary>
 //
- *
+ * 
  */
 #include <sys/types.h>
 #include <net/if.h>
@@ -32,7 +32,7 @@
 #include "athtestcmdlib.h"
 #ifdef ANDROID
 #include <cutils/properties.h>
-#endif
+#endif 
 
 //#define UNIT_TEST 1
 
@@ -72,7 +72,7 @@ static int parseCmd(const char *cmdline, char *buf, char **argv, size_t argvlen)
     {
         if (argc>=argvlen)
         {
-            break;
+            break;           
         }
         argv[argc++] = token;
         while ( *token && !isspace(*token) )
@@ -137,16 +137,16 @@ int tcmd_exec(const char *cmdline, void (*reportCB)(void *), jmp_buf *jbuf)
 }
 #else
 extern int tcmd_exec(const char *cmdline, void (*rxcb)(void*), jmp_buf *jbuf);
-#endif
+#endif 
 static void reportRx(void *data);
 
 static void getIfName(char *ifname)
-{
-#ifdef ANDROID
+{   
+#ifdef ANDROID 
     char ifprop[PROPERTY_VALUE_MAX];
-#endif
+#endif 
     char *src;
-    char defIfname[IFNAMSIZ];
+    char defIfname[IFNAMSIZ];  
     char linebuf[1024];
     FILE *f = fopen("/proc/net/wireless", "r");
     if (f) {
@@ -164,7 +164,7 @@ static void getIfName(char *ifname)
         fclose(f);
     }
 
-    src = defIfname;
+    src = defIfname;    
 #ifdef ANDROID
     if (property_get("wifi.interface", ifprop, defIfname)) {
         src = ifprop;
@@ -181,14 +181,14 @@ static int doCommand(const char *fmt, ...)
     char cmd[1024];
     va_list ap;
     getIfName(ifname);
-    len = snprintf(cmd, sizeof(cmd)-1, "athtestcmd -i %s ", ifname);
+    len = snprintf(cmd, sizeof(cmd)-1, "athtestcmd -i %s ", ifname); 
     va_start(ap, fmt);
     len = vsnprintf(cmd + len, sizeof(cmd)-1-len, fmt, ap);
     va_end(ap);
 
     if (len > 0) {
         gCmd.errCode = 0;
-        gCmd.errString[0] = '\0';
+        gCmd.errString[0] = '\0';      
         ret = tcmd_exec(cmd, &reportRx, &gCmd.ctx);
     }
     optarg = NULL;
@@ -203,7 +203,7 @@ static int doCommand(const char *fmt, ...)
 
 static void athCheck()
 {
-	if (gCmd.channel == 0 ) {
+	if (gCmd.channel == 0 ) { 
 		gCmd.channel = 1;
 	}
 	athTxStop();
@@ -232,7 +232,7 @@ void testcmd_error(int code, const char *fmt, ...)
     longjmp(gCmd.ctx, 1);
 }
 
-int athApiInit(void)
+int athApiInit(void) 
 {
     memset(&gCmd, 0, sizeof(gCmd));
     optarg = NULL;
@@ -249,7 +249,7 @@ void athApiCleanup(void)
 
 void athChannelSet(int channel)
 {
-    gCmd.channel = channel;
+    gCmd.channel = channel;   
 }
 
 void athShortGuardSet(int enable)
@@ -353,7 +353,7 @@ int athRxPacketStart(void)
     doCommand("--rx promis --rxfreq %d --rxantenna 0", gCmd.channel);
     if (gCmd.errCode==0) {
         gCmd.isRxStart = 1;
-    }
+    }    
     return (gCmd.errCode==0) ? 0 : -1;
 }
 
@@ -417,4 +417,7 @@ int main()
    // athRxPacketStop();
     athApiCleanup();
 }
-#endif
+#endif 
+
+
+

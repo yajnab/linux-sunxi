@@ -1,4 +1,4 @@
-// endian_func.h - contians endian conversion functions
+// endian_func.h - contians endian conversion functions 
 
 // Copyright (c) 2000 Atheros Communications, Inc., All Rights Reserved */
 
@@ -10,7 +10,7 @@
 // description
 // -----------
 // Contains functions which converts short and long integers from big endian
-// to little endian and vice versa.
+// to little endian and vice versa. 
 
 
 #ifndef __INCendian_funch
@@ -20,7 +20,7 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif // __cplusplus
+#endif // __cplusplus 
 
 A_UINT32 ltob_l
 (
@@ -53,7 +53,7 @@ A_UINT16 swap_s
 );
 
 void swapAndCopyBlock_l
-(
+(	
 	void *dest,
 	void *src,
 	A_UINT32 size
@@ -67,6 +67,7 @@ void swapBlock_l
 
 #ifdef __cplusplus
 }
-#endif // __cplusplus
+#endif // __cplusplus 
 
 #endif // __INCendian_funch
+

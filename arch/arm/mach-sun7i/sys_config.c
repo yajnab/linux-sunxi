@@ -316,7 +316,7 @@ void dump_mainkey(script_main_key_t *pmainkey)
                 printk("               %-15sINVALID TYPE\n", psubkey->name);
                 break;
         }
-
+        
         psubkey = psubkey->next;
     }
     printk("=========================================================\n");
@@ -574,20 +574,20 @@ static ssize_t dump_mainkey_write(struct file *filp, const char __user *buffer,
     size_t count, loff_t *ppos)
 {
     char mainkey[SCRIPT_NAME_SIZE_MAX] = {0};
-
+    
     if (!buffer) {
         printk(KERN_ERR "Usage: echo {mainkey} > dump_mainkey\n");
         return 0;
     }
-
+    
     if (copy_from_user(mainkey, buffer, count)) {
         return -EFAULT;
     }
-
+    
     /* omit '\n' */
     mainkey[count-1] = '\0';
     script_dump_mainkey(mainkey);
-
+    
     return count;
 }
 
@@ -603,13 +603,13 @@ static int script_debugfs_init(void)
         printk(KERN_ERR "create debugfs/sys_config/ failed\n");
         return -1;
     }
-
+    
     if (!debugfs_create_file("dump_mainkey", 0222, script_debugfs,
             NULL, &dump_mainkey_fops)) {
         printk(KERN_ERR "create file dump_mainkey failed\n");
         return -1;
     }
-
+    
     return 0;
 }
 core_initcall(script_debugfs_init);

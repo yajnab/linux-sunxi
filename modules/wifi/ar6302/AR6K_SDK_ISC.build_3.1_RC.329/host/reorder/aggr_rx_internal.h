@@ -3,7 +3,7 @@
  * Copyright (c) 2004-2010 Atheros Communications Inc.
  * All rights reserved.
  *
- *
+ * 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -51,7 +51,7 @@
 
 /* Hold q is a function of win_sz, which is negotiated per tid */
 #define HOLD_Q_SZ(_x)   (TID_WINDOW_SZ((_x))*sizeof(OSBUF_HOLD_Q))
-/* AGGR_RX_TIMEOUT value is important as a (too) small value can cause frames to be
+/* AGGR_RX_TIMEOUT value is important as a (too) small value can cause frames to be 
  * delivered out of order and a (too) large value can cause undesirable latency in
  * certain situations. */
 #define AGGR_RX_TIMEOUT     400  /* Timeout(in ms) for delivery of frames, if they are stuck */
@@ -83,9 +83,9 @@ typedef struct {
     A_UINT16            seq_next;   /* Next seq no, in current window */
     A_UINT32            hold_q_sz;  /* Num of frames that can be held in hold q */
     OSBUF_HOLD_Q        *hold_q;    /* Hold q for re-order */
-#if 0
+#if 0    
     WINDOW_SNAPSHOT     old_win;    /* Sliding window snapshot - for timeout */
-#endif
+#endif    
     A_NETBUF_QUEUE_T    q;          /* q head for enqueuing frames for dispatch */
     A_MUTEX_T           lock;
 }RXTID;
@@ -104,9 +104,9 @@ typedef struct {
 
 typedef struct {
     void                *dev;               /* dev handle */
-    A_UINT8             aggr_sz;            /* config value of aggregation size */
+    A_UINT8             aggr_sz;            /* config value of aggregation size */    
     A_UINT8             timerScheduled;
-    A_TIMER             timer;              /* timer for returning held up pkts in re-order que */
+    A_TIMER             timer;              /* timer for returning held up pkts in re-order que */    
     RXTID               RxTid[NUM_OF_TIDS]; /* Per tid window */
 #ifdef AGGR_DEBUG
     RXTID_STATS         stat[NUM_OF_TIDS];  /* Tid based statistics */
@@ -119,7 +119,7 @@ typedef struct {
     A_NETBUF_QUEUE_T    freeQ;              /* pre-allocated buffers - for A_MSDU slicing */
 #ifdef AGGR_DEBUG
     PACKET_LOG          pkt_log;            /* Log info of the packets */
-#endif
+#endif    
 }AGGR_INFO;
 
 #endif /* __AGGR_RX_INTERNAL_H__ */

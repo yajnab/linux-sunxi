@@ -1,5 +1,5 @@
 // Copyright (c) 2004, 2005 Atheros Communications Inc.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -13,22 +13,22 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
-// Portions of this code were developed with information supplied from the
+// Portions of this code were developed with information supplied from the 
 // SD Card Association Simplified Specifications. The following conditions and disclaimers may apply:
 //
 //  The following conditions apply to the release of the SD simplified specification (“Simplified
-//  Specification”) by the SD Card Association. The Simplified Specification is a subset of the complete
-//  SD Specification which is owned by the SD Card Association. This Simplified Specification is provided
-//  on a non-confidential basis subject to the disclaimers below. Any implementation of the Simplified
+//  Specification”) by the SD Card Association. The Simplified Specification is a subset of the complete 
+//  SD Specification which is owned by the SD Card Association. This Simplified Specification is provided 
+//  on a non-confidential basis subject to the disclaimers below. Any implementation of the Simplified 
 //  Specification may require a license from the SD Card Association or other third parties.
 //  Disclaimers:
-//  The information contained in the Simplified Specification is presented only as a standard
-//  specification for SD Cards and SD Host/Ancillary products and is provided "AS-IS" without any
-//  representations or warranties of any kind. No responsibility is assumed by the SD Card Association for
-//  any damages, any infringements of patents or other right of the SD Card Association or any third
-//  parties, which may result from its use. No license is granted by implication, estoppel or otherwise
-//  under any patent or other rights of the SD Card Association or any third party. Nothing herein shall
-//  be construed as an obligation by the SD Card Association to disclose or distribute any technical
+//  The information contained in the Simplified Specification is presented only as a standard 
+//  specification for SD Cards and SD Host/Ancillary products and is provided "AS-IS" without any 
+//  representations or warranties of any kind. No responsibility is assumed by the SD Card Association for 
+//  any damages, any infringements of patents or other right of the SD Card Association or any third 
+//  parties, which may result from its use. No license is granted by implication, estoppel or otherwise 
+//  under any patent or other rights of the SD Card Association or any third party. Nothing herein shall 
+//  be construed as an obligation by the SD Card Association to disclose or distribute any technical 
 //  information, know-how or other confidential information to any third party.
 //
 //
@@ -42,7 +42,7 @@
 @file: sdio_hcd_linux.h
 
 @abstract: include file for Tokyo Electron PCI Ellen host controller, linux dependent code
-
+ 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 #ifndef __SDIO_HCD_LINUX_H___
 #define __SDIO_HCD_LINUX_H___
@@ -95,9 +95,9 @@ typedef struct _SDHCD_DEVICE {
     SDLIST  List;                  /* linked list */
     SDHCD   Hcd;                   /* HCD description for bus driver */
     char    DeviceName[SDHCD_MAX_DEVICE_NAME]; /* our chr device name */
-    SDHCD_MEMORY Address;          /* memory address of this device */
+    SDHCD_MEMORY Address;          /* memory address of this device */ 
     spinlock_t AddressSpinlock;    /* use to protect reghisters when needed */
-    SDHCD_MEMORY ControlRegs;      /* memory address of shared control registers */
+    SDHCD_MEMORY ControlRegs;      /* memory address of shared control registers */ 
     SDHCD_TYPE Type;               /* type of this device */
     UINT8   InitStateMask;
 #define SDIO_BAR_MAPPED            0x01
@@ -111,8 +111,8 @@ typedef struct _SDHCD_DEVICE {
     BOOL         Cancel;
     BOOL         ShuttingDown;    /* indicates shut down of HCD) */
     BOOL         HighSpeed;       /* device supports high speed, 25-50 Mhz */
-    UINT32       BaseClock;       /* base clock in hz */
-    UINT32       TimeOut;         /* timeout setting */
+    UINT32       BaseClock;       /* base clock in hz */ 
+    UINT32       TimeOut;         /* timeout setting */ 
     UINT32       ClockSpinLimit;  /* clock limit for command spin loops */
     BOOL         KeepClockOn;
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,20)
@@ -131,7 +131,7 @@ typedef struct _SDHCD_DEVICE {
 #define WORK_ITEM_CARD_DETECT  1
 #define WORK_ITEM_SDIO_IRQ     2
 
-
+ 
 #define READ_HOST_REG32(pDevice, OFFSET)  \
     _READ_DWORD_REG((((UINT32)((pDevice)->Address.pMapped))) + (OFFSET))
 #define WRITE_HOST_REG32(pDevice, OFFSET, VALUE) \
@@ -187,10 +187,10 @@ typedef struct _SDHCD_DEVICE {
 //??#define TRACE_SIGNAL_DATA_READ(pDevice, on) GPIO_CONTROL((pDevice),(on),GPIO2_DATA_MASK)
 //??#define TRACE_SIGNAL_DATA_ISR(pDevice, on) GPIO_CONTROL((pDevice),(on),GPIO4_DATA_MASK)
 //??#define TRACE_SIGNAL_DATA_IOCOMP(pDevice, on) GPIO_CONTROL((pDevice),(on),GPIO3_DATA_MASK)
-#define TRACE_SIGNAL_DATA_WRITE(pDevice, on)
-#define TRACE_SIGNAL_DATA_READ(pDevice, on)
-#define TRACE_SIGNAL_DATA_ISR(pDevice, on)
-#define TRACE_SIGNAL_DATA_IOCOMP(pDevice, on)
+#define TRACE_SIGNAL_DATA_WRITE(pDevice, on) 
+#define TRACE_SIGNAL_DATA_READ(pDevice, on) 
+#define TRACE_SIGNAL_DATA_ISR(pDevice, on) 
+#define TRACE_SIGNAL_DATA_IOCOMP(pDevice, on) 
 #define TRACE_SIGNAL_DATA_TIMEOUT(pDevice, on) GPIO_CONTROL((pDevice),(on),GPIO3_DATA_MASK)
 
 /* prototypes */

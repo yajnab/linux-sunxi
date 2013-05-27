@@ -12,7 +12,7 @@ struct wifi_pm_ops {
 	script_item_u   sdio_id;
 	script_item_u   usb_id;
 	script_item_u   module_sel;
-	int             (*gpio_ctrl)(char* name, int level);
+	int             (*gpio_ctrl)(char* name, int level);	
 	void            (*standby)(int in);
 	void            (*power)(int mode, int *updown);
 

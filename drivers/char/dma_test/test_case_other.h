@@ -31,3 +31,4 @@ u32 __dtc_many_enq(void);
 u32 __dtc_stop(void);
 
 #endif /* __TEST_CASE_OTHER_H */
+

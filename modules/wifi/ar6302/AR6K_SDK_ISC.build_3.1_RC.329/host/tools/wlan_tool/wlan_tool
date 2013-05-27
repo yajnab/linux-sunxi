@@ -95,7 +95,7 @@ do_insmod() {
     *)
     MOD_ARGS=$ARGS
     ;;
-    esac
+    esac      
     if ! insmod /system/wifi/ar6000.ko $MOD_ARGS; then
         $SYSLOG "Fallback to use on property:wlan.driver.status=insmod which will insmod"
         do_setprop $DRIVER_PROP_NAME $1
@@ -118,7 +118,7 @@ reload() {
     fi
     $SYSLOG "Try to load driver with $@"
     do_insmod $@
-
+    
     for i in 1 2 3 4 5 6 7 8 9 10; do
         if $WLAN_ENABLE_CHECK; then
             break;
@@ -158,7 +158,7 @@ init() {
     do_setprop $APMODE_PROP_NAME "unloaded"
     mkdir /data/misc/wifi/wpa_supplicant
     mkdir /data/misc/wifi/hostapd
-    mkdir /data/system/wpa_supplicant /data/system/hostapd
+    mkdir /data/system/wpa_supplicant /data/system/hostapd  
     chmod 770 /data/misc/wifi/wpa_supplicant /data/misc/wifi/hostapd
     chown wifi.wifi /data/misc/wifi/wpa_supplicant /data/misc/wifi/hostapd
     chown wifi.wifi /data/system/wpa_supplicant /data/system/hostapd
@@ -175,7 +175,7 @@ init() {
 checkapmode() {
     if strcmp `getprop $APMODE_PROP_NAME unloaded` "ok"; then
         return 0
-    else
+    else 
         return 1
     fi
 }
@@ -215,7 +215,7 @@ loaddriver() {
         wmiconfig -i $IFNAME --wlan enable
     else
         reload $MODE_WLAN
-    fi
+    fi   
     if $WLAN_ENABLE_CHECK; then
         ifconfig $IFNAME up
         $SYSLOG "ar6000 driver loaded"
@@ -234,7 +234,7 @@ unloaddriver() {
         return
     fi
     if exp $CLK_HELPER == 1; then
-        wmiconfig -i $IFNAME --wlan disable
+        wmiconfig -i $IFNAME --wlan disable        
     else
         do_rmmod
     fi
@@ -279,8 +279,8 @@ apmodedown() {
 
         case $AP_IF_MODE in
             nat)
-# Reset NAT here
-            echo 0 > /proc/sys/net/ipv4/ip_forward
+# Reset NAT here 
+            echo 0 > /proc/sys/net/ipv4/ip_forward 
             iptables --flush
 # Stop dhcp server here
             kill -15 `cat $DNSMASQ_PID_FILE`
@@ -317,11 +317,11 @@ apmodeup() {
     else
         reload $MODE_WLAN
         wmiconfig -i $IFNAME --connect dummy
-    fi
-
+    fi 
+    
     if $WLAN_ENABLE_CHECK; then
     if $NO_NETD_CHECK; then
-# Execute hostapd here
+# Execute hostapd here 
         if ls $HOSTAP_CONF_FILE; then
             /system/bin/hostapd -P $HOSTAP_PID_FILE -B $HOSTAP_CONF_FILE
         else
@@ -334,7 +334,7 @@ apmodeup() {
         case $AP_IF_MODE in
             nat)
             $SYSLOG "NAT mode Subnet $AP_SUBNET.255"
-            echo 1 > /proc/sys/net/ipv4/ip_forward
+            echo 1 > /proc/sys/net/ipv4/ip_forward 
             iptables --flush
             iptables --table nat --flush
             iptables --delete-chain
@@ -366,9 +366,9 @@ apmodeup() {
 
 if ! ls /system/bin/wmiconfig; then
     $SYSLOG "Cannot find wmiconfig!!!!"
-fi
+fi 
 
-case $1 in
+case $1 in 
     dhcpcd)
     /system/bin/dhcpcd -B $IFNAME
     ;;
@@ -397,7 +397,7 @@ case $1 in
     fi
     do_setprop wlan.driver.btcoex ok
     ;;
-    unload)
+    unload)    
     unloaddriver
     ;;
     load)
@@ -422,7 +422,7 @@ case $1 in
     apmodedown)
     apmodedown
     ;;
-    *)
+    *) 
     init
     ;;
 esac

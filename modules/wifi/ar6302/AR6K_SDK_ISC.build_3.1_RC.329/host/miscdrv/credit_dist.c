@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="credit_dist.c" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -102,7 +102,7 @@ static void ar6000_credit_init(void                     *Context,
 #ifdef CONFIG_GIVE_LOW_PRIORITY_STREAMS_MIN_CREDITS
 	if (TotalCredits > 4)
 	{
-		  if ((pCurEpDist->ServiceID == WMI_DATA_BK_SVC)  || (pCurEpDist->ServiceID == WMI_DATA_BE_SVC)){
+ 		  if ((pCurEpDist->ServiceID == WMI_DATA_BK_SVC)  || (pCurEpDist->ServiceID == WMI_DATA_BE_SVC)){
 					/* assign at least min credits to lower than VO priority services */
 				GiveCredits(pCredInfo,pCurEpDist,pCurEpDist->TxCreditsMin);
 					/* force active */
@@ -228,7 +228,7 @@ static void ar6000_credit_distribute(void                     *Context,
             break;
         case HTC_DUMP_CREDIT_STATE :
             AR_DEBUG_PRINTF(ATH_DEBUG_ERR, ("Credit Distribution, total : %d, free : %d\n",
-									pCredInfo->TotalAvailableCredits, pCredInfo->CurrentFreeCredits));
+            								pCredInfo->TotalAvailableCredits, pCredInfo->CurrentFreeCredits));
             break;
         default:
             break;
@@ -414,3 +414,4 @@ A_STATUS ar6000_setup_credit_dist(HTC_HANDLE HTCHandle, COMMON_CREDIT_STATE_INFO
 
     return A_OK;
 }
+

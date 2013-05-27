@@ -192,7 +192,7 @@ dhd_customer_gpio_wlan_ctrl(int onoff)
 #endif /* CUSTOMER_HW */
 			OSL_DELAY(200);
 #ifdef CUSTOMER_AW
-			sw_mci_rescan_card(SDIO_ID, 1);
+            		sw_mci_rescan_card(SDIO_ID, 1);
 #endif
 		break;
 	}

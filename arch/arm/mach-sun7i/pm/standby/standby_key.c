@@ -93,3 +93,4 @@ __s32 standby_query_key(void)
     }
     return -1;
 }
+

@@ -45,3 +45,4 @@ void csp_dma_set_ctrl(dma_channel_t * pchan, u32 val);
 dma_ctrl_u csp_dma_get_ctrl(dma_channel_t * pchan);
 
 #endif  /* __DMA_CSP_H */
+

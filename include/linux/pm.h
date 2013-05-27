@@ -33,7 +33,7 @@ typedef enum{
 	NORMAL_STANDBY = 1,
 	SUPER_STANDBY = 3
 }standby_type_e;
-extern standby_type_e standby_type;
+extern standby_type_e standby_type; 
 
 typedef enum{
 	STANDBY_INITIAL = 0,

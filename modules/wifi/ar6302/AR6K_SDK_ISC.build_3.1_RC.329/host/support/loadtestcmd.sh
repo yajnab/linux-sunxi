@@ -38,7 +38,7 @@ if [ ! -x "$LOADAR6000" ]; then
 fi
 
 BMILOADER=${BMILOADER:-$WORKAREA/host/.output/$ATH_PLATFORM/image/bmiloader}
-if [ ! -x "$BMILOADER" ];
+if [ ! -x "$BMILOADER" ]; 
 then
 	echo "Loader application '$BMILOADER' not found"
 	exit
@@ -102,7 +102,7 @@ if [ "$TARGET_TYPE" = "AR6001" ]
 then
     TCMDIMAGE=${TCMDIMAGE:-$WORKAREA/target/AR6001/bin/athtcmd_ram.bin}
     LOCAL_SCRATCH_ADDRESS=0xac0140c0
-    if [ ! -x "$TCMDIMAGE" ];
+    if [ ! -x "$TCMDIMAGE" ]; 
     then
         echo "TEST CMD '$TCMDIMAGE' not found"
         exit
@@ -120,7 +120,7 @@ do
 		Help
 		;;
        * )
-	echo "Unsupported argument"
+      	echo "Unsupported argument"
             Help
 			exit -1
 		shift
@@ -147,8 +147,9 @@ if [ "$DisableAni" -eq "1" ]; then
        sleep 1
        $BMILOADER -i $NETIF --set --address $LOCAL_SCRATCH_ADDRESS --param=0x20
        sleep 1
-	   $BMILOADER -i $NETIF --get --address $LOCAL_SCRATCH_ADDRESS
+   	   $BMILOADER -i $NETIF --get --address $LOCAL_SCRATCH_ADDRESS
        sleep 1
 fi
 
 $BMILOADER -i $NETIF --done
+

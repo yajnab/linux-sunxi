@@ -27,3 +27,4 @@ config MALI400_GPU_UTILIZATION
 	---help---
 	  This enables gathering and processing of the utilization of Mali GPU.
 	  This data can be used as a basis to change GPU operating frequency.
+

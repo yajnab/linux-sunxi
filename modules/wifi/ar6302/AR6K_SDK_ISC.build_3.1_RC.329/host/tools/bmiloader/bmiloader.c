@@ -3,7 +3,7 @@
  * All rights reserved.
  *
  *
- *
+ * 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -18,7 +18,7 @@
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
 //
- *
+ * 
  */
 
 #include <sys/types.h>
@@ -72,7 +72,7 @@
 
 unsigned int flag;
 const char *progname;
-const char commands[] =
+const char commands[] = 
 "commands and options:\n\
 --get --address=<register address>\n\
 --set --address=<register address> --param=<register value>\n\
@@ -362,7 +362,7 @@ main (int argc, char **argv) {
     unsigned int bitwise_mask;
     unsigned int timeout;
     char *ethIf;
-
+    
     progname = argv[0];
     if (argc == 1) usage();
 
@@ -471,13 +471,13 @@ main (int argc, char **argv) {
         case 'I':
             cmd = BMI_GET_TARGET_INFO;
             break;
-
+            
         case 'n':
             flag |= PARAM_FLAG | AND_OP_FLAG | BITWISE_OP_FLAG;
             bitwise_mask = strtoul(optarg, NULL, 0);
             break;
-
-        case 'o':
+            
+        case 'o':                
             flag |= PARAM_FLAG | BITWISE_OP_FLAG;
             bitwise_mask = strtoul(optarg, NULL, 0);
             break;
@@ -485,7 +485,7 @@ main (int argc, char **argv) {
         case 'q':
             flag |= QUIET_FLAG;
             break;
-
+            
         case 'u':
             flag |= UNCOMPRESS_FLAG;
             break;
@@ -495,7 +495,7 @@ main (int argc, char **argv) {
             timeout = timeout * 10; // convert seconds to 100ms units
             flag |= TIMEOUT_FLAG;
             break;
-
+            
         case 'D':
             strncpy(devicename, optarg, sizeof(devicename)-5);
             strcat(devicename, "/bmi");
@@ -536,20 +536,20 @@ main (int argc, char **argv) {
         }
         s = socket(AF_INET, SOCK_DGRAM, 0);
         if (s < 0) err(1, "socket");
-
+    
         strncpy(ifr.ifr_name, ifname, sizeof(ifr.ifr_name));
         /* Verify that the Target is alive.  If not, wait for it. */
         {
             int rv;
             static int waiting_msg_printed = 0;
-
+    
             buffer = (char *)MALLOC(sizeof(struct bmi_target_info));
             ((int *)buffer)[0] = AR6000_XIOCTL_TARGET_INFO;
             ifr.ifr_data = buffer;
             while ((rv=ioctl(s, AR6000_IOCTL_EXTENDED, &ifr)) < 0)
             {
                 if (errno == ENODEV) {
-                    /*
+                    /* 
                      * Give the Target device a chance to start.
                      * Then loop back and see if it's alive till the specified
                      * timeout
@@ -596,10 +596,10 @@ main (int argc, char **argv) {
         break;
 
     case BMI_TEST:
-        if ((flag & (COUNT_FLAG | LENGTH_FLAG | ADDRESS_FLAG)) ==
+        if ((flag & (COUNT_FLAG | LENGTH_FLAG | ADDRESS_FLAG)) == 
             (COUNT_FLAG | LENGTH_FLAG | ADDRESS_FLAG))
         {
-            nqprintf("BMI Test (address: 0x%x, length: %d, count: %d)\n",
+            nqprintf("BMI Test (address: 0x%x, length: %d, count: %d)\n", 
                     address, length, count);
             if (flag & BMI_SYSFS_FLAG) {
                 err(1, "Cmd: %d not supported via sysfs interface", cmd);
@@ -621,7 +621,7 @@ main (int argc, char **argv) {
         break;
 
     case BMI_READ_MEMORY:
-        if ((flag & (ADDRESS_FLAG | LENGTH_FLAG | FILE_FLAG)) ==
+        if ((flag & (ADDRESS_FLAG | LENGTH_FLAG | FILE_FLAG)) == 
             (ADDRESS_FLAG | LENGTH_FLAG | FILE_FLAG))
         {
             nqprintf(
@@ -647,7 +647,7 @@ main (int argc, char **argv) {
                     } else {
                         ((int *)buffer)[0] = AR6000_XIOCTL_BMI_READ_MEMORY;
                         ((int *)buffer)[1] = address;
-
+    
                         /*
                          * We round up the requested length because some
                          * SDIO Host controllers can't handle other lengths;
@@ -758,7 +758,7 @@ main (int argc, char **argv) {
          * limits the size of each transfer over the
          * interconnect according to BMI protocol
          * limitations.
-         */
+         */ 
         {
             unsigned int remaining = length;
             int *pLength;
@@ -897,9 +897,9 @@ main (int argc, char **argv) {
         if ((flag & (ADDRESS_FLAG | PARAM_FLAG)) == (ADDRESS_FLAG | PARAM_FLAG))
         {
             A_UINT32 origvalue = 0;
-
+            
             if (flag & BITWISE_OP_FLAG) {
-                /* first read */
+                /* first read */    
                 if (flag & BMI_SYSFS_FLAG) {
                     BMIReadSOCRegister(dev, address, &origvalue);
                     param = origvalue;
@@ -916,28 +916,28 @@ main (int argc, char **argv) {
                     origvalue = param;
                     free(buffer);
                 }
-
+                
                 /* now modify */
                 if (flag & AND_OP_FLAG) {
-                    param &= bitwise_mask;
+                    param &= bitwise_mask;        
                 } else {
                     param |= bitwise_mask;
-                }
-
+                }               
+            
                 /* fall through to write out the parameter */
             }
-
+            
             if (flag & BITWISE_OP_FLAG) {
                 if (quiet()) {
                     printf("0x%x\n", origvalue);
                 } else {
-                    printf("BMI Bit-Wise (%s) modify Register (address: 0x%x, orig:0x%x, new: 0x%x,  mask:0x%X)\n",
-                       (flag & AND_OP_FLAG) ? "AND" : "OR", address, origvalue, param, bitwise_mask );
+                    printf("BMI Bit-Wise (%s) modify Register (address: 0x%x, orig:0x%x, new: 0x%x,  mask:0x%X)\n", 
+                       (flag & AND_OP_FLAG) ? "AND" : "OR", address, origvalue, param, bitwise_mask );   
                 }
-            } else{
+            } else{ 
                 nqprintf("BMI Write Register (address: 0x%x, param: 0x%x)\n", address, param);
             }
-
+            
             if (flag & BMI_SYSFS_FLAG) {
                 BMIWriteSOCRegister(dev, address, param);
             } else {
@@ -1021,7 +1021,7 @@ main (int argc, char **argv) {
 
         printf("TARGET_TYPE=%s\n",
                 (target_type == TARGET_TYPE_AR6001) ? "AR6001" :
-                ((target_type == TARGET_TYPE_AR6002) ? "AR6002" :
+                ((target_type == TARGET_TYPE_AR6002) ? "AR6002" : 
                 ((target_type == TARGET_TYPE_AR6003) ? "AR6003" :
                 ((target_type == TARGET_TYPE_MCKINLEY) ? "MCKINLEY" : "unknown"))));
         printf("TARGET_VERSION=0x%x\n", target_version);
@@ -1033,7 +1033,7 @@ main (int argc, char **argv) {
         buffer = (char *)MALLOC(sizeof(cmd) + sizeof(nvramname));
         ((int *)buffer)[0] = AR6000_XIOCTL_BMI_NVRAM_PROCESS;
         memcpy(&buffer[4], nvramname, sizeof(nvramname));
-
+        
         ifr.ifr_data = buffer;
         if (ioctl(s, AR6000_IOCTL_EXTENDED, &ifr) < 0)
         {

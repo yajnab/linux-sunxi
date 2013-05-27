@@ -80,15 +80,15 @@ void  __iomem *baseaddr;
 
 #define AUDIO_RATE_DEFAULT	44100
 	struct sun7i_pcm_dma_params {
-		char *name;
-		dma_addr_t dma_addr;
+		char *name;		
+		dma_addr_t dma_addr;	
 	};
 #define ST_RUNNING		(1<<0)
 #define ST_OPENED		(1<<1)
-
+ 
 /*struct sun7i_pcm_dma_params {
-	struct sw_dma_client *client;	 stream identifier
-	unsigned int channel;				 Channel ID
+	struct sw_dma_client *client;	 stream identifier 
+	unsigned int channel;				 Channel ID 
 	dma_addr_t dma_addr;
 	int dma_size;		 Size of the DMA transfer
 }; */
@@ -102,7 +102,7 @@ void  __iomem *baseaddr;
 #define CODEC_SINGLE_VALUE(xreg, xshift, xmax,	xinvert)\
 		((unsigned long)&(struct codec_mixer_control)\
 		{.reg	=	xreg,	.shift	=	xshift,	.rshift	=	xshift,	.max	=	xmax,\
-	.invert	=	xinvert})
+   	.invert	=	xinvert})
 
 #define CODEC_SINGLE(xname,	reg,	shift,	max,	invert)\
 {	.iface	= SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname,\
@@ -110,7 +110,7 @@ void  __iomem *baseaddr;
 	.put	= snd_codec_put_volsw,\
 	.private_value	= CODEC_SINGLE_VALUE(reg, shift, max, invert)}
 
-/*	mixer control*/
+/*	mixer control*/	
 struct	codec_mixer_control{
 	int	min;
 	int     max;

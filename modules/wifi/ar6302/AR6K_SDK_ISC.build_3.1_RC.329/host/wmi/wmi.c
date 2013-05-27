@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -2018,7 +2018,7 @@ wmi_bssInfo_event_rx(struct wmi_t *wmip, A_UINT8 *datap, int len)
                 cached_ssid_len = ie_ssid[1];
                 if (cached_ssid_len)
                 {
-			memcpy(cached_ssid_buf, ie_ssid + 2, cached_ssid_len);
+                	memcpy(cached_ssid_buf, ie_ssid + 2, cached_ssid_len);
 				}
             }
         }
@@ -2138,15 +2138,15 @@ wmi_bssInfo_event_rx(struct wmi_t *wmip, A_UINT8 *datap, int len)
 
 		if (buf_len)
 		{
-		/* now copy the rest of bytes */
-		A_MEMCPY(ni_buf, buf, buf_len);
+        	/* now copy the rest of bytes */
+        	A_MEMCPY(ni_buf, buf, buf_len);
 		}
     }
     else
     {
 		if (len)
 		{
-		A_MEMCPY(bss->ni_buf, buf, len);
+        	A_MEMCPY(bss->ni_buf, buf, len);
 		}
 	}
 
@@ -2247,7 +2247,7 @@ wmi_opt_frame_event_rx(struct wmi_t *wmip, A_UINT8 *datap, int len)
 
     if (len)
     {
-	A_MEMCPY(bss->ni_buf, buf, len);
+    	A_MEMCPY(bss->ni_buf, buf, len);
 	}
 
     wlan_setup_node(&wmip->wmi_scan_table, bss, bih->bssid);
@@ -3310,7 +3310,7 @@ wmi_probedSsid_cmd(struct wmi_t *wmip, A_UINT8 index, A_UINT8 flag,
 
     if (ssidLength)
     {
-	A_MEMCPY(cmd->ssid, ssid, ssidLength);
+    	A_MEMCPY(cmd->ssid, ssid, ssidLength);
 	}
 
     return (wmi_cmd_send(wmip, osbuf, WMI_SET_PROBED_SSID_CMDID,
@@ -3384,7 +3384,7 @@ wmi_associnfo_cmd(struct wmi_t *wmip, A_UINT8 ieType,
 
     if (ieLen)
     {
-	A_MEMCPY(cmd->assocInfo, ieInfo, ieLen);
+    	A_MEMCPY(cmd->assocInfo, ieInfo, ieLen);
 	}
 
     return (wmi_cmd_send(wmip, osbuf, WMI_SET_ASSOC_INFO_CMDID,
@@ -3941,7 +3941,7 @@ wmi_create_pstream_cmd(struct wmi_t *wmip, WMI_CREATE_PSTREAM_CMD *params)
     if ((A_UINT32)params->tsid == (A_UINT32)WMI_IMPLICIT_PSTREAM) {
         LOCK_WMI(pWmiPriv);
         fatPipeExistsForAC = (pWmiPriv->wmi_fatPipeExists & (1 << params->trafficClass));
-        /*
+        /* 
          * EV#84204 target assert failure in _tx_aggr_drain_post_process()
          * To prevent the driver from sending the back-to-back CREATE_PSTREAM cmd
          */
@@ -5879,7 +5879,7 @@ wmi_set_params_cmd(struct wmi_t *wmip, A_UINT32 opcode, A_UINT32 length, A_CHAR*
 
     if (length)
     {
-	A_MEMCPY(cmd->buffer, buffer, length);
+    	A_MEMCPY(cmd->buffer, buffer, length);
 	}
 
     return (wmi_cmd_send(wmip, osbuf, WMI_SET_PARAMS_CMDID,
@@ -8043,3 +8043,5 @@ wmi_set_apsd_buffered_traffic_cmd(struct wmi_t *wmip, A_UINT16 aid, A_UINT16 bit
 
     return (wmi_cmd_send(wmip, osbuf, WMI_AP_APSD_BUFFERED_TRAFFIC_CMDID, NO_SYNC_WMIFLAG));
 }
+
+

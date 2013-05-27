@@ -382,7 +382,7 @@ void dhd_net_if_unlock(struct net_device *dev);
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 25)) && 1
 extern struct mutex _dhd_sdio_mutex_lock_;
-#endif
+#endif 
 
 typedef struct dhd_if_event {
 	uint8 ifidx;
@@ -514,7 +514,7 @@ extern int write_to_file(dhd_pub_t *dhd, uint8 *buf, int size);
 #endif /* DHD_DEBUG */
 #if defined(OOB_INTR_ONLY)
 extern int dhd_customer_oob_irq_map(unsigned long *irq_flags_ptr);
-#endif
+#endif 
 extern void dhd_os_sdtxlock(dhd_pub_t * pub);
 extern void dhd_os_sdtxunlock(dhd_pub_t * pub);
 
@@ -601,7 +601,9 @@ extern uint android_msg_level;
 #ifdef CONFIG_WIRELESS_EXT
 extern uint iw_msg_level;
 #endif
+#ifdef WL_CFG80211
 extern uint wl_dbg_level;
+#endif
 extern uint dhd_slpauto;
 
 /* Use interrupts */
@@ -714,16 +716,8 @@ extern char fw_path2[MOD_PARAM_PATHLEN];
 
 #define FW_PATH_AUTO_SELECT 1
 extern char firmware_path[MOD_PARAM_PATHLEN];
-#ifdef FW_PATH_AUTO_SELECT
 extern void dhd_bus_select_firmware_name_by_chip(struct dhd_bus *bus, char *dst, char *src);
-#define COPY_FW_PATH_BY_CHIP( bus, dst, src)	dhd_bus_select_firmware_name_by_chip( bus, dst, src);
-#else
-#define COPY_FW_PATH_BY_CHIP( bus, dst, src)	strcpy(dst, src)
-#endif
-#if defined(RSSIOFFSET) || 1
-extern void dhd_bus_get_chip_ver(struct dhd_bus *bus, uint *chip, uint *chiprev);
-#define GET_CHIP_VER(bus, chip, chiprev)	dhd_bus_get_chip_ver(bus, chip, chiprev)
-#endif
+#define COPY_FW_PATH_BY_CHIP(bus, dst, src)	dhd_bus_select_firmware_name_by_chip(bus, dst, src);
 
 /* Flag to indicate if we should download firmware on driver load */
 extern uint dhd_download_fw_on_driverload;

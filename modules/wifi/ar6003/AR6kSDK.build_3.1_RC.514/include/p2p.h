@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="p2p.h" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -353,7 +353,7 @@ struct p2p_ie {
     const A_UINT8 *wps_pri_dev_type;
     A_CHAR   wps_device_name[33];
     A_UINT8  wps_dev_name_len;
-
+    
 
     /* SSID IE */
     const A_UINT8 *ssid;
@@ -424,6 +424,6 @@ struct p2p_device {
     A_UINT8 go_timeout;
     A_UINT8 client_timeout;
     A_UINT8 persistent_grp;
-
+   
 };
 #endif /* _P2P_H_ */

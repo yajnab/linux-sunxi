@@ -25,15 +25,15 @@ typedef struct
     __bool                  b_close;
 
     __u32                   screen_index;
-    __disp_scaler_in_src    input_sel;
-
+    __disp_scaler_in_src    input_sel; 
+    
     __u32                   layer_id;
     __disp_fb_t             in_fb;
     __disp_fb_t             out_fb;
-    __disp_rect_t           src_win;
+    __disp_rect_t           src_win;  
     __disp_rectsz_t         out_size;
     __u32                   smooth_mode;
-
+    
     __bool                  enhance_en;
     __u32                   bright;
     __u32                   contrast;

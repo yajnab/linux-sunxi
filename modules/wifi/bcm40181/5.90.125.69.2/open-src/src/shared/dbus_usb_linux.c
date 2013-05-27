@@ -4,7 +4,7 @@
  *
  * Copyright (C) 2011, Broadcom Corporation
  * All Rights Reserved.
- *
+ * 
  * This is UNPUBLISHED PROPRIETARY SOURCE CODE of Broadcom Corporation;
  * the contents of this file may not be disclosed to third parties, copied
  * or duplicated in any form, in whole or in part, without the prior
@@ -388,7 +388,7 @@ static int  dbus_usbos_intf_stop(void *bus);
 
 #if defined(DBUS_LINUX_HIST)
 static void dbus_usbos_intf_dump(void *bus, struct bcmstrbuf *b);
-#endif
+#endif 
 static int  dbus_usbos_intf_set_config(void *bus, dbus_config_t *config);
 static bool dbus_usbos_intf_recv_needed(void *bus);
 static void *dbus_usbos_intf_exec_rxlock(void *bus, exec_cb_t cb, struct exec_parms *args);
@@ -420,7 +420,7 @@ static dbus_intf_t dbus_usbos_intf = {
 	dbus_usbos_intf_dump, /* dump */
 #else
 	NULL, /* dump */
-#endif
+#endif 
 	dbus_usbos_intf_set_config, /* set_config */
 	NULL, /* get_config */
 	NULL, /* device_exists */
@@ -595,7 +595,7 @@ dbus_usbos_send_complete(CALLBACK_ARGS)
 	if (usbos_info->txposted_hist) {
 		usbos_info->txposted_hist[usbos_info->txposted]++;
 	}
-#endif
+#endif 
 	if (unlikely (usbos_info->txposted < 0)) {
 		DBUSERR(("%s ERROR: txposted is negative!!\n", __FUNCTION__));
 	}
@@ -679,7 +679,7 @@ dbus_usbos_recv_urb_submit(usbos_info_t *usbos_info, dbus_irb_rx_t *rxirb, uint3
 	if (usbos_info->rxposted_hist) {
 		usbos_info->rxposted_hist[usbos_info->rxposted]++;
 	}
-#endif
+#endif 
 
 	dbus_usbos_qenq(&usbos_info->req_rxpostedq, req, &usbos_info->rxposted_lock);
 fail:
@@ -700,7 +700,7 @@ dbus_usbos_recv_dpc(usbos_info_t *usbos_info)
 	int cnt = 0;
 
 	usbos_info->dpc_cnt++;
-#endif
+#endif 
 
 	while ((req = dbus_usbos_qdeq(&usbos_info->req_rxpendingq,
 		&usbos_info->rxpending_lock)) != NULL) {
@@ -745,7 +745,7 @@ fail:
 		usbos_info->rxpending--;
 #if defined(DBUS_LINUX_HIST)
 		cnt++;
-#endif
+#endif 
 		dbus_usbos_qenq(&usbos_info->req_freeq, req, &usbos_info->free_lock);
 		if (usbos_info->cbarg && usbos_info->cbs &&
 			usbos_info->cbs->recv_irb_complete) {
@@ -756,7 +756,7 @@ fail:
 #if defined(DBUS_LINUX_HIST)
 	usbos_info->dpc_pktcnt += cnt;
 	usbos_info->dpc_maxpktcnt = MAX(cnt, usbos_info->dpc_maxpktcnt);
-#endif
+#endif 
 #ifdef DBUS_LINUX_HIST
 	{
 		static unsigned long last_dump = 0;
@@ -1710,7 +1710,7 @@ dbus_usbos_intf_dump(void *bus, struct bcmstrbuf *b)
 
 	return;
 }
-#endif
+#endif 
 
 static int
 dbus_usbos_intf_set_config(void *bus, dbus_config_t *config)
@@ -2222,7 +2222,7 @@ dbus_usbos_intf_detach(dbus_pub_t *pub, void *info)
 	if (usbos_info->rxposted_hist) {
 		MFREE(osh, usbos_info->rxposted_hist, (usbos_info->pub->nrxq+1) * sizeof(int));
 	}
-#endif
+#endif 
 #ifdef USBOS_THREAD
 	dbus_usbos_thread_deinit(usbos_info);
 #endif /* USBOS_THREAD */

@@ -8,7 +8,7 @@ endif
 ifeq ($(CT_OS_SUB_TYPE),linux_2_4)
 # reset CFLAGs, for some reason on 2.4.20, the EXTRA_FLAGS is not propogated from our top-level makefile
 EXTRA_CFLAGS += $(CT_PASS_CFLAGS)
-O_TARGET := sdio_busdriver.o
+O_TARGET := sdio_busdriver.o 
 # need export line for module export
 export-objs := linux/sdio_bus_os.o
 obj-y += sdio_bus.o sdio_function.o sdio_bus_misc.o sdio_bus_events.o sdio_bus_os.o
@@ -32,3 +32,4 @@ include $(QRDIR)$(QRECURSE)
 endif
 
 
+  

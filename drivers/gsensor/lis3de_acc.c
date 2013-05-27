@@ -51,7 +51,7 @@
 
 /* #define	DEBUG		1 */
 
-#define	G_MAX		16000
+#define	G_MAX		        16000
 
 /* Accelerometer Sensor Operating Mode */
 #define LIS3DE_ACC_ENABLE	(0x01)
@@ -175,10 +175,10 @@
 /* end RESUME STATE INDICES */
 
 enum {
-	DEBUG_INIT = 1U << 0,
-	DEBUG_CONTROL_INFO = 1U << 1,
-	DEBUG_DATA_INFO = 1U << 2,
-	DEBUG_SUSPEND = 1U << 3,
+	DEBUG_INIT              = 1U << 0,
+	DEBUG_CONTROL_INFO      = 1U << 1,	
+	DEBUG_DATA_INFO         = 1U << 2,
+	DEBUG_SUSPEND           = 1U << 3,
 };
 static u32 debug_mask = 0;
 #define dprintk(level_mask, fmt, arg...)	if (unlikely(debug_mask & level_mask)) \
@@ -271,7 +271,7 @@ static const unsigned short i2c_address[3] = {0x28, 0x29, 0x38};
 
 /**
  * gsensor_fetch_sysconfig_para - get config info from sysconfig.fex file.
- * return value:
+ * return value:  
  *                    = 0; success;
  *                    < 0; err
  */
@@ -280,37 +280,37 @@ static int gsensor_fetch_sysconfig_para(void)
 	int ret = -1;
 	int device_used = -1;
 	script_item_u	val;
-	script_item_value_type_e  type;
-
+	script_item_value_type_e  type;	
+			
 	dprintk(DEBUG_INIT, "========%s===================\n", __func__);
-
+		
 	type = script_get_item("gsensor_para", "gsensor_used", &val);
-
+	 
 	if (SCIRPT_ITEM_VALUE_TYPE_INT	!= type) {
 			pr_err("%s: type err  device_used = %d. \n", __func__, val.val);
 			goto script_get_err;
 	}
 	device_used = val.val;
-
+		
 	if (1 == device_used) {
-		type = script_get_item("gsensor_para", "gsensor_twi_id", &val);
+		type = script_get_item("gsensor_para", "gsensor_twi_id", &val); 
 		if(SCIRPT_ITEM_VALUE_TYPE_INT != type){
 			pr_err("%s: type err twi_id = %d. \n", __func__, val.val);
 			goto script_get_err;
 		}
 		twi_id = val.val;
-
+			
 		dprintk(DEBUG_INIT, "%s: twi_id is %d. \n", __func__, twi_id);
-
+	
 		ret = 0;
-
+			
 	} else {
 		pr_err("%s: gsensor_unused. \n",  __func__);
 		ret = -1;
 	}
-
+	
 	return ret;
-
+	
 script_get_err:
 	pr_notice("=========script_get_err============\n");
 	return ret;
@@ -318,7 +318,7 @@ script_get_err:
 
 /**
  * gsensor_detect - Device detection callback for automatic device creation
- * return value:
+ * return value:  
  *                    = 0; success;
  *                    < 0; err
  */
@@ -328,26 +328,25 @@ static int gsensor_detect(struct i2c_client *client, struct i2c_board_info *info
 	int ret;
 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA))
 		return -ENODEV;
-
+            
 	if (twi_id == adapter->nr) {
 		for(i2c_num = 0; i2c_num < (sizeof(i2c_address)/sizeof(i2c_address[0]));i2c_num++)
 		{
 			client->addr = i2c_address[i2c_num];
-			pr_info("%s:addr= 0x%x,i2c_num:%d\n",__func__,client->addr,i2c_num);
 			ret = i2c_smbus_read_byte_data(client,WHO_AM_I);
 			dprintk(DEBUG_INIT, "%s: addr = 0x%x, i2c_num: %d, Read ID value is :%d",
 			        __func__,client->addr, i2c_num, ret);
-
+			        
 			if ((ret &0x00FF) == WHOAMI_LIS3DE_ACC) {
-				strlcpy(info->type, SENSOR_NAME, I2C_NAME_SIZE);
-				return 0;
-			}
+    				strlcpy(info->type, SENSOR_NAME, I2C_NAME_SIZE);
+				return 0; 
+			}                                                        
 		}
-
+        
 		dprintk(DEBUG_INIT, "%s:lis3de_acc Device not found, \
 			maybe the other gsensor equipment! \n",__func__);
 		return -ENODEV;
-
+		
 	} else {
 		return -ENODEV;
 	}
@@ -466,24 +465,25 @@ static int lis3de_acc_hw_init(struct lis3de_acc_status *stat)
 
 	dprintk(DEBUG_INIT, "%s: hw init start\n", LIS3DE_ACC_DEV_NAME);
 
-	buf[0] = WHO_AM_I;
+	/*buf[0] = WHO_AM_I;
 	err = lis3de_acc_i2c_read(stat, buf, 1);
 	if (err < 0) {
 		dev_warn(&stat->client->dev, "Error reading WHO_AM_I:"
 				" is device available/working?\n");
 		goto err_firstread;
 	} else
-		stat->hw_working = 1;
+		
 
 	if (buf[0] != WHOAMI_LIS3DE_ACC) {
 		dev_err(&stat->client->dev,
 			"device unknown. Expected: 0x%02x,"
 			" Replies: 0x%02x\n",
 			WHOAMI_LIS3DE_ACC, buf[0]);
-		err = -1; /* choose the right coded error */
+		err = -1; // choose the right coded error 
 		goto err_unknown_device;
-	}
+	}*/
 
+        stat->hw_working = 1;
 
 	buf[0] = CTRL_REG1;
 	buf[1] = stat->resume_state[RES_CTRL_REG1];
@@ -544,9 +544,6 @@ static int lis3de_acc_hw_init(struct lis3de_acc_status *stat)
 	dprintk(DEBUG_INIT, "%s: hw init done\n", LIS3DE_ACC_DEV_NAME);
 	return 0;
 
-err_firstread:
-	stat->hw_working = 0;
-err_unknown_device:
 err_resume_state:
 	stat->hw_initialized = 0;
 	dev_err(&stat->client->dev, "hw init error 0x%02x,0x%02x: %d\n", buf[0],
@@ -680,16 +677,16 @@ static int lis3de_acc_update_fs_range(struct lis3de_acc_status *stat,
 	switch (new_fs_range) {
 	case LIS3DE_ACC_G_2G:
 		break;
-
+		
 	case LIS3DE_ACC_G_4G:
 		break;
-
+		
 	case LIS3DE_ACC_G_8G:
 		break;
-
+		
 	case LIS3DE_ACC_G_16G:
 		break;
-
+		
 	default:
 		dev_err(&stat->client->dev, "invalid fs range requested: %u\n",
 				new_fs_range);
@@ -770,13 +767,14 @@ static int lis3de_acc_register_write(struct lis3de_acc_status *stat,
 {
 	int err = -1;
 
-		/* Sets configuration register at reg_address
-		 *  NOTE: this is a straight overwrite  */
-		buf[0] = reg_address;
-		buf[1] = new_value;
-		err = lis3de_acc_i2c_write(stat, buf, 1);
-		if (err < 0)
-			return err;
+	/* Sets configuration register at reg_address
+	 *  NOTE: this is a straight overwrite  */
+	buf[0] = reg_address;
+	buf[1] = new_value;
+	err = lis3de_acc_i2c_write(stat, buf, 1);
+	if (err < 0)
+		return err;
+		
 	return err;
 }
 
@@ -1229,9 +1227,9 @@ static struct device_attribute attributes[] = {
 #endif
 };
 
-static DEVICE_ATTR(delay, 0666,
+static DEVICE_ATTR(delay, 0664,
         attr_get_polling_rate, attr_set_polling_rate);
-static DEVICE_ATTR(enable, 0666,
+static DEVICE_ATTR(enable, 0664,
          attr_get_enable, attr_set_enable);
 
 static struct attribute* lis3de_attrs[] = {
@@ -1457,8 +1455,7 @@ static int lis3de_acc_probe(struct i2c_client *client,
 	if (stat->pdata == NULL) {
 		err = -ENOMEM;
 		dev_err(&client->dev,
-				"failed to allocate memory for pdata: %d\n",
-				err);
+				"failed to allocate memory for pdata!\n");
 		goto err_mutexunlock;
 	}
 
@@ -1627,7 +1624,8 @@ err_destoyworkqueue2:
 	if (stat->pdata->gpio_int2 >= 0)
 		destroy_workqueue(stat->irq2_work_queue);
 err_free_irq1:
-	free_irq(stat->irq1, stat);
+        if (stat->pdata->gpio_int1 >= 0)
+	        free_irq(stat->irq1, stat);
 err_destoyworkqueue1:
 	if (stat->pdata->gpio_int1 >= 0)
 		destroy_workqueue(stat->irq1_work_queue);
@@ -1644,7 +1642,6 @@ exit_kfree_pdata:
 	kfree(stat->pdata);
 err_mutexunlock:
 	mutex_unlock(&stat->lock);
-/* err_freedata: */
 	kfree(stat);
 exit_check_functionality_failed:
 	pr_err("%s: Driver Init failed\n", LIS3DE_ACC_DEV_NAME);
@@ -1662,16 +1659,14 @@ static int __devexit lis3de_acc_remove(struct i2c_client *client)
 
 	if (stat->pdata->gpio_int1 >= 0) {
 		free_irq(stat->irq1, stat);
-		//gpio_free(stat->pdata->gpio_int1);
 		destroy_workqueue(stat->irq1_work_queue);
 	}
 
 	if (stat->pdata->gpio_int2 >= 0) {
 		free_irq(stat->irq2, stat);
-		//gpio_free(stat->pdata->gpio_int2);
 		destroy_workqueue(stat->irq2_work_queue);
 	}
-
+        
         sysfs_remove_group(&stat->input_dev->dev.kobj, &lis3de_group);
 	lis3de_acc_input_cleanup(stat);
 	lis3de_acc_device_power_off(stat);
@@ -1702,7 +1697,7 @@ static void lis3de_late_resume(struct early_suspend *h)
 {
 	struct lis3de_acc_status *stat =
 		container_of(h, struct lis3de_acc_status, early_suspend);
-
+		
 	dprintk(DEBUG_SUSPEND, "lis3de_acc late resume\n");
 	if (stat->on_before_suspend)
 		lis3de_acc_enable(stat);
@@ -1713,7 +1708,7 @@ static void lis3de_late_resume(struct early_suspend *h)
 static int lis3de_acc_resume(struct i2c_client *client)
 {
 	struct lis3de_acc_status *stat = i2c_get_clientdata(client);
-
+	
 	dprintk(DEBUG_SUSPEND, "lis3de_acc resume\n");
 	if (stat->on_before_suspend)
 		return lis3de_acc_enable(stat);
@@ -1728,9 +1723,6 @@ static int lis3de_acc_suspend(struct i2c_client *client, pm_message_t mesg)
 	stat->on_before_suspend = atomic_read(&stat->enabled);
 	return lis3de_acc_disable(stat);
 }
-#else
-#define lis3de_acc_suspend	NULL
-#define lis3de_acc_resume	NULL
 #endif /* CONFIG_PM */
 #endif /* CONFIG_HAS_EARLYSUSPEND */
 
@@ -1741,19 +1733,19 @@ MODULE_DEVICE_TABLE(i2c, lis3de_acc_id);
 
 
 static struct i2c_driver lis3de_acc_driver = {
-	.class = I2C_CLASS_HWMON,
+	.class  = I2C_CLASS_HWMON,
 	.driver = {
 		.owner = THIS_MODULE,
-		.name = LIS3DE_ACC_DEV_NAME,
+		.name  = LIS3DE_ACC_DEV_NAME,
 		  },
-	.probe = lis3de_acc_probe,
+	.probe  = lis3de_acc_probe,
 	.remove = __devexit_p(lis3de_acc_remove),
 #ifdef CONFIG_HAS_EARLYSUSPEND
 #else
 	.suspend = lis3de_acc_suspend,
-	.resume = lis3de_acc_resume,
+	.resume  = lis3de_acc_resume,
 #endif
-	.id_table = lis3de_acc_id,
+	.id_table       = lis3de_acc_id,
 	.address_list	= normal_i2c,
 };
 
@@ -1762,10 +1754,10 @@ static int __init lis3de_acc_init(void)
 	dprintk(DEBUG_INIT, "%s accelerometer driver: init\n",
 						LIS3DE_ACC_DEV_NAME);
 	if (gsensor_fetch_sysconfig_para()) {
-		printk("%s: err.\n", __func__);
+		printk("%s: gsensor_fetch_sysconfig_para err.\n", __func__);
 		return -1;
 	}
-
+	
 	lis3de_acc_driver.detect = gsensor_detect;
 	return i2c_add_driver(&lis3de_acc_driver);
 }
@@ -1784,3 +1776,4 @@ module_exit(lis3de_acc_exit);
 MODULE_DESCRIPTION("lis3de accelerometer sysfs driver");
 MODULE_AUTHOR("Matteo Dameno, Denis Ciocca, STMicroelectronics");
 MODULE_LICENSE("GPL");
+

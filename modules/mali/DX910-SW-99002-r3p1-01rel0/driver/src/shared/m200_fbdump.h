@@ -1,9 +1,9 @@
 /*
  * Copyright (C) 2012 ARM Limited. All rights reserved.
- *
+ * 
  * This program is free software and is provided to you under the terms of the GNU General Public License version 2
  * as published by the Free Software Foundation, and any use by you of this program is subject to the terms of such GNU licence.
- *
+ * 
  * A copy of the licence is included with the program, and can also be obtained from Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
@@ -48,7 +48,7 @@ void _mali_fbdump_dump_callback(mali_surface_info_type* surface_info);
  * The callbacks will happen once the frame is done rendering
  *
  * @param frame_builder The framebuilder to set up callbacks on
- * @return MALI_ERR_NO_ERROR on success, or MALI_ERR_OUT_OF_MEMORY on failure
+ * @return MALI_ERR_NO_ERROR on success, or MALI_ERR_OUT_OF_MEMORY on failure 
  */
 mali_err_code _mali_fbdump_setup_callbacks( struct mali_frame_builder* frame_builder);
 

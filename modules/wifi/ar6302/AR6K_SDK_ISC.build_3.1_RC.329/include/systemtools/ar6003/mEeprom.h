@@ -6,10 +6,10 @@
 #endif
 
 //IMPORTANT:    change SCALE and DELTA together
-#define SCALE       100         //scale everything by this amount so get reasonalbe acuracy
+#define SCALE       100         //scale everything by this amount so get reasonalbe acuracy 
                                 //but don't need to do float arithmatic
 #define DELTA       10          //SCALE/10, but don't want do divide arithmatic each time
-#define PWR_MIN     0
+#define PWR_MIN     0           
 #define PWR_MAX     3150        //31.5*SCALE
 #define PWR_STEP    50          //0.5*SCALE
 // Keep 2 above defines together
@@ -27,7 +27,7 @@
 #define POWER_MASK              0x3f
 #define NUM_TEST_FREQUENCIES    8
 
-#define CHANNEL_START   5170
+#define CHANNEL_START   5170 
 #define CHANNEL_STOP    5800
 #define CHANNEL_STEP    5
 #define PCDAC_START     1
@@ -154,31 +154,31 @@ typedef struct mdk_dataPerChannel {
     A_UINT16        pcdacMax;
     A_UINT16        numPcdacValues;
     A_UINT16        PcdacValues[NUM_PCDAC_VALUES];
-    A_INT16         PwrValues[NUM_PCDAC_VALUES];
+    A_INT16         PwrValues[NUM_PCDAC_VALUES];        
 } MDK_DATA_PER_CHANNEL;
 
-typedef struct mdk_pcdacsAllModes {
+typedef struct mdk_pcdacsAllModes {     
     //lla info
     A_UINT16            Channels_11a[NUM_11A_EEPROM_CHANNELS];
     A_UINT16            numChannels_11a;
-    MDK_DATA_PER_CHANNEL    DataPerChannel_11a[NUM_11A_EEPROM_CHANNELS];
+    MDK_DATA_PER_CHANNEL    DataPerChannel_11a[NUM_11A_EEPROM_CHANNELS];        
 
     A_UINT16            numChannels_2_4;
     A_UINT16            Channels_11b[NUM_2_4_EEPROM_CHANNELS];
     A_UINT16            Channels_11g[NUM_2_4_EEPROM_CHANNELS];
 
     //11g info
-    MDK_DATA_PER_CHANNEL    DataPerChannel_11g[NUM_2_4_EEPROM_CHANNELS];
+    MDK_DATA_PER_CHANNEL    DataPerChannel_11g[NUM_2_4_EEPROM_CHANNELS];        
 
     //11b info
-    MDK_DATA_PER_CHANNEL    DataPerChannel_11b[NUM_2_4_EEPROM_CHANNELS];
+    MDK_DATA_PER_CHANNEL    DataPerChannel_11b[NUM_2_4_EEPROM_CHANNELS];        
 } MDK_PCDACS_ALL_MODES;
 
 //points to the appropriate pcdac structs in the above struct based on mode
-typedef struct mdk_pcdacsEeprom {
+typedef struct mdk_pcdacsEeprom {       
     A_UINT16            *pChannelList;
     A_UINT16            numChannels;
-    MDK_DATA_PER_CHANNEL    *pDataPerChannel;
+    MDK_DATA_PER_CHANNEL    *pDataPerChannel;       
 } MDK_PCDACS_EEPROM;
 
 typedef struct mdk_fullPcdacStruct {
@@ -187,7 +187,7 @@ typedef struct mdk_fullPcdacStruct {
     A_UINT16        pcdacMax;
     A_UINT16        numPcdacValues;
     A_UINT16        PcdacValues[PWR_TABLE_SIZE];
-    A_INT16         PwrValues[PWR_TABLE_SIZE];
+    A_INT16         PwrValues[PWR_TABLE_SIZE];  
 } MDK_FULL_PCDAC_STRUCT;
 
 
@@ -231,7 +231,7 @@ typedef struct mdk_rdEdgesPower {
     A_UINT16        flag;
 } MDK_RD_EDGES_POWER;
 
-// Variable are made 16bits to support swapping(if necessary due to endian change)
+// Variable are made 16bits to support swapping(if necessary due to endian change) 
 // for remote clients.
 typedef struct turboHeaderInfo {
     A_INT16 max2wPower;
@@ -257,14 +257,14 @@ typedef struct modeHeaderInfo
     A_UINT16 ob_4;          //hold ob_11 b and g
     A_UINT16 db_4;          //hold db_11 b and g
     A_UINT16 txEndToXLNAOn;
-    A_UINT16 thresh62;
-    A_UINT16 txEndToXPAOff;
-    A_UINT16 txFrameToXPAOn;
+    A_UINT16 thresh62;           
+    A_UINT16 txEndToXPAOff;  
+    A_UINT16 txFrameToXPAOn; 
     A_INT16 pgaDesiredSize; // 8-bit signed value
     A_INT16 noisefloorThresh;
     A_UINT16 xlnaGain;
-    A_UINT16 xgain;
-    A_UINT16 xpd;
+    A_UINT16 xgain; 
+    A_UINT16 xpd; 
 
     //added for 3.4 eeprom header
     A_UINT16 initialGainI;
@@ -280,7 +280,7 @@ typedef struct modeHeaderInfo
     A_UINT16 iqCalI;
     A_UINT16 iqCalQ;
     A_UINT16 rxtxMargin;
-    A_UINT16 turboDisable; // Added as part of modespecific variable;
+    A_UINT16 turboDisable; // Added as part of modespecific variable; 
     TURBO_HEADER_INFO turbo;
 
     // added for 4.9 header. this is a special falcon branch off of 4.8 branch
@@ -297,7 +297,7 @@ typedef struct cornerCalInfo {
     A_UINT16 clip;
 } CORNER_CAL_INFO;
 
-typedef struct mdk_eepHeaderInfo
+typedef struct mdk_eepHeaderInfo 
 {
     A_UINT16 countryRegCode;
     A_UINT16 countryCodeFlag;
@@ -318,7 +318,7 @@ typedef struct mdk_eepHeaderInfo
     //11a parameters (5GHz)
     MODE_HEADER_INFO    info11a;
 
-    //11g parameters
+    //11g parameters 
     MODE_HEADER_INFO    info11g;
 
     //11b parameters
@@ -327,7 +327,7 @@ typedef struct mdk_eepHeaderInfo
     A_UINT16 testGroups[MAX_NUM_CTL];
 
     //corner calibration information
-    CORNER_CAL_INFO     cornerCal[NUM_CORNER_CAL_POINTS];
+    CORNER_CAL_INFO     cornerCal[NUM_CORNER_CAL_POINTS];   
 
     A_UINT16        scaledOfdmCckDelta;
     A_UINT16        scaledCh14FilterCckDelta;
@@ -344,7 +344,7 @@ typedef struct mdk_eepHeaderInfo
     A_UINT16        maskRadio0;
     A_UINT16        maskRadio1;
 
-    //introduced in eeprom 4.2
+    //introduced in eeprom 4.2 
     A_INT16         ofdmCckGainDeltaX2;
 
     //introduced in eeprom 4.4
@@ -358,7 +358,7 @@ typedef struct mdk_eepHeaderInfo
     A_UINT16        rx_chain_mask;
 
     // Introduced to display MAC Settings
-
+    
     A_UINT16        keyCacheSize;
     A_UINT16        enableClip;
     A_UINT16        maxNumQCU;
@@ -382,10 +382,10 @@ typedef struct mdk_eepHeaderInfo
 } MDK_EEP_HEADER_INFO;
 
 
-void
+void 
 mapPcdacTable
 (
- MDK_PCDACS_EEPROM *pSrcStruct,
+ MDK_PCDACS_EEPROM *pSrcStruct, 
  MDK_FULL_PCDAC_STRUCT *pPcdacStruct
 );
 
@@ -407,22 +407,22 @@ findValueInList
  A_INT16            *powerValue         //return power value found in src struct
 );
 
-void getLowerUpperValues
+void getLowerUpperValues 
 (
  A_UINT16   value,          //value to search for
  A_UINT16   *pList,         //ptr to the list to search
  A_UINT16   listSize,       //number of entries in list
  A_UINT16   *pLowerValue,   //return the lower value
- A_UINT16   *pUpperValue    //return the upper value
+ A_UINT16   *pUpperValue    //return the upper value    
 );
 
-void getLowerUpperValues
+void getLowerUpperValues 
 (
  A_UINT16   value,          //value to search for
  A_UINT16   *pList,         //ptr to the list to search
  A_UINT16   listSize,       //number of entries in list
  A_UINT16   *pLowerValue,   //return the lower value
- A_UINT16   *pUpperValue    //return the upper value
+ A_UINT16   *pUpperValue    //return the upper value    
 );
 
 void getLeftRightChannels
@@ -433,7 +433,7 @@ void getLeftRightChannels
  A_UINT16           *pUpperChannel      //return upper channel
 );
 
-void getLowerUpperPcdacs
+void getLowerUpperPcdacs 
 (
  A_UINT16           pcdac,              //pcdac to search for
  A_UINT16           channel,            //current channel
@@ -442,13 +442,13 @@ void getLowerUpperPcdacs
  A_UINT16           *pUpperPcdac        //return upper pcdac
 );
 
-void getPwrTable
+void getPwrTable 
 (
  MDK_FULL_PCDAC_STRUCT *pPcdacStruct,
  A_UINT16           *pPwrTable      //ptr to power table to fill
 );
 
-void getPcdacInterceptsFromPcdacMinMax
+void getPcdacInterceptsFromPcdacMinMax 
 (
     A_UINT16    pcdacMin,
     A_UINT16    pcdacMax,
@@ -486,13 +486,13 @@ void printPcdacTable
  A_UINT16       numChannels
 );
 
-void printPowerTxMax
+void printPowerTxMax 
 (
  A_INT16        *pRatesPower
 );
 
 void printRDTable
-(
+( 
  RD_MAX_POWER   *pRdMaxPwrInfo,
  char *string
 );
@@ -517,7 +517,7 @@ void printEepromStructFormated
 void  read_chain1_antenna_control
 (
  A_UINT32           devNum,
- MDK_EEP_HEADER_INFO    *pHeaderInfo
+ MDK_EEP_HEADER_INFO    *pHeaderInfo    
 );
 
 void  readHeaderInfo
@@ -556,8 +556,8 @@ void freeEepStructs
 
 void readFreqPiers
 (
- A_UINT32 devNum,
- A_UINT16 *pChannels,
+ A_UINT32 devNum, 
+ A_UINT16 *pChannels, 
  A_UINT16 numChannels
 );
 
@@ -583,19 +583,19 @@ void applyFalseDetectBackoff
  A_UINT32 backoffAmount
 );
 
-void getPwrTableByModeCh
+void getPwrTableByModeCh 
 (
- A_UINT32 devNum,
- A_UINT32 mode,
- A_UINT32 freq,
+ A_UINT32 devNum, 
+ A_UINT32 mode, 
+ A_UINT32 freq, 
  A_UINT16 *powerValues
  );
 
 void forceChainPowerTxMaxVenice
 (
  A_UINT32   devNum,
- A_INT16    *pRatesPower,
- A_UINT16   *pPowerValues,
+ A_INT16    *pRatesPower, 
+ A_UINT16   *pPowerValues, 
  double     ofdm_cck_delta,
  A_UINT32   chainNum
 );
@@ -604,8 +604,8 @@ void forceChainPowerTxMaxVenice
 void forcePowerTxMaxVenice
 (
  A_UINT32   devNum,
- A_INT16    *pRatesPower,
- A_UINT16   *pPowerValues,
+ A_INT16    *pRatesPower, 
+ A_UINT16   *pPowerValues, 
  double     ofdm_cck_delta
 );
 */
@@ -646,9 +646,10 @@ extern EEP_OFFSET_STRUCT *pOffsets;
 
 #if defined(WIN32) || defined(WIN64)
 #pragma pack (pop)
-#endif
+#endif	
 
 #define HASH2GCHAN(freq)   (((freq) - 2410) /5)
 #define HASH5GCHAN(freq)   (((((freq) - 5000) /5) - 34) /16)
 
 #endif
+

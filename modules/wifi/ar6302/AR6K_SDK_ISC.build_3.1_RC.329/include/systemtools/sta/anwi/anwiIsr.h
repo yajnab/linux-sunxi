@@ -3,7 +3,7 @@
 // $ATH_LICENSE_TARGET_C$
 
 /*
- * This is the header file for Interrupt handling of the
+ * This is the header file for Interrupt handling of the 
  * Anwi driver
  */
 #ifndef __ANWIISR_H__

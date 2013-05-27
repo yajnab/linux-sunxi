@@ -156,17 +156,17 @@ const unsigned int AXP18_NOTIFIER_ON	=	AXP18_IRQ_EXTOV |
 
 const unsigned int AXP19_NOTIFIER_ON = 		AXP19_IRQ_USBOV |
 											AXP19_IRQ_USBIN |
-										AXP19_IRQ_USBRE |
-										AXP19_IRQ_USBLO |
-										AXP19_IRQ_ACOV |
-										AXP19_IRQ_ACIN |
-										AXP19_IRQ_ACRE |
-										AXP19_IRQ_TEMOV |
-										AXP19_IRQ_TEMLO |
-										AXP19_IRQ_BATIN |
-										AXP19_IRQ_BATRE |
-										AXP19_IRQ_PEKLO |
-										AXP19_IRQ_PEKSH ;
+				        					AXP19_IRQ_USBRE |
+				       						AXP19_IRQ_USBLO |
+				       						AXP19_IRQ_ACOV |
+				       						AXP19_IRQ_ACIN |
+				       						AXP19_IRQ_ACRE |
+				       						AXP19_IRQ_TEMOV |
+				       						AXP19_IRQ_TEMLO |
+				       						AXP19_IRQ_BATIN |
+				       						AXP19_IRQ_BATRE |
+				       						AXP19_IRQ_PEKLO |
+				       						AXP19_IRQ_PEKSH ;
 
 
 /*      AXP20      */
@@ -286,23 +286,23 @@ const unsigned int AXP19_NOTIFIER_ON = 		AXP19_IRQ_USBOV |
 
 const uint64_t AXP20_NOTIFIER_ON = 			//AXP20_IRQ_USBOV |
 											AXP20_IRQ_USBIN |
-										AXP20_IRQ_USBRE |
-										//AXP20_IRQ_USBLO |
-										//AXP20_IRQ_ACOV |
-										AXP20_IRQ_ACIN |
-										AXP20_IRQ_ACRE |
-										//AXP20_IRQ_TEMOV |
-										//AXP20_IRQ_TEMLO |
-										AXP20_IRQ_BATIN |
-										AXP20_IRQ_BATRE |
-										//AXP20_IRQ_PEKLO |
-										//AXP20_IRQ_PEKSH |
-										AXP20_IRQ_CHAST	|
-										AXP20_IRQ_PEKFE |
-										AXP20_IRQ_CHAOV |
-										AXP20_IRQ_PEKRE ;
-										//AXP20_IRQ_EXTLOWARN1|
-										//AXP20_IRQ_EXTLOWARN2;
+				        					AXP20_IRQ_USBRE |
+				       						//AXP20_IRQ_USBLO |
+				       						//AXP20_IRQ_ACOV |
+				       						AXP20_IRQ_ACIN |
+				       						AXP20_IRQ_ACRE |
+				       						//AXP20_IRQ_TEMOV |
+				       						//AXP20_IRQ_TEMLO |
+				       						AXP20_IRQ_BATIN |
+				       						AXP20_IRQ_BATRE |
+				       						//AXP20_IRQ_PEKLO |
+				       						//AXP20_IRQ_PEKSH |
+				       						AXP20_IRQ_CHAST	|
+				       						AXP20_IRQ_PEKFE |
+				       						AXP20_IRQ_CHAOV |
+				       						AXP20_IRQ_PEKRE ;
+				       						//AXP20_IRQ_EXTLOWARN1|
+				       						//AXP20_IRQ_EXTLOWARN2;
 
 
 #define AXP_CHG_ATTR(_name)					\
@@ -385,7 +385,7 @@ struct axp_charger {
 	int vusb;
 	int iusb;
 	int ocv;
-
+	
 	int disvbat;
 	int disibat;
 

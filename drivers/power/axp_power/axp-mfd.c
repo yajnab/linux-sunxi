@@ -30,20 +30,16 @@ static void axp_mfd_irq_work(struct work_struct *work)
 	struct axp_mfd_chip *chip =
 		container_of(work, struct axp_mfd_chip, irq_work);
 	uint64_t irqs = 0;
-
-    printk("-------------------------------------\n");
-    printk("axp_mfd_irq_work\n");
-    printk("-------------------------------------\n");
 	while (1) {
 		if (chip->ops->read_irqs(chip, &irqs)){
 			break;
 		}
-
+		
 		irqs &= chip->irqs_enabled;
 		if (irqs == 0){
 			break;
 		}
-
+		
 		if(irqs > 0xffffffff){
 			blocking_notifier_call_chain(
 					&chip->notifier_list, (irqs >>32), (void *)1);
@@ -260,18 +256,24 @@ static void axp_power_off(void)
 	    axp_write(&axp->dev, POWER20_INTSTS3, 0x03);
         axp_read(&axp->dev, POWER20_STATUS, &val);
 		if(val & 0xF0){
-		axp_read(&axp->dev, POWER20_MODE_CHGSTATUS, &val);
-		if(val & 0x20){
-		printk("[axp] set flag!\n");
-			axp_write(&axp->dev, POWER20_DATA_BUFFERC, 0x0f);
-		mdelay(20);
-			printk("[axp] reboot!\n");
-			arch_reset(0,NULL);
-			printk("[axp] warning!!! arch can't ,reboot, maybe some error happend!\n");
-		}
+	    	axp_read(&axp->dev, POWER20_MODE_CHGSTATUS, &val);
+	    	if(val & 0x20){
+            	printk("[axp] set flag!\n");
+	        	axp_write(&axp->dev, POWER20_DATA_BUFFERC, 0x0f);
+            	mdelay(20);
+		    	printk("[axp] reboot!\n");
+		    	arch_reset(0,NULL);
+		    	printk("[axp] warning!!! arch can't ,reboot, maybe some error happend!\n");
+	    	}
 		}
 	}
     axp_write(&axp->dev, POWER20_DATA_BUFFERC, 0x00);
+    axp_write(&axp->dev, 0xf4, 0x06);
+    axp_write(&axp->dev, 0xf2, 0x04);
+    axp_write(&axp->dev, 0xff, 0x01);
+    axp_write(&axp->dev, 0x04, 0x01);
+    axp_clr_bits(&axp->dev, 0x03, 0xc0);
+    axp_write(&axp->dev, 0xff, 0x00);
     mdelay(20);
 	axp_set_bits(&axp->dev, POWER20_OFF_CTL, 0x80);
     mdelay(20);
@@ -305,7 +307,7 @@ static int __devinit axp_mfd_probe(struct i2c_client *client,
 	BLOCKING_INIT_NOTIFIER_HEAD(&chip->notifier_list);
 
 	i2c_set_clientdata(client, chip);
-
+	
 	client->irq = 32;
 
 	ret = chip->ops->init_chip(chip);
@@ -314,16 +316,16 @@ static int __devinit axp_mfd_probe(struct i2c_client *client,
 
 	ret = request_irq(client->irq, axp_mfd_irq_handler,
 		IRQF_SHARED|IRQF_DISABLED, "axp_mfd", chip);
-	if (ret) {
-		dev_err(&client->dev, "failed to request irq %d\n",
-				client->irq);
-		goto out_free_chip;
-	}
+  	if (ret) {
+  		dev_err(&client->dev, "failed to request irq %d\n",
+  				client->irq);
+  		goto out_free_chip;
+  	}
 
     printk("-------------------------------------------\n");
     printk("%s:%s pmu request_irq ok !\n",__FUNCTION__,id->name);
     printk("-------------------------------------------\n");
-
+    
 	ret = axp_mfd_add_subdevs(chip, pdata);
 	if (ret)
 		goto out_free_irq;
@@ -341,17 +343,17 @@ static int __devinit axp_mfd_probe(struct i2c_client *client,
 
 	/* set ac/usb_in shutdown mean restart */
 	item_type = script_get_item("target", "power_start", &item_val);
-	if(SCIRPT_ITEM_VALUE_TYPE_INT != item_type)
-	{
-	printk("[AXP]axp driver uning configuration failed(%d)\n", __LINE__);
-	power_start = 0;
-	printk("[AXP]power_start = %d\n",power_start);
-	}else
-	{
+	if(SCIRPT_ITEM_VALUE_TYPE_INT != item_type) 
+  	{
+    	printk("[AXP]axp driver uning configuration failed(%d)\n", __LINE__);
+     	power_start = 0;
+     	printk("[AXP]power_start = %d\n",power_start);
+  	}else
+  	{
         power_start=item_val.val;
     }
-
-
+    
+  	
 	return 0;
 
 out_free_irq:

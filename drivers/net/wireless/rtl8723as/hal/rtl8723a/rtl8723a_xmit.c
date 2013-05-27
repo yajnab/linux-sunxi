@@ -27,7 +27,7 @@
 #ifdef CONFIG_XMIT_ACK
 void dump_txrpt_ccx_8723a(void *buf)
 {
-	struct txrpt_ccx_8723a *txrpt_ccx = buf;
+	struct txrpt_ccx_8723a *txrpt_ccx = buf; 
 
 	DBG_871X("tag1:%u, int_bt:%u, int_tri:%u, int_ccx:%u, mac_id:%u, pkt_drop:%u, pkt_ok:%u, bmc:%u\n"
 		"retry_count:%u, lifetime_over:%u, retry_over:%u, final_data_rate:%u, qsel:%u, sw:%u\n",
@@ -38,7 +38,7 @@ void dump_txrpt_ccx_8723a(void *buf)
 
 void handle_txrpt_ccx_8723a(_adapter *adapter, void *buf)
 {
-	struct txrpt_ccx_8723a *txrpt_ccx = buf;
+	struct txrpt_ccx_8723a *txrpt_ccx = buf; 
 
 	//dump_txrpt_ccx_8723a(buf);
 
@@ -50,3 +50,4 @@ void handle_txrpt_ccx_8723a(_adapter *adapter, void *buf)
 	}
 }
 #endif //CONFIG_XMIT_ACK
+

@@ -2,13 +2,13 @@
  * Linux cfg80211 driver
  *
  * Copyright (C) 1999-2011, Broadcom Corporation
- *
+ * 
  *         Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- *
+ * 
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -16,7 +16,7 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- *
+ * 
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
@@ -2269,7 +2269,7 @@ wl_set_key_mgmt(struct net_device *dev, struct cfg80211_connect_params *sme)
 			{
 
 				WL_ERR((" * wl_set_key_mgmt, WAPI_AUTH_PSK | WAPI_AUTH_UNSPECIFIED"));
-				val = WPA_AUTH_WAPI;
+ 				val = WPA_AUTH_WAPI;
 			}
 #endif
 		WL_DBG(("setting wpa_auth to %d\n", val));
@@ -2305,7 +2305,7 @@ wl_set_set_sharedkey(struct net_device *dev,
 		if (!(sec->wpa_versions & (NL80211_WPA_VERSION_1 |
 			NL80211_WPA_VERSION_2
 #ifdef BCMWAPI_WPI
-			| NL80211_WAPI_VERSION_1
+ 			| NL80211_WAPI_VERSION_1
 #endif
 			)) &&
 			(sec->cipher_pairwise & (WLAN_CIPHER_SUITE_WEP40 |
@@ -2491,7 +2491,7 @@ wl_cfg80211_connect(struct wiphy *wiphy, struct net_device *dev,
 	WL_DBG(("ie (%p), ie_len (%zd)\n", sme->ie, sme->ie_len));
 	WL_DBG(("3. set wapi version \n"));
 	err = wl_set_wpa_version(dev, sme);
-	if (unlikely(err))
+	if (unlikely(err)) 
 		return err;
 #ifdef BCMWAPI_WPI
 		if (sme->crypto.wpa_versions & NL80211_WAPI_VERSION_1)
@@ -2836,7 +2836,7 @@ wl_add_keyext(struct wiphy *wiphy, struct net_device *dev,
 		case WLAN_CIPHER_SUITE_SMS4:
 			key.algo = CRYPTO_ALGO_SMS4;
 			WL_DBG(("wl_add_keyext : set key to CRYPTO_ALGO_SMS4\n"));
-			break;
+ 			break;
 #endif
 		default:
 			WL_ERR(("Invalid cipher (0x%x)\n", params->cipher));
@@ -4126,7 +4126,7 @@ wl_cfg80211_add_set_beacon(struct wiphy *wiphy, struct net_device *dev,
 		if ((ssid_ie = bcm_parse_tlvs((u8 *)&info->head[ie_offset],
 			info->head_len - ie_offset,
 			DOT11_MNG_SSID_ID)) != NULL) {
-			memset(&ssid, 0, sizeof(wlc_ssid_t));
+			memset(&ssid, 0, sizeof(wlc_ssid_t)); 
 			memcpy(ssid.SSID, ssid_ie->data, ssid_ie->len);
 			WL_DBG(("SSID is (%s) in Head \n", ssid.SSID));
 			ssid.SSID_len = ssid_ie->len;
@@ -4569,7 +4569,7 @@ static s32 wl_inform_single_bss(struct wl_priv *wl, struct wl_bss_info *bi)
 	}
 
 	cbss = cfg80211_inform_bss_frame(wiphy, channel, mgmt,
-		le16_to_cpu(notif_bss_info->frame_len), signal, GFP_KERNEL);
+		le16_to_cpu(notif_bss_info->frame_len), signal, GFP_KERNEL); 
 	if (unlikely(!cbss)){
 		WL_ERR(("cfg80211_inform_bss_frame error\n"));
 		kfree(notif_bss_info);
@@ -5160,7 +5160,7 @@ wl_notify_scan_status(struct wl_priv *wl, struct net_device *ndev,
 	if (bss_list->count == 0) {
 		wl_iw_counters(ndev);
 		//wldev_iovar_getint(iscan->dev, "rxintcnt", &cur_rxintcnt);
-
+	
 		if (((presist_cnt == 0) && ap_found) || (presist_cnt == 1)) {
 			presist_cnt++;
 			//printk("### Hugh [%s], rxintcnt = %d, presist_cnt = %d\n",__FUNCTION__,cur_rxintcnt, presist_cnt);

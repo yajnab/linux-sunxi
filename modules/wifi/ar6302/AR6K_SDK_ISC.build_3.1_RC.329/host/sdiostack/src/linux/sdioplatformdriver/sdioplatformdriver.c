@@ -3,8 +3,8 @@
 
 @abstract: Linux implementation module for SDIO pltaform driver
 
-#notes:
-
+#notes: 
+ 
 @notice: Copyright (c), 2006 Atheros Communications, Inc.
 
 @license:  This program is free software; you can redistribute it and/or modify
@@ -16,12 +16,12 @@
 #define DESCRIPTION "SDIO Platform Driver"
 #define AUTHOR "Atheros Communications, Inc."
 
-//??for .h
+//??for .h 
 
 struct sdioplatform_peripheral {
-    struct list_head    node;
-    struct sdioplatform_controller *controller;
-    struct device       dev;
+    struct list_head    node;       
+    struct sdioplatform_controller *controller;      
+    struct device       dev;        
 };
 struct sdioplatform_driver {
     struct device_driver drv;
@@ -93,7 +93,7 @@ static int sdioplatform_controllerdrv_remove(struct device *dev)
     return drv->remove(controller);
 }
 
-/*
+/* 
  * sdioplatform_register_controller_driver - register a controller driver
  */
 int sdioplatform_register_controller_driver(struct sdioplatform_controller_driver *drv)
@@ -112,7 +112,7 @@ void sdioplatform_unregister_controller_driver(struct sdioplatform_driver *drv)
     driver_unregister(&drv->drv);
 }
 
-/*
+/* 
  * sdioplatform_add_controller - register a controller device
  */
 int sdioplatform_add_controller(char *name, struct sdioplatform_controller *dev)
@@ -124,7 +124,7 @@ int sdioplatform_add_controller(char *name, struct sdioplatform_controller *dev)
     return device_register(&dev->dev);
 }
 
-/*
+/* 
  * sdioplatform_remove_controller - unregister a controller device
  */
 int sdioplatform_remove_controller(char *name, struct sdioplatform_controller *dev)
@@ -152,7 +152,7 @@ static int sdioplatform_controllerdrv_remove(struct device *dev)
     return drv->remove(controller);
 }
 
-/*
+/* 
  * sdioplatform_register_driver - register a driver
  */
 int sdioplatform_register_driver(struct sdioplatform_driver *drv)
@@ -171,7 +171,7 @@ void sdioplatform_unregister_driver(struct sdioplatform_driver *drv)
     driver_unregister(&drv->drv);
 }
 
-/*
+/* 
  * sdioplatform_add_peripheral - register a peripheral device
  */
 int sdioplatform_add_peripheral(char *name, struct sdioplatform_peripheral *dev)
@@ -183,7 +183,7 @@ int sdioplatform_add_peripheral(char *name, struct sdioplatform_peripheral *dev)
     return device_register(&dev->dev);
 }
 
-/*
+/* 
  * sdioplatform_remove_peripheral - unregister a peripheral device
  */
 int sdioplatform_remove_peripheral(char *name, struct sdioplatform_peripheral *dev)
@@ -258,3 +258,6 @@ EXPORT_SYMBOL(sdioplatform_register_driver);
 EXPORT_SYMBOL(sdioplatform_unregister_driver);
 EXPORT_SYMBOL(sdioplatform_add_peripheral);
 EXPORT_SYMBOL(sdioplatform_remove_peripheral);
+
+
+ 

@@ -15,10 +15,10 @@
 #ifdef MODULE
 #define MOD_LICENCE "GPL"
 #define MOD_AUTHOR "sharmat@atheros.com"
-#define MOD_DESCRIPTION "Linux MDK driver 1.0"
+#define MOD_DESCRIPTION "Linux MDK driver 1.0" 
 #endif
 
-// Common variable types are typedefed
+// Common variable types are typedefed 
 typedef short INT16;
 typedef unsigned short UINT16;
 typedef int INT32;
@@ -35,7 +35,7 @@ typedef void VOID;
 
 #define MAX_BARS 6
 
-typedef enum
+typedef enum 
 {
 		FALSE=0,
 		TRUE

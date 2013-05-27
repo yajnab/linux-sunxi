@@ -2,13 +2,13 @@
 # GNU Makefile for Broadcom Dongle Host Driver
 #
 # Copyright (C) 1999-2010, Broadcom Corporation
-#
+# 
 #      Unless you and Broadcom execute a separate written software license
 # agreement governing use of this software, this software is licensed to you
 # under the terms of the GNU General Public License version 2 (the "GPL"),
 # available at http://www.broadcom.com/licenses/GPLv2.php, with the
 # following added to such license:
-#
+# 
 #      As a special exception, the copyright holders of this software give you
 # permission to link this software with independent modules, and to copy and
 # distribute the resulting executable under terms of your choice, provided that
@@ -16,7 +16,7 @@
 # the license of that module.  An independent module is a module which is not
 # derived from this software.  The special exception does not apply to any
 # modifications of the software.
-#
+# 
 #      Notwithstanding the above, under no circumstances may you combine this
 # software in any way with any other Broadcom software provided under a license
 # other than the GPL, without Broadcom's express prior written consent.
@@ -113,18 +113,18 @@ endif
 INSTALL_DIR ?= ./obj
 
 # First include from linux kernel dirs
-IFLAGS := -I$(LINUXDIR)/include
-IFLAGS += -I$(LINUXDIR)/include/asm/mach-default
+IFLAGS := -I$(LINUXDIR)/include 
+IFLAGS += -I$(LINUXDIR)/include/asm/mach-default 
 # Followed by 2.6.29+ specific paths
 IFLAGS += -I$(LINUXDIR)/arch/$(DHDARCH)/include
 IFLAGS += -I$(LINUXDIR)/arch/$(DHDARCH)/include/asm/mach-default
 
 # From current workspace
-IFLAGS += -I.
-IFLAGS += -I$(SRCBASE)/include
-IFLAGS += -I$(SRCBASE)/shared
-IFLAGS += -I$(SRCBASE)/dhd/sys
-IFLAGS += -I$(SRCBASE)/dongle
+IFLAGS += -I. 
+IFLAGS += -I$(SRCBASE)/include 
+IFLAGS += -I$(SRCBASE)/shared 
+IFLAGS += -I$(SRCBASE)/dhd/sys 
+IFLAGS += -I$(SRCBASE)/dongle 
 IFLAGS += -I$(SRCBASE)/wl/sys
 
 ifneq ($(wildcard $(LINUXDIR)/.config),)
@@ -203,7 +203,7 @@ IFLAGS += -I$(SRCBASE)/dongle/rte/wl/builds/$(DNGL_IMAGE_NAME)
 endif
 
 ifneq ($(findstring -cdc-,-$(TARGET)-),)
-DFLAGS += -DBDC -DTOE
+DFLAGS += -DBDC -DTOE 
 DFLAGS += -DDHD_BCMEVENTS -DSHOW_EVENTS
 CFILES += dhd_cdc.c
 ifneq ($(findstring -apsta-,-$(TARGET)-),)
@@ -214,7 +214,7 @@ ifneq ($(findstring -rndis-,-$(TARGET)-),)
 DFLAGS += -DRNDIS
 CFILES += dhd_rndis.c
 endif
-
+		  
 ifneq ($(findstring -usb-,-$(TARGET)-),)
 DFLAGS += -DBCMDHDUSB
 CFILES += dhd_usb_linux.c
@@ -258,12 +258,12 @@ endif
 endif
 endif
 ifneq ($(findstring -sdmmc-,-$(TARGET)-),)
-DFLAGS += -DBCMSDIO -DDHD_GPL -DBCMLXSDMMC -DBCMPLATFORM_BUS
+DFLAGS += -DBCMSDIO -DDHD_GPL -DBCMLXSDMMC -DBCMPLATFORM_BUS 
 CFILES += dhd_sdio.c bcmsdh_sdmmc.c bcmsdh.c bcmsdh_linux.c bcmsdh_sdmmc_linux.c
 endif
 ifneq ($(findstring -sdspi-,$(TARGET)-),)
 DFLAGS += -DBCMSDIO -DBCMSDIOH_SPI -DTESTDONGLE # -DBCMSDYIELD
-CFILES += dhd_sdio.c bcmsdh.c bcmsdspi.c bcmsdspi_linux.c bcmsdh_linux.c
+CFILES += dhd_sdio.c bcmsdh.c bcmsdspi.c bcmsdspi_linux.c bcmsdh_linux.c 
 endif
 ifneq ($(findstring -pci,$(TARGET)-),)
 CFILES += bcmpcispi.c
@@ -372,7 +372,7 @@ endif
 	test -r $(INSTALL_DIR) || mkdir $(INSTALL_DIR);
 	cp $(OBJDIR)/$(KMODULES) $(INSTALL_DIR)/usi4329_dhd.ko
 	cp $(FWBASE)/fw_bcm4329.bin $(INSTALL_DIR)/usi4329_fw.bin
-	cp $(FWBASE)/usi4329_nvram.txt $(INSTALL_DIR)/usi4329_nvram.txt
+	cp $(FWBASE)/usi4329_nvram.txt $(INSTALL_DIR)/usi4329_nvram.txt    
 
 dep: $(foreach file,$(CFILES),.$(file).depend)
 .%.c.depend: %.c

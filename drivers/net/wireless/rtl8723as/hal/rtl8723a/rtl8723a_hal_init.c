@@ -118,7 +118,7 @@ _BlockWrite(
 #ifdef CONFIG_USB_HCI
 		for (i = 0; i < blockCount_p2; i++) {
 			ret = rtw_writeN(padapter, (FW_8723A_START_ADDRESS + offset + i*blockSize_p2), blockSize_p2, (bufferPtr + offset + i*blockSize_p2));
-
+			
 			if(ret == _FAIL)
 				goto exit;
 		}
@@ -138,7 +138,7 @@ _BlockWrite(
 
 		for(i = 0 ; i < blockCount_p3 ; i++){
 			ret = rtw_write8(padapter, (FW_8723A_START_ADDRESS + offset + i), *(bufferPtr + offset + i));
-
+			
 			if(ret == _FAIL)
 				goto exit;
 		}
@@ -220,7 +220,7 @@ _WriteFW(
 		offset = pageNums * MAX_PAGE_SIZE;
 		page = pageNums;
 		ret = _PageWrite(padapter, page, bufferPtr+offset, remainSize);
-
+		
 		if(ret == _FAIL)
 			goto exit;
 	}
@@ -447,8 +447,8 @@ int _WriteBTFWtoTxPktBuf8723A(
 
 			_rtw_memcpy( (u8*) (pmgntframe->buf_addr + TXDESC_OFFSET), ReservedPagePacket, FwBufLen);
 			DBG_871X("===>TotalPktLen + TXDESC_OFFSET TotalPacketLen:%d ", (FwBufLen + TXDESC_OFFSET));
-
-			dump_mgntframe(Adapter, pmgntframe);
+		
+		     	dump_mgntframe(Adapter, pmgntframe);
 
 #endif
 #if 1
@@ -526,7 +526,7 @@ SetFwBTFwPatchCmd(
 	SET_H2CCMD_BT_FW_PATCH_SIZE(u1BTFwPatchParm, FwSize);
 
 	u1BTFwPatchParm[0]  |= BIT1;
-
+	
 	FillH2CCmd(Adapter, H2C_BT_FW_PATCH, H2C_BT_FW_PATCH_LEN, u1BTFwPatchParm);
 
 	RT_TRACE(_module_mp_, _drv_notice_,("<----SetFwBTFwPatchCmd(): FwSize = %d \n", FwSize));
@@ -568,9 +568,9 @@ _CheckWLANFwPatchBTFwReady(
 	//---------------------------------------------------------
 	do{
 		u1bTmp = PlatformEFIORead1Byte(Adapter, REG_MCUFWDL+1);
-		if(u1bTmp&BIT(7))
+		if(u1bTmp&BIT(7)) 
 			break;
-
+		
 		count++;
 		RT_TRACE(_module_mp_, _drv_info_,("0x81=%x, wait for 50 ms (%d) times.\n",
 					u1bTmp, count));
@@ -753,7 +753,7 @@ s32 rtl8723a_FirmwareDownload(PADAPTER padapter)
 			FwImageLen = Rtl8723_UMCBCutImgArrayLength;
 			DBG_871X(" Rtl8723_FwUMCBCutImageArray for RTL8723A B CUT\n");
 
-		pFwImageFileName = R8723FwImageFileName_UMC_B;
+      		pFwImageFileName = R8723FwImageFileName_UMC_B;
 		}
 		else
 		{
@@ -2849,7 +2849,7 @@ n. LEDCFG 0x4C[15:0] = 0x8080
 		//
 		//2. Disable GPIO[8] and GPIO[12]
 		rtw_write16(padapter, REG_GPIO_IO_SEL_2, 0x0000); // Configure all pins as input mode.
-		value32 = rtw_read32(padapter, REG_GPIO_PIN_CTRL_2) & 0xFFFF001F;
+	    	value32 = rtw_read32(padapter, REG_GPIO_PIN_CTRL_2) & 0xFFFF001F;
 		u4bTmp = value32 & 0x0000001F;
 //		if( IS_MULTI_FUNC_CHIP(padapter) )
 //			value32 |= ((u4bTmp<<8) | 0x00110000); // Set pin 8 and pin 12 to output mode.
@@ -2888,7 +2888,7 @@ c. 	APSD_CTRL 0x600[7:0] = 0x40
 d.	SYS_FUNC_EN 0x02[7:0] = 0x16		//reset BB state machine
 e.	SYS_FUNC_EN 0x02[7:0] = 0x14		//reset BB state machine
 ***************************************/
-	u8 eRFPath = 0, value8 = 0;
+    	u8 eRFPath = 0, value8 = 0;
 
 	rtw_write8(padapter, REG_TXPAUSE, 0xFF);
 
@@ -3637,7 +3637,7 @@ Hal_EfuseParseXtal_8723A(
 	if (!AutoLoadFail){
 		pHalData->CrystalCap = hwinfo[EEPROM_XTAL_K_8723A];
 		if(pHalData->CrystalCap == 0xFF)
-			pHalData->CrystalCap = EEPROM_Default_CrystalCap_8723A;
+			pHalData->CrystalCap = EEPROM_Default_CrystalCap_8723A;	
 	}
 	else{
 		pHalData->CrystalCap = EEPROM_Default_CrystalCap_8723A;
@@ -4722,7 +4722,7 @@ static void C2HCommandHandler(PADAPTER padapter, C2H_EVT_HDR *c2h_evt)
 
 	if (tmpBuf)
 		rtw_mfree(tmpBuf, C2hEvent.CmdLen);
-
+	
 #elif defined(CONFIG_USB_HCI)
 
 	process_c2h_event(padapter, c2h_evt, c2h_evt->payload);
@@ -5568,3 +5568,4 @@ void rtl8723a_stop_thread(_adapter *padapter)
 #endif
 #endif
 }
+

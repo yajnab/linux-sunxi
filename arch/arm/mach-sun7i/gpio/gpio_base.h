@@ -103,3 +103,4 @@ int __pio_to_irq(struct gpio_chip *chip, unsigned offset);
 int aw_gpiochip_add(struct gpio_chip *chip);
 
 #endif /* __GPIO_BASE_H */
+

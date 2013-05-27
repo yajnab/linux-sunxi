@@ -55,7 +55,7 @@ obj/uamp/$(TARGETARCH)/%.o: %.c
 
 # Final link targets
 $(UAMP_EXE): $(UAMP_OBJS)
-	$(CC) $(LDFLAGS) -o $@ $^
+	$(CC) $(LDFLAGS) -o $@ $^ 
 
 .PHONY: clean
 clean:

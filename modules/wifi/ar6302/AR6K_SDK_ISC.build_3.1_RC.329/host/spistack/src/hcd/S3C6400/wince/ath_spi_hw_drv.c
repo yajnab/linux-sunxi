@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="ath_spi_hw_drv.c" company="Atheros">
 //    Copyright (c) 2008 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -58,7 +58,7 @@ SDHCD_HW_DEVICE   g_HWDevice;
 #define S3C64XX_BASE_REG_PA_SPI0   S3C6400_BASE_REG_PA_SPI0
 #define S3C64XX_BASE_REG_PA_SPI1   S3C6400_BASE_REG_PA_SPI1
 #define S3C64XX_GPIO_REG           S3C6400_GPIO_REG
-#define S3C64XX_SPI_REG            S3C6400_SPI_REG
+#define S3C64XX_SPI_REG            S3C6400_SPI_REG 
 #define S3C64XX_SYSCON_REG         S3C6400_SYSCON_REG
 #define S3C64XX_DMAC_REG           S3C6400_DMAC_REG
 #define S3C64XX_DMA_CH_REG         S3C6400_DMA_CH_REG
@@ -75,7 +75,7 @@ SDHCD_HW_DEVICE   g_HWDevice;
 #define S3C64XX_BASE_REG_PA_SPI0   S3C6410_BASE_REG_PA_SPI0
 #define S3C64XX_BASE_REG_PA_SPI1   S3C6410_BASE_REG_PA_SPI1
 #define S3C64XX_GPIO_REG           S3C6410_GPIO_REG
-#define S3C64XX_SPI_REG            S3C6410_SPI_REG
+#define S3C64XX_SPI_REG            S3C6410_SPI_REG 
 #define S3C64XX_SYSCON_REG         S3C6410_SYSCON_REG
 #define S3C64XX_DMAC_REG           S3C6410_DMAC_REG
 #define S3C64XX_DMA_CH_REG         S3C6410_DMA_CH_REG
@@ -83,7 +83,7 @@ SDHCD_HW_DEVICE   g_HWDevice;
 #define S3C64XX_PCLK               S3C6410_PCLK
 #else
 #error "Not SMDK6410 nor SMDK6400"
-#endif
+#endif 
 
 #include <DrvLib.h>
 #include <bsp_cfg.h>
@@ -91,10 +91,10 @@ SDHCD_HW_DEVICE   g_HWDevice;
 
 //#define TARGET_TJET 1 /* enable for TJET phone setting */
 
-#if TARGET_TJET
+#if TARGET_TJET 
 #undef S3C64XX_ECLK
 #define S3C64XX_ECLK 96000000 /* TJET is using 96Mhz as EPLL */
-#endif
+#endif 
 
 /* Configure the following define if any changed */
 //#define ENABLE_SCATTER_DMA 1
@@ -125,7 +125,7 @@ SDHCD_HW_DEVICE   g_HWDevice;
 #else
 #define MASTER_CS_ENABLE
 #define MASTER_CS_DISABLE
-#endif
+#endif 
 
 #define TRAIL_CNT(n)    (((n)&0x3FF)<<19)
 
@@ -157,7 +157,7 @@ SDHCD_HW_DEVICE   g_HWDevice;
     (_r)->GPCCON = (_r)->GPCCON & ~(0xFFFF0000<<0) | (2<<16) | (2<<20) | (2<<24) |(2<<28); } while (0)
 #else
     #error "No available SPI device"
-#endif
+#endif 
 
 #define PFN_TO_PHYS_ADDR(_pfn) ( (_pfn) << UserKInfo[KINX_PFN_SHIFT] )
 
@@ -195,7 +195,7 @@ SDHCD_HW_DEVICE   g_HWDevice;
 #define    RX_CH_ON             (1<<1)
 #define    TX_CH_OFF            (0<<0)
 #define    TX_CH_ON             (1<<0)
-
+           
 #define    CLKSEL_PCLK          (0<<9)
 #define    CLKSEL_USBCLK        (1<<9)
 #define    CLKSEL_EPLL          (2<<9)
@@ -261,14 +261,14 @@ typedef struct {
     volatile S3C64XX_SYSCON_REG     *pSYSCONregs;
     volatile S3C64XX_DMAC_REG       *pDMAC0regs;
     volatile S3C64XX_DMAC_REG       *pDMAC1regs;
-    UINT32                      ClockCfg;
+    UINT32                      ClockCfg;    
     DWORD                       dwWlanSpiSysintr;
 #ifdef ENABLE_INT_MODE
     DWORD                       dwSpiSysIntr;
     HANDLE                      hSpiEvent;
     HANDLE                      hSpiDoneEvent;
     HANDLE                      hSpiThread;
-#endif
+#endif 
 
 #ifdef HCD_EMULATE_DMA
     HANDLE                      hRxDmaDoneEvent;
@@ -281,8 +281,8 @@ typedef struct {
     DWORD                       dwTxDmaDoneSysIntr;
     HANDLE                      hTxDmaDoneEvent;
     HANDLE                      hTxDmaDoneThread;
-#endif
-    S3C64XX_SPI_REG             RestoreSPIregs;
+#endif 
+    S3C64XX_SPI_REG             RestoreSPIregs; 
 } SPI_CONTEXT, *PSPI_CONTEXT;
 
 static DMA_CH_CONTEXT                  g_OutputDma;
@@ -297,7 +297,7 @@ DWORD ThreadForSpi(PSDHCD_HW_DEVICE pHWDevice)
 {
     PSPI_CONTEXT pSpi = (PSPI_CONTEXT)pHWDevice->pSpiContext;
     volatile S3C64XX_SPI_REG *pSPIregs = pSpi->pSPIregs;
-    PSDHCD_DEVICE pDevice = pHWDevice->pDevice;
+    PSDHCD_DEVICE pDevice = pHWDevice->pDevice;    
 
     RETAILMSG(SPI_MSG,(TEXT("[SPI] ThreadForSpi thread is created \r\n")));
     do
@@ -309,7 +309,7 @@ DWORD ThreadForSpi(PSDHCD_HW_DEVICE pHWDevice)
         pSPIregs->SPI_INT_EN    =    0;
         InterruptDone(pSpi->dwSpiSysIntr);
         SetEvent(pSpi->hSpiDoneEvent);
-
+        
     } while (1);
     return 0;
 }
@@ -317,11 +317,11 @@ DWORD ThreadForSpi(PSDHCD_HW_DEVICE pHWDevice)
 
 static BOOL CheckDMAActive(DMA_CH_CONTEXT *pCtxt)
 {
-    volatile S3C64XX_DMA_CH_REG *pDMACHReg;
+    volatile S3C64XX_DMA_CH_REG *pDMACHReg;    
     pDMACHReg = (S3C64XX_DMA_CH_REG *)pCtxt->pCHReg;
 
     if (pDMACHReg->Configuration & ACTIVE) {
-        return TRUE;
+        return TRUE;   
     }
     return FALSE;
 }
@@ -330,21 +330,21 @@ static BOOL CheckDMAActive(DMA_CH_CONTEXT *pCtxt)
 static DWORD ThreadForDmaEmulation(PSDHCD_HW_DEVICE pHWDevice)
 {
     PSPI_CONTEXT pSpi = (PSPI_CONTEXT)pHWDevice->pSpiContext;
-
+    
     do
     {
         WaitForSingleObject(pSpi->hRxDmaDoneEvent, INFINITE);
         if (pHWDevice->ShutDown) {
             if (pHWDevice->pDevice->DMAHWTransferInProgress) {
-                HcdDmaCompletion(pHWDevice->pDevice, SDIO_STATUS_CANCELED);
+                HcdDmaCompletion(pHWDevice->pDevice, SDIO_STATUS_CANCELED);    
             }
             break;
         }
-
+        
         DoEmulatedDMA(pHWDevice->pDevice);
-
+           
     } while(TRUE);
-
+    
     return 0;
 }
 #else /* HCD_EMULATE_DMA */
@@ -372,50 +372,50 @@ static DWORD ThreadForRxDmaDone(PSDHCD_HW_DEVICE pHWDevice)
 
         /* check for DMA errors */
         dmaStatus =  DMA_get_interrupt_status(&g_InputDma);
-
+                
         if (dmaStatus & ERR_INT_PEND) {
             RETAILMSG(1,(TEXT(" SPI RX transfer error: dma status = 0x%X  \r\n"), dmaStatus));
-            status = SDIO_STATUS_BUS_READ_ERROR;
+            status = SDIO_STATUS_BUS_READ_ERROR;       
         }
-
+         
          if (!(dmaStatus & TC_INT_PEND)) {
             RETAILMSG(1,(TEXT(" SPI RX did not reach terminal count !\r\n")));
-            status = SDIO_STATUS_BUS_READ_ERROR;
+            status = SDIO_STATUS_BUS_READ_ERROR;       
         }
 #endif /* ENABLE_SPI_DEBUG */
         if (pSPIregs->SPI_STATUS & (RX_OVERRUN | RX_UNDERRUN)) {
             RETAILMSG(1,(TEXT(" SPI RX transfer error: status = 0x%X\r\n"),pSPIregs->SPI_STATUS));
             pSPIregs->PENDING_CLEAR |= (0x1<<1 || 0x1<<2);
-            status = SDIO_STATUS_BUS_READ_ERROR;
+            status = SDIO_STATUS_BUS_READ_ERROR;    
         }
 
-        DMA_channel_stop(&g_InputDma);
+        DMA_channel_stop(&g_InputDma); 
         MASTER_CS_DISABLE;
-        pSPIregs->PACKET_COUNT = 0;
+        pSPIregs->PACKET_COUNT = 0;        
 
         InterruptDone(pSpi->dwRxDmaDoneSysIntr);
         DMA_clear_interrupt_mask(&g_InputDma);
         if (SDIO_SUCCESS(status)) {
 #ifdef ENABLE_SCATTER_DMA
-            if (!pHWDevice->CommonBufferDMA) {
+            if (!pHWDevice->CommonBufferDMA) {       
                 PVOID addr = pDevice->pCurrentBuffer;
                 pHWDevice->CommonBufferDMA = TRUE;
                 UnlockPages(addr, pDevice->CurrentTransferLength);
                 CacheRangeFlush(addr, pDevice->CurrentTransferLength, CACHE_SYNC_DISCARD );
-            }
+            } 
             else
 #endif
             {
-                /* copy common buffer back for RX */
+                /* copy common buffer back for RX */                                     
                 HcdCommonBufferCopy(pDevice->CurrentDmaWidth,
                                     pDevice->pCurrentBuffer,
                                     pHWDevice->pDmaCommonBuffer,
                                     pDevice->CurrentTransferLength,
-                                    pDevice->HostDMABufferCopyMode);
-            }
-        }
+                                    pDevice->HostDMABufferCopyMode);            
+            }                
+        }    
 
-        HcdDmaCompletion(pDevice, status);
+        HcdDmaCompletion(pDevice, status);      
     } while(TRUE);
     return 0;
 }
@@ -424,11 +424,11 @@ static DWORD ThreadForTxDmaDone(PSDHCD_HW_DEVICE pHWDevice)
 {
     PSPI_CONTEXT pSpi = (PSPI_CONTEXT)pHWDevice->pSpiContext;
     volatile S3C64XX_SPI_REG *pSPIregs = pSpi->pSPIregs;
-    PSDHCD_DEVICE pDevice = pHWDevice->pDevice;
+    PSDHCD_DEVICE pDevice = pHWDevice->pDevice; 
     SDIO_STATUS     status = SDIO_STATUS_SUCCESS;
 #ifdef ENABLE_SPI_DEBUG
     DMA_INT_STATUS  dmaStatus;
-#endif
+#endif    
     do
     {
         WaitForSingleObject(pSpi->hTxDmaDoneEvent, INFINITE);
@@ -439,25 +439,25 @@ static DWORD ThreadForTxDmaDone(PSDHCD_HW_DEVICE pHWDevice)
 #ifdef ENABLE_SPI_DEBUG
         /* check for DMA errors */
         dmaStatus =  DMA_get_interrupt_status(&g_OutputDma);
-
+                
         if (dmaStatus & ERR_INT_PEND) {
             RETAILMSG(1,(TEXT(" SPI TX transfer error: dma status = 0x%X  \r\n"), dmaStatus));
-            status = SDIO_STATUS_BUS_WRITE_ERROR;
+            status = SDIO_STATUS_BUS_WRITE_ERROR;       
         }
-
+         
          if (!(dmaStatus & TC_INT_PEND)) {
             RETAILMSG(1,(TEXT(" SPI TX did not reach terminal count !\r\n")));
-            status = SDIO_STATUS_BUS_WRITE_ERROR;
+            status = SDIO_STATUS_BUS_WRITE_ERROR;      
         }
 #endif /* ENABLE_SPI_DEBUG */
-         /* check for SPI controller errors */
+         /* check for SPI controller errors */      
         if (pSPIregs->SPI_STATUS & (TX_OVERRUN | TX_UNDERRUN)) {
             RETAILMSG(1,(TEXT(" SPI TX transfer error: status = 0x%X  \r\n"),pSPIregs->SPI_STATUS ));
-            status = SDIO_STATUS_BUS_WRITE_ERROR;
+            status = SDIO_STATUS_BUS_WRITE_ERROR;    
         }
-
+        
         /* Polling for pending tx data juts in case. It is necessary due to 6400 tx dma bug */
-        if (!(pSPIregs->SPI_STATUS & TX_DONE) || ((pSPIregs ->SPI_STATUS>>6) & 0x7f)>0) {
+        if (!(pSPIregs->SPI_STATUS & TX_DONE) || ((pSPIregs ->SPI_STATUS>>6) & 0x7f)>0) { 
             ULONG waitCount = 1000000;
             do {
                 if ((pSPIregs->SPI_STATUS & TX_DONE) && !((pSPIregs->SPI_STATUS>>6) & 0x7f)) {
@@ -472,21 +472,21 @@ static DWORD ThreadForTxDmaDone(PSDHCD_HW_DEVICE pHWDevice)
             }
         }
 
-        DMA_channel_stop(&g_OutputDma);
-
+        DMA_channel_stop(&g_OutputDma); 
+        
         MASTER_CS_DISABLE;
         InterruptDone(pSpi->dwTxDmaDoneSysIntr);
         DMA_clear_interrupt_mask(&g_OutputDma);
 #ifdef ENABLE_SCATTER_DMA
         if (!pHWDevice->CommonBufferDMA) {
             pHWDevice->CommonBufferDMA = TRUE;
-            UnlockPages(pDevice->pCurrentBuffer, pDevice->CurrentTransferLength);
+            UnlockPages(pDevice->pCurrentBuffer, pDevice->CurrentTransferLength);        
         }
 #endif
         HcdDmaCompletion(pDevice, status);
     } while(TRUE);
-
-
+    
+    
     return 0;
 }
 #endif /* HCD_EMULATE_DMA */
@@ -506,12 +506,12 @@ static void HW_DeInit(PSDHCD_HW_DEVICE pHWDevice)
     /* make sure interrupt asssociated with the event is disabled */
 #if !defined(HCD_EMULATE_DMA)
     if (pSpi->dwTxDmaDoneSysIntr != 0) {
-        InterruptDisable(pSpi->dwTxDmaDoneSysIntr);
+        InterruptDisable(pSpi->dwTxDmaDoneSysIntr);  
         KernelIoControl(IOCTL_HAL_RELEASE_SYSINTR, &pSpi->dwTxDmaDoneSysIntr, sizeof(DWORD), NULL, 0, NULL);
         pSpi->dwTxDmaDoneSysIntr = 0;
     }
     if (pSpi->dwRxDmaDoneSysIntr != 0) {
-        InterruptDisable(pSpi->dwRxDmaDoneSysIntr);
+        InterruptDisable(pSpi->dwRxDmaDoneSysIntr);  
         KernelIoControl(IOCTL_HAL_RELEASE_SYSINTR, &pSpi->dwRxDmaDoneSysIntr, sizeof(DWORD), NULL, 0, NULL);
         pSpi->dwRxDmaDoneSysIntr = 0;
     }
@@ -519,7 +519,7 @@ static void HW_DeInit(PSDHCD_HW_DEVICE pHWDevice)
 
 #ifdef ENABLE_INT_MODE
     if (pSpi->dwSpiSysIntr != 0) {
-        InterruptDisable(pSpi->dwSpiSysIntr);
+        InterruptDisable(pSpi->dwSpiSysIntr);  
         KernelIoControl(IOCTL_HAL_RELEASE_SYSINTR, &pSpi->dwSpiSysIntr, sizeof(DWORD), NULL, 0, NULL);
         pSpi->dwSpiSysIntr = 0;
     }
@@ -621,13 +621,13 @@ static void HW_DeInit(PSDHCD_HW_DEVICE pHWDevice)
 static void HW_SetupWlanGpioIntr(PSPI_CONTEXT pSpi)
 {
     volatile S3C64XX_GPIO_REG *pGPIOregs = pSpi->pGPIOregs;
-    //Set GPIO for WLAN Interrupt
+    //Set GPIO for WLAN Interrupt 
 #if (SPI_WLAN_INTR == IRQ_EINT4)
 
     /* disable interrupt first */
     pGPIOregs->EINT34MASK |= ( 1<<21 ); /* disable EINT4[5] interrupt */
     pGPIOregs->EINT0MASK  |= ( 1<<4 );  /* disable EINT4 interrupt */
-
+    
     /* setup interrupt Camera I/F data0 pin as interrupt */
     pGPIOregs->GPFCONSLP = pGPIOregs->GPFCONSLP & ~(0xC00<<0) | (3<<10); /* Previous state */
     pGPIOregs->GPFPUDSLP = pGPIOregs->GPFPUDSLP & ~(0xC00<<0) | (2<<10); /* pull-up enabled */
@@ -636,14 +636,14 @@ static void HW_SetupWlanGpioIntr(PSPI_CONTEXT pSpi)
 
     /* setup EINT4 pin as interrupt */
     pGPIOregs->GPNCON = pGPIOregs->GPNCON & ~(3<<8) | (2<<8);
-    pGPIOregs->GPNPUD = pGPIOregs->GPNPUD & ~(3<<8) | (2<<8);
+    pGPIOregs->GPNPUD = pGPIOregs->GPNPUD & ~(3<<8) | (2<<8);   
 
     /* Interrupt Siganl Method and Filtering */
     pGPIOregs->EINT34CON &= ~( (1<<22) | (1<<21) | (1<<20) ); /* active low for EINT4[7:4] */
-    pGPIOregs->EINT0CON0 &= ~( 7<<8 ); /* EINT4, EINT5 active low */
+    pGPIOregs->EINT0CON0 &= ~( 7<<8 ); /* EINT4, EINT5 active low */    
     pGPIOregs->EINT34FLTCON &= ~(1<<23); /* disable filter for EINT4[7-0] */
     pGPIOregs->EINT0FLTCON0 &= ~(1<<23); /* disable filter for EINT4, 5 */
-
+    
     // Clear Interrupt Pending
     pGPIOregs->EINT0PEND |= (1<<4);
     pGPIOregs->EINT34PEND &= ~( 1 << (16+5));
@@ -654,12 +654,12 @@ static void HW_SetupWlanGpioIntr(PSPI_CONTEXT pSpi)
 #elif (SPI_WLAN_INTR == IRQ_EINT5)
     /* disable interrupt first */
     //pGPIOregs->EINT56MASK |= ( 0x7f<<0 ); /* disable EINT5[x] interrupt */
-    pGPIOregs->EINT0MASK |= (0x1<<5);    // Mask EINT5
-
+    pGPIOregs->EINT0MASK |= (0x1<<5);    // Mask EINT5    
+    
     /* setup EINT5 pin as interrupt */
     pGPIOregs->GPNCON = pGPIOregs->GPNCON & ~(3<<10) | (2<<10);
-    pGPIOregs->GPNPUD = pGPIOregs->GPNPUD & ~(3<<10) | (2<<10);
-
+    pGPIOregs->GPNPUD = pGPIOregs->GPNPUD & ~(3<<10) | (2<<10);    
+        
     /* Interrupt Siganl Method and Filtering */
     pGPIOregs->EINT0CON0 &= ~(0x7<<8);
     pGPIOregs->EINT0FLTCON0 &= ~(0x1<<23);
@@ -672,7 +672,7 @@ static void HW_SetupWlanGpioIntr(PSPI_CONTEXT pSpi)
     //pGPIOregs->EINT56CON &= ~( 0x7f<<0 ); /* active low for EINT5[7:4] */
     //pGPIOregs->EINT56FLTCON &= ~(1<<7); /* disable filter for EINT4[7-0] */
 
-    pGPIOregs->EINT0PEND |= (0x1<<5);        // Clear pending EINT5[x]
+    pGPIOregs->EINT0PEND |= (0x1<<5);        // Clear pending EINT5[x]  
     pGPIOregs->EINT0MASK &= ~(0x1<<5);    // Enable EINT5[x] interrupt
 
     //pGPIOregs->EINT56PEND &= ~( 0x7f<<0 );
@@ -682,7 +682,7 @@ static void HW_SetupWlanGpioIntr(PSPI_CONTEXT pSpi)
     pGPIOregs->EINT0MASK |= (0x1<<10);    // Mask EINT10
     /* setup EINT10 pin as interrupt */
     pGPIOregs->GPNCON = pGPIOregs->GPNCON & ~(3<<20) | (2<<20);
-    pGPIOregs->GPNPUD = pGPIOregs->GPNPUD & ~(3<<20) | (2<<20);
+    pGPIOregs->GPNPUD = pGPIOregs->GPNPUD & ~(3<<20) | (2<<20);    
     /* Interrupt Siganl Method and Filtering */
     pGPIOregs->EINT0CON0 &= ~(0x7<<20);
     pGPIOregs->EINT0FLTCON1 &= ~(0x1<<15);
@@ -690,27 +690,27 @@ static void HW_SetupWlanGpioIntr(PSPI_CONTEXT pSpi)
     pGPIOregs->EINT0PEND |= (0x1<<10);        // Clear pending EINT10
     /* enable the interrupt */
     pGPIOregs->EINT0MASK &= ~(0x1<<10);    // Enable EINT10 interrupt
-#elif (SPI_WLAN_INTR == IRQ_EINT13)
+#elif (SPI_WLAN_INTR == IRQ_EINT13)   
     /* disable interrupt first */
     pGPIOregs->EINT0MASK |= (0x1<<13);    // Mask EINT13
     /* setup EINT10 pin as interrupt */
     pGPIOregs->GPNCON = pGPIOregs->GPNCON & ~(3<<26) | (2<<26);
-    pGPIOregs->GPNPUD = pGPIOregs->GPNPUD & ~(3<<26) | (2<<26);
+    pGPIOregs->GPNPUD = pGPIOregs->GPNPUD & ~(3<<26) | (2<<26);    
     /* Interrupt Siganl Method and Filtering */
     pGPIOregs->EINT0CON0 &= ~(0x7<<24);
     pGPIOregs->EINT0FLTCON1 &= ~(0x1<<23);
     /*Clear Interrupt Pending*/
     pGPIOregs->EINT0PEND |= (0x1<<13);        // Clear pending EINT10
     /* enable the interrupt */
-    pGPIOregs->EINT0MASK &= ~(0x1<<13);    // Enable EINT10 interrupt
+    pGPIOregs->EINT0MASK &= ~(0x1<<13);    // Enable EINT10 interrupt 
 #else
 #error "Please change the following setting if SPI_WLAN_INTR != IRQ_EINT4"
-#endif
+#endif 
 }
 
 static SDIO_STATUS HW_Init(PSDHCD_HW_DEVICE pHWDevice)
 {
-    PSPI_CONTEXT pSpi = (PSPI_CONTEXT)LocalAlloc(LPTR, sizeof(SPI_CONTEXT));
+    PSPI_CONTEXT pSpi = (PSPI_CONTEXT)LocalAlloc(LPTR, sizeof(SPI_CONTEXT)); 
     SDIO_STATUS status = SDIO_STATUS_SUCCESS;
     DWORD dwHwIntr;
     DWORD dwThreadId;
@@ -732,7 +732,7 @@ static SDIO_STATUS HW_Init(PSDHCD_HW_DEVICE pHWDevice)
             status = SDIO_STATUS_NO_RESOURCES;
             break;
         }
-
+    
         // HS-SPI Virtual alloc (SPI-1)
         pSpi->pSPIregs = (volatile S3C64XX_SPI_REG *)DrvLib_MapIoSpace(SPI_ADDR, sizeof(S3C64XX_SPI_REG), FALSE);
         if (pSpi->pSPIregs == NULL)
@@ -741,7 +741,7 @@ static SDIO_STATUS HW_Init(PSDHCD_HW_DEVICE pHWDevice)
             status = SDIO_STATUS_NO_RESOURCES;
             break;
         }
-
+    
         // Syscon Virtual alloc
         pSpi->pSYSCONregs = (volatile S3C64XX_SYSCON_REG *)DrvLib_MapIoSpace(S3C64XX_BASE_REG_PA_SYSCON, sizeof(S3C64XX_SYSCON_REG), FALSE);
         if (pSpi->pSYSCONregs == NULL)
@@ -750,7 +750,7 @@ static SDIO_STATUS HW_Init(PSDHCD_HW_DEVICE pHWDevice)
             status = SDIO_STATUS_NO_RESOURCES;
             break;
         }
-
+    
         // DMAC0 Virtual alloc
         pSpi->pDMAC0regs = (volatile S3C64XX_DMAC_REG *)DrvLib_MapIoSpace(S3C64XX_BASE_REG_PA_DMA0, sizeof(S3C64XX_DMAC_REG), FALSE);
         if (pSpi->pDMAC0regs == NULL)
@@ -759,7 +759,7 @@ static SDIO_STATUS HW_Init(PSDHCD_HW_DEVICE pHWDevice)
             status = SDIO_STATUS_NO_RESOURCES;
             break;
         }
-
+    
         // DMAC1 Virtual alloc
         pSpi->pDMAC1regs = (volatile S3C64XX_DMAC_REG *)DrvLib_MapIoSpace(S3C64XX_BASE_REG_PA_DMA1, sizeof(S3C64XX_DMAC_REG), FALSE);
         if (pSpi->pDMAC1regs == NULL)
@@ -835,9 +835,9 @@ static SDIO_STATUS HW_Init(PSDHCD_HW_DEVICE pHWDevice)
         pSpi->hTxDmaDoneEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
         if (NULL == pSpi->hTxDmaDoneEvent) {
             status = SDIO_STATUS_NO_RESOURCES;
-            break;
-        }
-
+            break;    
+        }     
+    
         if (!KernelIoControl(IOCTL_HAL_REQUEST_SYSINTR, &dwHwIntr, sizeof(DWORD), &pSpi->dwTxDmaDoneSysIntr, sizeof(DWORD), NULL))
         {
             RETAILMSG(SPI_INIT,(TEXT("[SPI] Failed to request the SPI_DMA sysintr.\n")));
@@ -845,14 +845,14 @@ static SDIO_STATUS HW_Init(PSDHCD_HW_DEVICE pHWDevice)
             status = SDIO_STATUS_NO_RESOURCES;
             break;
         }
-
+    
         if (!InterruptInitialize(pSpi->dwTxDmaDoneSysIntr, pSpi->hTxDmaDoneEvent, NULL, 0))
         {
             RETAILMSG(SPI_INIT,(TEXT("[SPI] DMA Interrupt Initialization failed!!!\n")));
             status = SDIO_STATUS_NO_RESOURCES;
             break;
         }
-
+        
         pSpi->hTxDmaDoneThread = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)ThreadForTxDmaDone, (LPVOID)pHWDevice, 0, (LPDWORD)&dwThreadId);
         if (pSpi->hTxDmaDoneThread == NULL)
         {
@@ -860,17 +860,17 @@ static SDIO_STATUS HW_Init(PSDHCD_HW_DEVICE pHWDevice)
             status = SDIO_STATUS_NO_RESOURCES;
             break;
         }
-
+    
         //Rx DMA Done ISR
         pSpi->dwRxDmaDoneSysIntr = SYSINTR_NOP;
         dwHwIntr = g_InputDma.dwIRQ;
-
+    
         pSpi->hRxDmaDoneEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
         if (NULL == pSpi->hRxDmaDoneEvent) {
             status = SDIO_STATUS_NO_RESOURCES;
-            break;
-        }
-
+            break;    
+        }     
+    
         if (!KernelIoControl(IOCTL_HAL_REQUEST_SYSINTR, &dwHwIntr, sizeof(DWORD), &pSpi->dwRxDmaDoneSysIntr, sizeof(DWORD), NULL))
         {
             RETAILMSG(SPI_INIT,(TEXT("[SPI] Failed to request the SPI_DMA sysintr.\n")));
@@ -878,21 +878,21 @@ static SDIO_STATUS HW_Init(PSDHCD_HW_DEVICE pHWDevice)
             status = SDIO_STATUS_NO_RESOURCES;
             break;
         }
-
+    
         if (!InterruptInitialize(pSpi->dwRxDmaDoneSysIntr, pSpi->hRxDmaDoneEvent, NULL, 0))
         {
             RETAILMSG(SPI_INIT,(TEXT("[SPI] DMA Interrupt Initialization failed!!!\n")));
             status = SDIO_STATUS_NO_RESOURCES;
             break;
         }
-
+    
         pSpi->hRxDmaDoneThread = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)ThreadForRxDmaDone, (LPVOID)pHWDevice, 0, (LPDWORD)&dwThreadId);
 #else   /* HCD_EMULATE_DMA */
         pSpi->hRxDmaDoneEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
         if (NULL == pSpi->hRxDmaDoneEvent) {
             status = SDIO_STATUS_NO_RESOURCES;
-            break;
-        }
+            break;    
+        } 
         pSpi->hRxDmaDoneThread = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)ThreadForDmaEmulation, (LPVOID)pHWDevice, 0, (LPDWORD)&dwThreadId);
 #endif  /* HCD_EMULATE_DMA */
         if (pSpi->hRxDmaDoneThread == NULL)
@@ -913,7 +913,7 @@ static SDIO_STATUS HW_Init(PSDHCD_HW_DEVICE pHWDevice)
     } while (0);
 
     if (status!=SDIO_STATUS_SUCCESS)
-    {
+    {            
         return status;
     }
 
@@ -936,9 +936,9 @@ static SDIO_STATUS HW_Init(PSDHCD_HW_DEVICE pHWDevice)
 #endif
 
     /* it is better to reset all SPI registers */
-    pSpi->pSPIregs->CH_CFG |= SW_RST; //Reset
+    pSpi->pSPIregs->CH_CFG |= SW_RST; //Reset    
     Sleep(5);
-    pSpi->pSPIregs->CH_CFG &= ~SW_RST;
+    pSpi->pSPIregs->CH_CFG &= ~SW_RST; 
     pSpi->pSPIregs->CLK_CFG = 0;
     pSpi->pSPIregs->MODE_CFG = 0;
     pSpi->pSPIregs->SLAVE_SEL = 1; /* inactive */
@@ -949,7 +949,7 @@ static SDIO_STATUS HW_Init(PSDHCD_HW_DEVICE pHWDevice)
     pSpi->pSPIregs->SLAVE_SEL = (1<<1);
 #else
     pSpi->pSPIregs->SLAVE_SEL &= ~(1<<1);
-#endif
+#endif 
 
     pSpi->RestoreSPIregs = *pSpi->pSPIregs;
     HW_PowerUpDown(pHWDevice, TRUE);
@@ -961,27 +961,27 @@ static SDIO_STATUS HW_Init(PSDHCD_HW_DEVICE pHWDevice)
 
 SDHCD_HW_DEVICE *InitializeSPIHW(PTSTR pRegPath)
 {
-    PSDHCD_DEVICE   pDevice;
-    SDHCD_HW_DEVICE *pHWDevice;
-    DWORD           threadId;
+    PSDHCD_DEVICE   pDevice;   
+    SDHCD_HW_DEVICE *pHWDevice;                  
+    DWORD           threadId;  
     SDIO_STATUS     status = SDIO_STATUS_SUCCESS;
-
-    do {
+     
+    do {      
             /* for now this is a static, single instance allocation */
         pHWDevice = &g_HWDevice;
-        ZERO_POBJECT(pHWDevice);
-        pDevice = &pHWDevice->SpiCommon;
+        ZERO_POBJECT(pHWDevice);       
+        pDevice = &pHWDevice->SpiCommon; 
         pHWDevice->pDevice = pDevice;
             /* set the HW portion */
-        pDevice->pHWDevice = pHWDevice;
-        pHWDevice = GET_HW_DEVICE(pDevice);
+        pDevice->pHWDevice = pHWDevice; 
+        pHWDevice = GET_HW_DEVICE(pDevice);         
         SET_SDIO_STACK_VERSION(&pDevice->Hcd);
         pDevice->Hcd.pName = SDIO_RAW_BD_BASE;
         pDevice->Hcd.Attributes = 0;
         pDevice->Hcd.pContext = pDevice;
         pDevice->Hcd.pRequest = HcdRequest;
         pDevice->Hcd.pConfigure = HcdConfig;
-
+        
             /* TODO : adjust these to match controller hardware */
         //pDevice->OperationalClock = 12000000;  /* 12 mhz, usb/4 */
         pDevice->OperationalClock = 21166666;  /* 21.1 mhz, epll/4 */
@@ -991,45 +991,45 @@ SDHCD_HW_DEVICE *InitializeSPIHW(PTSTR pRegPath)
         pDevice->Hcd.MaxClockRate = 48000000;  /* 48 Mhz */
         pDevice->PowerUpDelay = 100;
             /* set all the supported frame widths the controller can do
-             * 8/16/24/32 bit frames */
-        pDevice->SpiHWCapabilitiesFlags = HW_SPI_FRAME_WIDTH_8   |
-                                          HW_SPI_FRAME_WIDTH_16  |
+             * 8/16/24/32 bit frames */        
+        pDevice->SpiHWCapabilitiesFlags = HW_SPI_FRAME_WIDTH_8   | 
+                                          HW_SPI_FRAME_WIDTH_16  |                                     
                                           //HW_SPI_FRAME_WIDTH_24 |
                                           HW_SPI_FRAME_WIDTH_32;
 
-
+  
         pDevice->MiscFlags |= MISC_FLAG_DUMP_STATE_ON_SHUTDOWN | MISC_FLAG_RESET_SPI_IF_SHUTDOWN;
-
+        
         SDLIB_InitializeWorkerTask(&pHWDevice->IOCompleteWorkTask,
                                    IOCompleteWork,
                                    pHWDevice);
-
+        
         pHWDevice->pWorker = SDLIB_CreateWorker(WORKER_THREAD_PRIORITY);
-
+        
         if (NULL == pHWDevice->pWorker) {
             status = SDIO_STATUS_NO_RESOURCES;
-            break;
+            break;    
         }
-
+        
         /* TODO : allocate hardware resources (I/O , interrupt, DMA etc..) */
         if ( (status=HW_Init(pHWDevice))!=SDIO_STATUS_SUCCESS) {
             break;
         }
         /*************************************/
-
+        
         status = HcdInitialize(pDevice);
-
+   
             /* initialize common layer */
         if (!SDIO_SUCCESS(status)) {
             DBG_PRINT(SDDBG_ERROR, ("SPI - failed to init common layer, status =%d\n", status));
             break;
-        }
-
+        } 
+                       
         pHWDevice->InitStateMask |= SDHC_COMMON_INIT;
-
+        
              /* create the interrupt event */
         pHWDevice->hIstEventSPIGpioIRQ = CreateEvent(NULL, FALSE, FALSE, NULL);
-
+        
         if (NULL == pHWDevice->hIstEventSPIGpioIRQ) {
             status = SDIO_STATUS_NO_RESOURCES;
             break;
@@ -1039,7 +1039,7 @@ SDHCD_HW_DEVICE *InitializeSPIHW(PTSTR pRegPath)
              * GPIO IRQ must be level sensitive, active LOW */
         pHWDevice->SysIntrSPIGpioIRQ = ((PSPI_CONTEXT)pHWDevice->pSpiContext)->dwWlanSpiSysintr;
 
-        /* TODO : uncomment the following to associate the GPIO IRQ to the interrupt event :*/
+        /* TODO : uncomment the following to associate the GPIO IRQ to the interrupt event :*/ 
         if (!InterruptInitialize(pHWDevice->SysIntrSPIGpioIRQ,
                                  pHWDevice->hIstEventSPIGpioIRQ,
                                  NULL,
@@ -1048,7 +1048,7 @@ SDHCD_HW_DEVICE *InitializeSPIHW(PTSTR pRegPath)
             status = SDIO_STATUS_NO_RESOURCES;
             break;
         }
-
+                
             /* create the IST thread */
         pHWDevice->hIstSPIGpioIRQ = CreateThread(NULL,
                                      0,
@@ -1056,7 +1056,7 @@ SDHCD_HW_DEVICE *InitializeSPIHW(PTSTR pRegPath)
                                      (LPVOID)pHWDevice,
                                      0,
                                      &threadId);
-
+        
         if (NULL == pHWDevice->hIstSPIGpioIRQ) {
             status = SDIO_STATUS_NO_RESOURCES;
             DBG_PRINT(SDDBG_ERROR,("SPI HCD: Failed to Create IST! \n"));
@@ -1067,12 +1067,12 @@ SDHCD_HW_DEVICE *InitializeSPIHW(PTSTR pRegPath)
         if (!SDIO_SUCCESS((status = SDIO_RegisterHostController(&pDevice->Hcd)))) {
             DBG_PRINT(SDDBG_ERROR, ("SPI HCD: Probe - failed to register with host, status =%d\n",status));
             break;
-        }
-
+        }   
+          
         pHWDevice->InitStateMask |= SDHC_REGISTERED;
-
+                           
     } while (FALSE);
-
+     
     if (!SDIO_SUCCESS(status)) {
         if (pHWDevice != NULL) {
             CleanupSPIHW(pHWDevice);
@@ -1082,34 +1082,34 @@ SDHCD_HW_DEVICE *InitializeSPIHW(PTSTR pRegPath)
         PSPI_CONTEXT pSpi = (PSPI_CONTEXT)pHWDevice->pSpiContext;
         DBG_PRINT(SDDBG_ERROR, ("SPI - HCD ready! \n"));
     }
-
+    
     DBG_PRINT(SDDBG_TRACE, ("-SPI HCD: Setup - status : %d\n", status));
-    return SDIO_SUCCESS(status) ? pHWDevice : NULL;
-}
+    return SDIO_SUCCESS(status) ? pHWDevice : NULL;  
+}    
 
 void CleanupSPIHW(SDHCD_HW_DEVICE *pHWDevice)
 {
     pHWDevice->pDevice->ShuttingDown = TRUE;
     pHWDevice->ShutDown = TRUE;
-
+                       
     if (pHWDevice->InitStateMask & SDHC_COMMON_INIT) {
             /* deinit common layer */
         HcdDeinitialize(pHWDevice->pDevice);
     }
-
+    
     if (pHWDevice->InitStateMask & SDHC_REGISTERED) {
         SDIO_UnregisterHostController(&pHWDevice->pDevice->Hcd);
     }
-
+    
     if (pHWDevice->pWorker != NULL) {
-        SDLIB_FlushWorkTask(pHWDevice->pWorker,&pHWDevice->IOCompleteWorkTask);
+        SDLIB_FlushWorkTask(pHWDevice->pWorker,&pHWDevice->IOCompleteWorkTask);    
         SDLIB_DestroyWorker(pHWDevice->pWorker);
     }
-
+    
     if (pHWDevice->hIstEventSPIGpioIRQ != NULL) {
             /* make sure interrupt asssociated with the event is disabled */
         if (pHWDevice->SysIntrSPIGpioIRQ != 0) {
-            InterruptDisable(pHWDevice->SysIntrSPIGpioIRQ);
+            InterruptDisable(pHWDevice->SysIntrSPIGpioIRQ);            
         }
         if (pHWDevice->hIstSPIGpioIRQ != NULL) {
                 /* wake IST */
@@ -1122,12 +1122,12 @@ void CleanupSPIHW(SDHCD_HW_DEVICE *pHWDevice)
         CloseHandle(pHWDevice->hIstEventSPIGpioIRQ);
         pHWDevice->hIstEventSPIGpioIRQ = NULL;
     }
-
+    
     /* TODO : free hardware resources */
     HW_DeInit(pHWDevice);
 
     /*********************************/
-
+    
     ZERO_OBJECT(g_HWDevice);
     DBG_PRINT(SDDBG_TRACE, ("SPI HCD: CleanupDevice\n"));
 }
@@ -1135,55 +1135,55 @@ void CleanupSPIHW(SDHCD_HW_DEVICE *pHWDevice)
 typedef struct ModeParams {
     UINT32 mask;
     UINT32 mode;
-    UINT32 bytes;
+    UINT32 bytes; 
     TRANSFER_UNIT dmaUnit;
 } ModeParams;
 
 static const ModeParams gModeParams[] = {
-    {       0xff, (CH_SIZE_BYTE|BUS_SIZE_BYTE), 1, BYTE_UNIT },
-    {     0xffff, (CH_SIZE_HALF|BUS_SIZE_HALF), 2, HWORD_UNIT },
-    {   0xffffff, 0, 0, 0 },
-    { 0xffffffff, (CH_SIZE_WORD|BUS_SIZE_WORD), 4, WORD_UNIT },
+    {       0xff, (CH_SIZE_BYTE|BUS_SIZE_BYTE), 1, BYTE_UNIT }, 
+    {     0xffff, (CH_SIZE_HALF|BUS_SIZE_HALF), 2, HWORD_UNIT }, 
+    {   0xffffff, 0, 0, 0 }, 
+    { 0xffffffff, (CH_SIZE_WORD|BUS_SIZE_WORD), 4, WORD_UNIT }, 
 };
 
  /* map the request buffer to DMA
  * this function builds the scatter gather list which the hardware layer can use
  * to translate into DMA descriptor entries.  The hardware-specific layer is required to
  * perform cache/bus sync operations to make the buffer dma-coherent */
-static BOOL HcdMapCurrentRequestBuffer(PSDHCD_DEVICE pDevice, DMA_CH_CONTEXT *pDmaCtx,
+static BOOL HcdMapCurrentRequestBuffer(PSDHCD_DEVICE pDevice, DMA_CH_CONTEXT *pDmaCtx, 
                                        UINT src, UINT dst, BURST_SIZE burstSize,
-                                       ADDRESS_UPDATE srcUpdate, ADDRESS_UPDATE dstUpdate,
+                                       ADDRESS_UPDATE srcUpdate, ADDRESS_UPDATE dstUpdate, 
                                        int fOptions)
 {
     PSPI_CONTEXT pSpi = (PSPI_CONTEXT)GET_HW_DEVICE(pDevice)->pSpiContext;
-    const ModeParams *param = &gModeParams[pDevice->CurrentDmaWidth];
+    const ModeParams *param = &gModeParams[pDevice->CurrentDmaWidth];  
     UINT32 vaddress = (UINT32)pDevice->pCurrentBuffer;
     UINT *pAddr = (srcUpdate==INCREASE) ? &src : &dst;
     DWORD byteCount  = (pDevice->CurrentTransferLength & 0xFFFFF);
     DWORD dwMaximumPages = COMPUTE_PAGES_SPANNED(vaddress, byteCount);
     DWORD pfns[32];
     DWORD pageSize = PAGE_SIZE;
-    int LLICount = pDmaCtx->LLICount;
+    int LLICount = pDmaCtx->LLICount;        
     volatile S3C64XX_DMA_CH_REG *pDMACHReg = (S3C64XX_DMA_CH_REG *)pDmaCtx->pCHReg;
     if (!dwMaximumPages || dwMaximumPages>MAX_DMA_LINK) {
         goto cleanup_exit;
     }
 
-    if (LockPages((PVOID)vaddress, byteCount, pfns, fOptions)) {
+    if (LockPages((PVOID)vaddress, byteCount, pfns, fOptions)) {      
         UINT offset=vaddress % pageSize;
         UINT length = pageSize - offset;
         UINT32 Control0;
         *pAddr = PFN_TO_PHYS_ADDR(pfns[0]) + offset;
         if( length > byteCount ) {
             length = byteCount;
-        }
+        }       
         DMA_initialize_channel(pDmaCtx, TRUE);
         Control0 = (srcUpdate<<26) |(pDmaCtx->SrcAHBM<<24)|(param->dmaUnit<<18)|(burstSize<<12)|
                               (dstUpdate<<27) |(pDmaCtx->DstAHBM<<25)|(param->dmaUnit<<21)|(burstSize<<15);
         pDMACHReg->SrcAddr = src;
         pDMACHReg->DestAddr = dst;
         pDMACHReg->Control0 = Control0;
-        pDMACHReg->Control1 = length / param->bytes;
+        pDMACHReg->Control1 = length / param->bytes;           
         if (--dwMaximumPages == 0) {
             pDMACHReg->Control0 |= TCINT_ENABLE;
             pDmaCtx->LLICount = LLICount;
@@ -1221,7 +1221,7 @@ static BOOL HcdMapCurrentRequestBuffer(PSDHCD_DEVICE pDevice, DMA_CH_CONTEXT *pD
         }
         GET_HW_DEVICE(pDevice)->CommonBufferDMA = FALSE;
         return TRUE;
-    }
+    } 
     return FALSE;
 err_exit:
     UnlockPages(pDevice->pCurrentBuffer, pDevice->CurrentTransferLength);
@@ -1236,12 +1236,12 @@ cleanup_exit:
 /* set up SPI host controller DMA */
 SDIO_STATUS HW_SpiSetUpDMA(PSDHCD_DEVICE    pDevice)
 {
-#ifdef HCD_EMULATE_DMA
+#ifdef HCD_EMULATE_DMA   
     return SDIO_STATUS_PENDING;
 #else /* HCD_EMULATE_DMA */
     PSDHCD_HW_DEVICE pHWDevice = GET_HW_DEVICE(pDevice);
     PSPI_CONTEXT pSpi = (PSPI_CONTEXT)pHWDevice->pSpiContext;
-    volatile S3C64XX_SPI_REG    *pSPIregs = pSpi->pSPIregs;
+    volatile S3C64XX_SPI_REG    *pSPIregs = pSpi->pSPIregs;  
     const ModeParams *param;
     UINT32 dmaMode, burstSize, packetCount;
     DWORD dwDmaLen  = (pDevice->CurrentTransferLength & 0xFFFFF);
@@ -1249,9 +1249,9 @@ SDIO_STATUS HW_SpiSetUpDMA(PSDHCD_DEVICE    pDevice)
         return SDIO_STATUS_INVALID_PARAMETER;
     }
 
-    /* TODO see PSDHCD_DEVICE definition to get buffer variables to do
-     * the DMA transfer .
-     *
+    /* TODO see PSDHCD_DEVICE definition to get buffer variables to do 
+     * the DMA transfer .  
+     * 
      * Setup DMA hardware to do the transfer (direction, length, common buffer or direct)
      * If the driver performs common-buffer DMA, the hardware layer is responsible
      * for copying the data to/from pCurrentBuffer (see below) */
@@ -1259,8 +1259,8 @@ SDIO_STATUS HW_SpiSetUpDMA(PSDHCD_DEVICE    pDevice)
     pSPIregs->CH_CFG |= SW_RST;
     pSPIregs->CH_CFG = SPI_TRANSFER_TYPE; /* Master Mode and disable reset */
     pSPIregs->CLK_CFG = pSpi->ClockCfg;
-
-    param = &gModeParams[pDevice->CurrentDmaWidth];
+           
+    param = &gModeParams[pDevice->CurrentDmaWidth];    
 
     packetCount = dwDmaLen / param->bytes;
     if (packetCount & 3) {
@@ -1270,43 +1270,43 @@ SDIO_STATUS HW_SpiSetUpDMA(PSDHCD_DEVICE    pDevice)
         dmaMode = DMA_4BURST;
         burstSize = BURST_4;
     }
-    if (pDevice->CurrentTransferDirRx) {
+    if (pDevice->CurrentTransferDirRx) {       
 #ifdef ENABLE_SCATTER_DMA
-        if (
+        if ( 
              ((UINT)pDevice->pCurrentBuffer & (DMA_ALIGNMENT_BYTES - 1)) ||
              ((UINT)(pDevice->pCurrentBuffer+pDevice->CurrentTransferLength) & (DMA_ALIGNMENT_BYTES - 1)) ||
-             !HcdMapCurrentRequestBuffer(pDevice, &g_InputDma,
-                                         SPI_RX_DATA_PHY_ADDR, (UINT)pDevice->pCurrentBuffer,
-                                         burstSize, FIXED, INCREASE, LOCKFLAG_READ))
+             !HcdMapCurrentRequestBuffer(pDevice, &g_InputDma, 
+                                         SPI_RX_DATA_PHY_ADDR, (UINT)pDevice->pCurrentBuffer, 
+                                         burstSize, FIXED, INCREASE, LOCKFLAG_READ)) 
 #endif
-        {
+        {            
             DMA_initialize_channel(&g_InputDma, TRUE);
             DMA_set_channel_source(&g_InputDma, (UINT)SPI_RX_DATA_PHY_ADDR, param->dmaUnit, burstSize, FIXED);
             DMA_set_channel_destination(&g_InputDma, (UINT)pHWDevice->pDmaCommonPhysicalBuffer, param->dmaUnit, burstSize, INCREASE);
-            DMA_set_channel_transfer_size(&g_InputDma, dwDmaLen);
+            DMA_set_channel_transfer_size(&g_InputDma, dwDmaLen);    
         }
         pSPIregs->MODE_CFG     =  param->mode|RX_DMA_ON|dmaMode;
 #ifdef ENABLE_INT_MODE
         pSPIregs->SPI_INT_EN = 0; /*disable interrupt */
 #endif
-        pSPIregs->PACKET_COUNT = PACKET_CNT_EN | (packetCount) ;
+        pSPIregs->PACKET_COUNT = PACKET_CNT_EN | (packetCount) ;        
         pSPIregs->CH_CFG        |=  RX_CH_ON;
-
+                
         //DMA_initialize_LLI(&g_InputDma, 0);
     } else {
         /* write direction using common buffer DMA , must transfer to common buffer now */
         pSPIregs->MODE_CFG     =  param->mode|TX_DMA_ON|dmaMode;
 #ifdef ENABLE_INT_MODE
         pSPIregs->SPI_INT_EN = 0; /*disable interrupt */
-#endif
-        pSPIregs->CH_CFG        |=  TX_CH_ON;
+#endif 
+        pSPIregs->CH_CFG        |=  TX_CH_ON;    
 #ifdef ENABLE_SCATTER_DMA
         if (HcdMapCurrentRequestBuffer(pDevice, &g_OutputDma,
                                          (UINT)pDevice->pCurrentBuffer, SPI_TX_DATA_PHY_ADDR,
                                          burstSize, INCREASE, FIXED, LOCKFLAG_WRITE)) {
             CacheRangeFlush(pDevice->pCurrentBuffer, pDevice->CurrentTransferLength, CACHE_SYNC_WRITEBACK );
-        }
-        else
+        } 
+        else 
 #endif
         {
             HcdCommonBufferCopy(pDevice->CurrentDmaWidth,
@@ -1314,7 +1314,7 @@ SDIO_STATUS HW_SpiSetUpDMA(PSDHCD_DEVICE    pDevice)
                                 pDevice->pCurrentBuffer,
                                 pDevice->CurrentTransferLength,
                                 pDevice->HostDMABufferCopyMode);
-
+    
             DMA_initialize_channel(&g_OutputDma, TRUE);
             DMA_set_channel_source(&g_OutputDma, (UINT)pHWDevice->pDmaCommonPhysicalBuffer, param->dmaUnit, burstSize, INCREASE);
             DMA_set_channel_destination(&g_OutputDma, (UINT)SPI_TX_DATA_PHY_ADDR, param->dmaUnit, burstSize, FIXED);
@@ -1323,7 +1323,7 @@ SDIO_STATUS HW_SpiSetUpDMA(PSDHCD_DEVICE    pDevice)
         }
     }
 
-    return SDIO_STATUS_PENDING;
+    return SDIO_STATUS_PENDING;   
 #endif /* HCD_EMULATE_DMA */
 }
 
@@ -1334,7 +1334,7 @@ void HW_SetClock(PSDHCD_DEVICE pDevice, PUINT32 pClockRate)
     DWORD dwPrescaler = 0;
     PSPI_CONTEXT pSpi = (PSPI_CONTEXT)pHWDevice->pSpiContext;
     /* TODO set the clock rate to the closest (or less) rate*/
-#if (SPI_CLOCK == EPLL_CLOCK)  /* 84.666667MHz */
+#if (SPI_CLOCK == EPLL_CLOCK)  /* 84.666667MHz */ 
     DWORD clockRate = S3C64XX_ECLK;
     UINT32 clockFlag = CLKSEL_EPLL;
 #elif (SPI_CLOCK == USB_HOST_CLOCK) /* 48MHz */
@@ -1364,15 +1364,15 @@ void HW_EnableDisableSPIIRQ(PSDHCD_DEVICE pDevice, BOOL Enable, BOOL FromIrq)
 #if (SPI_WLAN_INTR == IRQ_EINT4)
    if (Enable) {
        pSpi->pGPIOregs->EINT0MASK  &= ~( 1<<4);
-       pSpi->pGPIOregs->EINT34MASK &= ~( 1<<21 ); /* Enable EINT4[5] interrupt */
+       pSpi->pGPIOregs->EINT34MASK &= ~( 1<<21 ); /* Enable EINT4[5] interrupt */       
    } else {
        pSpi->pGPIOregs->EINT34MASK |= ( 1<<21 ); /* disable EINT4[5] interrupt */
        pSpi->pGPIOregs->EINT0MASK  |= ( 1<<4 );  /* disable EINT4 interrupt */
        pSpi->pGPIOregs->EINT0PEND |= (1<<4);     // Clear pending
        pSpi->pGPIOregs->EINT34PEND &= ~( 1 << (16+5)); // Clear pending
-   }
+   }  
 #elif (SPI_WLAN_INTR == IRQ_EINT5)
-   if (Enable) {
+   if (Enable) {       
        pSpi->pGPIOregs->EINT0MASK &= ~(0x1<<5);    // unMask EINT5
        //pSpi->pGPIOregs->EINT56MASK &= ~( 0x7f<<0 ); /* enable EINT5[x] interrupt */
    } else {
@@ -1380,25 +1380,25 @@ void HW_EnableDisableSPIIRQ(PSDHCD_DEVICE pDevice, BOOL Enable, BOOL FromIrq)
        //pSpi->pGPIOregs->EINT56PEND |= ( 0x7f<<0 );
        pSpi->pGPIOregs->EINT0MASK |= (0x1<<5);    // Mask EINT5
        pSpi->pGPIOregs->EINT0PEND |= (0x1<<5); // Clear pending EINT5
-   }
+   } 
 #elif (SPI_WLAN_INTR == IRQ_EINT10)
    if (Enable) {
        pSpi->pGPIOregs->EINT0MASK &= ~(0x1<<10);    // unMask EINT10
    } else {
        pSpi->pGPIOregs->EINT0MASK |= (0x1<<10);    // Mask EINT10
        pSpi->pGPIOregs->EINT0PEND |= (0x1<<10); // Clear pending EINT10
-   }
+   } 
 #elif (SPI_WLAN_INTR == IRQ_EINT13)
    if (Enable) {
        pSpi->pGPIOregs->EINT0MASK &= ~(0x1<<13);    // unMask EINT10
    } else {
        pSpi->pGPIOregs->EINT0MASK |= (0x1<<13);    // Mask EINT10
        pSpi->pGPIOregs->EINT0PEND |= (0x1<<13); // Clear pending EINT10
-   }
+   }        
 #else
 #error "Please change the following setting if SPI_WLAN_INTR != IRQ_EINT4"
-#endif
-
+#endif 
+    
 }
 
     /* start the DMA operation on the SPI host controller */
@@ -1421,31 +1421,31 @@ void HW_StartDMA(PSDHCD_DEVICE pDevice)
 
         MASTER_CS_ENABLE;
         if (pHWDevice->CommonBufferDMA) {
-                /* common buffer DMA case */
+                /* common buffer DMA case */            
             if (pDevice->CurrentTransferDirRx) {
-                /* handle read dma */
+                /* handle read dma */    
                 DMA_channel_start(&g_InputDma);
             } else {
-                /* handle write dma */
+                /* handle write dma */    
                 DMA_channel_start(&g_OutputDma);
             }
-
+            
         } else {
                  /* scatter gather DMA case */
-
+                 
             if (pDevice->CurrentTransferDirRx) {
-                /* handle read dma */
+                /* handle read dma */    
                 DMA_channel_start(&g_InputDma);
             } else {
-                /* handle write dma */
+                /* handle write dma */    
                 DMA_channel_start(&g_OutputDma);
-            }
+            }            
         }
-
+        
     } while (FALSE);
 #endif /* HCD_EMULATE_DMA */
 }
-
+    
 /*
  * StopDMATransfer - stop DMA transfer
 */
@@ -1456,10 +1456,10 @@ void HW_StopDMATransfer(PSDHCD_DEVICE pDevice)
     PSPI_CONTEXT pSpi = (PSPI_CONTEXT)pHWDevice->pSpiContext;
     RETAILMSG(SPI_MSG,(TEXT("[SPI] Stop DMA\r\n")));
     if (pDevice->CurrentTransferDirRx) {
-        /* handle read dma */
+        /* handle read dma */    
         DMA_channel_stop(&g_InputDma);
     } else {
-        /* handle write dma */
+        /* handle write dma */    
         DMA_channel_stop(&g_OutputDma);
     }
 #endif /* HCD_EMULATE_DMA */
@@ -1469,18 +1469,18 @@ void HW_StopDMATransfer(PSDHCD_DEVICE pDevice)
 SDIO_STATUS HW_QueueDeferredCompletion(PSDHCD_DEVICE pDevice)
 {
     PSDHCD_HW_DEVICE pHWDevice = GET_HW_DEVICE(pDevice);
-
+    
     SDLIB_QueueWorkTask(pHWDevice->pWorker,&pHWDevice->IOCompleteWorkTask);
 
-    return SDIO_STATUS_SUCCESS;
+    return SDIO_STATUS_SUCCESS;  
 }
 
-    /* SPI token input output */
+    /* SPI token input output */   
 SDIO_STATUS HW_InOut_Token(PSDHCD_DEVICE pDevice,
                            UINT32        OutToken,
                            UINT8         DataSize,
-                           PUINT32       pInToken)
-{
+                           PUINT32       pInToken) 
+{   
     PSDHCD_HW_DEVICE pHWDevice = GET_HW_DEVICE(pDevice);
     PSPI_CONTEXT pSpi = (PSPI_CONTEXT)pHWDevice->pSpiContext;
     volatile S3C64XX_SPI_REG *pSPIregs = pSpi->pSPIregs;
@@ -1500,16 +1500,16 @@ SDIO_STATUS HW_InOut_Token(PSDHCD_DEVICE pDevice,
     pSPIregs->CH_CFG   |= SW_RST;
     pSPIregs->CH_CFG    = SPI_TRANSFER_TYPE;
     pSPIregs->CLK_CFG   = pSpi->ClockCfg;
-
+    
     do {
         if (DataSize==ATH_TRANS_DS_24 || DataSize>ATH_TRANS_DS_32) {
-            DBG_ASSERT(FALSE);
+            DBG_ASSERT(FALSE); 
             status = SDIO_STATUS_INVALID_PARAMETER;
-            break;
+            break;  
         } else {
             param = &gModeParams[DataSize];
             rxTrigger = param->bytes;
-        }
+        }    
 
         /* TODO .. issue SPI frame, inTokenVal is the SPI value returned from the device */
 #ifdef ENABLE_INT_MODE
@@ -1517,33 +1517,33 @@ SDIO_STATUS HW_InOut_Token(PSDHCD_DEVICE pDevice,
         pSPIregs->SPI_INT_EN   = RX_FIFORDY;
 #else
         pSPIregs->MODE_CFG = param->mode;
-#endif
+#endif         
         pSPIregs->PACKET_COUNT = PACKET_CNT_EN | (1) ;
         pSPIregs->CH_CFG   |=  TX_CH_ON|RX_CH_ON;
-
+        
         MASTER_CS_ENABLE;
 
         pSPIregs->SPI_TX_DATA = OutToken; /* write data */
 
 #ifdef ENABLE_INT_MODE
         WaitReturn = WaitForSingleObject(pSpi->hSpiDoneEvent, 5000);
-        if ( WAIT_TIMEOUT == WaitReturn ) {
+        if ( WAIT_TIMEOUT == WaitReturn ) {                
             RETAILMSG (TRUE, (TEXT("Read Rx interrrupt timeout!!!\r\n")));
                 status = SDIO_STATUS_IO_TIMEOUT;
                 break;
             }
         }
 #else
-        /* Poll for completion, we wait for RX data to fully shift in
-         * NOTE: we do not use GetTickCount to a timeout, because each call to GetTickCount
+        /* Poll for completion, we wait for RX data to fully shift in 
+         * NOTE: we do not use GetTickCount to a timeout, because each call to GetTickCount 
          * traps into the kernel! , we use an approzximate timeout */
         if (((pSPIregs->SPI_STATUS >> 13) & 0x7f) < rxTrigger) {
             ULONG  waitCount = 1000000;
             do {
                 if (((pSPIregs->SPI_STATUS >> 13) & 0x7f) >= rxTrigger) {
                         /* FIFO has data we want */
-                    break;
-                }
+                    break;    
+                }                
                 waitCount--;
             } while (waitCount);
 
@@ -1552,17 +1552,17 @@ SDIO_STATUS HW_InOut_Token(PSDHCD_DEVICE pDevice,
                 status = SDIO_STATUS_IO_TIMEOUT;
                 break;
             }
-        }
+        }             
 #endif /* ENABLE_INT_MODE */
 
-        inTokenVal = pSPIregs->SPI_RX_DATA;
+        inTokenVal = pSPIregs->SPI_RX_DATA;       
 
         if (pInToken != NULL) {
             *pInToken = inTokenVal & param->mask;
         }
-
-    } while (FALSE);
-
+        
+    } while (FALSE);    
+    
     MASTER_CS_DISABLE;
     pSPIregs->PACKET_COUNT = 0;
     return status;
@@ -1577,7 +1577,7 @@ void HW_SetDebugSignal(PSDHCD_DEVICE pDevice, INT PinNo, BOOL ON)
 
 
 void HW_ToggleDebugSignal(PSDHCD_DEVICE pDevice, int PinNo)
-{
+{ 
     PSDHCD_HW_DEVICE pHWDevice = GET_HW_DEVICE(pDevice);
     /* OPTIONAL GPIO toggling for timming analysis */
 }
@@ -1586,23 +1586,23 @@ void HW_UsecDelay(PSDHCD_DEVICE pDevice, UINT32 uSeconds)
 {
     PSDHCD_HW_DEVICE pHWDevice = GET_HW_DEVICE(pDevice);
     LARGE_INTEGER liDelay;
-
+    
     if (uSeconds == 0) {
-        return;
+        return;    
     }
-
+    
     // Query number of ticks per second
     if (QueryPerformanceFrequency(&liDelay))
-    {
+    {        
         LARGE_INTEGER liTimeOut;
         liDelay.QuadPart =  liDelay.QuadPart * uSeconds / 1000000;
 
         if (QueryPerformanceCounter(&liTimeOut))
         {
-            LARGE_INTEGER liCurrent;
+            LARGE_INTEGER liCurrent;            
             liTimeOut.QuadPart += liDelay.QuadPart;
             do { // Delay until timeout
-                QueryPerformanceCounter(&liCurrent);
+                QueryPerformanceCounter(&liCurrent);                
             } while (liCurrent.QuadPart<liTimeOut.QuadPart);
         }
     }
@@ -1621,8 +1621,8 @@ void HW_StopTimer(PSDHCD_DEVICE pDevice)
 
 static VOID IOCompleteWork(PVOID pContext)
 {
-    PSDHCD_HW_DEVICE pHWDevice = (PSDHCD_HW_DEVICE)pContext;
-
+    PSDHCD_HW_DEVICE pHWDevice = (PSDHCD_HW_DEVICE)pContext; 
+    
     SDIO_HandleHcdEvent(&pHWDevice->pDevice->Hcd, EVENT_HCD_TRANSFER_DONE);
 }
 
@@ -1635,18 +1635,18 @@ static DWORD SpiGpioIRQInterruptThread(LPVOID pContext)
     DBG_PRINT(SDDBG_TRACE, ("SpiGpioIRQInterruptThread: Initializing. Context 0x%X \n",pContext));
     RETAILMSG(1, ( TEXT("SpiGpioIRQInterruptThread: Initializing. Context 0x%X \n"), pContext) );
     CeSetThreadPriority(GetCurrentThread(), SPI_IRQ_THREAD_PRIORITY);
-
+    
     while (TRUE) {
-        WaitForSingleObject(pHWDevice->hIstEventSPIGpioIRQ,INFINITE);
+        WaitForSingleObject(pHWDevice->hIstEventSPIGpioIRQ,INFINITE); 
         if (pHWDevice->ShutDown) {
-            DBG_PRINT(SDDBG_TRACE, ("SpiGpioIRQInterruptThread: Shutting down \n"));
+            DBG_PRINT(SDDBG_TRACE, ("SpiGpioIRQInterruptThread: Shutting down \n"));            
             break;
         }
         HW_EnableDisableSPIIRQ(pHWDevice->pDevice, FALSE, TRUE);
         HcdSpiInterrupt(pHWDevice->pDevice);
-
+            
         /* ack kernel/OAL that interrupt has been acknowledged */
-        InterruptDone(pHWDevice->SysIntrSPIGpioIRQ);
+        InterruptDone(pHWDevice->SysIntrSPIGpioIRQ); 
     }
 
     return 0;
@@ -1662,24 +1662,24 @@ void HW_PowerUpDown(PVOID pContext, BOOL powerUp)
     RETAILMSG(1, (_T("SPI HW: %s power\n"), powerUp ? _T("Enable") : _T("Disable")));
     if (powerUp) {
 #if TARGET_TJET
-        /* Setup GPL13->IO, GPC4->32KHz, GPI9->CHIP_PWD_L*/
+        /* Setup GPL13->IO, GPC4->32KHz, GPI9->CHIP_PWD_L*/        
         pGPIOregs->GPLCON1 = pGPIOregs->GPLCON1 & ~(0xf<<20) | (1<<20);
         pGPIOregs->GPLPUD = pGPIOregs->GPLPUD & ~(0x3<<26) | (0<<26);
         pGPIOregs->GPCCON = pGPIOregs->GPCCON & ~(0xf<<16) | (1<<16);
         pGPIOregs->GPCPUD = pGPIOregs->GPCPUD & ~(0x3<<8) | (0<<8);
-        pGPIOregs->GPICON = pGPIOregs->GPICON & ~(0x3<<18) | (1<<18);
+        pGPIOregs->GPICON = pGPIOregs->GPICON & ~(0x3<<18) | (1<<18);     
         pGPIOregs->GPIPUD = pGPIOregs->GPIPUD & ~(0x3<<18) | (0<<18);
-
-        pGPIOregs->GPIDAT &= ~(0x1<<9); /* disable  the CHIP_PWD_L */
-        pGPIOregs->GPLDAT |= (0x1<<13); /* enable io suppiles, GPL13_Output */
-        pGPIOregs->GPCDAT |= (0x1<<4); /* enable the 32KHz clock, GPC4_Output */
+              
+        pGPIOregs->GPIDAT &= ~(0x1<<9); /* disable  the CHIP_PWD_L */   
+        pGPIOregs->GPLDAT |= (0x1<<13); /* enable io suppiles, GPL13_Output */        
+        pGPIOregs->GPCDAT |= (0x1<<4); /* enable the 32KHz clock, GPC4_Output */  
         HW_UsecDelay(pHWDevice->pDevice, 1000);
-        pGPIOregs->GPIDAT |= (0x1<<9); /* enable the CHIP_PWD_L */
+        pGPIOregs->GPIDAT |= (0x1<<9); /* enable the CHIP_PWD_L */  
         HW_UsecDelay(pHWDevice->pDevice, 1000);
-        pGPIOregs->GPIDAT &= ~(0x1<<9); /* disable  the CHIP_PWD_L */
+        pGPIOregs->GPIDAT &= ~(0x1<<9); /* disable  the CHIP_PWD_L */   
         HW_UsecDelay(pHWDevice->pDevice, 1000);
-        pGPIOregs->GPIDAT |= (0x1<<9); /* enable the CHIP_PWD_L */
-#endif
+        pGPIOregs->GPIDAT |= (0x1<<9); /* enable the CHIP_PWD_L */  
+#endif 
         // SPI Clock On
         pSpi->pSYSCONregs->PCLK_GATE |= SPI_POWER_ON;
 #if (SPI_CLOCK == EPLL_CLOCK)
@@ -1701,7 +1701,7 @@ void HW_PowerUpDown(PVOID pContext, BOOL powerUp)
         if (pHWDevice->pDevice->ShuttingDown) {
             HcdInitialize(pHWDevice->pDevice);
             pHWDevice->pDevice->ShuttingDown = FALSE;
-        }
+        }        
     } else {
         HW_EnableDisableSPIIRQ(pHWDevice->pDevice, FALSE, FALSE);
         HcdDeinitialize(pHWDevice->pDevice);
@@ -1720,12 +1720,12 @@ void HW_PowerUpDown(PVOID pContext, BOOL powerUp)
 #elif (SPI_CLOCK == USB_HOST_CLOCK)
         pSpi->pSYSCONregs->SCLK_GATE &= ~SPI_USBHOST_ON;
 #endif
-
+        
 #if TARGET_TJET
         pGPIOregs->GPICON = pGPIOregs->GPICON & ~(0x3<<18) | (1<<18);
         pGPIOregs->GPIPUD = pGPIOregs->GPIPUD & ~(0x3<<18) | (0<<18);
-        pGPIOregs->GPIDAT &= ~(0x1<<9); /* Assert for CHIP_PWD_L */
-#endif
+        pGPIOregs->GPIDAT &= ~(0x1<<9); /* Assert for CHIP_PWD_L */        
+#endif 
     }
 }
 
@@ -1741,33 +1741,33 @@ static void DoEmulatedDMA(PSDHCD_DEVICE    pDevice)
     SDIO_STATUS                 status = SDIO_STATUS_SUCCESS;
     BOOL                        alignedBuffer = FALSE;
     PUINT8                      pBuffer = pDevice->pCurrentBuffer;
-
-    if (pDevice->CurrentDmaWidth  == ATH_TRANS_DS_16) {
-        /* do 16 bit frame */
-        mode  = (CH_SIZE_HALF|BUS_SIZE_HALF);
+         
+    if (pDevice->CurrentDmaWidth  == ATH_TRANS_DS_16) {        
+        /* do 16 bit frame */   
+        mode  = (CH_SIZE_HALF|BUS_SIZE_HALF); 
         bytesPerFrame = 2;
         if (((UINT32)pBuffer & 0x1) == 0) {
             alignedBuffer = TRUE;
         }
-        frameCount >>= 1;
-    } else if (pDevice->CurrentDmaWidth  == ATH_TRANS_DS_32) {
-        /* do 32 bit frame */
-        mode  = (CH_SIZE_WORD|BUS_SIZE_WORD);
+        frameCount >>= 1;        
+    } else if (pDevice->CurrentDmaWidth  == ATH_TRANS_DS_32) {   
+        /* do 32 bit frame */           
+        mode  = (CH_SIZE_WORD|BUS_SIZE_WORD); 
         bytesPerFrame = 4;
         if (((UINT32)pBuffer & 0x3) == 0) {
             alignedBuffer = TRUE;
         }
-        frameCount >>= 2;
-    } else if (pDevice->CurrentDmaWidth  == ATH_TRANS_DS_8) {
-        /* do 8 bit frame */
-        mode = (CH_SIZE_BYTE|BUS_SIZE_BYTE);
+        frameCount >>= 2; 
+    } else if (pDevice->CurrentDmaWidth  == ATH_TRANS_DS_8) { 
+        /* do 8 bit frame */         
+        mode = (CH_SIZE_BYTE|BUS_SIZE_BYTE); 
         bytesPerFrame = 1;
         alignedBuffer = TRUE;
     } else {
         DBG_ASSERT(FALSE);
         return;
-    }
-
+    }   
+           
     while (frameCount) {
         pSPIregs->CH_CFG |= SW_RST;
         pSPIregs->CH_CFG = SPI_TRANSFER_TYPE;
@@ -1775,87 +1775,87 @@ static void DoEmulatedDMA(PSDHCD_DEVICE    pDevice)
         pSPIregs->MODE_CFG = mode;
 #ifdef ENABLE_INT_MODE
         pSPIregs->SPI_INT_EN = 0
-#endif
+#endif 
         pSPIregs->CH_CFG |= TX_CH_ON|RX_CH_ON;
         pSPIregs->PACKET_COUNT = PACKET_CNT_EN | (1) ;
         MASTER_CS_ENABLE;
-
+            
         if (pDevice->CurrentTransferDirRx) {
              outTokenVal = 0xFFFFFFFF;
         } else {
             if (alignedBuffer) {
-                if (pDevice->CurrentDmaWidth  == ATH_TRANS_DS_32) {
+                if (pDevice->CurrentDmaWidth  == ATH_TRANS_DS_32) {        
                     outTokenVal = *((UINT32 *)pBuffer);
-                    pBuffer += 4;
-                } else if (pDevice->CurrentDmaWidth  == ATH_TRANS_DS_16) {
+                    pBuffer += 4;   
+                } else if (pDevice->CurrentDmaWidth  == ATH_TRANS_DS_16) {   
                     outTokenVal = *((UINT16 *)pBuffer);
-                    pBuffer += 2;
-                } else if (pDevice->CurrentDmaWidth  == ATH_TRANS_DS_8) {
+                    pBuffer += 2;   
+                } else if (pDevice->CurrentDmaWidth  == ATH_TRANS_DS_8) { 
                     outTokenVal = *pBuffer;
-                    pBuffer++;
+                    pBuffer++; 
                 } else {
-                    outTokenVal = 0;
+                    outTokenVal = 0;    
                 }
             } else {
-                memcpy(&outTokenVal,pBuffer,bytesPerFrame);
+                memcpy(&outTokenVal,pBuffer,bytesPerFrame);   
                 pBuffer += bytesPerFrame;
             }
-        }
-
+        }    
+        
         pSPIregs->SPI_TX_DATA = outTokenVal;
-
+        
         {
             ULONG count = 1000000;
             while (count) {
                 if (((pSPIregs->SPI_STATUS >> 13) & 0x7f) >= bytesPerFrame) {
                         /* FIFO has data we want */
-                    break;
-                }
+                    break;    
+                }                  
                 count--;
             }
-
+            
             if (count == 0) {
                 RETAILMSG (TRUE, (TEXT("xx Read timeout!!!\r\n")));
                 status = SDIO_STATUS_IO_TIMEOUT;
             }
         }
-
+        
         if (!SDIO_SUCCESS(status)) {
             MASTER_CS_DISABLE;
             pSPIregs->PACKET_COUNT = (0) ; /* disable packet count */
             pSPIregs->CH_CFG &=  ~(TX_CH_ON|RX_CH_ON);
             break;
         }
-
+        
         inTokenVal = pSPIregs->SPI_RX_DATA;
-
-        if (pDevice->CurrentTransferDirRx) {
+        
+        if (pDevice->CurrentTransferDirRx) {      
             if (alignedBuffer) {
-                if (pDevice->CurrentDmaWidth  == ATH_TRANS_DS_32) {
+                if (pDevice->CurrentDmaWidth  == ATH_TRANS_DS_32) {        
                     *((UINT32 *)pBuffer) = inTokenVal;
-                    pBuffer += 4;
-                } else if (pDevice->CurrentDmaWidth  == ATH_TRANS_DS_16) {
+                    pBuffer += 4;   
+                } else if (pDevice->CurrentDmaWidth  == ATH_TRANS_DS_16) {   
                     *((UINT16 *)pBuffer) = (UINT16)inTokenVal;
-                    pBuffer += 2;
-                } else if (pDevice->CurrentDmaWidth  == ATH_TRANS_DS_8) {
+                    pBuffer += 2;   
+                } else if (pDevice->CurrentDmaWidth  == ATH_TRANS_DS_8) { 
                     *pBuffer = (UINT8)inTokenVal;
-                    pBuffer++;
+                    pBuffer++; 
                 } else {
                 }
             } else {
-                memcpy(pBuffer,&inTokenVal,bytesPerFrame);
+                memcpy(pBuffer,&inTokenVal,bytesPerFrame);   
                 pBuffer += bytesPerFrame;
             }
-        }
-
+        }           
+                
         MASTER_CS_DISABLE;
 
         frameCount--;
         pSPIregs->PACKET_COUNT = (0) ; /* disable packet count */
         pSPIregs->CH_CFG &=  ~(TX_CH_ON|RX_CH_ON);
     }
-
-
+    
+               
     HcdDmaCompletion(pHWDevice->pDevice, status);
 
 }

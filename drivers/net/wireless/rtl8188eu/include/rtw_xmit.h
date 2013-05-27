@@ -45,7 +45,11 @@
 #elif defined (CONFIG_USB_HCI)
 
 #ifdef CONFIG_USB_TX_AGGREGATION
-#define MAX_XMITBUF_SZ	20480	// 20k
+#ifdef CONFIG_PLATFORM_ARM_SUNxI
+#define MAX_XMITBUF_SZ (12288)  //12k 1536*8
+#else
+#define MAX_XMITBUF_SZ	(20480)	// 20k
+#endif
 #else
 #define MAX_XMITBUF_SZ	(2048)
 #endif
@@ -383,6 +387,8 @@ enum {
 	RTW_SCTX_DONE_TX_DESC_NA,
 	RTW_SCTX_DONE_TX_DENY,
 	RTW_SCTX_DONE_CCX_PKT_FAIL,
+	RTW_SCTX_DONE_DRV_STOP,
+	RTW_SCTX_DONE_DEV_REMOVE,
 };
 
 
@@ -441,7 +447,7 @@ struct xmit_buf
 	u8 *ptail;
 	u8 *pend;
 	u32 ff_hwaddr;
-	u8	pg_num;
+	u8	pg_num;	
 	u8	agg_num;
 #ifdef PLATFORM_OS_XP
 	PMDL pxmitbuf_mdl;
@@ -650,11 +656,11 @@ struct	xmit_priv	{
 	#ifdef CONFIG_TX_EARLY_MODE
 
 	#ifdef CONFIG_SDIO_HCI
-	#define MAX_AGG_PKT_NUM 20
+	#define MAX_AGG_PKT_NUM 20	
 	#else
-	#define MAX_AGG_PKT_NUM 256 //Max tx ampdu coounts
+	#define MAX_AGG_PKT_NUM 256 //Max tx ampdu coounts		
 	#endif
-
+	
 	struct agg_pkt_info agg_pkt[MAX_AGG_PKT_NUM];
 	#endif
 
@@ -663,7 +669,7 @@ struct	xmit_priv	{
 	_mutex ack_tx_mutex;
 	struct submit_ctx ack_tx_ops;
 #endif
-
+	
 };
 
 extern struct xmit_buf *rtw_alloc_xmitbuf_ext(struct xmit_priv *pxmitpriv);
@@ -739,3 +745,4 @@ void rtw_ack_tx_done(struct xmit_priv *pxmitpriv, int status);
 #include <xmit_osdep.h>
 
 #endif	//_RTL871X_XMIT_H_
+

@@ -10,7 +10,7 @@
 *
 * Author 		: javen
 *
-* Description 	: USBÊéßÂà∂Âô®0ËÆæÂ§á‰ø°ÊÅØ
+* Description 	: USBøÿ÷∆∆˜0…Ë±∏–≈œ¢
 *
 * History 		:
 *      <author>    		<time>       	<version >    		<desc>
@@ -31,6 +31,7 @@
 #include <linux/interrupt.h>
 #include <linux/platform_device.h>
 #include <linux/clk.h>
+#include <linux/device.h>
 
 #include <linux/debugfs.h>
 #include <linux/seq_file.h>
@@ -45,7 +46,7 @@
 #include  "../include/sw_usb_config.h"
 
 //---------------------------------------------------------------
-//  device ‰ø°ÊÅØÊèèËø∞
+//  device –≈œ¢√Ë ˆ
 //---------------------------------------------------------------
 static struct sw_udc_mach_info sw_udc_cfg;
 
@@ -63,7 +64,7 @@ static struct platform_device sw_udc_device = {
 };
 
 //---------------------------------------------------------------
-//  host ‰ø°ÊÅØÊèèËø∞
+//  host –≈œ¢√Ë ˆ
 //---------------------------------------------------------------
 static struct sw_hcd_eps_bits sw_hcd_eps[] = {
 	{ "ep1_tx", 8, },
@@ -138,15 +139,19 @@ __s32 usbc0_platform_device_init(struct usb_port_info *port_info)
     switch(port_info->port_type){
         case USB_PORT_TYPE_DEVICE:
             platform_device_register(&sw_udc_device);
+            device_enable_async_suspend(&sw_udc_device.dev);
         break;
 
         case USB_PORT_TYPE_HOST:
             platform_device_register(&sw_hcd_device);
+            device_enable_async_suspend(&sw_hcd_device.dev);
         break;
 
         case USB_PORT_TYPE_OTG:
             platform_device_register(&sw_udc_device);
+            device_enable_async_suspend(&sw_udc_device.dev);
             platform_device_register(&sw_hcd_device);
+            device_enable_async_suspend(&sw_hcd_device.dev);
         break;
 
         default:
@@ -196,3 +201,5 @@ __s32 usbc0_platform_device_exit(struct usb_port_info *info)
 
     return 0;
 }
+
+

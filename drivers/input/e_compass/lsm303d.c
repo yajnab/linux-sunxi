@@ -392,7 +392,7 @@ static int lsm303d_i2c_write(struct lsm303d_status *stat, u8 *buf, int len)
 
 /**
  * e_compass_fetch_sysconfig_para - get config info from sysconfig.fex file.
- * return value:
+ * return value:  
  *                    = 0; success;
  *                    < 0; err
  */
@@ -402,30 +402,30 @@ static int e_compass_fetch_sysconfig_para(void)
 	int ret = -1;
 	int device_used = -1;
 	script_item_u	val;
-	script_item_value_type_e  type;
-
+	script_item_value_type_e  type;	
+		
 	dprintk(DEBUG_INIT, "========%s===================\n", __func__);
-
+	
 	type = script_get_item("compass_para", "compass_used", &val);
-
+ 
 	if (SCIRPT_ITEM_VALUE_TYPE_INT != type) {
 		pr_err("%s: type err  device_used = %d. \n", __func__, val.val);
 		goto script_get_err;
 	}
 	device_used = val.val;
-
+	
 	if (1 == device_used) {
-		type = script_get_item("compass_para", "compass_twi_id", &val);
+		type = script_get_item("compass_para", "compass_twi_id", &val);	
 		if(SCIRPT_ITEM_VALUE_TYPE_INT != type){
 			pr_err("%s: type err twi_id = %d. \n", __func__, val.val);
 			goto script_get_err;
 		}
 		twi_id = val.val;
-
+		
 		dprintk(DEBUG_INIT, "%s: twi_id is %d. \n", __func__, twi_id);
 
 		ret = 0;
-
+		
 	} else {
 		pr_err("%s: compass_unused. \n",  __func__);
 		ret = -1;
@@ -441,7 +441,7 @@ script_get_err:
 
 /**
  * e_compass_detect - Device detection callback for automatic device creation
- * return value:
+ * return value:  
  *                    = 0; success;
  *                    < 0; err
  */
@@ -454,7 +454,7 @@ static int e_compass_detect(struct i2c_client *client, struct i2c_board_info *in
 	u8 cmd;
 
 	dprintk(DEBUG_INIT, "enter func %s. \n", __FUNCTION__);
-
+	
 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA))
 		return -ENODEV;
 
@@ -480,19 +480,19 @@ static int e_compass_detect(struct i2c_client *client, struct i2c_board_info *in
 			if (err < 0) {
 				dev_warn(&client->dev, "Error reading WHO_AM_I: is device"
 					" available/working?\n");
-
+				
 			}else	if (buf[0] != status_registers.who_am_i.value) {
 				dev_err(&client->dev,
 					"device unknown. Expected: 0x%02x,"
 					" Replies: 0x%02x\n", status_registers.who_am_i.value, buf[0]);
 			}else {
 				pr_info("%s:addr= 0x%x,i2c_num:%d\n",__func__,client->addr,i2c_num);
-				strlcpy(info->type, LSM303D_DEV_NAME, I2C_NAME_SIZE);
+				strlcpy(info->type, LSM303D_DEV_NAME, I2C_NAME_SIZE);	
 				return 0;
 			}
 
 		}
-
+	
 		pr_info("%s:lsm303d Device not found, \
 			 maybe the other e_compass equipment! \n",__func__);
 		return -ENODEV;
@@ -510,7 +510,7 @@ static int lsm303d_hw_init(struct lsm303d_status *stat)
 
 	buf[0] = status_registers.who_am_i.address;
 	err = lsm303d_i2c_read(stat, buf, 1);
-
+	
 	if (err < 0) {
 		dev_warn(&stat->client->dev, "Error reading WHO_AM_I: is device"
 		" available/working?\n");
@@ -526,19 +526,19 @@ static int lsm303d_hw_init(struct lsm303d_status *stat)
 		goto err_unknown_device;
 	}
 
-	status_registers.cntrl1.resume_value =
+	status_registers.cntrl1.resume_value = 
 					status_registers.cntrl1.default_value;
-	status_registers.cntrl2.resume_value =
+	status_registers.cntrl2.resume_value = 
 					status_registers.cntrl2.default_value;
-	status_registers.cntrl3.resume_value =
+	status_registers.cntrl3.resume_value = 
 					status_registers.cntrl3.default_value;
-	status_registers.cntrl4.resume_value =
+	status_registers.cntrl4.resume_value = 
 					status_registers.cntrl4.default_value;
-	status_registers.cntrl5.resume_value =
+	status_registers.cntrl5.resume_value = 
 					status_registers.cntrl5.default_value;
-	status_registers.cntrl6.resume_value =
+	status_registers.cntrl6.resume_value = 
 					status_registers.cntrl6.default_value;
-	status_registers.cntrl7.resume_value =
+	status_registers.cntrl7.resume_value = 
 					status_registers.cntrl7.default_value;
 
 	stat->hw_initialized = 1;
@@ -559,7 +559,7 @@ static int lsm303d_acc_device_power_off(struct lsm303d_status *stat)
 	u8 buf[2];
 
 	buf[0] = status_registers.cntrl1.address;
-	buf[1] = ((ODR_ACC_MASK & LSM303D_ACC_ODR_OFF) |
+	buf[1] = ((ODR_ACC_MASK & LSM303D_ACC_ODR_OFF) | 
 		((~ODR_ACC_MASK) & status_registers.cntrl1.resume_value));
 
 	err = lsm303d_i2c_write(stat, buf, 1);
@@ -570,7 +570,7 @@ static int lsm303d_acc_device_power_off(struct lsm303d_status *stat)
 	if (stat->pdata_acc->power_off) {
 		stat->pdata_acc->power_off();
 	}
-
+	
 	atomic_set(&stat->enabled_acc, 0);
 
 	return 0;
@@ -582,7 +582,7 @@ static int lsm303d_mag_device_power_off(struct lsm303d_status *stat)
 	u8 buf[2];
 
 	buf[0] = status_registers.cntrl7.address;
-	buf[1] = ((MSMS_MASK & POWEROFF_MAG) |
+	buf[1] = ((MSMS_MASK & POWEROFF_MAG) | 
 		((~MSMS_MASK) & status_registers.cntrl7.resume_value));
 
 	err = lsm303d_i2c_write(stat, buf, 1);
@@ -626,7 +626,7 @@ static int lsm303d_acc_device_power_on(struct lsm303d_status *stat)
 	buf[4] = status_registers.cntrl4.resume_value;
 	err = lsm303d_i2c_write(stat, buf, 4);
 	if (err < 0)
-		goto err_resume_state;
+		goto err_resume_state;	
 
 	buf[0] = status_registers.cntrl7.address;
 	buf[1] = status_registers.cntrl7.resume_value;
@@ -658,7 +658,7 @@ static int lsm303d_mag_device_power_on(struct lsm303d_status *stat)
 			return err;
 		}
 	}
-
+	
 	buf[0] = status_registers.cntrl0.address;
 	buf[1] = status_registers.cntrl0.resume_value;
 	err = lsm303d_i2c_write(stat, buf, 1);
@@ -670,13 +670,13 @@ static int lsm303d_mag_device_power_on(struct lsm303d_status *stat)
 	buf[2] = status_registers.cntrl4.resume_value;
 	buf[3] = status_registers.cntrl5.resume_value;
 	buf[4] = status_registers.cntrl6.resume_value;
-	buf[5] = ((MSMS_MASK & CONTINUOS_CONVERSION) |
+	buf[5] = ((MSMS_MASK & CONTINUOS_CONVERSION) | 
 		((~MSMS_MASK) & status_registers.cntrl7.resume_value));
 
 
 	err = lsm303d_i2c_write(stat, buf, 5);
 	if (err < 0)
-		goto err_resume_state;
+		goto err_resume_state;	
 
 	atomic_set(&stat->enabled_mag, 1);
 
@@ -689,7 +689,7 @@ err_resume_state:
 	return err;
 }
 
-static int lsm303d_acc_update_filter(struct lsm303d_status *stat,
+static int lsm303d_acc_update_filter(struct lsm303d_status *stat, 
 							u8 new_bandwidth)
 {
 	int err=-1;
@@ -717,8 +717,8 @@ static int lsm303d_acc_update_filter(struct lsm303d_status *stat,
 	if (err < 0)
 		goto error;
 
-	status_registers.cntrl2.resume_value = buf[0];
-	updated_val = ((LSM303D_ACC_FILTER_MASK & new_bandwidth) |
+	status_registers.cntrl2.resume_value = buf[0];	
+	updated_val = ((LSM303D_ACC_FILTER_MASK & new_bandwidth) | 
 					((~LSM303D_ACC_FILTER_MASK) & buf[0]));
 	buf[1] = updated_val;
 	buf[0] = status_registers.cntrl2.address;
@@ -729,14 +729,14 @@ static int lsm303d_acc_update_filter(struct lsm303d_status *stat,
 	status_registers.cntrl2.resume_value = updated_val;
 
 	return err;
-
+	
 error:
 	dev_err(&stat->client->dev, "update accelerometer fs range failed "
 		"0x%02x,0x%02x: %d\n", buf[0], buf[1], err);
 	return err;
 }
 
-static int lsm303d_acc_update_fs_range(struct lsm303d_status *stat,
+static int lsm303d_acc_update_fs_range(struct lsm303d_status *stat, 
 								u8 new_fs_range)
 {
 	int err=-1;
@@ -769,8 +769,8 @@ static int lsm303d_acc_update_fs_range(struct lsm303d_status *stat,
 	if (err < 0)
 		goto error;
 
-	status_registers.cntrl2.resume_value = buf[0];
-	updated_val = ((LSM303D_ACC_FS_MASK & new_fs_range) |
+	status_registers.cntrl2.resume_value = buf[0];	
+	updated_val = ((LSM303D_ACC_FS_MASK & new_fs_range) | 
 					((~LSM303D_ACC_FS_MASK) & buf[0]));
 	buf[1] = updated_val;
 	buf[0] = status_registers.cntrl2.address;
@@ -782,14 +782,14 @@ static int lsm303d_acc_update_fs_range(struct lsm303d_status *stat,
 	stat->sensitivity_acc = sensitivity;
 
 	return err;
-
+	
 error:
 	dev_err(&stat->client->dev, "update accelerometer fs range failed "
 		"0x%02x,0x%02x: %d\n", buf[0], buf[1], err);
 	return err;
 }
 
-static int lsm303d_mag_update_fs_range(struct lsm303d_status *stat,
+static int lsm303d_mag_update_fs_range(struct lsm303d_status *stat, 
 								u8 new_fs_range)
 {
 	int err=-1;
@@ -822,7 +822,7 @@ static int lsm303d_mag_update_fs_range(struct lsm303d_status *stat,
 	if (err < 0)
 		goto error;
 
-	status_registers.cntrl6.resume_value = buf[0];
+	status_registers.cntrl6.resume_value = buf[0];	
 	updated_val = (LSM303D_MAG_FS_MASK & new_fs_range);
 	buf[1] = updated_val;
 	buf[0] = status_registers.cntrl6.address;
@@ -834,7 +834,7 @@ static int lsm303d_mag_update_fs_range(struct lsm303d_status *stat,
 	stat->sensitivity_mag = sensitivity;
 
 	return err;
-
+	
 error:
 	dev_err(&stat->client->dev, "update magnetometer fs range failed "
 		"0x%02x,0x%02x: %d\n", buf[0], buf[1], err);
@@ -854,7 +854,7 @@ static int lsm303d_acc_update_odr(struct lsm303d_status *stat,
 			break;
 	}
 
-	config[1] = ((ODR_ACC_MASK & lsm303d_acc_odr_table[i].value) |
+	config[1] = ((ODR_ACC_MASK & lsm303d_acc_odr_table[i].value) | 
 		((~ODR_ACC_MASK) & status_registers.cntrl1.resume_value));
 
 	if (atomic_read(&stat->enabled_acc)) {
@@ -887,7 +887,7 @@ static int lsm303d_mag_update_odr(struct lsm303d_status *stat,
 			break;
 	}
 
-	config[1] = ((ODR_MAG_MASK & lsm303d_mag_odr_table[i].value) |
+	config[1] = ((ODR_MAG_MASK & lsm303d_mag_odr_table[i].value) | 
 		((~ODR_MAG_MASK) & status_registers.cntrl5.resume_value));
 
 	if (atomic_read(&stat->enabled_mag)) {
@@ -907,10 +907,10 @@ error:
 	return err;
 }
 
-static int lsm303d_validate_polling(unsigned int *min_interval,
-					unsigned int *poll_interval,
-					unsigned int min, u8 *axis_map_x,
-					u8 *axis_map_y, u8 *axis_map_z,
+static int lsm303d_validate_polling(unsigned int *min_interval, 
+					unsigned int *poll_interval, 
+					unsigned int min, u8 *axis_map_x, 
+					u8 *axis_map_y, u8 *axis_map_z,  
 					struct i2c_client *client)
 {
 	*min_interval = max(min, *min_interval);
@@ -972,7 +972,7 @@ static int lsm303d_acc_validate_pdata(struct lsm303d_status *stat)
 			break;
 		default:
 			dev_err(&stat->client->dev, "invalid accelerometer "
-				"bandwidth selected: %u\n",
+				"bandwidth selected: %u\n", 
 					stat->pdata_acc->aa_filter_bandwidth);
 			return -EINVAL;
 	}
@@ -1071,7 +1071,7 @@ static void lsm303d_mag_input_cleanup(struct lsm303d_status *stat)
 
 static ssize_t attr_get_polling_rate_acc(struct kobject *kobj,
 					struct kobj_attribute *attr,
-					char *buf)
+				     	char *buf)
 {
 	unsigned int val;
 	struct device *dev = to_dev(kobj->parent);
@@ -1084,7 +1084,7 @@ static ssize_t attr_get_polling_rate_acc(struct kobject *kobj,
 
 static ssize_t attr_get_polling_rate_mag(struct kobject *kobj,
 					struct kobj_attribute *attr,
-					char *buf)
+				     	char *buf)
 {
 	unsigned int val;
 	struct device *dev = to_dev(kobj->parent);
@@ -1097,7 +1097,7 @@ static ssize_t attr_get_polling_rate_mag(struct kobject *kobj,
 
 static ssize_t attr_set_polling_rate_acc(struct kobject *kobj,
 					struct kobj_attribute *attr,
-					const char *buf, size_t size)
+				     	const char *buf, size_t size)
 {
 	struct device *dev = to_dev(kobj->parent);
 	struct lsm303d_status *stat = dev_get_drvdata(dev);
@@ -1118,7 +1118,7 @@ static ssize_t attr_set_polling_rate_acc(struct kobject *kobj,
 
 static ssize_t attr_set_polling_rate_mag(struct kobject *kobj,
 					struct kobj_attribute *attr,
-					const char *buf, size_t size)
+				     	const char *buf, size_t size)
 {
 	struct device *dev = to_dev(kobj->parent);
 	struct lsm303d_status *stat = dev_get_drvdata(dev);
@@ -1139,7 +1139,7 @@ static ssize_t attr_set_polling_rate_mag(struct kobject *kobj,
 
 static ssize_t attr_get_enable_acc(struct kobject *kobj,
 					struct kobj_attribute *attr,
-					char *buf)
+				     	char *buf)
 {
 	struct device *dev = to_dev(kobj->parent);
 	struct lsm303d_status *stat = dev_get_drvdata(dev);
@@ -1149,7 +1149,7 @@ static ssize_t attr_get_enable_acc(struct kobject *kobj,
 
 static ssize_t attr_get_enable_mag(struct kobject *kobj,
 					struct kobj_attribute *attr,
-					char *buf)
+				     	char *buf)
 {
 	struct device *dev = to_dev(kobj->parent);
 	struct lsm303d_status *stat = dev_get_drvdata(dev);
@@ -1159,7 +1159,7 @@ static ssize_t attr_get_enable_mag(struct kobject *kobj,
 
 static ssize_t attr_set_enable_acc(struct kobject *kobj,
 					struct kobj_attribute *attr,
-					const char *buf, size_t size)
+				     	const char *buf, size_t size)
 {
 	struct device *dev = to_dev(kobj->parent);
 	struct lsm303d_status *stat = dev_get_drvdata(dev);
@@ -1180,7 +1180,7 @@ static ssize_t attr_set_enable_acc(struct kobject *kobj,
 
 static ssize_t attr_set_enable_mag(struct kobject *kobj,
 					struct kobj_attribute *attr,
-					const char *buf, size_t size)
+				     	const char *buf, size_t size)
 {
 	struct device *dev = to_dev(kobj->parent);
 	struct lsm303d_status *stat = dev_get_drvdata(dev);
@@ -1201,7 +1201,7 @@ static ssize_t attr_set_enable_mag(struct kobject *kobj,
 
 static ssize_t attr_get_range_acc(struct kobject *kobj,
 					struct kobj_attribute *attr,
-					char *buf)
+				     	char *buf)
 {
 	struct device *dev = to_dev(kobj->parent);
 	u8 val;
@@ -1229,7 +1229,7 @@ static ssize_t attr_get_range_acc(struct kobject *kobj,
 
 static ssize_t attr_get_range_mag(struct kobject *kobj,
 					struct kobj_attribute *attr,
-					char *buf)
+				     	char *buf)
 {
 	struct device *dev = to_dev(kobj->parent);
 	u8 val;
@@ -1257,7 +1257,7 @@ static ssize_t attr_get_range_mag(struct kobject *kobj,
 
 static ssize_t attr_set_range_acc(struct kobject *kobj,
 					struct kobj_attribute *attr,
-					const char *buf, size_t size)
+				     	const char *buf, size_t size)
 {
 	struct device *dev = to_dev(kobj->parent);
 	struct lsm303d_status *stat = dev_get_drvdata(dev);
@@ -1300,7 +1300,7 @@ static ssize_t attr_set_range_acc(struct kobject *kobj,
 
 static ssize_t attr_set_range_mag(struct kobject *kobj,
 					struct kobj_attribute *attr,
-					const char *buf, size_t size)
+				     	const char *buf, size_t size)
 {
 	struct device *dev = to_dev(kobj->parent);
 	struct lsm303d_status *stat = dev_get_drvdata(dev);
@@ -1343,7 +1343,7 @@ static ssize_t attr_set_range_mag(struct kobject *kobj,
 
 static ssize_t attr_get_aa_filter(struct kobject *kobj,
 					struct kobj_attribute *attr,
-					char *buf)
+				     	char *buf)
 {
 	struct device *dev = to_dev(kobj->parent);
 	u8 val;
@@ -1371,7 +1371,7 @@ static ssize_t attr_get_aa_filter(struct kobject *kobj,
 
 static ssize_t attr_set_aa_filter(struct kobject *kobj,
 					struct kobj_attribute *attr,
-					const char *buf, size_t size)
+				     	const char *buf, size_t size)
 {
 	struct device *dev = to_dev(kobj->parent);
 	struct lsm303d_status *stat = dev_get_drvdata(dev);
@@ -1414,23 +1414,23 @@ static ssize_t attr_set_aa_filter(struct kobject *kobj,
 }
 
 static struct kobj_attribute poll_attr_acc =
-	__ATTR(pollrate_us, 0666, attr_get_polling_rate_acc,
+	__ATTR(pollrate_us, 0666, attr_get_polling_rate_acc, 
 						attr_set_polling_rate_acc);
 static struct kobj_attribute enable_attr_acc =
-	__ATTR(enable_device, 0666, attr_get_enable_acc,
+	__ATTR(enable_device, 0666, attr_get_enable_acc, 
 						attr_set_enable_acc);
 static struct kobj_attribute fs_attr_acc =
 	__ATTR(full_scale, 0666, attr_get_range_acc, attr_set_range_acc);
 
 static struct kobj_attribute aa_filter_attr  =
-	__ATTR(anti_aliasing_frequency, 0666, attr_get_aa_filter,
+	__ATTR(anti_aliasing_frequency, 0666, attr_get_aa_filter, 
 							attr_set_aa_filter);
 
 static struct kobj_attribute poll_attr_mag =
-	__ATTR(pollrate_us, 0666, attr_get_polling_rate_mag,
+	__ATTR(pollrate_us, 0666, attr_get_polling_rate_mag, 
 						attr_set_polling_rate_mag);
 static struct kobj_attribute enable_attr_mag =
-	__ATTR(enable_device, 0666, attr_get_enable_mag,
+	__ATTR(enable_device, 0666, attr_get_enable_mag, 
 						attr_set_enable_mag);
 static struct kobj_attribute fs_attr_mag =
 	__ATTR(full_scale, 0666, attr_get_range_mag, attr_set_range_mag);
@@ -1450,7 +1450,7 @@ static struct attribute *attributes_mag[] = {
 	NULL,
 };
 
-static struct attribute_group attr_group_acc = {
+static struct attribute_group attr_group_acc = {	
 	.attrs = attributes_acc,
 };
 
@@ -1543,15 +1543,15 @@ static int lsm303d_acc_get_data(struct lsm303d_status *stat, int *xyz)
 	hw_d[1] = hw_d[1] * stat->sensitivity_acc;
 	hw_d[2] = hw_d[2] * stat->sensitivity_acc;
 
-	xyz[0] = ((stat->pdata_acc->negate_x) ?
+	xyz[0] = ((stat->pdata_acc->negate_x) ? 
 				(-hw_d[stat->pdata_acc->axis_map_x])
-					: (hw_d[stat->pdata_acc->axis_map_x]));
-	xyz[1] = ((stat->pdata_acc->negate_y) ?
+		   			: (hw_d[stat->pdata_acc->axis_map_x]));
+	xyz[1] = ((stat->pdata_acc->negate_y) ? 
 				(-hw_d[stat->pdata_acc->axis_map_y])
-					: (hw_d[stat->pdata_acc->axis_map_y]));
-	xyz[2] = ((stat->pdata_acc->negate_z) ?
+		   			: (hw_d[stat->pdata_acc->axis_map_y]));
+	xyz[2] = ((stat->pdata_acc->negate_z) ? 
 				(-hw_d[stat->pdata_acc->axis_map_z])
-					: (hw_d[stat->pdata_acc->axis_map_z]));
+		   			: (hw_d[stat->pdata_acc->axis_map_z]));
 
 	return err;
 }
@@ -1584,15 +1584,15 @@ static int lsm303d_mag_get_data(struct lsm303d_status *stat, int *xyz)
 	hw_d[1] = hw_d[1] * stat->sensitivity_mag;
 	hw_d[2] = hw_d[2] * stat->sensitivity_mag;
 
-	xyz[0] = ((stat->pdata_mag->negate_x) ?
+	xyz[0] = ((stat->pdata_mag->negate_x) ? 
 				(-hw_d[stat->pdata_mag->axis_map_x])
-					: (hw_d[stat->pdata_mag->axis_map_x]));
-	xyz[1] = ((stat->pdata_mag->negate_y) ?
+		   			: (hw_d[stat->pdata_mag->axis_map_x]));
+	xyz[1] = ((stat->pdata_mag->negate_y) ? 
 				(-hw_d[stat->pdata_mag->axis_map_y])
-					: (hw_d[stat->pdata_mag->axis_map_y]));
-	xyz[2] = ((stat->pdata_mag->negate_z) ?
+		   			: (hw_d[stat->pdata_mag->axis_map_y]));
+	xyz[2] = ((stat->pdata_mag->negate_z) ? 
 				(-hw_d[stat->pdata_mag->axis_map_z])
-					: (hw_d[stat->pdata_mag->axis_map_z]));
+		   			: (hw_d[stat->pdata_mag->axis_map_z]));
 
 	return err;
 }
@@ -1608,8 +1608,8 @@ static void lsm303d_acc_report_values(struct lsm303d_status *stat, int *xyz)
 	input_report_abs(stat->input_dev_acc, ABS_Y, xyz[1]);
 	input_report_abs(stat->input_dev_acc, ABS_Z, xyz[2]);
 	dprintk(DEBUG_REPORT_ACC_DATA, "stat->input_dev_acc x = %d, y = %d, z = %d. \n", \
-		xyz[0], xyz[1], xyz[2]);
-
+		xyz[0], xyz[1], xyz[2]); 
+	
 	input_sync(stat->input_dev_acc);
 }
 
@@ -1624,8 +1624,8 @@ static void lsm303d_mag_report_values(struct lsm303d_status *stat, int *xyz)
 	input_report_abs(stat->input_dev_mag, ABS_Y, xyz[1]);
 	input_report_abs(stat->input_dev_mag, ABS_Z, xyz[2]);
 	dprintk(DEBUG_REPORT_MAG_DATA, "stat->input_dev_mag x = %d, y = %d, z = %d. \n", \
-		xyz[0], xyz[1], xyz[2]);
-
+		xyz[0], xyz[1], xyz[2]); 
+	
 	input_sync(stat->input_dev_mag);
 }
 
@@ -1636,7 +1636,7 @@ static void lsm303d_acc_input_work_func(struct work_struct *work)
 	int err;
 
 	dprintk(DEBUG_REPORT_ACC_DATA, "enter func %s. \n", __FUNCTION__);
-
+	
 	stat = container_of((struct delayed_work *)work,
 			struct lsm303d_status, input_work_acc);
 
@@ -1646,7 +1646,7 @@ static void lsm303d_acc_input_work_func(struct work_struct *work)
 		dev_err(&stat->client->dev, "get_accelerometer_data failed\n");
 	else
 		lsm303d_acc_report_values(stat, xyz);
-
+		
 	schedule_delayed_work(&stat->input_work_acc, usecs_to_jiffies(
 			stat->pdata_acc->poll_interval));
 	mutex_unlock(&stat->lock);
@@ -1669,7 +1669,7 @@ static void lsm303d_mag_input_work_func(struct work_struct *work)
 		dev_err(&stat->client->dev, "get_magnetometer_data failed\n");
 	else
 		lsm303d_mag_report_values(stat, xyz);
-
+		
 	schedule_delayed_work(&stat->input_work_mag, usecs_to_jiffies(
 			stat->pdata_mag->poll_interval));
 	mutex_unlock(&stat->lock);
@@ -1698,11 +1698,11 @@ static int lsm303d_acc_input_init(struct lsm303d_status *stat)
 
 	set_bit(EV_ABS, stat->input_dev_acc->evbit);
 
-	input_set_abs_params(stat->input_dev_acc, ABS_X,
+	input_set_abs_params(stat->input_dev_acc, ABS_X, 
 					-ACC_G_MAX_NEG, ACC_G_MAX_POS, FUZZ, FLAT);
-	input_set_abs_params(stat->input_dev_acc, ABS_Y,
+	input_set_abs_params(stat->input_dev_acc, ABS_Y, 
 					-ACC_G_MAX_NEG, ACC_G_MAX_POS, FUZZ, FLAT);
-	input_set_abs_params(stat->input_dev_acc, ABS_Z,
+	input_set_abs_params(stat->input_dev_acc, ABS_Z, 
 					-ACC_G_MAX_NEG, ACC_G_MAX_POS, FUZZ, FLAT);
 
 	err = input_register_device(stat->input_dev_acc);
@@ -1744,11 +1744,11 @@ static int lsm303d_mag_input_init(struct lsm303d_status *stat)
 
 	set_bit(EV_ABS, stat->input_dev_mag->evbit);
 
-	input_set_abs_params(stat->input_dev_mag, ABS_X,
+	input_set_abs_params(stat->input_dev_mag, ABS_X, 
 					-MAG_G_MAX_NEG, MAG_G_MAX_POS, FUZZ, FLAT);
-	input_set_abs_params(stat->input_dev_mag, ABS_Y,
+	input_set_abs_params(stat->input_dev_mag, ABS_Y, 
 					-MAG_G_MAX_NEG, MAG_G_MAX_POS, FUZZ, FLAT);
-	input_set_abs_params(stat->input_dev_mag, ABS_Z,
+	input_set_abs_params(stat->input_dev_mag, ABS_Z, 
 					-MAG_G_MAX_NEG, MAG_G_MAX_POS, FUZZ, FLAT);
 
 	err = input_register_device(stat->input_dev_mag);
@@ -1781,7 +1781,7 @@ static int lsm303d_probe(struct i2c_client *client,
 {
 	struct lsm303d_status *stat;
 
-	u32 smbus_func = I2C_FUNC_SMBUS_BYTE_DATA |
+	u32 smbus_func = I2C_FUNC_SMBUS_BYTE_DATA | 
 			I2C_FUNC_SMBUS_WORD_DATA | I2C_FUNC_SMBUS_I2C_BLOCK;
 
 	int err = -1;
@@ -1789,7 +1789,7 @@ static int lsm303d_probe(struct i2c_client *client,
 
 	dprintk(DEBUG_INIT, "lsm303d probe i2c address is %d \n",i2c_address[i2c_num]);
 	client->addr = i2c_address[i2c_num];
-
+	
 	stat = kzalloc(sizeof(struct lsm303d_status), GFP_KERNEL);
 	if (stat == NULL) {
 		err = -ENOMEM;
@@ -1805,7 +1805,7 @@ static int lsm303d_probe(struct i2c_client *client,
 		if (i2c_check_functionality(client->adapter, smbus_func)){
 			stat->use_smbus = 1;
 			dev_warn(&client->dev, "client using SMBUS\n");
-		} else {
+		} else {			
 			err = -ENODEV;
 			dev_err(&client->dev, "client nor SMBUS capable\n");
 			goto exit_check_functionality_failed;
@@ -1836,7 +1836,7 @@ static int lsm303d_probe(struct i2c_client *client,
 					"accelerometer and magnetometer\n");
 	} else {
 		struct lsm303d_main_platform_data *tmp;
-		tmp = kzalloc(sizeof(struct lsm303d_main_platform_data),
+		tmp = kzalloc(sizeof(struct lsm303d_main_platform_data), 
 								GFP_KERNEL);
 		if(tmp == NULL)
 			goto exit_kfree_pdata;
@@ -1847,7 +1847,7 @@ static int lsm303d_probe(struct i2c_client *client,
 			dev_info(&client->dev, "using default plaform_data for "
 							"accelerometer\n");
 		} else {
-			memcpy(stat->pdata_acc, tmp->pdata_acc,
+			memcpy(stat->pdata_acc, tmp->pdata_acc, 
 						sizeof(*stat->pdata_acc));
 		}
 		if(tmp->pdata_mag == NULL) {
@@ -1856,7 +1856,7 @@ static int lsm303d_probe(struct i2c_client *client,
 			dev_info(&client->dev, "using default plaform_data for "
 							"magnetometer\n");
 		} else {
-			memcpy(stat->pdata_mag, tmp->pdata_mag,
+			memcpy(stat->pdata_mag, tmp->pdata_mag, 
 						sizeof(*stat->pdata_mag));
 		}
 		kfree(tmp);
@@ -1938,7 +1938,7 @@ static int lsm303d_probe(struct i2c_client *client,
 		goto  err_power_off;
 	}
 
-	err = lsm303d_acc_update_filter(stat,
+	err = lsm303d_acc_update_filter(stat, 
 					stat->pdata_acc->aa_filter_bandwidth);
 	if (err < 0) {
 		dev_err(&client->dev, "update_filter on accelerometer "
@@ -1976,7 +1976,7 @@ static int lsm303d_probe(struct i2c_client *client,
 	stat->early_suspend.resume = lsm303d_late_resume;
 	register_early_suspend(&stat->early_suspend);
 #endif
-
+	
 	dev_info(&client->dev, "%s: probed\n", LSM303D_DEV_NAME);
 	return 0;
 
@@ -2044,11 +2044,11 @@ static void lsm303d_early_suspend(struct early_suspend *h)
 	dprintk(DEBUG_SUSPEND, "%s: start\n", __func__);
 
 	err = lsm303d_acc_disable(data);
-	if (err < 0) {
+	if (err < 0) {	
 		pr_err("%s: lsm303d_acc_disable failed\n", LSM303D_DEV_NAME);
 	}
 	err = lsm303d_mag_disable(data);
-	if (err < 0) {
+	if (err < 0) {	
 		pr_err("%s: lsm303d_mag_disable failed\n", LSM303D_DEV_NAME);
 	}
 
@@ -2065,11 +2065,11 @@ static void lsm303d_late_resume(struct early_suspend *h)
 	dprintk(DEBUG_SUSPEND, "%s: start\n", __func__);
 
 	err = lsm303d_acc_enable(data);
-	if (err < 0) {
+	if (err < 0) {	
 		pr_err("%s: lsm303d_acc_enable failed\n", LSM303D_DEV_NAME);
 	}
 	err = lsm303d_mag_enable(data);
-	if (err < 0) {
+	if (err < 0) {	
 		pr_err("%s: lsm303d_mag_enable failed\n", LSM303D_DEV_NAME);
 	}
 
@@ -2081,18 +2081,18 @@ static void lsm303d_late_resume(struct early_suspend *h)
 static int lsm303d_suspend(struct device *dev)
 {
 	int err = 0;
-
+	
 	struct i2c_client *client = to_i2c_client(dev);
 	struct lsm303d_status *data = i2c_get_clientdata(client);
 
 	dev_info(&client->dev, "suspend\n");
 
 	err = lsm303d_acc_disable(data);
-	if (err < 0) {
+	if (err < 0) {	
 		return err;
 	}
 	err = lsm303d_mag_disable(data);
-	if (err < 0) {
+	if (err < 0) {	
 		return err;
 	}
 
@@ -2107,13 +2107,13 @@ static int lsm303d_resume(struct device *dev)
 	struct lsm303d_status *data = i2c_get_clientdata(client);
 
 	dev_info(&client->dev, "resume\n");
-
+	
 	err = lsm303d_acc_enable(data);
-	if (err < 0) {
+	if (err < 0) {	
 		return err;
 	}
 	err = lsm303d_mag_enable(data);
-	if (err < 0) {
+	if (err < 0) {	
 		return err;
 	}
 
@@ -2122,7 +2122,7 @@ static int lsm303d_resume(struct device *dev)
 #endif /*CONFIG_PM*/
 #endif /*CONFIG_HAS_EARLYSUSPEND*/
 
-static const struct i2c_device_id lsm303d_id[]
+static const struct i2c_device_id lsm303d_id[] 
 					= { { LSM303D_DEV_NAME, 0 }, { }, };
 
 MODULE_DEVICE_TABLE(i2c, lsm303d_id);
@@ -2152,14 +2152,14 @@ static struct i2c_driver lsm303d_driver = {
 static int __init lsm303d_init(void)
 {
 	pr_info("%s driver: init\n", LSM303D_DEV_NAME);
-
+	
 	if (e_compass_fetch_sysconfig_para()) {
 		printk("%s: err.\n", __func__);
 		return -1;
 	}
 
 	lsm303d_driver.detect = e_compass_detect;
-
+	
 	return i2c_add_driver(&lsm303d_driver);
 }
 

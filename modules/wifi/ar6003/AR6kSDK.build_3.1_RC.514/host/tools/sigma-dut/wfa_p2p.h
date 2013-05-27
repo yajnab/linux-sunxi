@@ -18,10 +18,10 @@
 
 
 extern int cmd_device_get_info(struct sigma_dut *dut, dutCommand_t *command,
-					      dutCmdResponse_t *resp);
+                        		      dutCmdResponse_t *resp);
 
 extern int cmd_sta_get_p2p_dev_address(struct sigma_dut *dut, dutCommand_t *command,
-					      dutCmdResponse_t *resp);
+                        		      dutCmdResponse_t *resp);
 
 extern int cmd_sta_set_p2p(struct sigma_dut *dut, caStaSetP2p_t *command, dutCmdResponse_t *resp);
 
@@ -98,7 +98,7 @@ extern int cmd_sta_block_icmp_response(struct sigma_dut *dut,
 				       dutCmdResponse_t *cmdRes);
 
 extern int cmd_traffic_send_ping(struct sigma_dut *dut,
-                                        tgPingStart_t *staPing,
+                                        tgPingStart_t *staPing, 
                                         dutCmdResponse_t *spresp);
 
 int cmd_traffic_stop_ping(struct sigma_dut *dut,

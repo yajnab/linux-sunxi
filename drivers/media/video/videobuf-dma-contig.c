@@ -311,7 +311,7 @@ static int __videobuf_mmap_mapper(struct videobuf_queue *q,
 	mem->vaddr = dma_alloc_coherent(q->dev, mem->size,
 					&mem->dma_handle, GFP_KERNEL);
 #endif
-
+	
 #ifdef USE_PHY_ADDR_DIRECT
 	mem->dma_handle = (ve_start + ve_size - 24*1024*1024 + buf->i * mem->size + 4095) & (~(4095));	//4k aligned
 	mem->vaddr = (void *)(mem->dma_handle + 0x80000000);	// not used
@@ -330,8 +330,8 @@ static int __videobuf_mmap_mapper(struct videobuf_queue *q,
 	{
 		mem->vaddr = NULL;
 	}
-#endif
-
+#endif					
+					
 	if (!mem->vaddr) {
 		dev_err(q->dev, "dma_alloc_coherent size %ld failed\n",
 			mem->size);

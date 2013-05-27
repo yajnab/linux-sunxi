@@ -1,17 +1,17 @@
 #include "bsp_tvd.h"
 #include <linux/delay.h>
 
-#define REG_RD32(reg)    (*((volatile __u32 *)(reg)))
-#define REG_WR32(reg, value) (*((volatile __u32 *)(reg))  = (value))
+#define REG_RD32(reg)    (*((volatile __u32 *)(reg)))         
+#define REG_WR32(reg, value) (*((volatile __u32 *)(reg))  = (value))  
 
 static __u32 addr_base = 0;
 
 void TVD_init(void *addr)
 {
-	__u32 i;
-        addr_base = (__u32)addr;
+	__u32 i; 
+        addr_base = (__u32)addr;       
         for(i=0;i<4;i++){
-	        REG_WR32(addr_base+0x0130+0x100*i,0x04000000);//reg for set once here
+    	        REG_WR32(addr_base+0x0130+0x100*i,0x04000000);//reg for set once here    
         }
 }
 
@@ -20,7 +20,7 @@ void TVD_config(__u32 interface, __u32 system)
 	//global reg set here
         REG_WR32(addr_base+0x0500,0x00000f11);  //first, open adc, so the tvd has clock
         REG_WR32(addr_base+0x0000,0x00001f00);  //reset tvd
-        msleep(1);                              //need delay here for tvd reset
+        msleep(1);                              //need delay here for tvd reset 
         if(interface==TVD_CVBS)                 //composite
         {
 	        switch(system)
@@ -34,7 +34,7 @@ void TVD_config(__u32 interface, __u32 system)
                                 REG_WR32(addr_base+0x002c,0x0000cb74);//ntsc vs pal
                                 REG_WR32(addr_base+0x0030,0x21f07c1f);//ntsc vs pal
                                 REG_WR32(addr_base+0x0034,0x20000000);
-
+			    
                                 //REG_WR32(addr_base+0x0024,0x05C8B10A);
                                 //REG_WR32(addr_base+0x0028,0x00005838);
                                 //REG_WR32(addr_base+0x002c,0x0000cb74);
@@ -74,7 +74,7 @@ void TVD_config(__u32 interface, __u32 system)
 	        REG_WR32(addr_base+0x0504,0x00000000);
 		REG_WR32(addr_base+0x052c,0x00110000);
 		//1 channel cvbs
-	        //REG_WR32(addr_base+0x0500,0x00000111);
+	        //REG_WR32(addr_base+0x0500,0x00000111);	
 	        //REG_WR32(addr_base+0x0000,0x00000321);
 	        //default open all 4 channels if you don't care power consumption
 	        REG_WR32(addr_base+0x0500,0x00000f11);
@@ -85,7 +85,7 @@ void TVD_config(__u32 interface, __u32 system)
 		switch(system)
 		{
 			case TVD_NTSC://480i
-				REG_WR32(addr_base+0x0008,0x00594001);
+    				REG_WR32(addr_base+0x0008,0x00594001);
 			        REG_WR32(addr_base+0x0018,0x00002080);
 			        REG_WR32(addr_base+0x0080,0x00500082);
 			        REG_WR32(addr_base+0x0084,0x00610022);
@@ -107,15 +107,15 @@ void TVD_config(__u32 interface, __u32 system)
 		switch(system)
 		{
 			case TVD_NTSC://480p
-				REG_WR32(addr_base+0x0008,0x00594001);
+    				REG_WR32(addr_base+0x0008,0x00594001);
                                 REG_WR32(addr_base+0x0018,0x00002080);
                                 REG_WR32(addr_base+0x0080,0x00500082);
                                 REG_WR32(addr_base+0x0084,0x00610022);
-
+                                
                                 REG_WR32(addr_base+0x0008,0x80594001);
                                 REG_WR32(addr_base+0x0024,0x039db10a);
                                 REG_WR32(addr_base+0x0028,0x000037b1);
-                                REG_WR32(addr_base+0x0034,0x39999999);
+                                REG_WR32(addr_base+0x0034,0x39999999);			    
 				break;
 			case TVD_PAL://576p not work
 			        REG_WR32(addr_base+0x0008,0x10594101);
@@ -126,9 +126,9 @@ void TVD_config(__u32 interface, __u32 system)
 		}
 	        REG_WR32(addr_base+0x0504,0x00000000);
 	        REG_WR32(addr_base+0x052c,0x00110000);
-	        REG_WR32(addr_base+0x0500,0x00020711);
+	        REG_WR32(addr_base+0x0500,0x00020711);	
 	        REG_WR32(addr_base+0x0000,0x00000321);
-	}
+	}	
 }
 
 void TVD_set_width(__u32 id,__u32 w)
@@ -142,7 +142,7 @@ void TVD_set_width(__u32 id,__u32 w)
 
 void TVD_set_width_jump(__u32 id,__u32 j)
 {
-        REG_WR32(addr_base+0x0138+0x100*id, j);
+        REG_WR32(addr_base+0x0138+0x100*id, j); 
 }
 
 void TVD_set_height(__u32 id,__u32 h)
@@ -159,15 +159,15 @@ void TVD_irq_enable(__u32 id,tvd_irq_t irq)
 {
 	__u32 reg_val;
 	switch(irq){
-		case TVD_FRAME_DONE:
+		case TVD_FRAME_DONE:	
 			reg_val = REG_RD32(addr_base + 0x148);
 			reg_val |= 1<<(24+id);
 			REG_WR32(addr_base + 0x148, reg_val);
 			break;
 		case TVD_LOCK:
-			break;
+			break;	
 		case TVD_UNLOCK:
-			break;
+			break;	
                 default:
                         break;
 	}
@@ -177,28 +177,28 @@ void TVD_irq_disable(__u32 id,tvd_irq_t irq)
 {
 	__u32 reg_val;
 	switch(irq){
-		case TVD_FRAME_DONE:
+		case TVD_FRAME_DONE:	
 			reg_val = REG_RD32(addr_base + 0x148);
 			reg_val &= ~(1<<(24+id));
 			REG_WR32(addr_base + 0x148, reg_val);
 			break;
                 default:
                         break;
-	}
+	}	
 }
 
 __s32 TVD_irq_status_get(__u32 id,tvd_irq_t irq)
 {
 	__u32 reg_val, ret = -1;
 	switch(irq){
-		case TVD_FRAME_DONE:
+		case TVD_FRAME_DONE:	
 			reg_val = REG_RD32(addr_base+0x140);
 			ret = (reg_val>>(24+id))&1;
 			break;
                 default:
                         printk("TVD get irq status error\n");
                         break;
-	}
+	}	
 	return ret;
 }
 
@@ -206,13 +206,13 @@ void TVD_irq_status_clear(__u32 id,tvd_irq_t irq)
 {
 	__u32 reg_val;
 	switch(irq){
-		case TVD_FRAME_DONE:
+		case TVD_FRAME_DONE:	
 			reg_val = 1<<(24+id);
 			REG_WR32(addr_base+0x140, reg_val);
 			break;
                 default:
                         break;
-	}
+	}	
 }
 
 void TVD_capture_on(__u32 id)
@@ -245,19 +245,19 @@ void TVD_set_fmt(__u32 id, tvd_fmt_t fmt)
 	__u32 reg_val;
 	reg_val = REG_RD32(addr_base + 0x130+0x100*id);
 	switch(fmt){
-		case TVD_PL_YUV422:
+		case TVD_PL_YUV422:				
 			reg_val &= ~(1<<24);
 			reg_val |= 1<<4;
 			break;
-		case TVD_PL_YUV420:
+		case TVD_PL_YUV420:				
 			reg_val &= ~(1<<24);
 			reg_val &= ~(1<<4);
 			break;
-		case TVD_MB_YUV420:
+		case TVD_MB_YUV420:				
 			reg_val |= 1<<24;
 			reg_val &= ~(1<<4);
 			break;
-	}
+	}	
 	REG_WR32(addr_base + 0x130+0x100*id, reg_val);
 }
 

@@ -1,9 +1,9 @@
 /**
  * Copyright (C) 2011-2012 ARM Limited. All rights reserved.
- *
+ * 
  * This program is free software and is provided to you under the terms of the GNU General Public License version 2
  * as published by the Free Software Foundation, and any use by you of this program is subject to the terms of such GNU licence.
- *
+ * 
  * A copy of the licence is included with the program, and can also be obtained from Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
@@ -208,7 +208,7 @@ static ssize_t gp_all_counter_srcx_write(struct file *filp, const char __user *u
 					{
 						return 0;
 					}
-				}
+				}				
 			}
 
 			/* try next group */
@@ -412,7 +412,7 @@ static ssize_t pp_all_counter_srcx_write(struct file *filp, const char __user *u
 					{
 						return 0;
 					}
-				}
+				}				
 			}
 
 			/* try next group */
@@ -614,8 +614,8 @@ static ssize_t l2_all_counter_srcx_write(struct file *filp, const char __user *u
 			{
 				return 0;
 			}
-		}
-
+		}				
+		
 		/* try next L2 */
 		l2_id++;
 		l2_cache = mali_l2_cache_core_get_glob_l2_core(l2_id);
@@ -681,7 +681,7 @@ static const struct file_operations l2_all_counter_src1_fops = {
 
 static ssize_t power_events_write(struct file *filp, const char __user *ubuf, size_t cnt, loff_t *ppos)
 {
-
+	
 	memset(pwr_buf,0,POWER_BUFFER_SIZE);
 	virtual_power_status_register = 0;
 	if (!strncmp(ubuf,mali_power_events[_MALI_DEVICE_SUSPEND],strlen(mali_power_events[_MALI_DEVICE_SUSPEND])))
@@ -705,7 +705,7 @@ static ssize_t power_events_write(struct file *filp, const char __user *ubuf, si
 		if (!power_on)
 		{
 			virtual_power_status_register = 2;
-			mali_dev_resume();
+			mali_dev_resume();		
 		}
 		else
 		{
@@ -718,7 +718,7 @@ static ssize_t power_events_write(struct file *filp, const char __user *ubuf, si
 		mali_dev_resume();
 		/*  @@@@ assuming currently resume is successful later on to tune as per previous */
 		virtual_power_status_register = 1;
-
+                
 	}
 	*ppos += cnt;
 	sprintf(pwr_buf, "%d",virtual_power_status_register);
@@ -857,7 +857,7 @@ static ssize_t profiling_record_write(struct file *filp, const char __user *ubuf
 			MALI_DEBUG_PRINT(2, ("Failed to stop recording of profiling events\n"));
 			return -EFAULT;
 		}
-
+		
 		MALI_DEBUG_PRINT(2, ("Profiling recording stopped (recorded %u events)\n", count));
 	}
 
@@ -1200,7 +1200,7 @@ int mali_sysfs_register(struct mali_dev *device, dev_t dev, const char *mali_dev
 						debugfs_create_file("counter_src0", 0600, mali_l2_l2x_dir, l2_cache, &l2_l2x_counter_src0_fops);
 						debugfs_create_file("counter_src1", 0600, mali_l2_l2x_dir, l2_cache, &l2_l2x_counter_src1_fops);
 					}
-
+					
 					/* try next L2 */
 					l2_id++;
 					l2_cache = mali_l2_cache_core_get_glob_l2_core(l2_id);

@@ -59,6 +59,7 @@ static void IRQHandlerF2(struct sdio_func *func);
 #endif /* !defined(OOB_INTR_ONLY) */
 static int sdioh_sdmmc_get_cisaddr(sdioh_info_t *sd, uint32 regaddr);
 extern int sdio_reset_comm(struct mmc_card *card);
+extern int sw_mci_check_r1_ready(struct mmc_host* mmc, unsigned ms);
 
 extern PBCMSDH_SDMMC_INSTANCE gInstance;
 
@@ -783,6 +784,8 @@ sdioh_request_byte(sdioh_info_t *sd, uint rw, uint func, uint regaddr, uint8 *by
 #if defined(MMC_SDIO_ABORT)
 	int sdio_abort_retry = MMC_SDIO_ABORT_RETRY_LIMIT;
 #endif
+	int ret = 0;
+
 	sd_info(("%s: rw=%d, func=%d, addr=0x%05x\n", __FUNCTION__, rw, func, regaddr));
 
 	DHD_PM_RESUME_WAIT(sdioh_request_byte_wait);
@@ -869,6 +872,11 @@ sdioh_request_byte(sdioh_info_t *sd, uint rw, uint func, uint regaddr, uint8 *by
 		}
 	}
 
+	//AW judge sdio read write timeout, 1s
+	ret = sw_mci_check_r1_ready(gInstance->func[func]->card->host, 1000);
+	if (ret != 0)
+		printk(("%s data timeout.\n", __FUNCTION__));	
+
 	if (err_ret) {
 		sd_err(("bcmsdh_sdmmc: Failed to %s byte F%d:@0x%05x=%02x, Err: %d\n",
 		                        rw ? "Write" : "Read", func, regaddr, *byte, err_ret));
@@ -885,6 +893,7 @@ sdioh_request_word(sdioh_info_t *sd, uint cmd_type, uint rw, uint func, uint add
 #if defined(MMC_SDIO_ABORT)
 	int sdio_abort_retry = MMC_SDIO_ABORT_RETRY_LIMIT;
 #endif
+	int ret = 0;
 
 	if (func == 0) {
 		sd_err(("%s: Only CMD52 allowed to F0.\n", __FUNCTION__));
@@ -916,6 +925,11 @@ sdioh_request_word(sdioh_info_t *sd, uint cmd_type, uint rw, uint func, uint add
 			sd_err(("%s: Invalid nbytes: %d\n", __FUNCTION__, nbytes));
 		}
 	}
+
+	//AW judge sdio read write timeout, 1s
+	ret = sw_mci_check_r1_ready(gInstance->func[func]->card->host, 1000);
+	if (ret != 0)
+		printk(("%s data timeout.\n", __FUNCTION__));
 
 	/* Release host controller */
 	sdio_release_host(gInstance->func[func]);
@@ -963,6 +977,7 @@ sdioh_request_packet(sdioh_info_t *sd, uint fix_inc, uint write, uint func,
 	struct mmc_request mmc_req;
 	struct mmc_command mmc_cmd;
 	struct mmc_data mmc_dat;
+	int ret = 0;
 
 	sd_trace(("%s: Enter\n", __FUNCTION__));
 
@@ -1105,6 +1120,11 @@ sdioh_request_packet(sdioh_info_t *sd, uint fix_inc, uint write, uint func,
 						gInstance->func[func],
 						buf, addr, pkt_len);
 
+			//AW judge sdio read write timeout, 1s
+			ret = sw_mci_check_r1_ready(gInstance->func[func]->card->host, 1000);
+			if (ret != 0)
+				printk(("%s data timeout.\n", __FUNCTION__));
+			
 			if (err_ret)
 				sd_err(("%s: %s FAILED %p[%d], addr=0x%05x, pkt_len=%d, ERR=%d\n",
 				       __FUNCTION__,

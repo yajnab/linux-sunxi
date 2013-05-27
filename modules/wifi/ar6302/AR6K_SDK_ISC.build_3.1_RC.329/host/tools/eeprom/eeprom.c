@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2006-2010 Atheros Communications, Inc.
  * All rights reserved.
+ * 
  *
- *
- *
+ * 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -18,7 +18,7 @@
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
 //
- *
+ * 
  */
 
 #include <sys/types.h>
@@ -147,7 +147,7 @@ wait_for_target(void)
         while ((rv=ioctl(s, AR6000_IOCTL_EXTENDED, &ifr)) < 0)
         {
             if (errno == ENODEV) {
-                /*
+                /* 
                  * Give the Target device a chance to start.
                  * Then loop back and see if it's alive.
                  */
@@ -217,7 +217,7 @@ BMI_write_mem(A_UINT32 address, A_UINT8 *data, A_UINT32 sz)
 static int
 wmic_ether_aton(const char *orig, A_UINT8 *eth)
 {
-    const char *bufp;
+    const char *bufp;   
     int i;
 
     i = 0;
@@ -291,7 +291,7 @@ scan_args(int argc, char **argv)
              * if I do it this way, I can use memcpy to copy the regulatory data
              * into host RAM.
              */
-            sscanf(p_reg, "%x", &new_reg_val);
+            sscanf(p_reg, "%x", &new_reg_val); 
             new_reg[0] = new_reg_val & (0xFF);
             new_reg[1] = (new_reg_val & (0xFF00)) >> 8;
             break;
@@ -345,8 +345,8 @@ update_reg(unsigned char* eeprom, A_UINT32 sz, unsigned char* new_reg_ptr)
     }
 
     memcpy(ptr_reg, new_reg_ptr, 2); // Regulatory domain is 2 bytes
-
-    /* Clear current checksum and recalculate it */
+ 
+    /* Clear current checksum and recalculate it */ 
     *ptr_checksum = 0;
     ptr_eeprom = (A_UINT16*)eeprom;
 
@@ -372,7 +372,7 @@ update_mac(unsigned char* eeprom, A_UINT32 sz, unsigned char* macaddr)
     A_UINT16 *ptr_eeprom;
     A_UINT16 checksum;
     unsigned char *ptr_macaddr;
-
+   
     if (target_type == TARGET_TYPE_AR6001) {
         ptr_checksum = (A_UINT16 *)(eeprom + 0);
         ptr_macaddr  = eeprom + 6;
@@ -391,7 +391,7 @@ update_mac(unsigned char* eeprom, A_UINT32 sz, unsigned char* macaddr)
 
     memcpy(ptr_macaddr,macaddr,MAC_ADDR_LEN);
 
-    /* Clear current checksum and recalculate it */
+    /* Clear current checksum and recalculate it */ 
     *ptr_checksum = 0;
     ptr_eeprom = (A_UINT16*)eeprom;
 
@@ -406,7 +406,7 @@ update_mac(unsigned char* eeprom, A_UINT32 sz, unsigned char* macaddr)
     return;
 }
 
-void
+void 
 target_get_bd_sz(A_UINT32 target_type, A_UINT32 *bd_size, A_UINT32 *bd_ext_size)
 {
     if (target_type == TARGET_TYPE_AR6002) {
@@ -455,13 +455,13 @@ main(int argc, char *argv[])
        ERROR("File stats for local file failed\n");
     }
     if ((fstat_buf.st_size > bd_size) && (bd_ext_size)) {
-
+        
         /*if use 1792 size bin file in Venus 2.1.1, the bd_ext_size needs adjust to 768*/
         if ((fstat_buf.st_size - bd_size) < bd_ext_size) {
             bd_ext_size = fstat_buf.st_size - bd_size;
-        }
+        }    
         if ((bd_ext_size) &&
-            (fread(eeprom_ext_data, 1, bd_ext_size, file) != bd_ext_size))
+            (fread(eeprom_ext_data, 1, bd_ext_size, file) != bd_ext_size)) 
         {
             ERROR("Read from local file failed for extended data\n");
         }

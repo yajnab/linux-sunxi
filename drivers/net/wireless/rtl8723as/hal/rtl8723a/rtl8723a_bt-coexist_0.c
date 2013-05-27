@@ -758,11 +758,11 @@ void bthci_DecideBTChannel(PADAPTER padapter, u8 EntryNum)
 		{
 			//if any preferred channel triplet exists
 			RTPRINT(FIOCTL, (IOCTL_BT_HCICMD|IOCTL_BT_LOGO), ("There are %d sub band triplet exists, ", subbandTripletCnt));
-			if (firstRemoteLegalChnlInTriplet == 0)
-			{
-				//no legal channel is found, reject the connection.
+		 	if (firstRemoteLegalChnlInTriplet == 0)
+		 	{
+		 		//no legal channel is found, reject the connection.
 				RTPRINT(FIOCTL, (IOCTL_BT_HCICMD|IOCTL_BT_LOGO), ("no legal channel is found!!\n"));
-			}
+		 	}
 			else
 			{
 				// Remote Legal channel is found but not match to local
@@ -2724,7 +2724,7 @@ bthci_StartBeaconAndConnect(
 			else if (pBTInfo->BtAsocEntry[CurrentAssocNum].AMPRole == AMP_BTAP_JOINER)
 			{
 				bthci_ResponderStartToScan(padapter);
-			}
+ 			}
 		}
 		RT_PRINT_STR(_module_rtl871x_mlme_c_, _drv_notice_, "StartBeaconAndConnect, SSID:\n", pBTInfo->BtAsocEntry[pBtMgnt->CurrentConnectEntryNum].BTSsid.Octet, pBTInfo->BtAsocEntry[pBtMgnt->CurrentConnectEntryNum].BTSsid.Length);
 	}
@@ -3275,7 +3275,7 @@ bthci_CmdEnhancedFlush(
 	{
 		status = HCI_STATUS_INVALID_HCI_CMD_PARA_VALUE;
 	}
-	else
+ 	else
 		pBtHciInfo->enFlush_LLH = logicHandle;
 
 	if (bthci_DiscardTxPackets(padapter, pBtHciInfo->enFlush_LLH))
@@ -5841,7 +5841,7 @@ bthci_HandleOGFSetEventMaskCMD(
 		RTPRINT(FIOCTL, IOCTL_BT_HCICMD, ("HCI_HOST_BUFFER_SIZE\n"));
 		status = bthci_CmdHostBufferSize(padapter,pHciCmd);
 		break;
-	default:
+ 	default:
 		RTPRINT(FIOCTL, IOCTL_BT_HCICMD, ("bthci_HandleOGFSetEventMaskCMD(), Unknown case = 0x%x\n", pHciCmd->OCF));
 		RTPRINT(FIOCTL, IOCTL_BT_HCICMD, ("HCI_UNKNOWN_COMMAND\n"));
 		status = bthci_UnknownCMD(padapter, pHciCmd);
@@ -6123,7 +6123,7 @@ bthci_StateStarting(
 			RTPRINT(FIOCTL, IOCTL_STATE, ("STATE_CMD_MAC_START_COMPLETE\n"));
 			if (pBTInfo->BtAsocEntry[EntryNum].AMPRole == AMP_BTAP_JOINER)
 			{
-			}
+	 		}
 			else if (pBTInfo->BtAsocEntry[EntryNum].AMPRole == AMP_BTAP_CREATOR)
 			{
 				bthci_EventChannelSelected(padapter,EntryNum);
@@ -18996,3 +18996,4 @@ void HALBT_SwitchWirelessMode(PADAPTER padapter, u8 targetWirelessMode)
 
 // ===== End of sync from SD7 driver HAL/HalBT.c =====
 #endif
+

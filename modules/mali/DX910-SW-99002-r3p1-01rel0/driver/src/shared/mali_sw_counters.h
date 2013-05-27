@@ -1,9 +1,9 @@
 /*
  * Copyright (C) 2012 ARM Limited. All rights reserved.
- *
+ * 
  * This program is free software and is provided to you under the terms of the GNU General Public License version 2
  * as published by the Free Software Foundation, and any use by you of this program is subject to the terms of such GNU licence.
- *
+ * 
  * A copy of the licence is included with the program, and can also be obtained from Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
@@ -54,7 +54,7 @@ typedef struct mali_sw_counters
 
 /**
  * Allocates the structure containing all the software counters
- * @return A legal pointer, or NULL on error.
+ * @return A legal pointer, or NULL on error. 
  */
 struct mali_sw_counters* _mali_sw_counters_alloc(void);
 
@@ -67,10 +67,10 @@ void _mali_sw_counters_free(struct mali_sw_counters* counters);
 
 /*
  * Sends software counters to gator.
- * This function is used as a callback function assigned to
- * the end of any frame using SW counters.
+ * This function is used as a callback function assigned to 
+ * the end of any frame using SW counters. 
  *
- * @param counters - The counters to report.
+ * @param counters - The counters to report. 
  *
  */
 void _mali_sw_counters_dump(struct mali_sw_counters* counters);

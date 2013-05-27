@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="targaddrs.h" company="Atheros">
 //    Copyright (c) 2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -382,7 +382,7 @@ PREPACK64 struct host_interest_s {
 #define AR6003_REV3_APP_START_OVERRIDE    0x945d00
 #define AR6003_REV3_APP_LOAD_ADDRESS      0x545000
 #define AR6003_REV3_BOARD_EXT_DATA_ADDRESS      0x542330
-#define AR6003_REV3_DATASET_PATCH_ADDRESS       0x57FF74
+#define AR6003_REV3_DATASET_PATCH_ADDRESS       0x57FF74 
 #define AR6003_REV3_RAM_RESERVE_SIZE            4352
 
 /* # of A_UINT32 entries in targregs, used by DIAG_FETCH_TARG_REGS */

@@ -38,6 +38,6 @@ void mem_tmr_disable_watchdog(void)
 	TmrReg->DogMode &= ~(1<<1);
 	/* disable watch-dog */
 	TmrReg->DogMode &= ~(1<<0);
-
+	
 	return;
 }

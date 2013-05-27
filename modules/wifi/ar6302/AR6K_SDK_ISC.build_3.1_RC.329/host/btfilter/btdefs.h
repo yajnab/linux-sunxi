@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="btdefs.h" company="Atheros">
 //    Copyright (c) 2007 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -109,7 +109,7 @@
 #define AVDTP_OPEN    0x06
 
 #define GETUINT16(p)(((A_UINT16)((p)[1])) << 8) | ((A_UINT16)((p)[0]))
-
+    
 #include "athstartpack.h"
 
 typedef PREPACK struct _ACL_HEADER{
@@ -141,3 +141,6 @@ typedef PREPACK struct _AVDTP_HEADER{
 #include "athendpack.h"
 
 #endif /*BTDEFS_H_*/
+
+
+

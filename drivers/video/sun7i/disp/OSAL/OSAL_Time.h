@@ -10,7 +10,7 @@
 *
 * Author 		: javen
 *
-* Description 	: Timeæ“ä½œ
+* Description 	: Time²Ù×÷
 *
 * History 		:
 *      <author>    		<time>       	<version >    		<desc>
@@ -21,9 +21,9 @@
 #ifndef  __OSAL_TIME_H__
 #define  __OSAL_TIME_H__
 
-/* å®šæ—¶å™¨ */
-#define  OSAL_TIMER_EVENT_TYPE_ONCE       0   /* ä¸€æ¬¡è§¦å‘     */
-#define  OSAL_TIMER_EVENT_TYPE_PERIOD     1   /* å‘¨æœŸæ€§è§¦å‘   */
+/* ¶¨Ê±Æ÷ */
+#define  OSAL_TIMER_EVENT_TYPE_ONCE       0   /* Ò»´Î´¥·¢     */
+#define  OSAL_TIMER_EVENT_TYPE_PERIOD     1   /* ÖÜÆÚĞÔ´¥·¢   */
 
 typedef void (* TIMECALLBACK)(void *pArg);
 
@@ -32,16 +32,16 @@ typedef void (* TIMECALLBACK)(void *pArg);
 *                     OSAL_CreateTimer
 *
 * Description:
-*    åˆå§‹åŒ–ä¸€ä¸ªtimer
+*    ³õÊ¼»¯Ò»¸ötimer
 *
 * Parameters:
-*    Period     :  input. å‘¨æœŸæ—¶é—´
-*    EventType  :  input. äº‹ä»¶è§¦å‘çš„ç±»å‹ï¼Œä¸€æ¬¡è¿˜æ˜¯å¤šæ¬¡ã€‚
-*    CallBack   :  input. å›è°ƒå‡½æ•°
-*    pArg       :  input. å›è°ƒå‡½æ•°çš„å‚æ•°
-*
+*    Period     :  input. ÖÜÆÚÊ±¼ä
+*    EventType  :  input. ÊÂ¼ş´¥·¢µÄÀàĞÍ£¬Ò»´Î»¹ÊÇ¶à´Î¡£
+*    CallBack   :  input. »Øµ÷º¯Êı
+*    pArg       :  input. »Øµ÷º¯ÊıµÄ²ÎÊı
+* 
 * Return value:
-*    è¿”å›timerå¥æŸ„
+*    ·µ»Øtimer¾ä±ú
 *
 * note:
 *    void
@@ -55,13 +55,13 @@ __hdle OSAL_CreateTimer(__u32 Period, __u32 EventType, TIMECALLBACK CallBack, vo
 *                     OSAL_DelTimer
 *
 * Description:
-*    åˆ é™¤timer
+*    É¾³ıtimer
 *
 * Parameters:
-*    HTimer  :  input. OSAL_InitTimerç”³è¯·timerå¥æŸ„
-*
+*    HTimer  :  input. OSAL_InitTimerÉêÇëtimer¾ä±ú
+* 
 * Return value:
-*    è¿”å›æˆåŠŸæˆ–è€…å¤±è´¥
+*    ·µ»Ø³É¹¦»òÕßÊ§°Ü
 *
 * note:
 *    void
@@ -75,13 +75,13 @@ __s32 OSAL_DelTimer(__hdle HTimer);
 *                     OSAL_StartTimer
 *
 * Description:
-*    å¼€å§‹timerè®¡æ—¶
+*    ¿ªÊ¼timer¼ÆÊ±
 *
 * Parameters:
-*    HTimer  :  input. OSAL_InitTimerç”³è¯·timerå¥æŸ„
-*
+*    HTimer  :  input. OSAL_InitTimerÉêÇëtimer¾ä±ú
+* 
 * Return value:
-*    è¿”å›æˆåŠŸæˆ–è€…å¤±è´¥
+*    ·µ»Ø³É¹¦»òÕßÊ§°Ü
 *
 * note:
 *    void
@@ -90,7 +90,8 @@ __s32 OSAL_DelTimer(__hdle HTimer);
 */
 __s32 OSAL_StartTimer(__hdle HTimer);
 
-/* ç¡çœ  */
-void OSAL_Sleep(__u32 Milliseconds);	/* å•ä½ï¼šæ¯«ç§’ */
+/* Ë¯Ãß */
+void OSAL_Sleep(__u32 Milliseconds);	/* µ¥Î»£ººÁÃë */
 
 #endif   //__OSAL_TIME_H__
+

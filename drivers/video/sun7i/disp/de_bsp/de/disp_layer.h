@@ -40,3 +40,4 @@ __s32 Yuv_Channel_Set_framebuffer(__u32 sel, __disp_fb_t * pfb, __u32 xoffset, _
 __s32 Yuv_Channel_adjusting(__u32 sel, __u32 mode,__u32 format, __s32 *src_x, __u32 *scn_width);
 
 #endif
+

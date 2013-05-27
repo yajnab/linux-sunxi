@@ -24,6 +24,7 @@
 
 
 void mem_clk_dramgating(int onoff);
+void mem_clk_dramgating_nommu(int onoff);
 __s32 mem_clk_init(void);
 __s32 mem_clk_plldisable(void);
 __s32 mem_clk_pllenable(void);
@@ -35,3 +36,4 @@ __s32 mem_clk_getdiv(struct clk_div_t  *clk_div);
 extern __u32   cpu_ms_loopcnt;
 
 #endif  /* __SUPER_CLOCK_H__ */
+

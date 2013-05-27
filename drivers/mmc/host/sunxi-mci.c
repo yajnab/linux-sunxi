@@ -164,11 +164,11 @@ s32 sw_mci_set_vddio(struct sunxi_mmc_host* smc_host, u32 vdd)
 
 s32 sw_mci_update_clk(struct sunxi_mmc_host* smc_host)
 {
-	u32 rval;
-	s32 expire = jiffies + msecs_to_jiffies(1000);	//1000ms timeout
-	s32 ret = 0;
+  	u32 rval;
+  	s32 expire = jiffies + msecs_to_jiffies(1000);	//1000ms timeout
+  	s32 ret = 0;
 
-	rval = SDXC_Start|SDXC_UPCLKOnly|SDXC_WaitPreOver;
+  	rval = SDXC_Start|SDXC_UPCLKOnly|SDXC_WaitPreOver;
 	if (smc_host->voltage_switching)
 		rval |= SDXC_VolSwitch;
 	mci_writel(smc_host, REG_CMDR, rval);
@@ -366,9 +366,9 @@ static void sw_mci_init_idma_des(struct sunxi_mmc_host* smc_host, struct mmc_dat
 			memset((void*)&pdes[des_idx], 0, sizeof(struct sunxi_mmc_idma_des));
 			config = SDXC_IDMAC_DES0_CH|SDXC_IDMAC_DES0_OWN|SDXC_IDMAC_DES0_DIC;
 
-			if (buff_frag_num > 1 && j != buff_frag_num-1)
+		    	if (buff_frag_num > 1 && j != buff_frag_num-1)
 				pdes[des_idx].data_buf1_sz = SDXC_DES_BUFFER_MAX_LEN;
-			else
+		    	else
 				pdes[des_idx].data_buf1_sz = remain;
 
 			pdes[des_idx].buf_addr_ptr1 = sg_dma_address(&data->sg[i])
@@ -385,7 +385,7 @@ static void sw_mci_init_idma_des(struct sunxi_mmc_host* smc_host, struct mmc_dat
 			}
 			pdes[des_idx].config = config;
 			SMC_INF(smc_host, "sg %d, frag %d, remain %d, des[%d](%08x): "
-				"[0] = %08x, [1] = %08x, [2] = %08x, [3] = %08x\n", i, j, remain,
+		    		"[0] = %08x, [1] = %08x, [2] = %08x, [3] = %08x\n", i, j, remain,
 				des_idx, (u32)&pdes[des_idx],
 				(u32)((u32*)&pdes[des_idx])[0], (u32)((u32*)&pdes[des_idx])[1],
 				(u32)((u32*)&pdes[des_idx])[2], (u32)((u32*)&pdes[des_idx])[3]);
@@ -508,7 +508,7 @@ s32 sw_mci_request_done(struct sunxi_mmc_host* smc_host)
 	s32 ret = 0;
 
 	if (smc_host->int_sum & SDXC_IntErrBit) {
-		/* if we got response timeout error information, we should check
+		/* if we got response timeout error information, we should check 
 		   if the command done status has been set. if there is no command
 		   done information, we should wait this bit to be set */
 		if ((smc_host->int_sum & SDXC_RespTimeout) && !(smc_host->int_sum & SDXC_CmdDone)) {
@@ -518,7 +518,7 @@ s32 sw_mci_request_done(struct sunxi_mmc_host* smc_host)
 				rint = mci_readl(smc_host, REG_RINTR);
 			} while (jiffies < expire && !(rint & SDXC_CmdDone));
 		}
-
+			
 		sw_mci_dump_errinfo(smc_host);
 		if (req->data)
 			SMC_ERR(smc_host, "In data %s operation\n",
@@ -1274,7 +1274,7 @@ static void sw_mci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
 			break;
 		case MMC_POWER_UP:
 			if (!smc_host->power_on) {
-				SMC_DBG(smc_host, "sdc%d power on\n", smc_host->pdev->id);
+				SMC_MSG(smc_host, "sdc%d power on\n", smc_host->pdev->id);
 				sw_mci_restore_io(smc_host);
 				err = clk_enable(smc_host->hclk);
 				if (err) {
@@ -1299,7 +1299,7 @@ static void sw_mci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
 			break;
 		case MMC_POWER_OFF:
 			if (smc_host->power_on) {
-				SMC_DBG(smc_host, "sdc%d power off\n", smc_host->pdev->id);
+				SMC_MSG(smc_host, "sdc%d power off\n", smc_host->pdev->id);
 				disable_irq(smc_host->irq);
 				sw_mci_exit_host(smc_host);
 				err = clk_reset(smc_host->mclk, AW_CCU_CLK_RESET);
@@ -1356,12 +1356,15 @@ static void sw_mci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
 		else
 			smc_host->mod_clk = ios->clock;
 		smc_host->card_clk = ios->clock;
-		#ifdef CONFIG_AW_FPGA_PLATFORM
+#ifdef CONFIG_AW_FPGA_PLATFORM
         if (smc_host->mod_clk > 24000000)
 		    smc_host->mod_clk = 24000000;
 		if (smc_host->card_clk > smc_host->mod_clk)
 			smc_host->card_clk = smc_host->mod_clk;
-		#endif
+#elif defined CONFIG_AW_ASIC_PLATFORM
+        if (smc_host->mod_clk > 45000000)
+            smc_host->mod_clk = 45000000;
+#endif
 		sw_mci_set_clk(smc_host, smc_host->card_clk);
 		last_clock[id] = ios->clock;
 		usleep_range(50000, 55000);
@@ -1408,7 +1411,7 @@ static void sw_mci_request(struct mmc_host *mmc, struct mmc_request *mrq)
 	u32 byte_cnt = 0;
 	int ret;
 
-	if (sw_mci_card_present(mmc) == 0 || smc_host->ferror ||
+	if (sw_mci_card_present(mmc) == 0 || smc_host->ferror || 
         smc_host->suspend || !smc_host->power_on) {
 		SMC_DBG(smc_host, "no medium present, ferr %d, suspend %d pwd %d\n",
 			    smc_host->ferror, smc_host->suspend, smc_host->power_on);
@@ -2053,6 +2056,16 @@ static int __devinit sw_mci_probe(struct platform_device *pdev)
 		goto probe_free_host;
 	}
 
+    smc_host->mod_clk = 400000;
+    if (sw_mci_set_clk(smc_host, 400000)) {
+        SMC_ERR(smc_host, "Failed to set clock to 400KHz\n");
+        ret = -ENOENT;
+        goto probe_free_resource;
+    }
+    clk_enable(smc_host->mclk);
+    clk_enable(smc_host->hclk);
+    sw_mci_init_host(smc_host);
+
 	sw_mci_procfs_attach(smc_host);
 
 	smc_host->irq = SMC_IRQNO(pdev->id);
@@ -2245,7 +2258,7 @@ static struct sunxi_mmc_platform_data sw_mci_pdata[4] = {
 		.ocr_avail = MMC_VDD_28_29 | MMC_VDD_29_30 | MMC_VDD_30_31 | MMC_VDD_31_32
 				| MMC_VDD_32_33 | MMC_VDD_33_34,
 		.caps = MMC_CAP_4_BIT_DATA | MMC_CAP_MMC_HIGHSPEED | MMC_CAP_SD_HIGHSPEED
-			| MMC_CAP_SDIO_IRQ | MMC_CAP_NONREMOVABLE
+			| MMC_CAP_SDIO_IRQ
 			| MMC_CAP_UHS_SDR12 | MMC_CAP_UHS_SDR25 | MMC_CAP_UHS_SDR50
 			| MMC_CAP_UHS_DDR50
 			| MMC_CAP_SET_XPC_330 | MMC_CAP_DRIVER_TYPE_A,

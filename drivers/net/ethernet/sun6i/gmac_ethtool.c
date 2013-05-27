@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Copyright (C) 2012 Shuge
+  Copyright (C) 2012 Shuge 
 
   This program is free software; you can redistribute it and/or modify it
   under the terms and conditions of the GNU General Public License,
@@ -302,3 +302,4 @@ void gmac_set_ethtool_ops(struct net_device *netdev)
 {
 	netdev->ethtool_ops = &gmac_ethtool_ops;
 }
+

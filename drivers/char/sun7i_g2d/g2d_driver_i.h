@@ -19,7 +19,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA02111-1307USA
  */
-
+ 
 #ifndef __G2D_DRIVER_I_H
 #define __G2D_DRIVER_I_H
 
@@ -43,7 +43,7 @@ struct info_mem
 {
 	unsigned long	 phy_addr;
 	void			*virt_addr;
-    __u32			 b_used;
+    __u32			 b_used;	
 	__u32			 mem_len;
 };
 
@@ -66,7 +66,7 @@ typedef struct
     struct semaphore	*event_sem;
 	wait_queue_head_t	 queue;
 	__u32				 finish_flag;
-
+	
 }__g2d_drv_t;
 
 struct g2d_alloc_struct

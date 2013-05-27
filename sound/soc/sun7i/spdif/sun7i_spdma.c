@@ -75,12 +75,9 @@ static void sun7i_pcm_enqueue(struct snd_pcm_substream *substream)
 	dma_addr_t pos = prtd->dma_pos;
 	unsigned int limit;
 	int ret;
-
 	unsigned long len = prtd->dma_period;
-
-	limit = prtd->dma_limit;
-	while (prtd->dma_loaded < limit) {
-
+  	limit = prtd->dma_limit;
+  	while (prtd->dma_loaded < limit) {
 		if ((pos + len) > prtd->dma_end) {
 			len  = prtd->dma_end - pos;
 		}
@@ -101,11 +98,10 @@ static void sun7i_audio_buffdone(dma_hdl_t dma_hdl, void *parg)
 {
 	struct sun7i_runtime_data *prtd;
 	struct snd_pcm_substream *substream = parg;
-
 	prtd = substream->runtime->private_data;
 	if (substream) {
 		snd_pcm_period_elapsed(substream);
-	}
+	}	
 	spin_lock(&prtd->lock);
 	{
 		prtd->dma_loaded--;
@@ -121,12 +117,12 @@ static int sun7i_pcm_hw_params(struct snd_pcm_substream *substream,
 	struct sun7i_runtime_data *prtd = runtime->private_data;
 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
 	unsigned long totbytes = params_buffer_bytes(params);
-	struct sun7i_dma_params *dma =
+	struct sun7i_dma_params *dma = 
 					snd_soc_dai_get_dma_data(rtd->cpu_dai, substream);
 
 	if (!dma)
 		return 0;
-
+		
 	if (prtd->params == NULL) {
 		prtd->params = dma;
 		/*
@@ -169,9 +165,9 @@ static int sun7i_pcm_hw_params(struct snd_pcm_substream *substream,
 static int sun7i_pcm_hw_free(struct snd_pcm_substream *substream)
 {
 	struct sun7i_runtime_data *prtd = substream->runtime->private_data;
-
+	
 	snd_pcm_set_runtime_buffer(substream, NULL);
-
+  
 	if (prtd->params) {
 		/*
 		 * stop play dma transfer
@@ -199,7 +195,7 @@ static int sun7i_pcm_prepare(struct snd_pcm_substream *substream)
 
 	if (!prtd->params)
 		return 0;
-
+		
 	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK){
 		//spdif_dma_conf.drqsrc_type  = DRQ_TYPE_SDRAM;
 		//spdif_dma_conf.drqdst_type  = DRQ_TYPE_SPDIF;
@@ -231,7 +227,7 @@ static int sun7i_pcm_prepare(struct snd_pcm_substream *substream)
 	/* enqueue dma buffers */
 	sun7i_pcm_enqueue(substream);
 
-	return ret;
+	return ret;	
 }
 
 static int sun7i_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
@@ -243,8 +239,8 @@ static int sun7i_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
 	switch (cmd) {
 	case SNDRV_PCM_TRIGGER_START:
 	case SNDRV_PCM_TRIGGER_RESUME:
-	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-		printk("[SPDIF] dma trigger start\n");
+	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:	
+		
 	    /*
 		* start dma transfer
 		*/
@@ -253,11 +249,11 @@ static int sun7i_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
 			return -EINVAL;
 		}
 		break;
-
+		
 	case SNDRV_PCM_TRIGGER_SUSPEND:
 	case SNDRV_PCM_TRIGGER_STOP:
 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-		printk("[SPDIF] dma trigger stop\n");
+		
 		/*
 		* stop play dma transfer
 		*/
@@ -282,7 +278,7 @@ static snd_pcm_uframes_t sun7i_pcm_pointer(struct snd_pcm_substream *substream)
 	struct sun7i_runtime_data *prtd = runtime->private_data;
 	unsigned long res = 0;
 	snd_pcm_uframes_t offset = 0;
-
+	
 	spin_lock(&prtd->lock);
 	sw_dma_getposition(prtd->dma_hdl, (dma_addr_t*)&dmasrc, (dma_addr_t*)&dmadst);
 
@@ -305,11 +301,11 @@ static int sun7i_pcm_open(struct snd_pcm_substream *substream)
 
 	snd_pcm_hw_constraint_integer(runtime, SNDRV_PCM_HW_PARAM_PERIODS);
 	snd_soc_set_runtime_hwparams(substream, &sun7i_pcm_hardware);
-
+	
 	prtd = kzalloc(sizeof(struct sun7i_runtime_data), GFP_KERNEL);
 	if (prtd == NULL)
 		return -ENOMEM;
-
+		
 	spin_lock_init(&prtd->lock);
 
 	runtime->private_data = prtd;
@@ -321,7 +317,7 @@ static int sun7i_pcm_close(struct snd_pcm_substream *substream)
 	struct snd_pcm_runtime *runtime = substream->runtime;
 	struct sun7i_runtime_data *prtd = runtime->private_data;
 	kfree(prtd);
-
+	
 	return 0;
 }
 
@@ -329,7 +325,7 @@ static int sun7i_pcm_mmap(struct snd_pcm_substream *substream,
 	struct vm_area_struct *vma)
 {
 	struct snd_pcm_runtime *runtime = substream->runtime;
-
+	
 	return dma_mmap_writecombine(substream->pcm->card->dev, vma,
 				     runtime->dma_area,
 				     runtime->dma_addr,
@@ -370,7 +366,7 @@ static void sun7i_pcm_free_dma_buffers(struct snd_pcm *pcm)
 	struct snd_pcm_substream *substream;
 	struct snd_dma_buffer *buf;
 	int stream;
-
+	
 	for (stream = 0; stream < 2; stream++) {
 		substream = pcm->streams[stream].substream;
 		if (!substream)
@@ -393,7 +389,7 @@ static int sun7i_pcm_new(struct snd_soc_pcm_runtime *rtd)
 	struct snd_card *card = rtd->card->snd_card;
 	struct snd_pcm *pcm = rtd->pcm;
 	int ret = 0;
-
+	
 	if (!card->dev->dma_mask)
 		card->dev->dma_mask = &sun7i_pcm_mask;
 	if (!card->dev->coherent_dma_mask)
@@ -423,7 +419,7 @@ static struct snd_soc_platform_driver sun7i_soc_platform = {
 };
 
 static int __devinit sun7i_spdif_pcm_probe(struct platform_device *pdev)
-{
+{	
 	return snd_soc_register_platform(&pdev->dev, &sun7i_soc_platform);
 }
 
@@ -450,13 +446,13 @@ static struct platform_driver sun7i_spdif_pcm_driver = {
 
 static int __init sun7i_soc_platform_spdif_init(void)
 {
-	int err = 0;
+	int err = 0;	
 	if((err = platform_device_register(&sun7i_spdif_pcm_device)) < 0)
 		return err;
 
 	if ((err = platform_driver_register(&sun7i_spdif_pcm_driver)) < 0)
 		return err;
-	return 0;
+	return 0;	
 }
 module_init(sun7i_soc_platform_spdif_init);
 

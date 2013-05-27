@@ -3,13 +3,13 @@
 #  it uses Makerules.env for build env vars and optional branding.inc
 #
 # Copyright (C) 1999-2010, Broadcom Corporation
-#
+# 
 #      Unless you and Broadcom execute a separate written software license
 # agreement governing use of this software, this software is licensed to you
 # under the terms of the GNU General Public License version 2 (the "GPL"),
 # available at http://www.broadcom.com/licenses/GPLv2.php, with the
 # following added to such license:
-#
+# 
 #      As a special exception, the copyright holders of this software give you
 # permission to link this software with independent modules, and to copy and
 # distribute the resulting executable under terms of your choice, provided that
@@ -17,7 +17,7 @@
 # the license of that module.  An independent module is a module which is not
 # derived from this software.  The special exception does not apply to any
 # modifications of the software.
-#
+# 
 #      Notwithstanding the above, under no circumstances may you combine this
 # software in any way with any other Broadcom software provided under a license
 # other than the GPL, without Broadcom's express prior written consent.
@@ -55,7 +55,7 @@ ifeq ($(TARGETOS), unix)
 
 	# The environment for native unix builds
 
-	EXEEXT	=
+	EXEEXT	= 
 	OBJEXT	= .o
 	GCINCS	= -I$(SRCBASE)/include
 	GCDEFS	= -DTARGETENV_$(TARGETENV) -DTARGETOS_$(TARGETOS) -DTARGETARCH_$(TARGETARCH)
@@ -131,10 +131,10 @@ ifeq ($(TARGETOS), unix)
 	else
 	ifeq ($(TARGETENV), android)
 		TARGET_PREFIX = arm-eabi-
-		GCFLAGS += -Dlinux
-		GCFLAGS += -I/projects/hnd/tools/linux/hndtools-arm-eabi-4.2.1/arm-eabi/include/bionic/libc/include
-		GCFLAGS += -I/projects/hnd/tools/linux/hndtools-arm-eabi-4.2.1/arm-eabi/include/bionic/libc/arch-arm/include/
-		GCFLAGS += -I/tools/linux/src/linux-2.6.25-01843-gfea26b0/include/
+        	GCFLAGS += -Dlinux
+        	GCFLAGS += -I/projects/hnd/tools/linux/hndtools-arm-eabi-4.2.1/arm-eabi/include/bionic/libc/include
+        	GCFLAGS += -I/projects/hnd/tools/linux/hndtools-arm-eabi-4.2.1/arm-eabi/include/bionic/libc/arch-arm/include/
+        	GCFLAGS += -I/tools/linux/src/linux-2.6.25-01843-gfea26b0/include/
 	else
 	ifeq ($(TARGETENV), linuxarm_omap)
 		TARGET_PREFIX = arm-none-linux-gnueabi-
@@ -318,28 +318,28 @@ ifeq ($(TARGETENV), nucleusarm)
 	ifeq ($(BSP_BASE_DIR),)
 		BSP_BASE_DIR := $(SRCBASE)/../bsp
 	endif
-
+   
 	ifeq ($(NUCLEUS_INC_DIR),)
 		NUCLEUS_INC_DIR := $(BSP_BASE_DIR)/rtos/nucleus/inc
 	endif
 
-	EXEEXT	:=
+	EXEEXT	:= 
 	OBJEXT	:= .o
 	GCINCS	:= -I$(SRCBASE)/include -I$(NUCLEUS_INC_DIR)
 	GCDEFS	:= -DTARGETENV_$(TARGETENV) -DTARGETOS_$(TARGETOS) -DTARGETARCH_$(TARGETARCH)
 	GCOPTS	:=
-
+   
 	ifeq ($(OBJDIR),)
 		OBJDIR	:= $(TARGETENV)/
 	endif
-
-	# --md:  This option compiles the source and writes make file dependency lines
+   
+	# --md:  This option compiles the source and writes make file dependency lines 
 	#        to a file. The output file is suitable for use by a make utility.
 	# -c:    Compiles but does not perform the link phase.
 	# -O2:   High optimization.
-	# ---memaccess -UL41: This option tells the compiler that the memory in the
+	# ---memaccess -UL41: This option tells the compiler that the memory in the 
 	#        target system has slightly restricted or expanded capabilities.
-	#        Disables unaligned mode for code that uses pre-ARMv6 unaligned
+	#        Disables unaligned mode for code that uses pre-ARMv6 unaligned 
 	#        access behavior.
 	# "/adsabi" is added to "--apcs /interwork/$(SWST)" so that objects created
 	#	under ADS 1.2 can be linked with objects compiled under RVCT 2.2.
@@ -376,12 +376,12 @@ ifeq ($(TARGETENV), nucleusarm)
 
 	TCFLAGS :=
 
-	GLDFLAGS :=
+	GLDFLAGS := 
 	GLDLIBS := --ELF --symbols --debug --map --info sizes,totals --errors link.err --list link.map --verbose
 
 	# Convert windows style directories to cygwin style.
 	# It should be used in situations where the host environment is cygwin, and
-	# the host compiler is a native Win32 app (non-cygwin). It will convert the
+	# the host compiler is a native Win32 app (non-cygwin). It will convert the 
 	# Windows style directories in the dependencies list to cygwin style. This is
 	# necessary for the dependency files to be included by cygwin make.
 	ifeq ($(HOSTOS),Windows_NT)
@@ -397,7 +397,7 @@ ifeq	($(TARGETENV), bcmmips)
 	GCDEFS	= -DTARGETENV_$(TARGETENV) -DTARGETOS_$(TARGETOS) \
 		-DTARGETARCH_$(TARGETARCH) -D__mips__
 	GCOPTS	= -g -O2
-	GCFLAGS	= -Wall
+	GCFLAGS	= -Wall 
 	GLDFLAGS = -Wl,-tidt.dld
 
 	AS		= bcmas
@@ -441,7 +441,7 @@ endif
 
 ifeq ($(TARGETENV), win32)
 
-# win32 needs different command line args
+# win32 needs different command line args 
 
 %.s: %.c
 	$(CC) /FAs $(CFLAGS) $(CPPFLAGS) /Fa$@ /c $<
@@ -483,7 +483,7 @@ else
 #  - Convert windows-style drive letters to cygwin style.
 #
 # It should be used in situations where the host environment is cygwin, and
-# the host compiler is a native Win32 app (non-cygwin). It will convert the
+# the host compiler is a native Win32 app (non-cygwin). It will convert the 
 # Windows style directories in the dependencies list to cygwin style. This is
 # necessary for the dependency files to be included by cygwin make.
 define FILTER_DEPENDS
@@ -498,13 +498,13 @@ $(OBJDIR)%$(OBJEXT): %.c
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) $(CC_TARGET) $<
 ifeq ($(FILTER_DEPENDS_IN_C_TO_OBJ_RULE),1)
 	${FILTER_DEPENDS}
-endif
+endif   
 
 $(OBJDIR)%$(OBJEXT): %.cpp
 	$(CPP) -c $(CFLAGS) $(CPPFLAGS) $(CPP_TARGET) $<
 ifeq ($(FILTER_DEPENDS_IN_C_TO_OBJ_RULE),1)
 	${FILTER_DEPENDS}
-endif
+endif   
 
 
 endif # klsi
@@ -523,7 +523,7 @@ env:
 # if the user mistakenly specified RELEASE_DIR in unix-style notation,
 # convert it to Win32 notation for them.
 #
-# RELEASE_DIR is assumed to be in windows-style notation if it has both
+# RELEASE_DIR is assumed to be in windows-style notation if it has both 
 # backslashes ('\') and colons (':').
 #
 

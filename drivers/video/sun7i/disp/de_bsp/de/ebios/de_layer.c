@@ -10,19 +10,19 @@ __s32 DE_BE_Format_To_Bpp(__u32 sel, __u8 format)
 		case  DE_MONO_1BPP:
 			bpp = 1;
 			break;
-
+		    
 		case DE_MONO_2BPP:
 			bpp = 2;
 			break;
-
+		    
 		case DE_MONO_4BPP:
 			bpp = 4;
 			break;
-
+		    
 		case DE_MONO_8BPP:
 			bpp = 8;
 			break;
-
+		    
 		case DE_COLOR_RGB655:
 		case DE_COLOR_RGB565:
 		case DE_COLOR_RGB556:
@@ -31,11 +31,11 @@ __s32 DE_BE_Format_To_Bpp(__u32 sel, __u8 format)
 		case DE_COLOR_ARGB4444:
 			bpp=16;
 			break;
-
+		    
 		case DE_COLOR_RGB0888:
 			bpp = 32;
 			break;
-
+		    
 		case DE_COLOR_ARGB8888:
 			bpp = 32;
 			break;
@@ -43,14 +43,14 @@ __s32 DE_BE_Format_To_Bpp(__u32 sel, __u8 format)
 		case DE_COLOR_RGB888:
 			bpp = 24;
 			break;
-
+			
 		default:
 		    bpp = 0;
-			break;
+			break;	 
 	}
 
     return bpp;
-}
+}   
 
 __u32 DE_BE_Offset_To_Addr(__u32 src_addr,__u32 width,__u32 x,__u32 y,__u32 bpp)
 {
@@ -58,7 +58,7 @@ __u32 DE_BE_Offset_To_Addr(__u32 src_addr,__u32 width,__u32 x,__u32 y,__u32 bpp)
 
     addr = src_addr + ((y*(width*bpp))>>3) + ((x*bpp)>>3);
 
-    return addr;
+    return addr;		
 }
 
 __u32  DE_BE_Addr_To_Offset(__u32 src_addr,__u32 off_addr,__u32 width,__u32 bpp,__disp_pos_t *pos)
@@ -73,13 +73,13 @@ __u32  DE_BE_Addr_To_Offset(__u32 src_addr,__u32 off_addr,__u32 width,__u32 bpp,
     pos->y      = offset.y;
 
     return 0;
-
+		
 }
 
 __s32 DE_BE_Layer_Set_Work_Mode(__u32 sel, __u8 layidx,__u8 mode)
 {
     __u32 tmp;
-
+    
     tmp = DE_BE_RUINT32IDX(sel, DE_BE_LAYER_ATTRCTL_OFF0,layidx);
     DE_BE_WUINT32IDX(sel, DE_BE_LAYER_ATTRCTL_OFF0,layidx,(tmp&0xff3fffff)|mode<<22);
 
@@ -95,7 +95,7 @@ static __s32 DE_BE_Layer_Set_Addr(__u32 sel, __u8 layidx,__u32 addr)   //bit
 
     tmp = DE_BE_RUINT32(sel,DE_BE_FRMBUF_HIGH4ADDR_OFF) & (~(0xff<<(layidx*8)));
     DE_BE_WUINT32(sel, DE_BE_FRMBUF_HIGH4ADDR_OFF, tmp | (tmp_h << (layidx*8)));
-
+    
     return 0;
 }
 
@@ -109,7 +109,7 @@ static __s32 DE_BE_Layer_Set_Line_Width(__u32 sel, __u8 layidx,__u32 width)    /
 __s32 DE_BE_Layer_Set_Format(__u32 sel, __u8 layidx,__u8 format,__bool br_swap,__u8 order)
 {
     __u32 tmp;
-
+     
     tmp = DE_BE_RUINT32IDX(sel, DE_BE_LAYER_ATTRCTL_OFF1,layidx);
     DE_BE_WUINT32IDX(sel, DE_BE_LAYER_ATTRCTL_OFF1,layidx,(tmp&0xfffff000)|format<<8|br_swap<<2|order);
 
@@ -132,14 +132,14 @@ __s32 DE_BE_Layer_Set_Framebuffer(__u32 sel, __u8 layidx, layer_src_t *layer_fb)
     DE_BE_Layer_Set_Addr(sel, layidx,addr);
     DE_BE_Layer_Set_Line_Width(sel, layidx,layer_fb->fb_width*bpp);
 
-	return 0;
+	return 0;     
 }
 
 
 __s32 DE_BE_Layer_Set_Screen_Win(__u32 sel, __u8 layidx, __disp_rect_t * win)
 {
     __u32 tmp;
-
+        
     tmp = ((((__u32)(win->y))>>31)<<31)|((((__u32)(win->y))&0x7fff)<<16)|((((__u32)(win->x))>>31)<<15)|(((__u32)(win->x))&0x7fff);
     DE_BE_WUINT32IDX(sel, DE_BE_LAYER_CRD_CTL_OFF,layidx,tmp);
     DE_BE_WUINT32IDX(sel, DE_BE_LAYER_SIZE_OFF,layidx,(win->height-1)<<16|(win->width-1));
@@ -150,11 +150,11 @@ __s32 DE_BE_Layer_Video_Enable(__u32 sel, __u8 layidx,__bool video_en)
 {
 
     __u32 tmp;
-
+        
     tmp = DE_BE_RUINT32IDX(sel, DE_BE_LAYER_ATTRCTL_OFF0,layidx);
     DE_BE_WUINT32IDX(sel, DE_BE_LAYER_ATTRCTL_OFF0,layidx,(tmp&0xfffffffd)|video_en<<1);
 
-
+    
     return 0;
 }
 
@@ -162,11 +162,11 @@ __s32 DE_BE_Layer_Video_Ch_Sel(__u32 sel, __u8 layidx,__bool scaler_index)
 {
 
     __u32 tmp;
-
+        
     tmp = DE_BE_RUINT32IDX(sel, DE_BE_LAYER_ATTRCTL_OFF0,layidx);
     DE_BE_WUINT32IDX(sel, DE_BE_LAYER_ATTRCTL_OFF0,layidx,(tmp&0xffffffef)|scaler_index<<4);
 
-
+    
     return 0;
 }
 
@@ -174,34 +174,34 @@ __s32 DE_BE_Layer_Yuv_Ch_Enable(__u32 sel, __u8 layidx,__bool yuv_en)
 {
 
     __u32 tmp;
-
+        
     tmp = DE_BE_RUINT32IDX(sel, DE_BE_LAYER_ATTRCTL_OFF0,layidx);
     DE_BE_WUINT32IDX(sel, DE_BE_LAYER_ATTRCTL_OFF0,layidx,(tmp&0xfffffffb)|yuv_en<<2);
 
-
+    
     return 0;
 }
 
 __s32 DE_BE_Layer_Set_Prio(__u32 sel, __u8 layidx,__u8 prio)
 {
     __u32 tmp;
-
+        
     tmp = DE_BE_RUINT32IDX(sel, DE_BE_LAYER_ATTRCTL_OFF0,layidx);
     DE_BE_WUINT32IDX(sel, DE_BE_LAYER_ATTRCTL_OFF0,layidx,(tmp&0xfffff3ff)|prio<<10);
-
+    
     return 0;
- }
+ }     
 
 __s32 DE_BE_Layer_Set_Pipe(__u32 sel, __u8 layidx,__u8 pipe)
 {
     __u32 tmp;
-
+        
     tmp = DE_BE_RUINT32IDX(sel, DE_BE_LAYER_ATTRCTL_OFF0,layidx);
     DE_BE_WUINT32IDX(sel, DE_BE_LAYER_ATTRCTL_OFF0,layidx,(tmp&0xffff7fff)|pipe<<15);
 
     return 0;
 }
-
+      
 
 __s32 DE_BE_Layer_ColorKey_Enable(__u32 sel, __u8 layidx, __bool enable)
 {
@@ -218,7 +218,7 @@ __s32 DE_BE_Layer_ColorKey_Enable(__u32 sel, __u8 layidx, __bool enable)
         tmp = DE_BE_RUINT32IDX(sel, DE_BE_LAYER_ATTRCTL_OFF0,layidx);
         DE_BE_WUINT32IDX(sel, DE_BE_LAYER_ATTRCTL_OFF0,layidx,(tmp&0xfff3ffff));
     }
-
+    
     return 0;
 }
 
@@ -244,12 +244,12 @@ __s32 DE_BE_Layer_Set_Alpha_Value(__u32 sel, __u8 layidx,__u8 alpha_val)//todo,w
 {
 
     __u32 tmp;
-
+    
     tmp = DE_BE_RUINT32IDX(sel, DE_BE_LAYER_ATTRCTL_OFF0,layidx);
     DE_BE_WUINT32IDX(sel, DE_BE_LAYER_ATTRCTL_OFF0,layidx,(tmp&0x0ffffff)|alpha_val<<24);
-
+    
     return 0;
-}
+}      
 
 __s32 DE_BE_Layer_Enable(__u32 sel, __u8 layidx, __bool enable)
 {
@@ -282,7 +282,7 @@ static __s32 DE_BE_YUV_CH_Cfg_Csc_Coeff(__u32 sel, __u8 cs_mode)//todo
 
     while(pdest_cur < pdest_end)
     {
-	temp = *(volatile __u32 *)pdest_cur;
+    	temp = *(volatile __u32 *)pdest_cur;
 		temp &= 0xffff0000;
 		*(volatile __u32 *)pdest_cur++ = ((*psrc_cur++)&0xffff) | temp;
     }
@@ -292,7 +292,7 @@ static __s32 DE_BE_YUV_CH_Cfg_Csc_Coeff(__u32 sel, __u8 cs_mode)//todo
 
 //==================================================================
 //function name:    DE_BE_YUV_CH_Set_Format
-//author:
+//author:           
 //date:             2009-9-28
 //description:      de be input YUV channel format setting
 //parameters:	----format(0-4)
@@ -315,7 +315,7 @@ static __s32 DE_BE_YUV_CH_Cfg_Csc_Coeff(__u32 sel, __u8 cs_mode)//todo
 //						1:DE_SCAL_VUYA
 //return:           if success return DIS_SUCCESS
 //                  if fail return the number of fail
-//modify history:
+//modify history: 
 //==================================================================
 static __s32 DE_BE_YUV_CH_Set_Format(__u32 sel, __u8 format,__u8 pixel_seq)
 {
@@ -324,7 +324,7 @@ static __s32 DE_BE_YUV_CH_Set_Format(__u32 sel, __u8 format,__u8 pixel_seq)
     tmp = DE_BE_RUINT32(sel, DE_BE_YUV_CTRL_OFF);
     tmp &= 0xffff8cff;//clear bit14:12, bit9:8
 	DE_BE_WUINT32(sel, DE_BE_YUV_CTRL_OFF, tmp | (format<<12) | (pixel_seq<<8));
-
+	
 	return 0;
 }
 
@@ -344,7 +344,7 @@ __s32 DE_BE_YUV_CH_Set_Src(__u32 sel, de_yuv_ch_src_t * in_src)
 {
 	__u32 ch0_base, ch1_base, ch2_base;
 	__u32 image_w;
-	__u32 offset_x, offset_y;
+	__u32 offset_x, offset_y;	
     __u8 in_fmt,in_mode,pixseq;
     __u32 ch0_addr, ch1_addr, ch2_addr;
     __u32 ch0_line_stride, ch1_line_stride, ch2_line_stride;
@@ -370,7 +370,7 @@ __s32 DE_BE_YUV_CH_Set_Src(__u32 sel, de_yuv_ch_src_t * in_src)
     offset_y = (offset_y>>h_shift)<<h_shift;
     image_w =((image_w+((1<<w_shift)-1))>>w_shift)<<w_shift;
     //compute buffer address
-    //--the size ratio of Y/G to UV/RB must be fit with input format and mode &&&&
+    //--the size ratio of Y/G to UV/RB must be fit with input format and mode &&&& 
     if(in_mode == 0x00)    //non macro block plannar
     {
         //line stride
@@ -381,11 +381,11 @@ __s32 DE_BE_YUV_CH_Set_Src(__u32 sel, de_yuv_ch_src_t * in_src)
         de_scal_ch0_offset = image_w * offset_y + offset_x;
         de_scal_ch1_offset = (image_w>>w_shift) * (offset_y>>h_shift) + (offset_x>>w_shift); //image_w'
         de_scal_ch2_offset = (image_w>>w_shift) * (offset_y>>h_shift) + (offset_x>>w_shift); //image_w'
-
+        
         ch0_addr = ch0_base + de_scal_ch0_offset;
         ch1_addr = ch1_base + de_scal_ch1_offset;
         ch2_addr = ch2_base + de_scal_ch2_offset;
-    }
+    } 
     else if(in_mode == 0x01) //interleaved data
     {
         //line stride
@@ -395,15 +395,15 @@ __s32 DE_BE_YUV_CH_Set_Src(__u32 sel, de_yuv_ch_src_t * in_src)
         //buffer address
         de_scal_ch0_offset = ((image_w * offset_y + offset_x)<<(0x02 - w_shift));
         de_scal_ch1_offset = 0x0;
-        de_scal_ch2_offset = 0x0;
-
+        de_scal_ch2_offset = 0x0; 
+        
         ch0_addr = ch0_base + de_scal_ch0_offset;
         ch1_addr = 0x00;
-        ch2_addr = 0x00;
+        ch2_addr = 0x00;           
     }
     else
     {
-	return 0;
+    	return 0;
     }
 
     DE_BE_YUV_CH_Set_Format(sel, in_fmt,pixseq);
@@ -414,8 +414,8 @@ __s32 DE_BE_YUV_CH_Set_Src(__u32 sel, de_yuv_ch_src_t * in_src)
     //set buffer address
     DE_BE_YUV_CH_Set_Addr(sel, 0x00, ch0_addr);
     DE_BE_YUV_CH_Set_Addr(sel, 0x01, ch1_addr);
-    DE_BE_YUV_CH_Set_Addr(sel, 0x02, ch2_addr);
-
+    DE_BE_YUV_CH_Set_Addr(sel, 0x02, ch2_addr);  
+    
     DE_BE_YUV_CH_Cfg_Csc_Coeff(sel, in_src->cs_mode);
     return 0;
 }
@@ -432,3 +432,5 @@ __s32 DE_BE_YUV_CH_Enable(__u32 sel, __bool enable)
 	}
 	return 0;
 }
+
+

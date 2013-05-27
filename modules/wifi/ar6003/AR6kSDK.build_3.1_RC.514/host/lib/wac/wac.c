@@ -3,7 +3,7 @@
  * All rights reserved.
  *
  *
- *
+ * 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -43,7 +43,7 @@
 #include "wireless_copy.h"
 #else
 #include <linux/wireless.h>
-#endif
+#endif 
 #include <a_config.h>
 #include <a_osapi.h>
 #include <a_types.h>
@@ -547,11 +547,11 @@ int wac_enable(int s, int enable, unsigned int period, unsigned int scan_thres, 
 }
 
 void wac_control_request( int s,
-                          WAC_REQUEST_TYPE req,
-                          WAC_COMMAND cmd,
-                          WAC_FRAME_TYPE frm,
-                          char *ie,
-                          int *ret_val,
+                          WAC_REQUEST_TYPE req, 
+                          WAC_COMMAND cmd, 
+                          WAC_FRAME_TYPE frm, 
+                          char *ie, 
+                          int *ret_val, 
                           WAC_STATUS *status )
 {
     char ifname[IFNAMSIZ];
@@ -644,7 +644,7 @@ void wac_control_request( int s,
                 goto done_ctrl_req;
             }
             A_MEMCPY(status, ifr.ifr_data, sizeof(WAC_STATUS));
-        }
+        } 
         else if ( PRBREQ == frm ) {   // GET IE
             ctrl_cmd->req = WAC_GET;
             ctrl_cmd->cmd = WAC_GET_IE;
@@ -698,7 +698,7 @@ static void str2hex(A_UINT8 *hex, char *str)
     int i;
     int len = strlen(str);
 
-    for (i = 2; i < len; i+=2) {
+    for (i = 2; i < len; i+=2) { 
         hex[(i-2)/2] = htoi(str[i]) * 16 + htoi(str[i+1]);
     }
 }
@@ -764,7 +764,7 @@ static int check_stored_profile(A_UINT8 *bssid)
     bssid[4] = htoi(buffer[12]) * 16 + htoi(buffer[13]);
     bssid[5] = htoi(buffer[15]) * 16 + htoi(buffer[16]);
 
-	printf("bssid in decimal: %d:%d:%d:%d:%d:%d\n",
+	printf("bssid in decimal: %d:%d:%d:%d:%d:%d\n", 
             bssid[0], bssid[1], bssid[2], bssid[3], bssid[4], bssid[5]);
 
 	return 0;
@@ -1224,7 +1224,7 @@ event_wireless(A_INT8 *data, int len)
       if(ret != 0)
       {
           RECEVENT_DEBUG_PRINTF("\n cmd = %x, length = %d, ",iwe.cmd,iwe.u.data.length);
-
+            
           switch (iwe.cmd) {
              case IWEVCUSTOM:
                 custom = pos + IW_EV_POINT_LEN;
@@ -1339,14 +1339,14 @@ event_wireless(A_INT8 *data, int len)
                         printf("Too many bss reported, quitting\n");
                         break;
                     }
-
+                        
 //                    printf("event = WAC report bss, len = %d\n", iwe.u.data.length);
 
                     p = &myBssInfo[myBssCnt++];
                     memcpy((A_UINT8 *)p, rxB, sizeof(WMI_BSS_INFO_HDR2));
 
                     p = (WMI_BSS_INFO_HDR2 *) rxB;
-                    printf("event = WAC report bss: %x:%x:%x:%x:%x:%x\n",
+                    printf("event = WAC report bss: %x:%x:%x:%x:%x:%x\n", 
                             p->bssid[0],
                             p->bssid[1],
                             p->bssid[2],
@@ -1423,7 +1423,7 @@ event_wireless(A_INT8 *data, int len)
             case WMI_ENABLE_WAC_CMDID:
             {
                 WMI_WAC_ENABLE_CMD *cmd = (WMI_WAC_ENABLE_CMD *)(buf+2);
-
+                
                 wac_enable(s, cmd->enable, cmd->period, cmd->threshold, cmd->rssi);
                 break;
             }
@@ -1443,3 +1443,4 @@ event_wireless(A_INT8 *data, int len)
 
 #endif
 }
+

@@ -10,7 +10,7 @@
 *
 * Author 		: javen
 *
-* Description 	: USB 娑堟伅鍒嗗彂
+* Description 	: USB 消息分发
 *
 * History 		:
 *      <author>    		<time>       	<version >    		<desc>
@@ -48,12 +48,12 @@
 #include  "usbc_platform.h"
 #include  "usb_hw_scan.h"
 #include  "usb_msg_center.h"
-/*
+
 extern int axp_usbvol(void );
 extern int axp_usbcur(void);
 extern int axp_usbvol_restore(void);
 extern int axp_usbcur_restore(void);
-*/
+
 static struct usb_msg_center_info g_center_info;
 
 void print_usb_msg(struct usb_msg_center_info * center_info)
@@ -205,8 +205,8 @@ static void rmmod_host_driver(struct usb_msg_center_info *center_info)
 
 	ret = sw_usb_host0_disable();
 	if(ret != 0){
-	DMSG_PANIC("err: disable hcd0 failed\n");
-	return;
+    	DMSG_PANIC("err: disable hcd0 failed\n");
+    	return;
 	}
 
 	set_usb_role(center_info, USB_ROLE_NULL);
@@ -236,8 +236,8 @@ static void insmod_device_driver(struct usb_msg_center_info *center_info)
 {
 	DMSG_INFO("\n\ninsmod_device_driver\n\n");
 
-    //axp_usbvol();
-    //axp_usbcur();
+    axp_usbvol();
+    axp_usbcur();
 
 	set_usb_role(center_info, USB_ROLE_DEVICE);
 	sw_usb_device_enable();
@@ -270,8 +270,8 @@ static void rmmod_device_driver(struct usb_msg_center_info *center_info)
 	set_usb_role(center_info, USB_ROLE_NULL);
 	sw_usb_device_disable();
 
-	//axp_usbcur_restore();
-	//axp_usbvol_restore();
+	axp_usbcur_restore();
+	axp_usbvol_restore();
 
 	return;
 }
@@ -488,3 +488,4 @@ s32 usb_msg_center_exit(struct usb_cfg *cfg)
 
 	return 0;
 }
+

@@ -1,5 +1,5 @@
 // Copyright (c) 2004, 2005 Atheros Communications Inc.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -13,22 +13,22 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
-// Portions of this code were developed with information supplied from the
+// Portions of this code were developed with information supplied from the 
 // SD Card Association Simplified Specifications. The following conditions and disclaimers may apply:
 //
 //  The following conditions apply to the release of the SD simplified specification (“Simplified
-//  Specification”) by the SD Card Association. The Simplified Specification is a subset of the complete
-//  SD Specification which is owned by the SD Card Association. This Simplified Specification is provided
-//  on a non-confidential basis subject to the disclaimers below. Any implementation of the Simplified
+//  Specification”) by the SD Card Association. The Simplified Specification is a subset of the complete 
+//  SD Specification which is owned by the SD Card Association. This Simplified Specification is provided 
+//  on a non-confidential basis subject to the disclaimers below. Any implementation of the Simplified 
 //  Specification may require a license from the SD Card Association or other third parties.
 //  Disclaimers:
-//  The information contained in the Simplified Specification is presented only as a standard
-//  specification for SD Cards and SD Host/Ancillary products and is provided "AS-IS" without any
-//  representations or warranties of any kind. No responsibility is assumed by the SD Card Association for
-//  any damages, any infringements of patents or other right of the SD Card Association or any third
-//  parties, which may result from its use. No license is granted by implication, estoppel or otherwise
-//  under any patent or other rights of the SD Card Association or any third party. Nothing herein shall
-//  be construed as an obligation by the SD Card Association to disclose or distribute any technical
+//  The information contained in the Simplified Specification is presented only as a standard 
+//  specification for SD Cards and SD Host/Ancillary products and is provided "AS-IS" without any 
+//  representations or warranties of any kind. No responsibility is assumed by the SD Card Association for 
+//  any damages, any infringements of patents or other right of the SD Card Association or any third 
+//  parties, which may result from its use. No license is granted by implication, estoppel or otherwise 
+//  under any patent or other rights of the SD Card Association or any third party. Nothing herein shall 
+//  be construed as an obligation by the SD Card Association to disclose or distribute any technical 
 //  information, know-how or other confidential information to any third party.
 //
 //
@@ -44,7 +44,7 @@
 @abstract: OS independent bus driver support for function drivers
 
 @notes: This file supports the interface between SDIO function drivers and the bus driver.
-
+ 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 #define MODULE_NAME  SDBUSDRIVER
 #include "../include/ctsystem.h"
@@ -62,14 +62,14 @@ static UINT16 ManCodeCheck = CT_MAN_CODE_CHECK;
   @function: Register a function driver with the bus driver.
 
   @function name: SDIO_RegisterFunction
-  @prototype: SDIO_STATUS SDIO_RegisterFunction(PSDFUNCTION pFunction)
+  @prototype: SDIO_STATUS SDIO_RegisterFunction(PSDFUNCTION pFunction) 
   @category: PD_Reference
   @input:  pFunction - the function definition structure.
-
+ 
   @output: none
 
   @return: SDIO_STATUS - SDIO_STATUS_SUCCESS when succesful.
-
+ 
   @notes: Each function driver must register with the bus driver once upon loading.
           The calling function must be prepared to receive a Probe callback before
           this function returns. This will occur when an perpheral device is already
@@ -77,12 +77,12 @@ static UINT16 ManCodeCheck = CT_MAN_CODE_CHECK;
           The function driver should unregister itself when exiting.
           The bus driver checks for possible function drivers to support a device
           in reverse registration order.
-
+ 
   @example: Registering a function driver:
             //list of devices supported by this function driver
        static SD_PNP_INFO Ids[] = {
-            {.SDIO_ManufacturerID = 0xaa55,
-             .SDIO_ManufacturerCode = 0x5555,
+            {.SDIO_ManufacturerID = 0xaa55,  
+             .SDIO_ManufacturerCode = 0x5555, 
              .SDIO_FunctionNo = 1},
             {}                      //list is null termintaed
         };
@@ -98,28 +98,28 @@ static UINT16 ManCodeCheck = CT_MAN_CODE_CHECK;
             .Function.pRemove  = Remove, //pointer to the function drivers Remove function
                                          /  that will be called when a device is removed.
             .Function.pContext = &FunctionContext, //data value that will be passed into Probe and
-                                         //  Remove callbacks.
-        };
+                                         //  Remove callbacks. 
+        }; 
         SDIO_STATUS status;
         status = SDIO_RegisterFunction(&FunctionContext.Function)
         if (!SDIO_SUCCESS(status)) {
             ...failed to register
         }
-
+        
   @see also: SDIO_UnregisterFunction
-
+  
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-SDIO_STATUS _SDIO_RegisterFunction(PSDFUNCTION pFunction)
+SDIO_STATUS _SDIO_RegisterFunction(PSDFUNCTION pFunction) 
 {
     SDIO_STATUS status = SDIO_STATUS_SUCCESS;
-
+    
 #ifdef CT_MAN_CODE_CHECK
     DBG_PRINT(SDDBG_TRACE,
         ("SDIO Bus Driver: _SDIO_RegisterFunction: WARNING, this version is locked to Memory cards and SDIO cards with JEDEC IDs of: 0x%X\n",
             ManCodeCheck));
-#else
+#else    
     DBG_PRINT(SDDBG_TRACE, ("SDIO Bus Driver: _SDIO_RegisterFunction\n"));
-#endif
+#endif 
 
     /* sanity check the driver */
     if ((pFunction == NULL) ||
@@ -132,14 +132,14 @@ SDIO_STATUS _SDIO_RegisterFunction(PSDFUNCTION pFunction)
 
     DBG_PRINT(SDDBG_TRACE, ("+SDIO Bus Driver: Function Driver Stack Version: %d.%d \n",
         GET_SDIO_STACK_VERSION_MAJOR(pFunction),GET_SDIO_STACK_VERSION_MINOR(pFunction)));
-
+        
     if (!CHECK_FUNCTION_DRIVER_VERSION(pFunction)) {
-        DBG_PRINT(SDDBG_ERROR,
+        DBG_PRINT(SDDBG_ERROR, 
            ("SDIO Bus Driver: Function Major Version Mismatch (hcd = %d, bus driver = %d)\n",
            GET_SDIO_STACK_VERSION_MAJOR(pFunction), CT_SDIO_STACK_VERSION_MAJOR(g_Version)));
-        return SDIO_STATUS_INVALID_PARAMETER;
+        return SDIO_STATUS_INVALID_PARAMETER;       
     }
-
+   
     /* protect the function list and add the function */
     if (!SDIO_SUCCESS((status = SemaphorePendInterruptable(&pBusContext->FunctionListSem)))) {
       goto cleanup;   /* wait interrupted */
@@ -165,30 +165,30 @@ cleanup:
   @function: Unregister a function driver with the bus driver.
 
   @function name: SDIO_UnregisterFunction
-  @prototype: SDIO_STATUS SDIO_UnregisterFunction(PSDFUNCTION pFunction)
+  @prototype: SDIO_STATUS SDIO_UnregisterFunction(PSDFUNCTION pFunction) 
   @category: PD_Reference
-
+  
   @input:  pFunction - the function definition structure.
-
+ 
   @output: none
 
   @return: SDIO_STATUS - SDIO_STATUS_SUCCESS when succesful.
-
+ 
   @notes: Each function driver must unregister from the bus driver when the function driver
           exits.
           A function driver must disconnect from any interrupts before calling this function.
-
+ 
   @example: Unregistering a function driver:
         SDIO_UnregisterFunction(&FunctionContext.Function);
-
+        
   @see also: SDIO_RegisterFunction
-
+  
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-SDIO_STATUS _SDIO_UnregisterFunction(PSDFUNCTION pFunction)
+SDIO_STATUS _SDIO_UnregisterFunction(PSDFUNCTION pFunction) 
 {
     SDIO_STATUS status = SDIO_STATUS_SUCCESS;
     PSDDEVICE pDevice;
-
+    
     DBG_PRINT(SDDBG_TRACE, ("+SDIO Bus Driver: _SDIO_UnregisterFunction\n"));
 
     /* protect the function list and synchronize with Probe() and Remove()*/
@@ -201,11 +201,11 @@ SDIO_STATUS _SDIO_UnregisterFunction(PSDFUNCTION pFunction)
     SDITERATE_OVER_LIST_ALLOW_REMOVE(&pFunction->DeviceList, pDevice, SDDEVICE,FuncListLink)  {
         if (pDevice->pFunction == pFunction) {
                 /* notify removal */
-            NotifyDeviceRemove(pDevice);
+            NotifyDeviceRemove(pDevice); 
         }
     }SDITERATE_END;
-
-    SignalDelete(&pFunction->CleanupReqSig);
+    
+    SignalDelete(&pFunction->CleanupReqSig); 
 
     if (!SDIO_SUCCESS((status = SemaphorePost(&pBusContext->FunctionListSem)))) {
         goto cleanup;   /* wait interrupted */
@@ -221,28 +221,28 @@ cleanup:
 /* documentation headers only for Probe and Remove */
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @function: This function is called by the Busdriver when a device is inserted that can be supported by this function driver.
-
+  
   @function name: Probe
   @prototype: BOOL (*pProbe)(struct _SDFUNCTION *pFunction, struct _SDDEVICE *pDevice)
   @category: PD_Reference
-
+  
   @input:  pFunction - the function definition structure that was passed to Busdriver
                        via the SDIO_RegisterFunction.
-  @input:  pDevice   - the description of the newly inserted device.
-
+  @input:  pDevice   - the description of the newly inserted device.            
+ 
   @output: none
 
   @return: TRUE  - this function driver will suport this device
            FALSE - this function driver will not support this device
-
+ 
   @notes: The Busdriver calls the Probe function of a function driver to inform it that device is
-          available for the function driver to control. The function driver should initialize the
+          available for the function driver to control. The function driver should initialize the 
           device and be pepared to acceopt any interrupts from the device before returning.
-
+  
   @example: Example of typical Probe function callback:
-  static BOOL Probe(PSDFUNCTION pFunction, PSDDEVICE pDevice) {
+  static BOOL Probe(PSDFUNCTION pFunction, PSDDEVICE pDevice) { 
        ...get the our context info passed into the SDIO_RegisterFunction
-    PSDXXX_DRIVER_CONTEXT pFunctionContext =
+    PSDXXX_DRIVER_CONTEXT pFunctionContext = 
                                 (PSDXXX_DRIVER_CONTEXT)pFunction->pContext;
     SDIO_STATUS status;
        //test the identification of this device and ensure we want to support it
@@ -253,26 +253,26 @@ cleanup:
                                 pDevice->pId[0].SDIO_ManufacturerCode,
                                 pDevice->pId[0].SDIO_FunctionNo));
         ...
-
+        
   @see also: SDIO_RegisterFunction
   @see also: Remove
-
+  
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
-BOOL FilterPnpInfo(PSDDEVICE pDevice)
+BOOL FilterPnpInfo(PSDDEVICE pDevice) 
 {
 #ifdef CT_MAN_CODE_CHECK
     if (pDevice->pId[0].CardFlags & CARD_SDIO) {
         if (pDevice->pId[0].SDIO_ManufacturerCode != ManCodeCheck) {
-            DBG_PRINT(SDDBG_ERROR,
+            DBG_PRINT(SDDBG_ERROR, 
              ("SDIO Card with JEDEC ID:0x%X , not Allowed! Driver check halted. "
               "Please Contact sales@codetelligence.com.\n",
                     pDevice->pId[0].SDIO_ManufacturerCode));
             return FALSE;
-        }
+        } 
     }
     return TRUE;
-#else
+#else 
     return TRUE;
 #endif
 }
@@ -280,38 +280,38 @@ BOOL FilterPnpInfo(PSDDEVICE pDevice)
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @function: This function is called by the Busdriver when a device controlled by this function
              function driver is removed.
-
+  
   @function name: Remove
   @prototype: void (*pRemove)(struct _SDFUNCTION *pFunction, struct _SDDEVICE *pDevice)
   @category: PD_Reference
-
+  
   @input:  pFunction - the function definition structure that was passed to Busdriver
                        via the SDIO_RegisterFunction.
   @input:  pDevice   - the description of the device being removed.
-
+ 
   @output: none
 
   @return: none
-
+ 
   @notes: The Busdriver calls the Remove function of a function driver to inform it that device it
           was supporting has been removed. The device has already been removed, so no further I/O
           to the device can be performed.
-
+  
   @example: Example of typical Remove function callback:
     void Remove(PSDFUNCTION pFunction, PSDDEVICE pDevice) {
             // get the our context info passed into the SDIO_RegisterFunction
-        PSDXXX_DRIVER_CONTEXT pFunctionContext =
+        PSDXXX_DRIVER_CONTEXT pFunctionContext = 
                              (PSDXXX_DRIVER_CONTEXT)pFunction->pContext;
            ...free any acquired resources.
-
+                
   @see also: SDIO_RegisterFunction
   @see also: Probe
-
+  
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
-/*
+/* 
  * ProbeForFunction - look for a function driver to handle this card
- *
+ * 
 */
 SDIO_STATUS ProbeForFunction(PSDDEVICE pDevice, PSDHCD pHcd) {
     SDIO_STATUS status;
@@ -326,44 +326,44 @@ SDIO_STATUS ProbeForFunction(PSDDEVICE pDevice, PSDHCD pHcd) {
         DBG_PRINT(SDDBG_TRACE, (" SDIO MANFCODE:  0x%X \n", pDevice->pId[0].SDIO_ManufacturerCode));
         DBG_PRINT(SDDBG_TRACE, (" SDIO FuncNo:    %d \n", pDevice->pId[0].SDIO_FunctionNo));
         DBG_PRINT(SDDBG_TRACE, (" SDIO FuncClass: %d \n", pDevice->pId[0].SDIO_FunctionClass));
-    }
+    }    
     if (pDevice->pId[0].CardFlags & (CARD_MMC | CARD_SD)) {
         DBG_PRINT(SDDBG_TRACE, (" SDMMC MANFID: 0x%X \n",pDevice->pId[0].SDMMC_ManfacturerID));
         DBG_PRINT(SDDBG_TRACE, (" SDMMC OEMID:  0x%X \n",pDevice->pId[0].SDMMC_OEMApplicationID));
     }
-
+    
     if (!FilterPnpInfo(pDevice)) {
         status = SDIO_STATUS_SUCCESS;
-        goto cleanup;
+        goto cleanup;  
     }
-
+    
     /* protect the function list */
     if (!SDIO_SUCCESS((status = SemaphorePendInterruptable(&pBusContext->FunctionListSem)))) {
         goto cleanup;   /* wait interrupted */
     }
-
+   
     /* protect against ProbeForDevice */
     if (!SDIO_SUCCESS((status = SemaphorePendInterruptable(&pBusContext->DeviceListSem)))) {
             /* release the function list semaphore we just took */
         SemaphorePost(&pBusContext->FunctionListSem);
         goto cleanup;
     }
-
+    
     if (pDevice->pFunction != NULL) {
             /* device already has a function driver handling it */
         DBG_PRINT(SDDBG_TRACE, ("SDIO Bus Driver: ProbeForFunction, device already has function\n"));
             /* release function list */
-        SemaphorePost(&pBusContext->DeviceListSem);
+        SemaphorePost(&pBusContext->DeviceListSem);    
             /* release function list */
         SemaphorePost(&pBusContext->FunctionListSem);
             /* just return success */
         status = SDIO_STATUS_SUCCESS;
         goto cleanup;
-    }
-
+    } 
+    
         /* release device list */
-    SemaphorePost(&pBusContext->DeviceListSem);
-
+    SemaphorePost(&pBusContext->DeviceListSem); 
+         
     /* walk functions looking for one that can handle this device */
     SDITERATE_OVER_LIST(&pBusContext->FunctionList, pList) {
         pFunction = CONTAINING_STRUCT(pList, SDFUNCTION, SDList);
@@ -373,20 +373,20 @@ SDIO_STATUS ProbeForFunction(PSDDEVICE pDevice, PSDHCD pHcd) {
         }
         DBG_PRINT(SDDBG_TRACE, ("SDIO Bus Driver: ProbeForFunction - checking: %s \n",
                                 pFunction->pName));
-
+            
         /* see if this function handles this device */
         if (IsPotentialIdMatch(pDevice->pId, pFunction->pIds)) {
             if (!FilterPnpInfo(pDevice)) {
-                break;
-            }
+                break;  
+            } 
             DBG_PRINT(SDDBG_TRACE, ("SDIO Bus Driver: ProbeForFunction -Got Match, probing: %s \n",
-                                    pFunction->pName));
+                                    pFunction->pName));                                 
             /* we need to setup with the OS bus driver before the probe, so probe can
               do OS operations. */
-            OS_InitializeDevice(pDevice, pFunction);
+            OS_InitializeDevice(pDevice, pFunction);  
             if (!SDIO_SUCCESS(OS_AddDevice(pDevice, pFunction))) {
-                break;
-            }
+                break;  
+            }  
             /* close enough match, ask the function driver if it supports us */
             if (pFunction->pProbe(pFunction, pDevice)) {
                 /* she accepted the device, add to list */
@@ -400,7 +400,7 @@ SDIO_STATUS ProbeForFunction(PSDDEVICE pDevice, PSDHCD pHcd) {
                 /* didn't take this device */
                 OS_RemoveDevice(pDevice);
             }
-
+            
         }
     }
     if (!SDIO_SUCCESS((status = SemaphorePost(&pBusContext->FunctionListSem)))) {
@@ -413,9 +413,9 @@ cleanup:
     return status;
 }
 
-/*
+/* 
  * ProbeForDevice - look for a device that this function driver supports
- *
+ * 
 */
 static SDIO_STATUS ProbeForDevice(PSDFUNCTION pFunction) {
     SDIO_STATUS status;
@@ -428,7 +428,7 @@ static SDIO_STATUS ProbeForDevice(PSDFUNCTION pFunction) {
         DBG_PRINT(SDDBG_TRACE, ("SDIO Bus Driver: ProbeForDevice, too many devices in function\n"));
         return SDIO_STATUS_SUCCESS;
     }
-
+  
      /* protect the driver list */
     if (!SDIO_SUCCESS((status = SemaphorePendInterruptable(&pBusContext->DeviceListSem)))) {
       goto cleanup;   /* wait interrupted */
@@ -448,14 +448,14 @@ static SDIO_STATUS ProbeForDevice(PSDFUNCTION pFunction) {
                                 pDevice->pId[0].SDIO_FunctionClass));
         if (IsPotentialIdMatch(pDevice->pId, pFunction->pIds)) {
             if (!FilterPnpInfo(pDevice)) {
-                break;
+                break;  
             }
             /* we need to setup with the OS bus driver before the probe, so probe can
               do OS operations. */
-            OS_InitializeDevice(pDevice, pFunction);
+            OS_InitializeDevice(pDevice, pFunction);  
             if (!SDIO_SUCCESS(OS_AddDevice(pDevice, pFunction))) {
-                break;
-            }
+                break;  
+            }  
             /* close enough match, ask the function driver if it supports us */
             if (pFunction->pProbe(pFunction, pDevice)) {
                 /* she accepted the device, add to list */
@@ -493,59 +493,59 @@ static void DumpPnpEntry(PSD_PNP_INFO pInfo)
     DBG_PRINT(SDDBG_TRACE, (" SDIO FuncClass: %d \n", pInfo->SDIO_FunctionClass));
     DBG_PRINT(SDDBG_TRACE, (" SDMMC MANFID:   0x%X \n", pInfo->SDMMC_ManfacturerID));
     DBG_PRINT(SDDBG_TRACE, (" SDMMC OEMID:    0x%X \n", pInfo->SDMMC_OEMApplicationID));
-}
-#endif
-/*
+}  
+#endif      
+/* 
  * IsPotentialIdMatch - test for potential device match
- *
+ * 
 */
 BOOL IsPotentialIdMatch(PSD_PNP_INFO pIdsDev, PSD_PNP_INFO pIdsFuncList) {
     PSD_PNP_INFO pTFn;
-    BOOL match = FALSE;
-
+    BOOL match = FALSE; 
+    
     for (pTFn = pIdsFuncList;!IS_LAST_SDPNPINFO_ENTRY(pTFn);pTFn++) {
         //DumpPnpEntry(pTFn);
             /* check specific SDIO Card manufacturer ID, Code and Function number */
         if ((pIdsDev->SDIO_ManufacturerID != 0) &&
-            (pTFn->SDIO_ManufacturerID != 0) &&
+            (pTFn->SDIO_ManufacturerID != 0) && 
             (pIdsDev->SDIO_ManufacturerID == pTFn->SDIO_ManufacturerID) &&
             (pIdsDev->SDIO_ManufacturerCode == pTFn->SDIO_ManufacturerCode) &&
-            ((pIdsDev->SDIO_FunctionNo == pTFn->SDIO_FunctionNo) ||
+            ((pIdsDev->SDIO_FunctionNo == pTFn->SDIO_FunctionNo) || 
              (pTFn->SDIO_FunctionNo == 0)) )
         {
                 match = TRUE;
                 break;
-        }
+        }        
             /* check generic function class */
         if ((pIdsDev->SDIO_FunctionClass != 0) &&
-            (pTFn->SDIO_FunctionClass != 0) &&
+            (pTFn->SDIO_FunctionClass != 0) && 
             (pIdsDev->SDIO_FunctionClass == pTFn->SDIO_FunctionClass)) {
             match = TRUE;
             break;
-        }
+        }        
             /* check specific SDMMC MANFID and APPLICATION ID, NOTE SANDISK
              * uses a MANFID of zero! */
-        if ((pTFn->SDMMC_OEMApplicationID != 0) &&
+        if ((pTFn->SDMMC_OEMApplicationID != 0) && 
             (pIdsDev->SDMMC_ManfacturerID == pTFn->SDMMC_ManfacturerID) &&
             (pIdsDev->SDMMC_OEMApplicationID == pTFn->SDMMC_OEMApplicationID)) {
             match = TRUE;
             break;
         }
-
+        
             /* check generic SD Card */
         if ((pIdsDev->CardFlags & CARD_SD) &&
             (pTFn->CardFlags & CARD_SD)){
             match = TRUE;
-            break;
+            break;   
         }
-
+        
             /* check generic MMC Card */
         if ((pIdsDev->CardFlags & CARD_MMC) &&
             (pTFn->CardFlags & CARD_MMC)){
             match = TRUE;
             break;
         }
-
+        
              /* check raw Card */
         if ((pIdsDev->CardFlags & CARD_RAW) &&
             (pTFn->CardFlags & CARD_RAW)){
@@ -553,30 +553,30 @@ BOOL IsPotentialIdMatch(PSD_PNP_INFO pIdsDev, PSD_PNP_INFO pIdsFuncList) {
             break;
         }
     }
-
-    return match;
+    
+    return match; 
 }
 
-/*
+/* 
  * NotifyDeviceRemove - tell function driver on this device that the device is being removed
- *
+ * 
 */
 SDIO_STATUS NotifyDeviceRemove(PSDDEVICE pDevice) {
-    SDIO_STATUS     status;
+    SDIO_STATUS     status; 
     SDREQUESTQUEUE  cancelQueue;
     PSDREQUEST      pReq;
     CT_DECLARE_IRQ_SYNC_CONTEXT();
-
+    
     InitializeRequestQueue(&cancelQueue);
-
-    if ((pDevice->pFunction != NULL) &&
+    
+    if ((pDevice->pFunction != NULL) && 
         (pDevice->pFunction->pRemove != NULL)) {
         DBG_PRINT(SDDBG_TRACE, ("SDIO Bus Driver: removing device 0x%X\n", (INT)pDevice));
             /* fail any outstanding requests for this device */
             /* acquire lock for request queue */
         status = _AcquireHcdLock(pDevice->pHcd);
         if (!SDIO_SUCCESS(status)) {
-            return status;
+            return status;  
         }
             /* mark the function to block any more requests comming down */
         pDevice->pFunction->Flags |= SDFUNCTION_FLAG_REMOVING;
@@ -585,7 +585,7 @@ SDIO_STATUS NotifyDeviceRemove(PSDDEVICE pDevice) {
             if (pReq->pFunction == pDevice->pFunction) {
                 /* cancel this request, as this device or function is being removed */
                 /* note that these request are getting completed out of order */
-                DBG_PRINT(SDDBG_TRACE, ("SDIO Bus Driver - NotifyDeviceRemove: canceling req 0x%X\n", (UINT)pReq));
+                DBG_PRINT(SDDBG_TRACE, ("SDIO Bus Driver - NotifyDeviceRemove: canceling req 0x%X\n", (UINT)pReq));             
                 pReq->Status = SDIO_STATUS_CANCELED;
                     /* remove it from the HCD queue */
                 SDListRemove(&pReq->SDList);
@@ -593,14 +593,14 @@ SDIO_STATUS NotifyDeviceRemove(PSDDEVICE pDevice) {
                 QueueRequest(&cancelQueue, pReq);
             }
         }SDITERATE_END;
-
+        
         status = _ReleaseHcdLock(pDevice->pHcd);
-
+        
            /* now empty the cancel queue if anything is in there */
         while (TRUE) {
             pReq = DequeueRequest(&cancelQueue);
             if (NULL == pReq) {
-                break;
+                break;    
             }
                 /* complete the request */
             DoRequestCompletion(pReq, pDevice->pHcd);
@@ -608,36 +608,36 @@ SDIO_STATUS NotifyDeviceRemove(PSDDEVICE pDevice) {
             /* re-acquire the lock to deal with the current request */
         status = _AcquireHcdLock(pDevice->pHcd);
         if (!SDIO_SUCCESS(status)) {
-            return status;
-        }
+            return status;  
+        }        
             /* now deal with the current request */
         pReq = GET_CURRENT_REQUEST(pDevice->pHcd);
         if ((pReq !=NULL) && (pReq->pFunction == pDevice->pFunction) && (pReq->pFunction != NULL)) {
-            DBG_PRINT(SDDBG_TRACE, ("SDIO Bus Driver - NotifyDeviceRemove: Outstanding Req 0x%X on HCD: 0x%X.. waiting...\n",
-                (UINT)pReq, (UINT)pDevice->pHcd));
+            DBG_PRINT(SDDBG_TRACE, ("SDIO Bus Driver - NotifyDeviceRemove: Outstanding Req 0x%X on HCD: 0x%X.. waiting...\n", 
+                (UINT)pReq, (UINT)pDevice->pHcd));                         
                 /* the outstanding request on this device is for the function being removed */
-            pReq->Flags |= SDREQ_FLAGS_CANCELED;
+            pReq->Flags |= SDREQ_FLAGS_CANCELED; 
                 /* wait for this request to get completed normally */
             status = _ReleaseHcdLock(pDevice->pHcd);
             SignalWait(&pDevice->pFunction->CleanupReqSig);
-            DBG_PRINT(SDDBG_TRACE, ("SDIO Bus Driver - NotifyDeviceRemove: Outstanding HCD Req 0x%X completed \n", (UINT)pReq));
-        }  else {
+            DBG_PRINT(SDDBG_TRACE, ("SDIO Bus Driver - NotifyDeviceRemove: Outstanding HCD Req 0x%X completed \n", (UINT)pReq));                         
+        }  else { 
                 /* release lock */
             status = _ReleaseHcdLock(pDevice->pHcd);
         }
-
+        
             /* synchronize with ISR SYNC Handlers */
-        status = SemaphorePendInterruptable(&pBusContext->DeviceListSem);
+        status = SemaphorePendInterruptable(&pBusContext->DeviceListSem);           
         if (!SDIO_SUCCESS(status)) {
             return status;
-        }
+        }    
             /* call this devices Remove function */
         pDevice->pFunction->pRemove(pDevice->pFunction,pDevice);
         pDevice->pFunction->NumDevices--;
             /* make sure the sync handler is NULLed out */
-        pDevice->pIrqFunction = NULL;
+        pDevice->pIrqFunction = NULL;  
         SemaphorePost(&pBusContext->DeviceListSem);
-
+        
         OS_RemoveDevice(pDevice);
             /* detach this device from the function list it belongs to */
         SDListRemove(&pDevice->FuncListLink);
@@ -647,10 +647,10 @@ SDIO_STATUS NotifyDeviceRemove(PSDDEVICE pDevice) {
     return SDIO_STATUS_SUCCESS;
 }
 
-
-/*
+    
+/* 
  * RemoveHcdFunctions - remove all functions attached to an HCD
- *
+ * 
 */
 SDIO_STATUS RemoveHcdFunctions(PSDHCD pHcd) {
     SDIO_STATUS status;
@@ -658,7 +658,7 @@ SDIO_STATUS RemoveHcdFunctions(PSDHCD pHcd) {
     PSDFUNCTION pFunction;
     PSDDEVICE pDevice;
     DBG_PRINT(SDDBG_TRACE, ("+SDIO Bus Driver: RemoveHcdFunctions\n"));
-
+    
     /* walk through the functions and remove the ones associated with this HCD */
     /* protect the driver list */
     if (!SDIO_SUCCESS((status = SemaphorePend(&pBusContext->FunctionListSem)))) {
@@ -670,7 +670,7 @@ SDIO_STATUS RemoveHcdFunctions(PSDHCD pHcd) {
         pFunction = CONTAINING_STRUCT(pList, SDFUNCTION, SDList);
         DBG_PRINT(SDDBG_TRACE, ("SDIO Bus Driver: scanning function 0x%X, %s\n", (INT)pFunction,
                                 (pFunction == NULL)?"NULL":pFunction->pName));
-
+        
         /* walk the devices on this function and look for a match */
         SDITERATE_OVER_LIST_ALLOW_REMOVE(&pFunction->DeviceList, pDevice, SDDEVICE,FuncListLink) {
             if (pDevice->pHcd == pHcd) {
@@ -678,28 +678,28 @@ SDIO_STATUS RemoveHcdFunctions(PSDHCD pHcd) {
                 NotifyDeviceRemove(pDevice);
             }
         SDITERATE_END;
-    SDITERATE_END;
+    SDITERATE_END;    
     if (!SDIO_SUCCESS((status = SemaphorePost(&pBusContext->FunctionListSem)))) {
         goto cleanup;   /* wait interrupted */
     }
     DBG_PRINT(SDDBG_TRACE, ("-SDIO Bus Driver: RemoveHcdFunctions\n"));
     return SDIO_STATUS_SUCCESS;
-
+    
 cleanup:
     DBG_PRINT(SDDBG_ERROR, ("-SDIO Bus Driver: RemoveHcdFunctions, error exit 0x%X\n", status));
-    return status;
+    return status;   
 }
 
-/*
+/* 
  * RemoveAllFunctions - remove all functions attached
- *
+ * 
 */
-SDIO_STATUS RemoveAllFunctions()
+SDIO_STATUS RemoveAllFunctions() 
 {
     SDIO_STATUS status;
     PSDLIST pList;
     PSDHCD pHcd;
-
+    
     /* walk through the HCDs  */
     /* protect the driver list */
     if (!SDIO_SUCCESS((status = SemaphorePend(&pBusContext->HcdListSem)))) {
@@ -709,12 +709,13 @@ SDIO_STATUS RemoveAllFunctions()
         pHcd = CONTAINING_STRUCT(pList, SDHCD, SDList);
             /* remove the functions */
         RemoveHcdFunctions(pHcd);
-    }
+    }    
     if (!SDIO_SUCCESS((status = SemaphorePost(&pBusContext->HcdListSem)))) {
         goto cleanup;   /* wait interrupted */
     }
     return SDIO_STATUS_SUCCESS;
 cleanup:
     DBG_PRINT(SDDBG_ERROR, ("SDIO Bus Driver: RemoveAllFunctions, error exit 0x%X\n", status));
-    return status;
+    return status;   
 }
+

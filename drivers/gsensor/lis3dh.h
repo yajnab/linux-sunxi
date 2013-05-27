@@ -62,7 +62,7 @@ Revision 1-0-7 26/11/2010
 #define LIS3DH_ACC_I2C_SAD_L	((LIS3DH_ACC_I2C_SADROOT<<1)|SAD0L)
 #define LIS3DH_ACC_I2C_SAD_H	((LIS3DH_ACC_I2C_SADROOT<<1)|SAD0H)
 #define	LIS3DH_ACC_DEV_NAME	"lis3dh_acc"
-#define SENSOR_NAME             LIS3DH_ACC_DEV_NAME
+#define SENSOR_NAME             LIS3DH_ACC_DEV_NAME 
 
 /************************************************/
 /* 	Accelerometer defines section	 	*/
@@ -106,8 +106,11 @@ struct lis3dh_acc_platform_data {
 
 #ifdef CONFIG_HAS_EARLYSUSPEND
 	struct early_suspend early_suspend;
-#endif
+#endif		
 };
 #endif	/* __KERNEL__ */
 
 #endif	/* __LIS3DH_H__ */
+
+
+

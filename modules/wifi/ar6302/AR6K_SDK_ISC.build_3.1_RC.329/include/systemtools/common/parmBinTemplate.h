@@ -7,3 +7,4 @@ typedef struct _parmBinTemplate {
 } __ATTRIB_PACK _PARM_BIN_TEMPLATE;
 
 #endif // #if !defined(_TEST_CMD_PARMS_BIN_TEMPLATE)
+

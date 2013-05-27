@@ -1,9 +1,9 @@
 /**
  * Copyright (C) 2010-2012 ARM Limited. All rights reserved.
- *
+ * 
  * This program is free software and is provided to you under the terms of the GNU General Public License version 2
  * as published by the Free Software Foundation, and any use by you of this program is subject to the terms of such GNU licence.
- *
+ * 
  * A copy of the licence is included with the program, and can also be obtained from Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
@@ -50,7 +50,7 @@
 extern const char *__malidrv_build_info(void);
 
 /* Module parameter to control log level */
-int mali_debug_level = 8;
+int mali_debug_level = 0;
 module_param(mali_debug_level, int, S_IRUSR | S_IWUSR | S_IWGRP | S_IRGRP | S_IROTH); /* rw-rw-r-- */
 MODULE_PARM_DESC(mali_debug_level, "Higher number, more dmesg output");
 
@@ -129,7 +129,7 @@ static int mali_driver_runtime_idle(struct device *dev);
 extern int mali_platform_device_register(void);
 extern int mali_platform_device_unregister(void);
 #endif
-extern int sun5i_mali_platform_device_register(void);
+extern int sun7i_mali_platform_device_register(void);
 extern  int sync_debugfs_init(void);
 /* Linux power management operations provided by the Mali device driver */
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(2,6,29))
@@ -191,11 +191,6 @@ struct file_operations mali_fops =
 	.mmap = mali_mmap
 };
 
-
-
-
-
-
 int mali_module_init(void)
 {
 	int err = 0;
@@ -215,7 +210,10 @@ int mali_module_init(void)
 		return err;
 	}
 #endif
-    err = sun5i_mali_platform_device_register();
+    err = sun7i_mali_platform_device_register();
+    if (0 != err){
+        return err;
+    }
     sync_debugfs_init();
 	MALI_DEBUG_PRINT(2, ("mali_module_init() registering driver\n"));
 

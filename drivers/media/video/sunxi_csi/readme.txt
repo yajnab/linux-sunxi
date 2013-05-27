@@ -30,3 +30,7 @@ insmod sun4i_csiX.ko ccm="s5k4ec" i2c_addr=0x5a
 
 V1_00
 CSI: Merged from sun4i for FPGA,only support OV5640
+
+
+
+

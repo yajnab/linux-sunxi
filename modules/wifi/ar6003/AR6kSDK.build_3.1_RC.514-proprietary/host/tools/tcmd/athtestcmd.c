@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2006 Atheros Communications Inc.
  * All rights reserved.
- *
- *
+ * 
+ * 
 // The software source and binaries included in this development package are
 // licensed, not sold. You, or your company, received the package under one
 // or more license agreements. The rights granted to you are specifically
@@ -12,12 +12,12 @@
 // portion of this package must be in strict compliance with the license
 // agreement(s) terms.
 // </copyright>
-//
+// 
 // <summary>
 // 	Wifi driver for AR6002
 // </summary>
 //
- *
+ * 
  */
 
 #include <sys/types.h>
@@ -79,7 +79,7 @@ const char commands[] =
 
 #define INVALID_FREQ    0
 
-#define A_RATE_NUM      28
+#define A_RATE_NUM      28 
 #define G_RATE_NUM      28
 
 #define RATE_STR_LEN    20
@@ -113,7 +113,7 @@ const RATE_STR  bgRateStrTbl[G_RATE_NUM] = {
     { "HT40 MCS4 81  Mb" },
     { "HT40 MCS5 108  Mb" },
     { "HT40 MCS6 121.5  Mb" },
-    { "HT40 MCS7 135  Mb" }
+    { "HT40 MCS7 135  Mb" }	
 };
 
 static void rxReport(void *buf);
@@ -148,7 +148,7 @@ static int parseCmd(const char *cmdline, char *buf, char **argv, size_t argvlen)
     {
         if (argc>=argvlen)
         {
-            break;
+            break;           
         }
         argv[argc++] = token;
         while ( *token && !isspace(*token) )
@@ -189,7 +189,7 @@ int main (int argc, char **argv)
     TCMD_PM *pmCmd = (TCMD_PM *)((A_UINT32 *)buf + 1);
     WMI_SET_LPREAMBLE_CMD *setLpreambleCmd = (WMI_SET_LPREAMBLE_CMD *)((A_UINT32 *)buf + 1);
     TCMD_SET_REG *setRegCmd = (TCMD_SET_REG *)((A_UINT32 *)buf + 1);
-    A_BOOL needRxReport = FALSE;
+    A_BOOL needRxReport = FALSE;    
 
     txCmd->numPackets = 0;
     txCmd->wlanMode = TCMD_WLAN_MODE_NOHT;
@@ -201,7 +201,7 @@ int main (int argc, char **argv)
             close(s);
         return -1;
     }
-#endif
+#endif 
 
     if (argc == 1) {
         usage();
@@ -240,12 +240,12 @@ int main (int argc, char **argv)
             {"numpackets", 1, NULL, 'n'},
             {"mode", 1, NULL, 'M'},
             {"setlongpreamble", 1, NULL, 'l'},
-            {"setreg", 1, NULL, 'R'},
-            {"regval", 1, NULL, 'V'},
-            {"flag", 1, NULL, 'F'},
-            {"writeotp", 0, NULL, 'w'},
-            {"otpregdmn", 1, NULL, 'E'},
-            {"btaddr", 1, NULL, 'B'},
+            {"setreg", 1, NULL, 'R'},                  
+            {"regval", 1, NULL, 'V'},                
+            {"flag", 1, NULL, 'F'},     
+            {"writeotp", 0, NULL, 'w'},  	
+            {"otpregdmn", 1, NULL, 'E'},		
+            {"btaddr", 1, NULL, 'B'},			
             {0, 0, 0, 0}
         };
 
@@ -333,7 +333,7 @@ int main (int argc, char **argv)
             break;
         case 'j':
             txCmd->antenna = antValid(atoi(optarg));
-            break;
+            break;       
         case 'z':
             txCmd->pktSz = pktSzValid(atoi(optarg));
             break;
@@ -345,7 +345,7 @@ int main (int argc, char **argv)
 			rxCmd->testCmdId = TCMD_CONT_RX_ID;
             if (!strcmp(optarg, "promis")) {
                 rxCmd->act = TCMD_CONT_RX_PROMIS;
-				printf(" Its cont Rx promis mode \n");
+			 	printf(" Its cont Rx promis mode \n");
             } else if (!strcmp(optarg, "filter")) {
                 rxCmd->act = TCMD_CONT_RX_FILTER;
 				printf(" Its cont Rx  filter  mode \n");
@@ -388,7 +388,7 @@ int main (int argc, char **argv)
                 }
                 memcpy(rxCmd->u.mac.addr, mac, ATH_MAC_LEN);
 #ifdef TCMD_DEBUG
-                printf("JLU: tcmd: setmac 0x%02x, 0x%02x, 0x%02x, 0x%02x, 0x%02x, 0x%02x\n",
+                printf("JLU: tcmd: setmac 0x%02x, 0x%02x, 0x%02x, 0x%02x, 0x%02x, 0x%02x\n", 
                         mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 #endif
                 break;
@@ -413,8 +413,8 @@ int main (int argc, char **argv)
             if (argc < 4)
                 usage();
             cmd = TESTMODE_CONT_RX;
-            rxCmd->testCmdId = TCMD_CONT_RX_ID;
-            rxCmd->act = TCMD_CONT_RX_SET_ANT_SWITCH_TABLE;
+            rxCmd->testCmdId = TCMD_CONT_RX_ID;		
+            rxCmd->act = TCMD_CONT_RX_SET_ANT_SWITCH_TABLE;				
             rxCmd->u.antswitchtable.antswitch1 = (unsigned int) atoi(argv[2]);
             rxCmd->u.antswitchtable.antswitch2 = (unsigned int) atoi(argv[3]);
             break;
@@ -429,34 +429,34 @@ int main (int argc, char **argv)
             cmd = TESTMODE_SETREG;
             setRegCmd->testCmdId = TCMD_SET_REG_ID;
             setRegCmd->regAddr   = strtoul(optarg, (char **)NULL, 0);//atoi(optarg);
-            break;
+            break; 
         case 'V':
             setRegCmd->val = strtoul(optarg, (char **)NULL, 0);
-            break;
+            break;            
         case 'F':
             setRegCmd->flag = atoi(optarg);
-            break;
+            break;                       
         case 'w':
-            rxCmd->u.mac.otpWriteFlag = 1;
-            break;
+            rxCmd->u.mac.otpWriteFlag = 1;	
+            break;		
         case 'E':
             rxCmd->u.mac.regDmn[0] = 0xffff&(strtoul(optarg, (char **)NULL, 0));
-            rxCmd->u.mac.regDmn[1] = 0xffff&(strtoul(optarg, (char **)NULL, 0)>>16);
-            break;
+            rxCmd->u.mac.regDmn[1] = 0xffff&(strtoul(optarg, (char **)NULL, 0)>>16);		
+            break;		
         case 'B':
-            {
+            {    				           
                 A_UINT8 btaddr[ATH_MAC_LEN];
                 if (ath_ether_aton(optarg, btaddr) != A_OK) {
                     A_ERR(-1, "Invalid mac address format! \n");
-                }
+                } 
                 memcpy(rxCmd->u.mac.btaddr, btaddr, ATH_MAC_LEN);
 #ifdef TCMD_DEBUG
-                printf("JLU: tcmd: setbtaddr 0x%02x, 0x%02x, 0x%02x, 0x%02x, 0x%02x, 0x%02x\n",
+                printf("JLU: tcmd: setbtaddr 0x%02x, 0x%02x, 0x%02x, 0x%02x, 0x%02x, 0x%02x\n", 
                         btaddr[0], btaddr[1], btaddr[2], btaddr[3], btaddr[4], btaddr[5]);
-#endif
+#endif		
             }
-            break;
-
+            break;		
+			
         default:
             usage();
         }
@@ -514,15 +514,15 @@ int main (int argc, char **argv)
         ifr.ifr_data = (void *)buf;
         if (ioctl(s, AR6000_IOCTL_EXTENDED, &ifr) < 0) {
             A_ERR(1, "%s", ifr.ifr_name);
-        }
-        break;
+        }   
+        break;   
     case TESTMODE_SETREG:
         *(A_UINT32 *)buf = AR6000_XIOCTL_TCMD_SETREG;
         ifr.ifr_data = (void *)buf;
         if (ioctl(s, AR6000_IOCTL_EXTENDED, &ifr) < 0) {
             printf("%s", ifr.ifr_name);
-        }
-        break;
+        }   
+        break;              
     default:
         usage();
     }
@@ -577,7 +577,7 @@ rxReport(void *buf)
     printf("HT20 MCS5 52Mbps    %d (SGI: %d)\n", rateCnt[17], rateCntShortGuard[17]);
     printf("HT20 MCS6 58.5Mbps  %d (SGI: %d)\n", rateCnt[18], rateCntShortGuard[18]);
     printf("HT20 MCS7 65Mbps    %d (SGI: %d)\n", rateCnt[19], rateCntShortGuard[19]);
-    printf("\n");
+    printf("\n");	
     printf("HT40 MCS0 13.5Mbps    %d (SGI: %d)\n", rateCnt[20], rateCntShortGuard[20]);
     printf("HT40 MCS1 27.0Mbps    %d (SGI: %d)\n", rateCnt[21], rateCntShortGuard[21]);
     printf("HT40 MCS2 40.5Mbps    %d (SGI: %d)\n", rateCnt[22], rateCntShortGuard[22]);
@@ -587,7 +587,7 @@ rxReport(void *buf)
     printf("HT40 MCS6 121.5Mbps   %d (SGI: %d)\n", rateCnt[26], rateCntShortGuard[26]);
     printf("HT40 MCS7 135Mbps     %d (SGI: %d)\n", rateCnt[27], rateCntShortGuard[27]);
 
-
+	
 }
 
 static A_UINT32
@@ -607,7 +607,7 @@ freqValid(A_UINT32 val)
                 return freq;
         }
 
-        if ((val == BG_FREQ_MAX) ||
+        if ((val == BG_FREQ_MAX) || 
             ((val < BG_FREQ_MAX) && (val >= BG_FREQ_MIN) && !((val - BG_FREQ_MIN) % 5)))
             return val;
         else if ((val >= A_FREQ_MIN) && (val < A_20MHZ_BAND_FREQ_MAX) && !((val - A_FREQ_MIN) % 20))
@@ -641,7 +641,7 @@ static void prtRateTbl(A_UINT32 freq)
         }
         printf("\n");
     }
-
+    
 /*
  * converts ieee channel number to frequency
  */
@@ -707,7 +707,7 @@ _is_hex(char c)
 
 // Convert a single hex nibble
 static int
-_from_hex(char c)
+_from_hex(char c) 
 {
     int ret = 0;
 
@@ -735,7 +735,7 @@ _tolower(char c)
 static A_BOOL
 isalpha(int c)
 {
-    return (((c >= 'a') && (c <= 'z')) ||
+    return (((c >= 'a') && (c <= 'z')) || 
             ((c >= 'A') && (c <= 'Z')));
 }
 
@@ -762,8 +762,8 @@ static A_STATUS
 ath_ether_aton(const char *orig, A_UINT8 *eth)
 {
     int mac[6];
-    if (sscanf(orig, "%02x:%02x:%02X:%02X:%02X:%02X",
-               &mac[0], &mac[1], &mac[2],
+    if (sscanf(orig, "%02x:%02x:%02X:%02X:%02X:%02X", 
+               &mac[0], &mac[1], &mac[2],  
                &mac[3], &mac[4], &mac[5])==6) {
         int i;
 #ifdef DEBUG
@@ -772,7 +772,7 @@ ath_ether_aton(const char *orig, A_UINT8 *eth)
             return A_EINVAL;
         }
 #endif
-        for (i=0; i<6; ++i)
+        for (i=0; i<6; ++i) 
             eth[i] = mac[i] & 0xff;
         return A_OK;
     }

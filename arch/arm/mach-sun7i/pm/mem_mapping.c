@@ -65,7 +65,7 @@ struct saved_mmu_level_one {
 unsigned long saved_context_r13_sys[SYS_CONTEXT_SIZE];
 unsigned long saved_cpsr_svc;
 unsigned long saved_context_r12_svc[SVC_CONTEXT_SIZE];
-unsigned long saved_spsr_svc;
+unsigned long saved_spsr_svc;   
 unsigned long saved_context_r13_fiq[FIQ_CONTEXT_SIZE];
 unsigned long saved_spsr_fiq;
 unsigned long saved_context_r13_abt[ABT_CONTEXT_SIZE];
@@ -118,7 +118,7 @@ void create_mapping(void)
 	return;
 }
 
-/**save the va: 0x0000,0000 mapping.
+/**save the va: 0x0000,0000 mapping. 
 *@vaddr: the va of mmu mapping to save;
 */
 void save_mapping(unsigned long vaddr)
@@ -136,21 +136,21 @@ void save_mapping(unsigned long vaddr)
 	return;
 }
 
-/**restore the va: 0x0000,0000 mapping.
+/**restore the va: 0x0000,0000 mapping. 
 *@vaddr: the va of mmu mapping to restore.
 *
 */
 void restore_mapping(unsigned long vaddr)
 {
 	unsigned long addr;
-
+	
 	addr = vaddr & PAGE_MASK;
-
+	
 	if(addr != backup_tbl[0].vaddr){
 		while(1);
 		return;
 	}
-
+	
 	//__cpuc_flush_kern_all();
 	*((volatile __u32 *)(PAGE_TBL_ADDR)) = backup_tbl[0].entry_val;
 	//clean cache
@@ -159,3 +159,23 @@ void restore_mapping(unsigned long vaddr)
 
 	return;
 }
+
+void init_pgd(unsigned int *pgd)
+{
+    int i = 0;
+    volatile __u32 *tmp;
+    memcpy(pgd, (void*)0xc0004000, 0x4000);
+	*((volatile __u32 *)(pgd)) = 0xc4a;     //0x0000,0000 <-> 0x0000,0000
+    tmp = pgd; 
+	for (i = 0; i < 1024; i++)        //vaddr:0x0000,0000 <-> paddr:0x0000,0000
+	{
+        *((volatile __u32 *)(tmp++)) = (0xc4a|(i<<20));
+	}
+    tmp = pgd + 1 * 1024; 
+	for (i = 0; i < 1024; i++)        //vaddr:0x4000,0000 <-> paddr:0x4000,0000
+	{
+        *((volatile __u32 *)(tmp++)) = (0xc4a|(0x40000000)|(i<<20));
+	}
+	__cpuc_coherent_kern_range((long unsigned int)(pgd), (long unsigned int)(pgd + 0x4000 - 1));
+}
+

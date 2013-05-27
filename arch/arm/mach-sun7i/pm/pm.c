@@ -83,6 +83,8 @@ static int standby_timeout = 5;
 static int standby_axp_enable = 1;
 static int standby_timeout = 0;
 #endif
+static unsigned long standby_crc_addr = 0x40000000;
+static int standby_crc_size = DRAM_BACKUP_SIZE;
 
 static int suspend_freq = SUSPEND_FREQ;
 static int suspend_delay_ms = SUSPEND_DELAY_MS;
@@ -107,6 +109,7 @@ extern void clear_reg_context(void);
 void create_mapping(void);
 void save_mapping(unsigned long vaddr);
 void restore_mapping(unsigned long vaddr);
+void init_pgd(unsigned int *pgd);
 static void show_reg(unsigned long addr, int nbytes, const char *name);
 
 int (*mem)(void) = 0;
@@ -130,6 +133,7 @@ static struct tmr_state saved_tmr_state;
 static struct twi_state saved_twi_state;
 static struct gpio_state saved_gpio_state;
 static struct sram_state saved_sram_state;
+static volatile __u32   dogMode;
 
 #ifdef GET_CYCLE_CNT
 static int start = 0;
@@ -162,6 +166,8 @@ standby_type_e standby_type = NON_STANDBY;
 EXPORT_SYMBOL(standby_type);
 standby_level_e standby_level = STANDBY_INITIAL;
 EXPORT_SYMBOL(standby_level);
+EXPORT_SYMBOL(pm_disable_watchdog);
+EXPORT_SYMBOL(pm_enable_watchdog);
 
 //static volatile int enter_flag = 0;
 static int standby_mode = 1;
@@ -222,19 +228,19 @@ static int aw_pm_valid(suspend_state_t state)
         }
         printk("standby_mode:%d, standby_type:%d, line:%d\n",standby_mode, standby_type, __LINE__);
     }
-
+    
     //allocat space for backup dram data
     if(SUPER_STANDBY == standby_type){
         if((DRAM_BACKUP_SIZE) < ((int)&resume0_bin_end - (int)&resume0_bin_start) ){
             //judge the reserved space for resume0 is enough or not.
-            pr_info("Notice: reserved space for resume is not enough. \n");
+            pr_info("Notice: reserved space(%d) for resume is not enough(%d). \n", DRAM_BACKUP_SIZE,((int)&resume0_bin_end - (int)&resume0_bin_start));
             return 0;
         }
-
+        
         memcpy((void *)DRAM_BACKUP_BASE_ADDR, (void *)&resume0_bin_start, (int)&resume0_bin_end - (int)&resume0_bin_start);
         dmac_flush_range((void *)DRAM_BACKUP_BASE_ADDR, (void *)(DRAM_BACKUP_BASE_ADDR + DRAM_BACKUP_SIZE -1) );
     }
-
+        
 #ifdef GET_CYCLE_CNT
         // init counters:
         init_perfcounters (1, 0);
@@ -259,9 +265,12 @@ static int aw_pm_valid(suspend_state_t state)
 *             will be called before devices suspened;
 *********************************************************************************************************
 */
+unsigned int backup_max_freq = 0;
+unsigned int backup_min_freq = 0;
+
 int aw_pm_begin(suspend_state_t state)
 {
-    struct cpufreq_policy policy;
+    struct cpufreq_policy *policy;
 
     PM_DBG("%d state begin:%d\n", state,debug_mask);
 
@@ -269,12 +278,22 @@ int aw_pm_begin(suspend_state_t state)
 #ifdef CONFIG_CPU_FREQ_USR_EVNT_NOTIFY
     //cpufreq_user_event_notify();
 #endif
-
-    if (cpufreq_get_policy(&policy, 0))
+    
+    backup_max_freq = 0;
+    backup_min_freq = 0;
+    policy = cpufreq_cpu_get(0);
+    if (!policy)
+    {
+        PM_DBG("line:%d cpufreq_cpu_get failed!\n", __LINE__);
         goto out;
+    }
 
-    cpufreq_driver_target(&policy, suspend_freq, CPUFREQ_RELATION_L);
-
+    backup_max_freq = policy->max;
+    backup_min_freq = policy->min;
+    policy->user_policy.max= suspend_freq;
+    policy->user_policy.min = suspend_freq;
+    cpufreq_cpu_put(policy);
+    cpufreq_update_policy(0);
 
     /*must init perfcounter, because delay_us and delay_ms is depandant perf counter*/
 #ifndef GET_CYCLE_CNT
@@ -364,14 +383,13 @@ static int aw_early_suspend(void)
 #define MAX_RETRY_TIMES (5)
 
     __s32 retry = MAX_RETRY_TIMES;
-
+    
     //backup device state
     mem_ccu_save((__ccmu_reg_list_t *)(SW_VA_CCM_IO_BASE));
     mem_gpio_save(&(saved_gpio_state));
     mem_tmr_save(&(saved_tmr_state));
     mem_twi_save(&(saved_twi_state));
-    mem_sram_save(&(saved_sram_state));
-
+    mem_sram_save(&(saved_sram_state));    
 
     if (likely(mem_para_info.axp_enable))
     {
@@ -386,8 +404,8 @@ static int aw_early_suspend(void)
             return -1;
         }else{
             retry = MAX_RETRY_TIMES;
-        }
-
+        }   
+        
         while(-1 == (mem_para_info.suspend_dcdc3 = mem_get_voltage(POWER_VOL_DCDC3)) && --retry){
             ;
         }
@@ -396,7 +414,7 @@ static int aw_early_suspend(void)
             return -1;
         }else{
             retry = MAX_RETRY_TIMES;
-        }
+        }   
     }
     else
     {
@@ -409,13 +427,17 @@ static int aw_early_suspend(void)
     mem_clk_getdiv(&mem_para_info.clk_div);
     /*backup pll ratio*/
     mem_clk_get_pll_factor(&mem_para_info.pll_factor);
-
+    
     //backup mmu
     save_mmu_state(&(mem_para_info.saved_mmu_state));
     //backup cpu state
-    __save_processor_state(&(mem_para_info.saved_cpu_context));
+//    __save_processor_state(&(mem_para_info.saved_cpu_context));
     //backup 0x0000,0000 page entry, size?
-    save_mapping(MEM_SW_VA_SRAM_BASE);
+//    save_mapping(MEM_SW_VA_SRAM_BASE);
+//    mem_para_info.saved_cpu_context.ttb_1r = DRAM_STANDBY_PGD_PA;
+    memcpy((void*)(DRAM_STANDBY_PGD_ADDR + 0x3000), (void*)0xc0007000, 0x1000);
+	__cpuc_coherent_kern_range(DRAM_STANDBY_PGD_ADDR + 0x3000, DRAM_STANDBY_PGD_ADDR + 0x4000 - 1);
+    mem_para_info.saved_mmu_state.ttb_1r = DRAM_STANDBY_PGD_PA;
 
     //prepare resume0 code for resume
 
@@ -432,19 +454,19 @@ static int aw_early_suspend(void)
     //prepare dram training area data
     memcpy((void *)DRAM_BACKUP_BASE_ADDR2, (void *)DRAM_BASE_ADDR, DRAM_TRANING_SIZE);
     dmac_flush_range((void *)DRAM_BACKUP_BASE_ADDR2, (void *)(DRAM_BACKUP_BASE_ADDR2 + DRAM_BACKUP_SIZE2 - 1));
-
+    
     mem_arch_suspend();
-    save_processor_state();
-
-    //create 0x0000,0000 mapping table: 0x0000,0000 -> 0x0000,0000
-    create_mapping();
+    save_processor_state(); 
+    
     //before creating mapping, build the coherent between cache and memory
-    //clean and flush
     __cpuc_flush_kern_all();
     __cpuc_coherent_kern_range(0xc0000000, 0xffffffff-1);
+    //create 0x0000,0000 mapping table: 0x0000,0000 -> 0x0000,0000 
+    //create_mapping();
 
+    //clean and flush
     mem_flush_tlb();
-
+    
 #ifdef PRE_DISABLE_MMU
     //jump to sram: dram enter selfresh, and power off.
     mem = (super_standby_func)SRAM_FUNC_START_PA;
@@ -458,12 +480,12 @@ static int aw_early_suspend(void)
 #ifdef CONFIG_AW_FPGA_PLATFORM
 *(unsigned int *)(0xf0007000 - 0x4) = 0x12345678;
 printk("%s,%d:%d\n",__FILE__,__LINE__, *(unsigned int *)(0xf0007000 - 0x4));
-#endif
+#endif 
 #ifdef PRE_DISABLE_MMU
     //enable the mapping and jump
     //invalidate tlb? maybe, but now, at this situation,  0x0000 <--> 0x0000 mapping never stay in tlb before this.
     //busy_waiting();
-    jump_to_suspend(mem_para_info.saved_cpu_context.ttb_1r, mem);
+    jump_to_suspend(mem_para_info.saved_mmu_state.ttb_1r, mem);
 #else
     mem();
 #endif
@@ -509,7 +531,7 @@ static int verify_restore(void *src, void *dest, int count)
 *
 *Return     : return 0 is process successed;
 *
-*Notes      :
+*Notes      : 
 *********************************************************************************************************
 */
 static void aw_late_resume(void)
@@ -536,7 +558,7 @@ static void aw_late_resume(void)
 *
 *Return     : return 0 is process successed;
 *
-*Notes      :
+*Notes      : 
 *********************************************************************************************************
 */
 static int aw_super_standby(suspend_state_t state)
@@ -544,7 +566,7 @@ static int aw_super_standby(suspend_state_t state)
     int result = 0;
     suspend_status_flag = 0;
     mem_para_info.axp_enable = standby_axp_enable;
-
+    
 mem_enter:
     if( 1 == mem_para_info.mem_flag){
         invalidate_branch_predictor();
@@ -553,8 +575,9 @@ mem_enter:
         __cpuc_flush_icache_all();
         //disable 0x0000 <---> 0x0000 mapping
         restore_processor_state();
+        mem_flush_tlb();
         //destroy 0x0000 <---> 0x0000 mapping
-        restore_mapping(MEM_SW_VA_SRAM_BASE);
+        //restore_mapping(MEM_SW_VA_SRAM_BASE);
         mem_arch_resume();
         goto resume;
     }
@@ -569,8 +592,8 @@ mem_enter:
     if(unlikely(debug_mask&PM_STANDBY_PRINT_STANDBY)){
         pr_info("resume_pointer = 0x%x. \n", (unsigned int)(mem_para_info.resume_pointer));
     }
-
-
+    
+    
 #if 1
     /* config system wakeup evetn type */
     if(PM_SUSPEND_MEM == state || PM_SUSPEND_STANDBY == state){
@@ -578,7 +601,7 @@ mem_enter:
     }else if(PM_SUSPEND_BOOTFAST == state){
         mem_para_info.axp_event = AXP_BOOTFAST_WAKEUP;
     }
-#endif
+#endif  
 
     result = aw_early_suspend();
     if(-2 == result){
@@ -591,12 +614,12 @@ mem_enter:
         mem_para_info.mem_flag = 0;
         goto suspend_err;
     }
-
+    
 resume:
     aw_late_resume();
     //have been disable dcache in resume1
     //enable_cache();
-
+    
 suspend_err:
     if(unlikely(debug_mask&PM_STANDBY_PRINT_RESUME)){
         pr_info("suspend_status_flag = %d. \n", suspend_status_flag);
@@ -623,8 +646,7 @@ static int aw_pm_enter(suspend_state_t state)
 {
 //  asm volatile ("stmfd sp!, {r1-r12, lr}" );
     normal_standby_func standby;
-    int i = 0;
-
+    
     PM_DBG("enter state %d\n", state);
 
     if(unlikely(debug_mask&PM_STANDBY_PRINT_REG)){
@@ -641,7 +663,7 @@ static int aw_pm_enter(suspend_state_t state)
     }
 
     standby_info.standby_para.axp_enable = standby_axp_enable;
-
+    
     if(NORMAL_STANDBY== standby_type){
         standby = (int (*)(struct aw_pm_info *arg))SRAM_FUNC_START;
         //move standby code to sram
@@ -666,8 +688,9 @@ static int aw_pm_enter(suspend_state_t state)
     }else if(SUPER_STANDBY == standby_type){
         printk("standby_mode:%d, standby_type:%d, line:%d\n",standby_mode, standby_type, __LINE__);
             print_call_info();
-            aw_super_standby(state);
+            aw_super_standby(state);    
     }
+    dogMode = pm_enable_watchdog();
     print_call_info();
 
     if(unlikely(debug_mask&PM_STANDBY_PRINT_REG)){
@@ -745,12 +768,29 @@ void aw_pm_finish(void)
 */
 void aw_pm_end(void)
 {
+    struct cpufreq_policy *policy;
+
 #ifndef GET_CYCLE_CNT
     #ifndef IO_MEASURE
             restore_perfcounter();
     #endif
 #endif
-
+    if (backup_max_freq != 0 && backup_min_freq != 0)
+    {
+        policy = cpufreq_cpu_get(0);
+        if (!policy)
+        {
+            printk("cpufreq_cpu_get err! check it! aw_pm_end:%d\n", __LINE__);
+            return;
+        }
+        
+        policy->user_policy.max = backup_max_freq;
+        policy->user_policy.min = backup_min_freq;
+        cpufreq_cpu_put(policy);
+        cpufreq_update_policy(0);
+    }
+    pm_disable_watchdog(dogMode);
+    
     if(unlikely(debug_mask&PM_STANDBY_PRINT_REG)){
         printk("after dev suspend, line:%d\n", __LINE__);
         show_reg(SW_VA_CCM_IO_BASE, (CCU_REG_LENGTH)*4, "ccu");
@@ -763,6 +803,7 @@ void aw_pm_end(void)
             show_reg(userdef_reg_addr, userdef_reg_size*4, "user defined");
         }
     }
+
     PM_DBG("aw_pm_end!\n");
 }
 
@@ -803,6 +844,133 @@ static struct platform_suspend_ops aw_pm_ops = {
     .recover = aw_pm_recover,
 };
 
+static int dram_para_script_fetch(char *sub, u32 *val)
+{
+	script_item_u script_val;
+	script_item_value_type_e type;
+	type = script_get_item("dram_para", sub, &script_val);
+	if (SCIRPT_ITEM_VALUE_TYPE_INT != type) {
+		pr_err("type err!");
+        return -1;
+	}
+	*val = script_val.val;
+	pr_info("dram config [dram_para] [%s] : %d\n", sub, *val);
+	return 0;
+}
+
+
+static int fetch_and_save_dram_para(standy_dram_para_t *pstandby_dram_para)
+{
+	int ret;
+	ret = dram_para_script_fetch( "dram_baseaddr", &pstandby_dram_para->dram_baseaddr);
+	if (ret)
+	{
+	   return -1;
+	}
+	ret = dram_para_script_fetch( "dram_clk", &pstandby_dram_para->dram_clk);
+	if (ret)
+	{
+	   return -1;
+	}
+	ret = dram_para_script_fetch( "dram_type", &pstandby_dram_para->dram_type);
+	if (ret)
+	{
+	   return -1;
+	}
+	ret = dram_para_script_fetch( "dram_rank_num", &pstandby_dram_para->dram_rank_num);
+	if (ret)
+	{
+	   return -1;
+	}
+	ret = dram_para_script_fetch( "dram_chip_density", &pstandby_dram_para->dram_chip_density);
+	if (ret)
+	{
+	   return -1;
+	}
+	ret = dram_para_script_fetch( "dram_io_width", &pstandby_dram_para->dram_io_width);
+	if (ret)
+	{
+	   return -1;
+	}
+	ret = dram_para_script_fetch( "dram_bus_width", &pstandby_dram_para->dram_bus_width);
+	if (ret)
+	{
+	   return -1;
+	}
+	ret = dram_para_script_fetch( "dram_cas", &pstandby_dram_para->dram_cas);
+	if (ret)
+	{
+	   return -1;
+	}
+	ret = dram_para_script_fetch( "dram_zq", &pstandby_dram_para->dram_zq);
+	if (ret)
+	{
+	   return -1;
+	}
+	ret = dram_para_script_fetch( "dram_odt_en", &pstandby_dram_para->dram_odt_en);
+	if (ret)
+	{
+	   return -1;
+	}
+	ret = dram_para_script_fetch( "dram_size", &pstandby_dram_para->dram_size);
+	if (ret)
+	{
+	   return -1;
+	}
+	ret = dram_para_script_fetch( "dram_tpr0", &pstandby_dram_para->dram_tpr0);
+	if (ret)
+	{
+	   return -1;
+	}
+	ret = dram_para_script_fetch( "dram_tpr1", &pstandby_dram_para->dram_tpr1);
+	if (ret)
+	{
+	   return -1;
+	}
+	ret = dram_para_script_fetch( "dram_tpr2", &pstandby_dram_para->dram_tpr2);
+	if (ret)
+	{
+	   return -1;
+	}
+	ret = dram_para_script_fetch( "dram_tpr3", &pstandby_dram_para->dram_tpr3);
+	if (ret)
+	{
+	   return -1;
+	}
+	ret = dram_para_script_fetch( "dram_tpr4", &pstandby_dram_para->dram_tpr4);
+	if (ret)
+	{
+	   return -1;
+	}
+    
+	ret = dram_para_script_fetch( "dram_tpr5", &pstandby_dram_para->dram_tpr5);
+	if (ret)
+	{
+	   return -1;
+	}
+    
+	ret = dram_para_script_fetch( "dram_emr1", &pstandby_dram_para->dram_emr1);
+	if (ret)
+	{
+	   return -1;
+	}
+    
+	ret = dram_para_script_fetch( "dram_emr2", &pstandby_dram_para->dram_emr2);
+	if (ret)
+	{
+	   return -1;
+	}
+
+    ret = dram_para_script_fetch( "dram_emr3", &pstandby_dram_para->dram_emr3);
+	if (ret)
+	{
+	   return -1;
+	}
+
+    return 0;
+}
+
+
 
 /*
 *********************************************************************************************************
@@ -825,9 +993,16 @@ static int __init aw_pm_init(void)
     int cpu0_en = 0;
     int dram_selfresh_en = 0;
     int wakeup_src_cnt = 0;
-
+    
     PM_DBG("aw_pm_init!\n");
 
+    if (fetch_and_save_dram_para(&standby_info.dram_para) != 0)
+    {
+        memset(&standby_info.dram_para, 0, sizeof(standby_info.dram_para));
+        pr_err("%s: fetch_and_save_dram_para err. \n", __func__);
+    }
+    memcpy(&mem_para_info.dram_para, &standby_info.dram_para, sizeof(standby_info.dram_para));
+    
     //get standby_mode.
     if(SCIRPT_ITEM_VALUE_TYPE_INT != script_get_item("pm_para", "standby_mode", &item)){
         pr_err("%s: script_parser_fetch err. \n", __func__);
@@ -869,7 +1044,7 @@ static int __init aw_pm_init(void)
             pr_info("notice: only support ns, standby_mode = %d.\n", standby_mode);
         }
     }
-
+    
     //get wakeup_src_cnt
     wakeup_src_cnt = script_get_pio_list("wakeup_src_para",&list);
     pr_info("wakeup src cnt is : %d. \n", wakeup_src_cnt);
@@ -878,7 +1053,7 @@ static int __init aw_pm_init(void)
     mem_para_info.cpus_gpio_wakeup = 0;
 
 /*to fix: add wake src in config.bin*/
-#if 0
+#if 0  
     if(0 != wakeup_src_cnt){
         unsigned gpio = 0;
         int i = 0;
@@ -906,6 +1081,9 @@ static int __init aw_pm_init(void)
             mem_para_info.cpus_gpio_wakeup);
     }
 #endif
+    init_pgd((unsigned int *)DRAM_STANDBY_PGD_ADDR);
+    printk("DRAM_STANDBY_PGD_ADDR:%x\n",DRAM_STANDBY_PGD_ADDR);
+    dmac_flush_range((void *)DRAM_STANDBY_PGD_ADDR, (void *)(DRAM_STANDBY_PGD_ADDR + SZ_32K - 1));
     suspend_set_ops(&aw_pm_ops);
 
     return 0;
@@ -983,5 +1161,8 @@ module_param_named(suspend_freq, suspend_freq, int, S_IRUGO | S_IWUSR | S_IWGRP)
 module_param_named(suspend_delay_ms, suspend_delay_ms, int, S_IRUGO | S_IWUSR | S_IWGRP);
 module_param_named(userdef_reg_addr, userdef_reg_addr, ulong, S_IRUGO | S_IWUSR | S_IWGRP);
 module_param_named(userdef_reg_size, userdef_reg_size, int, S_IRUGO | S_IWUSR | S_IWGRP);
+module_param_named(standby_crc_addr, standby_crc_addr, ulong, S_IRUGO | S_IWUSR | S_IWGRP);
+module_param_named(standby_crc_size, standby_crc_size, int, S_IRUGO | S_IWUSR | S_IWGRP);
 module_init(aw_pm_init);
 module_exit(aw_pm_exit);
+

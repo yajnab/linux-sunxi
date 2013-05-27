@@ -18,9 +18,10 @@ for i in 1 2 3 4 5 6 7 8 9 10; do
     $SYSLOG "wlan_tool waiting for ar6k loading"
     sleep 1
 done
-
+	
 $SYSLOG "wlan_tool ar6003 driver loaded"
 setprop $DRIVER_PROP_NAME "ok"
 
 #$SYSLOG "wlan_tool ar6003 driver fails to load"
 #setprop $DRIVER_PROP_NAME "failed"
+

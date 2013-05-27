@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="hif.c" company="Atheros">
 //    Copyright (c) 2004-2007 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -34,7 +34,7 @@ ATH_DEBUG_INSTANTIATE_MODULE_VAR(hif,
                                  ATH_DEBUG_MASK_DEFAULTS,
                                  0,
                                  NULL);
-
+                                 
 #endif
 
 /* ------ Static Variables ------ */
@@ -106,7 +106,7 @@ A_STATUS HIFInit(OSDRV_CALLBACKS *callbacks)
     A_REGISTER_MODULE_DEBUG_INFO(hif);
 
     /* store the callback handlers */
-    osdrvCallbacks = *callbacks;
+    osdrvCallbacks = *callbacks;    
     CriticalSectionInit(&lock);
 
     /* Register with bus driver core */
@@ -159,7 +159,7 @@ HIFReadWrite(HIF_DEVICE *device,
         } else if (request & HIF_ASYNCHRONOUS) {
             sdrequest->Flags = SDREQ_FLAGS_RESP_SDIO_R5 | SDREQ_FLAGS_DATA_TRANS |
                                SDREQ_FLAGS_TRANS_ASYNC;
-            busrequest->hifDevice = device;
+            busrequest->hifDevice = device;                   
             sdrequest->pCompleteContext = busrequest;
             sdrequest->pCompletion = hifRWCompletionHandler;
             AR_DEBUG_PRINTF(ATH_DEBUG_TRACE, ("Execution mode: Asynchronous\n"));
@@ -215,9 +215,9 @@ HIFReadWrite(HIF_DEVICE *device,
             if ((address >= HIF_MBOX_START_ADDR(0)) &&
                 (address <= HIF_MBOX_END_ADDR(3)))
             {
-
+    
                 DBG_ASSERT(length <= HIF_MBOX_WIDTH);
-
+    
                 /*
                  * Mailbox write. Adjust the address so that the last byte
                  * falls on the EOM address.
@@ -300,13 +300,13 @@ HIFConfigureDevice(HIF_DEVICE *device, HIF_DEVICE_CONFIG_OPCODE opcode,
         case HIF_DEVICE_GET_MBOX_ADDR:
             for (count = 0; count < 4; count ++) {
                 ((A_UINT32 *)config)[count] = HIF_MBOX_START_ADDR(count);
-            }
+            }     
 
-            if (configLen >= sizeof(HIF_DEVICE_MBOX_INFO)) {
+            if (configLen >= sizeof(HIF_DEVICE_MBOX_INFO)) {    
                 SetExtendedMboxWindowInfo(SDDEVICE_GET_SDIO_MANFID(device->handle),
                                           (HIF_DEVICE_MBOX_INFO *)config);
             }
-
+              
             break;
         case HIF_DEVICE_GET_IRQ_PROC_MODE:
                 /* the SDIO stack allows the interrupts to be processed either way, ASYNC or SYNC */
@@ -314,7 +314,7 @@ HIFConfigureDevice(HIF_DEVICE *device, HIF_DEVICE_CONFIG_OPCODE opcode,
             break;
         case HIF_CONFIGURE_QUERY_SCATTER_REQUEST_SUPPORT:
             if (nohifscattersupport) {
-                return A_ERROR;
+                return A_ERROR;    
             }
             return SetupHIFScatterSupport(device, (HIF_DEVICE_SCATTER_SUPPORT_INFO *)config);
         case HIF_DEVICE_GET_OS_DEVICE:
@@ -323,10 +323,10 @@ HIFConfigureDevice(HIF_DEVICE *device, HIF_DEVICE_CONFIG_OPCODE opcode,
                 return A_ERROR;
             }
             ((HIF_DEVICE_OS_DEVICE_INFO *)config)->pOSDevice = SD_GET_HCD_OS_DEVICE(device->handle);
-            break;
-        case HIF_DEVICE_DEBUG_BUS_STATE:
-            SDLIB_IssueConfig(device->handle,SDCONFIG_DUMP_HCD_STATE,NULL,0);
-            break;
+            break;    
+        case HIF_DEVICE_DEBUG_BUS_STATE:            
+            SDLIB_IssueConfig(device->handle,SDCONFIG_DUMP_HCD_STATE,NULL,0);        
+            break;           
         default:
             AR_DEBUG_PRINTF(ATH_DEBUG_WARN,
                             ("Unsupported configuration opcode: %d\n", opcode));
@@ -344,7 +344,7 @@ HIFShutDownDevice(HIF_DEVICE *device)
     SDCONFIG_FUNC_ENABLE_DISABLE_DATA fData;
 
     AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("rtc_reset_only_on_exit : %d\n",rtc_reset_only_on_exit));
-
+    
     if (device != NULL) {
         DBG_ASSERT(device->handle != NULL);
 
@@ -352,7 +352,7 @@ HIFShutDownDevice(HIF_DEVICE *device)
         status = SDLIB_IssueConfig(device->handle,
                                    SDCONFIG_FUNC_FREE_SLOT_CURRENT, NULL, 0);
         DBG_ASSERT(SDIO_SUCCESS(status));
-
+    
         if (!rtc_reset_only_on_exit) {
             /* Disable the card */
             fData.EnableFlags = SDCONFIG_DISABLE_FUNC;
@@ -444,14 +444,14 @@ hifIRQHandler(void *context)
 static void hifAssignTargetHeaders(A_UINT16 SDIO_ManufacturerID)
 {
      switch (SDIO_ManufacturerID) {
-         case MANUFACTURER_ID_AR6003_BASE:
+         case MANUFACTURER_ID_AR6003_BASE: 
              hif_register_tbl_attach(HIF_TYPE_AR6003);
          break;
 
-         case MANUFACTURER_ID_MCKINLEY_BASE:
+         case MANUFACTURER_ID_MCKINLEY_BASE: 
              hif_register_tbl_attach(HIF_TYPE_MCKINLEY);
          break;
-         default:
+         default: 
              hif_register_tbl_attach(HIF_TYPE_AR6003);
          break;
     }
@@ -475,7 +475,7 @@ hifDeviceInserted(SDFUNCTION *function, SDDEVICE *handle)
     DBG_ASSERT(function != NULL);
     DBG_ASSERT(handle != NULL);
 
-    functionContext =  (TARGET_FUNCTION_CONTEXT *)function->pContext;
+    functionContext =  (TARGET_FUNCTION_CONTEXT *)function->pContext;  
 
     /*
      * Issue commands to get the manufacturer ID and stuff and compare it
@@ -526,8 +526,8 @@ hifDeviceInserted(SDFUNCTION *function, SDDEVICE *handle)
             busSettings.BusModeFlags &= ~SDCONFIG_BUS_MODE_SD_HS;
             AR_DEBUG_PRINTF(ATH_DEBUG_WARN,
                             ("HIF overriding clock to %d , disabling HS \n",busSettings.ClockRate));
-        }
-
+        }        
+        
     } else {
             /* see if HIF wants to run at a lower clock speed, we may already be
              * at that lower clock speed */
@@ -538,10 +538,10 @@ hifDeviceInserted(SDFUNCTION *function, SDDEVICE *handle)
         }
     }
 
-    if ((SDDEVICE_GET_SDIO_MANFID(handle) &
+    if ((SDDEVICE_GET_SDIO_MANFID(handle) & 
             MANUFACTURER_ID_AR6K_BASE_MASK) == MANUFACTURER_ID_AR6003_BASE) {
             /* for AR6003, enable 4-bit ASYNC I/O interrupts if we are running in 4-bit mode  */
-        if (SDDEVICE_GET_BUSWIDTH(handle) == SDCONFIG_BUS_WIDTH_4_BIT) {
+        if (SDDEVICE_GET_BUSWIDTH(handle) == SDCONFIG_BUS_WIDTH_4_BIT) {               
             data = SDIO_IRQ_MODE_ASYNC_4BIT_IRQ;
                 /* write to FUNC0 (CCCR) register space */
             status = SDLIB_IssueCMD52(handle, 0, CCCR_SDIO_IRQ_MODE_REG, &data, 1, TRUE);
@@ -550,8 +550,8 @@ hifDeviceInserted(SDFUNCTION *function, SDDEVICE *handle)
                                 ("HIF: Unable to set ASYNC 4-bit IRQ mode\n"));
                 return FALSE;
             } else {
-                AR_DEBUG_PRINTF(ATH_DEBUG_WARN,("HIF: ASYNC 4-bit IRQ enabled \n"));
-            }
+                AR_DEBUG_PRINTF(ATH_DEBUG_WARN,("HIF: ASYNC 4-bit IRQ enabled \n"));    
+            }  
         }
     }
 
@@ -627,7 +627,7 @@ hifDeviceInserted(SDFUNCTION *function, SDDEVICE *handle)
                       SDCONFIG_FUNC_NO_IRQ_PEND_CHECK,
                       NULL,
                       0);
-
+                                   
     /* Enable the I/O function */
     count = 0;
     enabled = FALSE;
@@ -673,7 +673,7 @@ hifDeviceInserted(SDFUNCTION *function, SDDEVICE *handle)
     {
         /* Add a device handle only when we claim the device */
         HIF_DEVICE *device;
-
+    
         device = addHifDevice(handle);
         AR_DEBUG_PRINTF(ATH_DEBUG_TRACE, ("Device: %p\n", device));
         DL_LIST_INIT(&device->ScatterReqHead);
@@ -791,12 +791,12 @@ hifDeviceRemoved(SDFUNCTION *function, SDDEVICE *handle)
 {
     HIF_DEVICE *device;
     A_UINT32 count;
-
+    
     DBG_ASSERT(function != NULL);
     DBG_ASSERT(handle != NULL);
 
     device = getHifDevice(handle);
-
+                            
     if (device->claimedContext != NULL) {
             /* device was claimed, call the removal handler */
         osdrvCallbacks.deviceRemovedHandler(device->claimedContext, device);
@@ -817,10 +817,10 @@ hifDeviceRemoved(SDFUNCTION *function, SDDEVICE *handle)
     }
     /* Clean up the queue */
     s_busRequestFreeQueue = NULL;
-
+    
     CleanupHIFScatterResources(device);
-
-    delHifDevice(handle);
+        
+    delHifDevice(handle);  
 }
 
 HIF_DEVICE *
@@ -876,21 +876,21 @@ static void ResetAllCards(void)
 
 void HIFClaimDevice(HIF_DEVICE  *device, void *context)
 {
-    device->claimedContext = context;
+    device->claimedContext = context;   
 }
 
 void HIFReleaseDevice(HIF_DEVICE  *device)
 {
-    device->claimedContext = NULL;
+    device->claimedContext = NULL;    
 }
 
 A_STATUS HIFAttachHTC(HIF_DEVICE *device, HTC_CALLBACKS *callbacks)
 {
     if (device->htcCallbacks.context != NULL) {
             /* already in use! */
-        return A_ERROR;
+        return A_ERROR;    
     }
-    device->htcCallbacks = *callbacks;
+    device->htcCallbacks = *callbacks; 
     return A_OK;
 }
 
@@ -906,3 +906,9 @@ A_STATUS hifWaitForPendingRecv(HIF_DEVICE *device)
 {
     return A_OK;
 }
+
+
+
+
+
+

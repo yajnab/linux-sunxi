@@ -2,7 +2,7 @@
 # <copyright file="makefile" company="Atheros">
 #    Copyright (c) 2005-2010 Atheros Corporation.  All rights reserved.
 #
-#
+# 
 #
 # Permission to use, copy, modify, and/or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -31,8 +31,9 @@ LOCAL_C_INCLUDES := \
     $(LOCAL_PATH)/../../os/linux/include \
     $(LOCAL_PATH)/../../../include \
 
-LOCAL_CFLAGS+=
+LOCAL_CFLAGS+= 
 LOCAL_SRC_FILES:= debugctrl.c
 LOCAL_MODULE := drvdebugctrl
 LOCAL_MODULE_TAGS := debug eng optional
 include $(BUILD_EXECUTABLE)
+

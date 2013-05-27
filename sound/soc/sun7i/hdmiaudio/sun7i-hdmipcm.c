@@ -2,7 +2,7 @@
  * sound\soc\sun7i\hdmiaudio\sun7i-hdmipcm.c
  * (C) Copyright 2007-2011
  * Reuuimlla Technology Co., Ltd. <www.reuuimllatech.com>
- * chenpailin <chenpailin@Reuuimllatech.com>
+ * huangxin <huangxin@Reuuimllatech.com>
  *
  * some simple description for this code
  *
@@ -19,17 +19,13 @@
 #include <linux/platform_device.h>
 #include <linux/slab.h>
 #include <linux/dma-mapping.h>
-
 #include <sound/core.h>
 #include <sound/pcm.h>
 #include <sound/pcm_params.h>
 #include <sound/soc.h>
-
 #include <asm/dma.h>
 #include <mach/hardware.h>
 #include <mach/dma.h>
-
-#include "sun7i-hdmiaudio.h"
 #include "sun7i-hdmipcm.h"
 static volatile unsigned int dmasrc = 0;
 static volatile unsigned int dmadst = 0;
@@ -43,13 +39,13 @@ static const struct snd_pcm_hardware sun7i_pcm_hardware = {
 	.rate_min		= 8000,
 	.rate_max		= 192000,
 	.channels_min		= 1,
-	.channels_max		= 2,
+	.channels_max		= 4,
 	.buffer_bytes_max	= 128*1024,    /* value must be (2^n)Kbyte size */
-	.period_bytes_min	= 1024*4,//1024*4,
-	.period_bytes_max	= 1024*32,//1024*32,
-	.periods_min		= 4,//4,
-	.periods_max		= 8,//8,
-	.fifo_size		= 128,//32,
+	.period_bytes_min	= 1024*4,
+	.period_bytes_max	= 1024*32,
+	.periods_min		= 2,
+	.periods_max		= 8,
+	.fifo_size			= 128,
 };
 
 struct sun7i_runtime_data {
@@ -73,17 +69,16 @@ static void sun7i_pcm_enqueue(struct snd_pcm_substream *substream)
 	dma_addr_t pos = prtd->dma_pos;
 	unsigned int limit;
 	int ret;
-
 	unsigned long len = prtd->dma_period;
-	limit = prtd->dma_limit;
-	while(prtd->dma_loaded < limit)
+  	limit = prtd->dma_limit;
+  	while(prtd->dma_loaded < limit)
 	{
 		if((pos + len) > prtd->dma_end){
 			len  = prtd->dma_end - pos;
 		}
-
+		
 		ret = sw_dma_enqueue(prtd->dma_hdl, pos, prtd->params->dma_addr, len);
-
+	
 		if (ret == 0) {
 			prtd->dma_loaded++;
 			pos += prtd->dma_period;
@@ -92,7 +87,7 @@ static void sun7i_pcm_enqueue(struct snd_pcm_substream *substream)
 		}else {
 			break;
 		}
-
+	  
 	}
 	prtd->dma_pos = pos;
 }
@@ -104,7 +99,7 @@ static void sun7i_audio_buffdone(dma_hdl_t dma_hdl, void *parg)
 	prtd = substream->runtime->private_data;
 		if (substream) {
 			snd_pcm_period_elapsed(substream);
-		}
+		}	
 
 	spin_lock(&prtd->lock);
 	{
@@ -121,13 +116,13 @@ static int sun7i_pcm_hw_params(struct snd_pcm_substream *substream,
 	struct sun7i_runtime_data *prtd = runtime->private_data;
 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
 	unsigned long totbytes = params_buffer_bytes(params);
-	struct sun7i_dma_params *dma =
+	struct sun7i_dma_params *dma = 
 					snd_soc_dai_get_dma_data(rtd->cpu_dai, substream);
 
-
+	
 	if (!dma)
 		return 0;
-
+		
 	if (prtd->params == NULL) {
 		prtd->params = dma;
 			/*
@@ -152,7 +147,7 @@ static int sun7i_pcm_hw_params(struct snd_pcm_substream *substream,
 		sw_dma_release(prtd->dma_hdl);
 		return -EINVAL;
 	}
-
+		
 	snd_pcm_set_runtime_buffer(substream, &substream->dma_buffer);
 
 	runtime->dma_bytes = totbytes;
@@ -171,11 +166,11 @@ static int sun7i_pcm_hw_params(struct snd_pcm_substream *substream,
 static int sun7i_pcm_hw_free(struct snd_pcm_substream *substream)
 {
 	struct sun7i_runtime_data *prtd = substream->runtime->private_data;
+	
 
-
-
+  	
 	snd_pcm_set_runtime_buffer(substream, NULL);
-
+  
 	if (prtd->params) {
 			/*
 		 * stop play dma transfer
@@ -201,11 +196,11 @@ static int sun7i_pcm_prepare(struct snd_pcm_substream *substream)
 	struct sun7i_runtime_data *prtd = substream->runtime->private_data;
 	dma_config_t codec_dma_conf;
 	int ret = 0;
-
+	//printk("pcm:::%s,line:%d\n", __func__, __LINE__);
 	if (!prtd->params)
 		return 0;
-
-	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK){
+		
+   	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK){
 		memset(&codec_dma_conf, 0, sizeof(codec_dma_conf));
 		codec_dma_conf.xfer_type.src_data_width 	= DATA_WIDTH_32BIT;
 		codec_dma_conf.xfer_type.src_bst_len 	= DATA_BRST_4;
@@ -229,14 +224,14 @@ static int sun7i_pcm_prepare(struct snd_pcm_substream *substream)
 			para.dst_wait_cyc 	= 0;*/
 			u32 tmp = 0x1F071F07;
 			if(0 != sw_dma_ctl(prtd->dma_hdl, DMA_OP_SET_PARA_REG, &tmp)) {
-
+				
 				return -EINVAL;
 			}
-
+			
 		}else{
 		return -EINVAL;
 		}
-
+		
 	/* flush the DMA channel */
 	/*sw_dma_ctrl(prtd->params->channel, SW_DMAOP_FLUSH);*/
 	prtd->dma_loaded = 0;
@@ -244,7 +239,7 @@ static int sun7i_pcm_prepare(struct snd_pcm_substream *substream)
 	/* enqueue dma buffers */
 	sun7i_pcm_enqueue(substream);
 
-	return ret;
+	return ret;	
 }
 
 static int sun7i_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
@@ -257,20 +252,21 @@ static int sun7i_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
 	case SNDRV_PCM_TRIGGER_START:
 	case SNDRV_PCM_TRIGGER_RESUME:
 	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-		printk("[HDMI-AUDIO] PCM trigger start...\n");
+		
 		/*
 		* start dma transfer
 		*/
+		
 		if (0 != sw_dma_ctl(prtd->dma_hdl, DMA_OP_START, NULL)) {
 			printk("%s err, dma start err\n", __FUNCTION__);
 			return -EINVAL;
 		}
 		break;
-
+		
 	case SNDRV_PCM_TRIGGER_SUSPEND:
 	case SNDRV_PCM_TRIGGER_STOP:
 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-		printk("[HDMI-AUDIO] PCM trigger stop...\n");
+		
 		/*
 		* stop play dma transfer
 		*/
@@ -295,9 +291,9 @@ static snd_pcm_uframes_t sun7i_pcm_pointer(struct snd_pcm_substream *substream)
 	struct sun7i_runtime_data *prtd = runtime->private_data;
 	unsigned long res = 0;
 	snd_pcm_uframes_t offset = 0;
-
+	
 	spin_lock(&prtd->lock);
-
+	
 	sw_dma_getposition(prtd->dma_hdl, (dma_addr_t*)&dmasrc, (dma_addr_t*)&dmadst);
 
 	if (substream->stream == SNDRV_PCM_STREAM_CAPTURE)
@@ -320,11 +316,11 @@ static int sun7i_pcm_open(struct snd_pcm_substream *substream)
 
 	snd_pcm_hw_constraint_integer(runtime, SNDRV_PCM_HW_PARAM_PERIODS);
 	snd_soc_set_runtime_hwparams(substream, &sun7i_pcm_hardware);
-
+	
 	prtd = kzalloc(sizeof(struct sun7i_runtime_data), GFP_KERNEL);
 	if (prtd == NULL)
 		return -ENOMEM;
-
+		
 	spin_lock_init(&prtd->lock);
 
 	runtime->private_data = prtd;
@@ -335,9 +331,9 @@ static int sun7i_pcm_close(struct snd_pcm_substream *substream)
 {
 	struct snd_pcm_runtime *runtime = substream->runtime;
 	struct sun7i_runtime_data *prtd = runtime->private_data;
-
+	
 	kfree(prtd);
-
+	
 	return 0;
 }
 
@@ -345,7 +341,7 @@ static int sun7i_pcm_mmap(struct snd_pcm_substream *substream,
 	struct vm_area_struct *vma)
 {
 	struct snd_pcm_runtime *runtime = substream->runtime;
-
+	
 	return dma_mmap_writecombine(substream->pcm->card->dev, vma,
 				     runtime->dma_area,
 				     runtime->dma_addr,
@@ -408,7 +404,7 @@ static int sun7i_pcm_new(struct snd_soc_pcm_runtime *rtd)
 {
 	struct snd_card *card = rtd->card->snd_card;
 	struct snd_pcm *pcm = rtd->pcm;
-
+	
 	int ret = 0;
 
 	if (!card->dev->dma_mask)
@@ -467,13 +463,13 @@ static struct platform_driver sun7i_hdmiaudio_pcm_driver = {
 
 static int __init sun7i_soc_platform_hdmiaudio_init(void)
 {
-	int err = 0;
+	int err = 0;	
 	if((err = platform_device_register(&sun7i_hdmiaudio_pcm_device)) < 0)
 		return err;
 
 	if ((err = platform_driver_register(&sun7i_hdmiaudio_pcm_driver)) < 0)
 		return err;
-	return 0;
+	return 0;	
 }
 module_init(sun7i_soc_platform_hdmiaudio_init);
 
@@ -486,3 +482,4 @@ module_exit(sun7i_soc_platform_hdmiaudio_exit);
 MODULE_AUTHOR("All winner");
 MODULE_DESCRIPTION("SUN7I HDMIAUDIO DMA module");
 MODULE_LICENSE("GPL");
+

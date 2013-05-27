@@ -68,7 +68,7 @@ Version History.
 #define LIS3DE_ACC_I2C_SAD_H		((LIS3DE_ACC_I2C_SADROOT<<1)| \
 						LIS3DE_SAD0H)
 
-/* to set gpios numb connected to interrupt pins,
+/* to set gpios numb connected to interrupt pins, 
 * the unused ones have to be set to -EINVAL
 */
 #define LIS3DE_ACC_DEFAULT_INT1_GPIO		(-EINVAL)
@@ -110,3 +110,6 @@ struct lis3de_acc_platform_data {
 #endif	/* __KERNEL__ */
 
 #endif	/* __LIS3DE_H__ */
+
+
+

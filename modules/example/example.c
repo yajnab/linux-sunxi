@@ -16,3 +16,4 @@ static void __exit example_exit(void)
 module_exit(example_exit);
 
 MODULE_LICENSE("GPL");
+

@@ -21,7 +21,7 @@
 void dfs_radar_task (unsigned long arg)
 {
     struct ath_dfs_host *dfs = (struct ath_dfs_host *)arg;
-    A_INT16 chan_index;
+    A_INT16 chan_index; 
     A_UINT8 bangradar;
 
     //printk("\n%s\n",__func__);
@@ -36,8 +36,10 @@ void dfs_radar_task (unsigned long arg)
          * context which could potentially cause issues with sleepable
          * WMI. Change this to process context later. */
         DFS_RADAR_DETECTED(dfs->dev_hdl, chan_index, bangradar);
-    }
+    } 
 
 }
 
 #endif /* ATH_SUPPORT_DFS */
+
+

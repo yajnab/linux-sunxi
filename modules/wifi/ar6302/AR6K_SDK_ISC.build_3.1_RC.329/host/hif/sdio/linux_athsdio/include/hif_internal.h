@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="hif_internal.h" company="Atheros">
 //    Copyright (c) 2004-2007 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -56,16 +56,16 @@
 
     /* full scatter gather support */
 typedef struct _HIF_SCATTER_DMA_REAL_INFO {
-    SDDMA_DESCRIPTOR SDSGList[MAX_SCATTER_ENTRIES_PER_REQ];
+    SDDMA_DESCRIPTOR SDSGList[MAX_SCATTER_ENTRIES_PER_REQ];   
 } HIF_SCATTER_DMA_REAL_INFO;
 
     /* SG using DMA bounce buffer */
 typedef struct _HIF_SCATTER_DMA_BOUNCE_INFO {
-    SDDMA_DESCRIPTOR   SGList[1];        /* only need one for the bounce buffer, on linux the bounce buffer
+    SDDMA_DESCRIPTOR   SGList[1];        /* only need one for the bounce buffer, on linux the bounce buffer 
                                             is contiguous */
     A_UINT8            *pBounceBuffer;   /* bounce buffer */
     A_UINT32           BufferSize;       /* dma buffer size */
-    A_UINT32           AlignmentOffset;  /* any alignment offset that needs to be applied */
+    A_UINT32           AlignmentOffset;  /* any alignment offset that needs to be applied */             
 } HIF_SCATTER_DMA_BOUNCE_INFO;
 
 
@@ -86,7 +86,7 @@ struct hif_device {
     HTC_CALLBACKS htcCallbacks;
     OSKERNEL_HELPER insert_helper;
     BOOL  helper_started;
-    DL_LIST      ScatterReqHead;
+    DL_LIST      ScatterReqHead;   
     HIF_SCATTER_METHOD  ScatterMethod;
 };
 

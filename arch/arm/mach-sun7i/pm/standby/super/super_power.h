@@ -87,3 +87,5 @@ extern __s32 mem_get_voltage(enum power_vol_type_e type);
 
 
 #endif  /* __SUPER_POWER_H__ */
+
+

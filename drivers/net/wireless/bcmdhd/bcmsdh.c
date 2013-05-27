@@ -74,6 +74,26 @@ bcmsdh_enable_hw_oob_intr(bcmsdh_info_t *sdh, bool enable)
 }
 #endif
 
+#if defined(HW_OOB)
+#include <sbchipc.h>
+void
+bcmsdh_config_hw_oob_intr(bcmsdh_info_t *sdh, uint chip)
+{
+	uint32 gpiocontrol, addr;
+
+ 	printf("%s: Enter\n", __FUNCTION__);
+	if (CHIPID(chip) == BCM43362_CHIP_ID) {
+		addr = SI_ENUM_BASE + OFFSETOF(chipcregs_t, gpiocontrol);
+		gpiocontrol = bcmsdh_reg_read(sdh, addr, 4);
+		gpiocontrol |= 0x2;
+		bcmsdh_reg_write(sdh, addr, 4, gpiocontrol);
+		bcmsdh_cfg_write(sdh, SDIO_FUNC_1, 0x10005, 0xf, NULL);
+		bcmsdh_cfg_write(sdh, SDIO_FUNC_1, 0x10006, 0x0, NULL);
+		bcmsdh_cfg_write(sdh, SDIO_FUNC_1, 0x10007, 0x2, NULL);
+	}
+}
+#endif
+
 /* Attach BCMSDH layer to SDIO Host Controller Driver
  *
  * @param osh OSL Handle.

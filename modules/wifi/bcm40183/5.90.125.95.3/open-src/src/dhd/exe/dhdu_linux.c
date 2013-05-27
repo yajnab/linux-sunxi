@@ -2,13 +2,13 @@
  * Linux port of dhd command line utility, hacked from wl utility.
  *
  * Copyright (C) 1999-2011, Broadcom Corporation
- *
+ * 
  *         Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- *
+ * 
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -16,7 +16,7 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- *
+ * 
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
@@ -91,7 +91,7 @@ syserr(char *s)
 	exit(errno);
 }
 
-/* This function is called by ioctl_setinformation_fe or ioctl_queryinformation_fe
+/* This function is called by ioctl_setinformation_fe or ioctl_queryinformation_fe 
  * for executing  remote commands or local commands
  */
 static int
@@ -138,7 +138,7 @@ dhd_ioctl(void *dhd, int cmd, void *buf, int len, bool set)
 	return ret;
 }
 
-/* This function is called in wlu_pipe.c remote_wifi_ser_init() to execute
+/* This function is called in wlu_pipe.c remote_wifi_ser_init() to execute 
  * the initial set of wl commands for wifi transport (e.g slow_timer, fast_timer etc)
  */
 int wl_ioctl(void *wl, int cmd, void *buf, int len, bool set)
@@ -146,7 +146,7 @@ int wl_ioctl(void *wl, int cmd, void *buf, int len, bool set)
 	return dhd_ioctl(wl, cmd, buf, len, set); /* Call actual wl_ioctl here: Shubhro */
 }
 
-/* Search if dhd adapter or wl adapter is present
+/* Search if dhd adapter or wl adapter is present 
  * This is called by dhd_find to check if it supports wl or dhd
  * The reason for checking wl adapter is that we can still send remote dhd commands over
  * wifi transport.
@@ -249,7 +249,7 @@ wl_check(void *wl)
 	if (!dhd_check (wl))
 		return 0;
 
-	/*
+	/* 
 	 *  If dhd_check() fails then go for a regular wl driver verification
 	 */
 	if ((ret = wl_get(wl, WLC_GET_MAGIC, &val, sizeof(int))) < 0)
@@ -330,7 +330,7 @@ ioctl_setinformation_fe(void *wl, int cmd, void* buf, int *len)
 	}
 }
 
-/* The function is replica of wl_get in wlu_linux.c. Optimize when we have some
+/* The function is replica of wl_get in wlu_linux.c. Optimize when we have some 
  * common code between wlu_linux.c and dhdu_linux.c
  */
 int
@@ -352,7 +352,7 @@ wl_get(void *wl, int cmd, void *buf, int len)
 	return error;
 }
 
-/* The function is replica of wl_set in wlu_linux.c. Optimize when we have some
+/* The function is replica of wl_set in wlu_linux.c. Optimize when we have some 
  * common code between wlu_linux.c and dhdu_linux.c
  */
 int
@@ -499,7 +499,7 @@ main(int argc, char **argv)
 
 	return err;
 }
-/*
+/* 
  * Function called for  'local' execution and for 'remote' non-interactive session
  * (shell cmd, wl cmd) .The code is mostly from wlu_linux.c. This code can be
  * common to wlu_linux.c and dhdu_linux.c

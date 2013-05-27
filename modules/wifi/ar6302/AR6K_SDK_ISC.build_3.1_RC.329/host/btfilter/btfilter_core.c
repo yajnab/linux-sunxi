@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="btfilter_core.c" company="Atheros">
 //    Copyright (c) 2007 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -42,21 +42,21 @@ ATH_DEBUG_INSTANTIATE_MODULE_VAR(btfilt,
                                  ATH_DEBUG_MASK_DEFAULTS,
                                  0,
                                  NULL);
-
+                                 
 #endif
 
 #define IS_STATE_FILTER_IGNORED(pCore,indication) ((pCore)->StateFilterIgnore & (1 << (indication)))
 
 static A_BOOL IsACLSignaling(BT_FILTER_CORE_INFO *pCore,
-                             A_UINT8             *pBuffer,
+                             A_UINT8             *pBuffer, 
                              int                 Length);
 
 static A_BOOL IsA2DPConnection(BT_FILTER_CORE_INFO *pCore,
-                               A_UINT8             *pBuffer,
+                               A_UINT8             *pBuffer, 
                                int                 Length);
 
 static void ParseACLPacket(BT_FILTER_CORE_INFO *pCore,
-                           A_UINT8             *pBuffer,
+                           A_UINT8             *pBuffer, 
                            int                 Length);
 
 static void ProcessA2DPconnection(BT_FILTER_CORE_INFO *pCore,
@@ -64,7 +64,7 @@ static void ProcessA2DPconnection(BT_FILTER_CORE_INFO *pCore,
                                   A_BOOL              IsConnect);
 
 static ATHBT_STATE_INDICATION A2DP_StateIndication(BT_FILTER_CORE_INFO *pCore,
-                                                   A_UINT8             *pBuffer,
+                                                   A_UINT8             *pBuffer, 
                                                    int                 Length,
                                                    ATHBT_STATE         *pNewState);
 
@@ -231,7 +231,7 @@ ATHBT_STATE_INDICATION FCore_FilterBTEvent(BT_FILTER_CORE_INFO *pCore, A_UINT8 *
             break;
 
         case HCI_EVT_CONNECT_COMPLETE :
-
+                         
             if (BT_CONN_EVENT_STATUS_SUCCESS(pBuffer)) {
                 FilterConnectDisconnectComplete(pCore,
                                                 GET_BT_CONN_LINK_TYPE(pBuffer),
@@ -240,7 +240,7 @@ ATHBT_STATE_INDICATION FCore_FilterBTEvent(BT_FILTER_CORE_INFO *pCore, A_UINT8 *
                                                 &indication,
                                                 &state);
             }
-
+                                       
             break;
 
         case HCI_EVT_CONNECT_REQUEST :
@@ -329,63 +329,63 @@ A_UINT32 FCore_GetCurrentBTStateBitMap(BT_FILTER_CORE_INFO    *pCore)
 }
 
 ATHBT_STATE_INDICATION FCore_FilterACLDataIn(BT_FILTER_CORE_INFO *pCore,
-                                             A_UINT8             *pBuffer,
-                                             int                 Length,
+                                             A_UINT8             *pBuffer, 
+                                             int                 Length, 
                                              ATHBT_STATE         *pNewState)
 {
     ATHBT_STATE_INDICATION  stateIndication = ATH_BT_NOOP;
-
+   
     *pNewState  = STATE_OFF;
-
+    
     do {
-
+        
         if (IS_STATE_FILTER_IGNORED(pCore, ATH_BT_A2DP)) {
             /* we only filter for A2DP stream state if the OS-ported layer
              * cannot do it */
             break;
         }
-
+        
         /***** the following code filters for A2DP stream state ONLY *****/
-
+        
             /* filter ACL packets for application specific traffic */
         if (IsACLSignaling(pCore,pBuffer,Length)) {
-		ParseACLPacket(pCore,pBuffer,Length);
+        	ParseACLPacket(pCore,pBuffer,Length);
         } else if ( IsA2DPConnection(pCore,pBuffer,Length)) {
-		stateIndication = A2DP_StateIndication(pCore,pBuffer,Length,pNewState);
-        }
-
-    } while (FALSE);
-
-    return stateIndication;
+        	stateIndication = A2DP_StateIndication(pCore,pBuffer,Length,pNewState);
+        }   
+        
+    } while (FALSE);	
+  
+    return stateIndication;    
 }
 
-ATHBT_STATE_INDICATION FCore_FilterACLDataOut(BT_FILTER_CORE_INFO *pCore,
-                                              A_UINT8             *pBuffer,
-                                              int                 Length,
+ATHBT_STATE_INDICATION FCore_FilterACLDataOut(BT_FILTER_CORE_INFO *pCore, 
+                                              A_UINT8             *pBuffer, 
+                                              int                 Length, 
                                               ATHBT_STATE         *pNewState)
-{
+{ 
     ATHBT_STATE_INDICATION  stateIndication = ATH_BT_NOOP;
-
+      
     *pNewState  = STATE_OFF;
-
+        
     do {
-
+        
         if (IS_STATE_FILTER_IGNORED(pCore, ATH_BT_A2DP)) {
             /* we only filter for A2DP stream state if the OS-ported layer
              * cannot do it */
             break;
         }
-
+        
         /***** the following code filters for A2DP stream state ONLY *****/
-
+             
         if (IsACLSignaling(pCore,pBuffer,Length)) {
-		ParseACLPacket(pCore,pBuffer,Length);
+        	ParseACLPacket(pCore,pBuffer,Length);
         } else if (IsA2DPConnection(pCore,pBuffer,Length)) {
-		stateIndication = A2DP_StateIndication(pCore,pBuffer,Length,pNewState);
-        }
-
-    } while (FALSE);
-
+        	stateIndication = A2DP_StateIndication(pCore,pBuffer,Length,pNewState);
+        }   
+    
+    } while (FALSE);	
+    
     return stateIndication;
 }
 
@@ -394,7 +394,7 @@ static INLINE A_BOOL ParseCAPheader(L2CAP_HEADER *pL2hdr,
                                     int          Length)
 {
     A_UCHAR    *pTemp = pBuffer + sizeof(ACL_HEADER);
-
+    
     if (Length < (sizeof(ACL_HEADER)+sizeof(L2CAP_HEADER))) {
         return FALSE;
     }
@@ -412,11 +412,11 @@ static INLINE A_BOOL ParseCAPCtrl(L2CAP_CONTROL *pL2Ctrl,
                                   int           Length)
 {
     A_UCHAR     *pTemp = pBuffer + sizeof(ACL_HEADER);
-
+      
     if (Length < (sizeof(ACL_HEADER)+sizeof(L2CAP_HEADER)+sizeof(L2CAP_CONTROL)-6)) {
         return FALSE;
     }
-
+    
     pTemp +=sizeof(L2CAP_HEADER);
 
     pL2Ctrl->CODE = *pTemp++;
@@ -427,95 +427,95 @@ static INLINE A_BOOL ParseCAPCtrl(L2CAP_CONTROL *pL2Ctrl,
     pTemp += sizeof(A_UINT16);
     pL2Ctrl->SOURCE_CID = GETUINT16(pTemp);
     pTemp += sizeof(A_UINT16);
-
-    if (Length >= (sizeof(ACL_HEADER)+sizeof(L2CAP_HEADER)+sizeof(L2CAP_CONTROL)-sizeof(A_UINT16))) {
+    
+    if (Length >= (sizeof(ACL_HEADER)+sizeof(L2CAP_HEADER)+sizeof(L2CAP_CONTROL)-sizeof(A_UINT16))) { 
         pL2Ctrl->RESULT = GETUINT16(pTemp);
         pTemp += sizeof(A_UINT16);
         pL2Ctrl->STATUS = GETUINT16(pTemp);
         pTemp += sizeof(A_UINT16);
     }
-
+    
     return TRUE;
-}
+} 
 
 static A_BOOL IsACLSignaling(BT_FILTER_CORE_INFO *pCore,
-                             A_UINT8             *pBuffer,
+                             A_UINT8             *pBuffer, 
                              int                 Length)
 {
     L2CAP_HEADER    L2hdr;
-
+    
     A_MEMZERO(&L2hdr,sizeof(L2CAP_HEADER));
-
+    
     if (!ParseCAPheader(&L2hdr,pBuffer,Length)) {
          return FALSE;
     }
-
+         
     if (L2hdr.CID == SIGNALING) {
         return TRUE;
-    }
-
-    return FALSE;
+    }   
+    
+    return FALSE;   
 }
 
 static A_BOOL IsA2DPConnection(BT_FILTER_CORE_INFO *pCore,
-                               A_UINT8             *pBuffer,
+                               A_UINT8             *pBuffer, 
                                int                 Length)
 {
     L2CAP_HEADER    L2hdr;
-
+    
     A_MEMZERO(&L2hdr,sizeof(L2CAP_HEADER));
-
+    
     if (!ParseCAPheader(&L2hdr,pBuffer,Length)) {
-        /* not L2CAP header */
+        /* not L2CAP header */        
         return FALSE;
     }
-
-    if (pCore->FilterState.AVDTP_state==STATE_CONNECTED &&
+     
+    if (pCore->FilterState.AVDTP_state==STATE_CONNECTED && 
         ((L2hdr.CID==pCore->FilterState.AVDTP_DESTINATION_CID) ||
          (L2hdr.CID==pCore->FilterState.AVDTP_SOURCE_CID))) {
         //ACL normal packet
-        return TRUE;
+        return TRUE;                   
     }
-
-    return FALSE;
-}
+    
+    return FALSE;  
+}   
 
 static void ParseACLPacket(BT_FILTER_CORE_INFO *pCore,
-                           A_UINT8             *pBuffer,
+                           A_UINT8             *pBuffer, 
                            int                 Length)
 {
     L2CAP_CONTROL   L2ctrl;
-
+    
     A_MEMZERO(&L2ctrl,sizeof(L2CAP_CONTROL));
-
+    
     if (!ParseCAPCtrl(&L2ctrl,pBuffer,Length)) {
-        return;
-    }
-
+        return; 
+    }      
+    
     switch( L2ctrl.CODE) {
         case CONNECT_REQ:
         case CONNECT_RSP:
             ProcessA2DPconnection(pCore,&L2ctrl,TRUE);
-            break;
+            break;        
         case DISCONNECT_REQ:
         case DISCONNECT_RSP:
             ProcessA2DPconnection(pCore,&L2ctrl,FALSE);
-            break;
-    }
+            break;  
+    }   
 }
 
 static void ProcessA2DPconnection(BT_FILTER_CORE_INFO *pCore,
                                   PL2CAP_CONTROL      pL2Ctrl,
                                   A_BOOL              IsConnect)
 {
-
+    
     if (IsConnect) {
-        if (pL2Ctrl->CODE==CONNECT_REQ) {
+        if (pL2Ctrl->CODE==CONNECT_REQ) { 
             if (pCore->FilterState.AVDTP_state==STATE_DISCONNECT) {
-                pCore->FilterState.AVDTP_state = pL2Ctrl->PSM ==
-                                    A2DP_TYPE ? STATE_CONNECTING:STATE_DISCONNECT;
+                pCore->FilterState.AVDTP_state = pL2Ctrl->PSM == 
+                                    A2DP_TYPE ? STATE_CONNECTING:STATE_DISCONNECT;                
             } else if (pCore->FilterState.RFCOMM_state==STATE_DISCONNECT) {
-                pCore->FilterState.RFCOMM_state= pL2Ctrl->PSM ==
+                pCore->FilterState.RFCOMM_state= pL2Ctrl->PSM == 
                                     RFCOMM_TYPE ? STATE_CONNECTING:STATE_DISCONNECT;
             }
         } else if (pL2Ctrl->CODE==CONNECT_RSP) {
@@ -526,65 +526,65 @@ static void ProcessA2DPconnection(BT_FILTER_CORE_INFO *pCore,
                         pCore->FilterState.AVDTP_DESTINATION_CID=NULL_ID;
                         if ( pL2Ctrl->STATUS==STATE_SUCCESS) {
                             pCore->FilterState.AVDTP_state= STATE_CONNECTED;
-                            pCore->FilterState.AVDTP_SOURCE_CID= pL2Ctrl->SOURCE_CID;
-                            pCore->FilterState.AVDTP_DESTINATION_CID= pL2Ctrl->DESTINATION_CID;
+                            pCore->FilterState.AVDTP_SOURCE_CID= pL2Ctrl->SOURCE_CID;  
+                            pCore->FilterState.AVDTP_DESTINATION_CID= pL2Ctrl->DESTINATION_CID; 
                         }
                     } else if (pCore->FilterState.RFCOMM_state == STATE_CONNECTING) {
                         pCore->FilterState.RFCOMM_SOURCE_CID=NULL_ID;
                         pCore->FilterState.RFCOMM_DESTINATION_CID=NULL_ID;
                         if ( pL2Ctrl->STATUS==STATE_SUCCESS) {
                             pCore->FilterState.RFCOMM_state= STATE_CONNECTED;
-                            pCore->FilterState.RFCOMM_SOURCE_CID= pL2Ctrl->SOURCE_CID;
+                            pCore->FilterState.RFCOMM_SOURCE_CID= pL2Ctrl->SOURCE_CID; 
                             pCore->FilterState.RFCOMM_DESTINATION_CID= pL2Ctrl->DESTINATION_CID;
                         }
-                    }
+                    } 
                     break;
                 case STATE_PENDING:
                     break;
-                default:
-                    pCore->FilterState.RFCOMM_state=STATE_DISCONNECT;
+                default: 
+                    pCore->FilterState.RFCOMM_state=STATE_DISCONNECT;   
                     pCore->FilterState.RFCOMM_SOURCE_CID=NULL_ID;
                     pCore->FilterState.RFCOMM_DESTINATION_CID=NULL_ID;
-                    pCore->FilterState.AVDTP_state=STATE_DISCONNECT;
+                    pCore->FilterState.AVDTP_state=STATE_DISCONNECT;    
                     pCore->FilterState.AVDTP_SOURCE_CID = NULL_ID;
                     pCore->FilterState.AVDTP_DESTINATION_CID=NULL_ID;
                     break;
             }
        }
     } else {
-        pCore->FilterState.AVDTP_state=STATE_DISCONNECT;
-        pCore->FilterState.RFCOMM_state=STATE_DISCONNECT;
+        pCore->FilterState.AVDTP_state=STATE_DISCONNECT;    
+        pCore->FilterState.RFCOMM_state=STATE_DISCONNECT;   
     }
-
-}
+    
+}                        
 
 
 static ATHBT_STATE_INDICATION A2DP_StateIndication(BT_FILTER_CORE_INFO *pCore,
-                                                   A_UINT8             *pBuffer,
+                                                   A_UINT8             *pBuffer, 
                                                    int                 Length,
-                                                   ATHBT_STATE         *pNewState)
+                                                   ATHBT_STATE         *pNewState)                                       
 
 {
-    AVDTP_HEADER            Avdtphdr;
+    AVDTP_HEADER            Avdtphdr;   
     ATHBT_STATE_INDICATION  stateIndication = ATH_BT_NOOP;
     A_UCHAR                 *pTemp = pBuffer+sizeof(ACL_HEADER)+sizeof(L2CAP_HEADER);
-
+    
     Avdtphdr.MESSAGE_TYPE= (*pTemp++) & 0x03; // get Message Type
     Avdtphdr.CMD_ID = (*pTemp++) & 0x3F;     //Get command code
-
+    
     switch (Avdtphdr.MESSAGE_TYPE) {
         case TYPE_ACPT:
             stateIndication = ProcessA2DPCMD(pCore,Avdtphdr.CMD_ID,pNewState,TRUE);
             break;
-        case TYPE_REJ:
+        case TYPE_REJ: 
             stateIndication = ProcessA2DPCMD(pCore,Avdtphdr.CMD_ID,pNewState,FALSE);
-            break;
+            break;       
         default:
-            break;
+            break;    
     }
-
-    return stateIndication;
-}
+    
+    return stateIndication; 
+}                                       
 
 static ATHBT_STATE_INDICATION ProcessA2DPCMD(BT_FILTER_CORE_INFO *pCore,
                                              A_UINT8             CMDID,
@@ -593,26 +593,28 @@ static ATHBT_STATE_INDICATION ProcessA2DPCMD(BT_FILTER_CORE_INFO *pCore,
 
 {
     ATHBT_STATE_INDICATION stateIndication = ATH_BT_NOOP;
-
-    switch(CMDID) {
+    
+    switch(CMDID) {        
         case AVDTP_START:
             stateIndication = ATH_BT_A2DP;
             *pNewState = IsACPT ? STATE_ON:STATE_OFF;
             break;
         case AVDTP_OPEN:
                 // don't assign any state in here.
-            break;
+            break;         
         case AVDTP_SUSPEND:
             stateIndication = ATH_BT_A2DP;
-            *pNewState = STATE_OFF;
+            *pNewState = STATE_OFF;       
             break;
-        case AVDTP_CLOSE:
+        case AVDTP_CLOSE:     
             stateIndication = ATH_BT_A2DP;
-            *pNewState = STATE_OFF;
-            break;
+            *pNewState = STATE_OFF;       
+            break;  
         default:
             break;
-    }
+    }    
+   
+    return stateIndication;   
+}                  
 
-    return stateIndication;
-}
+                    

@@ -2,7 +2,7 @@
 # RTC class/drivers configuration
 #
 
-config RTC_LIB
+config RTC_LIB 
 	bool
 
 menuconfig RTC_CLASS
@@ -135,7 +135,7 @@ config RTC_ALARM_SHUTDOWN_WAKEUP
        default n
        help
                support the alarm wakeup at A1X platform.
-
+               
 config RTC_DRV_TEST
 	tristate "Test driver/device"
 	help
@@ -979,7 +979,7 @@ config RTC_DRV_TX4939
 	  Toshiba TX4939 SoC.
 
 config RTC_DRV_SUN7I
-	tristate "sun7i rtc driver"
+	tristate "sun7i rtc driver"	
 	help
 	  sun7i rtc driver
 

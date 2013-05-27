@@ -25,7 +25,7 @@
 #include <linux/sunxi_physmem.h>
 
 /*
- * usage:
+ * usage: 
  * 	func_name: function name to defination
  *      test_sec:  test time in seconds, 0 means test forever.
  */
@@ -101,3 +101,4 @@ module_exit(sunxi_mem_test_exit);
 MODULE_LICENSE ("GPL");
 MODULE_AUTHOR ("liugang");
 MODULE_DESCRIPTION ("sun7i sunxi_mem test driver code");
+

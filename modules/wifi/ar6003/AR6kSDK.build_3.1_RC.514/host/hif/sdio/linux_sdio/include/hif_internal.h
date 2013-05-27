@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="hif_internal.h" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -31,7 +31,7 @@
 #include "a_osapi.h"
 #include "hif.h"
 #include "../../../common/hif_sdio_common.h"
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,24)
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,24)   
 #include <linux/scatterlist.h>
 #define HIF_LINUX_MMC_SCATTER_SUPPORT
 #endif
@@ -105,11 +105,11 @@ void AddToAsyncList(HIF_DEVICE *device, BUS_REQUEST *busrequest);
 #define MAX_SCATTER_REQ_TRANSFER_SIZE    32*1024
 
 typedef struct _HIF_SCATTER_REQ_PRIV {
-    HIF_SCATTER_REQ     *pHifScatterReq;  /* HIF scatter request with allocated entries */
+    HIF_SCATTER_REQ     *pHifScatterReq;  /* HIF scatter request with allocated entries */   
     HIF_DEVICE          *device;          /* this device */
     BUS_REQUEST         *busrequest;      /* request associated with request */
-        /* scatter list for linux */
-    struct scatterlist  sgentries[MAX_SCATTER_ENTRIES_PER_REQ];
+        /* scatter list for linux */    
+    struct scatterlist  sgentries[MAX_SCATTER_ENTRIES_PER_REQ];   
 } HIF_SCATTER_REQ_PRIV;
 
 #define ATH_DEBUG_SCATTER  ATH_DEBUG_MAKE_MODULE_MASK(0)
@@ -120,12 +120,12 @@ A_STATUS DoHifReadWriteScatter(HIF_DEVICE *device, BUS_REQUEST *busrequest);
 
 #else  // HIF_LINUX_MMC_SCATTER_SUPPORT
 
-static inline A_STATUS SetupHIFScatterSupport(HIF_DEVICE *device, HIF_DEVICE_SCATTER_SUPPORT_INFO *pInfo)
+static inline A_STATUS SetupHIFScatterSupport(HIF_DEVICE *device, HIF_DEVICE_SCATTER_SUPPORT_INFO *pInfo) 
 {
     return A_ENOTSUP;
 }
 
-static inline A_STATUS DoHifReadWriteScatter(HIF_DEVICE *device, BUS_REQUEST *busrequest)
+static inline A_STATUS DoHifReadWriteScatter(HIF_DEVICE *device, BUS_REQUEST *busrequest) 
 {
     return A_ENOTSUP;
 }
@@ -135,3 +135,4 @@ static inline A_STATUS DoHifReadWriteScatter(HIF_DEVICE *device, BUS_REQUEST *bu
 #endif // HIF_LINUX_MMC_SCATTER_SUPPORT
 
 #endif // _HIF_INTERNAL_H_
+

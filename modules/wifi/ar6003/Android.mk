@@ -30,3 +30,4 @@ ifneq ($(TARGET_SIMULATOR),true)
     endif
   endif
 endif
+

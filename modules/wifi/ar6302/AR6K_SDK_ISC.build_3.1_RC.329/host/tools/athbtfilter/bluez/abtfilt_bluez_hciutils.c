@@ -52,17 +52,17 @@ static void eventNotificationCallback ( tHCIUTILS_NOTIFICATION * pEvent)
 
     if(pEvent->tType == HCIUTILS_COMMAND) {
         if(pEvent->nOpCode == HCI_CMD_OPCODE_INQUIRY_START) {
-	        A_DEBUG("Device Inquiry Started \n");
+ 	        A_DEBUG("Device Inquiry Started \n");
             pAbfBtInfo->btInquiryState |= (1 << 0);
             AthBtIndicateState(pInstance, ATH_BT_INQUIRY, STATE_ON);
         }
         if(pEvent->nOpCode == HCI_CMD_OPCODE_INQUIRY_CANCEL  ) {
-	        A_DEBUG("Device Inquiry cancelled \n");
+ 	        A_DEBUG("Device Inquiry cancelled \n");
             if(pAbfBtInfo->btInquiryState) {
 	            pAbfBtInfo->btInquiryState &= ~(1 << 0);
                 AthBtIndicateState(pInstance, ATH_BT_INQUIRY, STATE_OFF);
 	        }
-	    }
+ 	    }
         if(pEvent->nOpCode == HCI_CMD_OPCODE_CONNECT) {
             A_DEBUG("Bt-Connect\n");
         }
@@ -90,8 +90,8 @@ static void eventNotificationCallback ( tHCIUTILS_NOTIFICATION * pEvent)
             lmp_features = &eventPtr[3];
             A_DUMP_BUFFER(lmp_features, sizeof(lmp_features),"Remote Device LMP Features:");
 
-            if ((lmp_features[LMP_FEATURE_ACL_EDR_2MBPS_BYTE_INDEX] & LMP_FEATURE_ACL_EDR_2MBPS_BIT_MASK)  ||
-                (lmp_features[LMP_FEATURE_ACL_EDR_3MBPS_BYTE_INDEX] & LMP_FEATURE_ACL_EDR_3MBPS_BIT_MASK))
+            if ((lmp_features[LMP_FEATURE_ACL_EDR_2MBPS_BYTE_INDEX] & LMP_FEATURE_ACL_EDR_2MBPS_BIT_MASK)  ||    
+                (lmp_features[LMP_FEATURE_ACL_EDR_3MBPS_BYTE_INDEX] & LMP_FEATURE_ACL_EDR_3MBPS_BIT_MASK)) 
             {
                 A_DEBUG("Device is EDR capable \n");
                 pAbfBtInfo->DefaultAudioDeviceLmpVersion = 3;
@@ -100,7 +100,7 @@ static void eventNotificationCallback ( tHCIUTILS_NOTIFICATION * pEvent)
                 pAbfBtInfo->DefaultAudioDeviceLmpVersion = 2;
             }
             pAbfBtInfo->DefaultRemoteAudioDevicePropsValid = TRUE;
-            pInfo->A2DPConnection_LMPVersion =  pInfo->SCOConnection_LMPVersion =
+            pInfo->A2DPConnection_LMPVersion =  pInfo->SCOConnection_LMPVersion = 
                                                 pAbfBtInfo->DefaultAudioDeviceLmpVersion;
         }
         if(pEvent->nOpCode ==  HCI_EVT_REMOTE_DEV_VERSION) {
@@ -120,27 +120,27 @@ static void eventNotificationCallback ( tHCIUTILS_NOTIFICATION * pEvent)
 	            strcpy(&pAbfBtInfo->DefaultRemoteAudioDeviceVersion[0], "1.1");
                 pAbfBtInfo->DefaultAudioDeviceLmpVersion = 1;
 		        A_DEBUG("Its 1.1 \n");
-		} else if (eventPtr[3] == 2) {
+        	} else if (eventPtr[3] == 2) {
 	            strcpy(&pAbfBtInfo->DefaultRemoteAudioDeviceVersion[0], "1.2");
                 pAbfBtInfo->DefaultAudioDeviceLmpVersion = 2;
-		    A_DEBUG("Its 1.2 \n");
-		} else if (eventPtr[3] == 3) {
+    		    A_DEBUG("Its 1.2 \n");
+        	} else if (eventPtr[3] == 3) {
 	            strcpy(&pAbfBtInfo->DefaultRemoteAudioDeviceVersion[0], "2.0");
 /*                    pAbfBtInfo->DefaultAudioDeviceLmpVersion = 3; */
-		    A_DEBUG("Its 2.0 \n");
-		}else {
+	    	    A_DEBUG("Its 2.0 \n");
+        	}else {
 	            strcpy(&pAbfBtInfo->DefaultRemoteAudioDeviceVersion[0], "2.1");
 /*                    pAbfBtInfo->DefaultAudioDeviceLmpVersion = 4; */
 		        A_DEBUG("Its 2.1 \n");
             }
-
-            pInfo->A2DPConnection_LMPVersion =  pInfo->SCOConnection_LMPVersion =
+           
+            pInfo->A2DPConnection_LMPVersion =  pInfo->SCOConnection_LMPVersion = 
                                                 pAbfBtInfo->DefaultAudioDeviceLmpVersion;
 	    }
         if (pEvent->nOpCode == EVT_INQUIRY_COMPLETE) {
             A_DEBUG("Device Inquiry Completed\n");
             if(pAbfBtInfo->btInquiryState) {
-		pAbfBtInfo->btInquiryState &= ~(1 << 0);
+            	pAbfBtInfo->btInquiryState &= ~(1 << 0);
                 AthBtIndicateState(pInstance, ATH_BT_INQUIRY, STATE_OFF);
             }
         }
@@ -153,7 +153,7 @@ static void eventNotificationCallback ( tHCIUTILS_NOTIFICATION * pEvent)
         }
 	    if(pEvent->nOpCode == HCI_EVT_ROLE_CHANGE) {
 	        A_DEBUG("Role Change\n");
-	    A_UCHAR * eventPtr = (A_UCHAR *)pEvent->p_notification_data_buf;
+    	    A_UCHAR * eventPtr = (A_UCHAR *)pEvent->p_notification_data_buf;
             A_UINT32 len = pEvent->n_data_length;
 
             A_DUMP_BUFFER(eventPtr, len,"Remote Device Role ");
@@ -163,7 +163,7 @@ static void eventNotificationCallback ( tHCIUTILS_NOTIFICATION * pEvent)
 	            A_DEBUG("ROLE IS MASTER \n");
                 pAbfBtInfo->pInfo->A2DPConnection_Role = 0x0;
             }
-	    if(*eventPtr == 0x01) {
+    	    if(*eventPtr == 0x01) {
 	            A_DEBUG("ROLE IS SLAVE \n");
                 pAbfBtInfo->pInfo->A2DPConnection_Role = 0x1;
             }
@@ -171,7 +171,7 @@ static void eventNotificationCallback ( tHCIUTILS_NOTIFICATION * pEvent)
         if(pEvent->nOpCode == EVT_CONN_COMPLETE) {
             A_DEBUG("Conn complete\n");
             if(pAbfBtInfo->btInquiryState) {
-		pAbfBtInfo->btInquiryState &= ~(1 << 1);
+            	pAbfBtInfo->btInquiryState &= ~(1 << 1);
                 AthBtIndicateState(pInstance, ATH_BT_INQUIRY, STATE_OFF);
             }
         }
@@ -200,7 +200,7 @@ static void eventNotificationCallback ( tHCIUTILS_NOTIFICATION * pEvent)
                 pInfo->SCOConnectInfo.TxPacketLength);
 
             AthBtIndicateState(pInstance,
-			      pInfo->SCOConnectInfo.LinkType == BT_LINK_TYPE_ESCO? ATH_BT_ESCO: ATH_BT_SCO,
+                	      pInfo->SCOConnectInfo.LinkType == BT_LINK_TYPE_ESCO? ATH_BT_ESCO: ATH_BT_SCO,
                               STATE_ON);
         }
         if(pEvent->nOpCode == HCI_EVT_DISCONNECT) {
@@ -210,7 +210,7 @@ static void eventNotificationCallback ( tHCIUTILS_NOTIFICATION * pEvent)
 
             if( (bitmap & (1 << ATH_BT_SCO))|| (bitmap & (1 << ATH_BT_ESCO))) {
                 AthBtIndicateState(pInstance,
-			      pInfo->SCOConnectInfo.LinkType == BT_LINK_TYPE_ESCO? ATH_BT_ESCO: ATH_BT_SCO,
+                	      pInfo->SCOConnectInfo.LinkType == BT_LINK_TYPE_ESCO? ATH_BT_ESCO: ATH_BT_SCO,
                               STATE_OFF);
             }
             ForgetRemoteAudioDevice(pAbfBtInfo);
@@ -293,7 +293,7 @@ A_STATUS  Abf_IssueAFHViaHciLib (ABF_BT_INFO  * pAbfBtInfo,
         setChannels.last = 79;
         center = 0;
    }else {
-        if( (CurrentWLANChannel < 2412) ||
+        if( (CurrentWLANChannel < 2412) || 
            (CurrentWLANChannel >  2470))
         {
             return A_ERROR;
@@ -317,7 +317,7 @@ A_STATUS  Abf_IssueAFHViaHciLib (ABF_BT_INFO  * pAbfBtInfo,
 }
 
 A_STATUS Abf_HciLibInit(A_UINT32 *btfiltFlags)
-{
+{        
 #ifdef STATIC_LINK_HCILIBS
     pfn_HCIUTILS_RegisterHCINotification = HCIUTILS_RegisterHCINotification;
     pfn_HCIUTILS_SendCmd = HCIUTILS_SendCmd;
@@ -334,7 +334,7 @@ A_STATUS Abf_HciLibInit(A_UINT32 *btfiltFlags)
         pfn_HCIUTILS_RegisterHCINotification = dlsym(g_hciHandle, "HCIUTILS_RegisterHCINotification");
         pfn_HCIUTILS_SendCmd = dlsym(g_hciHandle, "HCIUTILS_SendCmd");
         pfn_HCIUTILS_UnRegisterHCINotification = dlsym(g_hciHandle, "HCIUTILS_UnRegisterHCINotification");
-        if ( (NULL == pfn_HCIUTILS_RegisterHCINotification) || (NULL == pfn_HCIUTILS_SendCmd) ||
+        if ( (NULL == pfn_HCIUTILS_RegisterHCINotification) || (NULL == pfn_HCIUTILS_SendCmd) || 
               (NULL == pfn_HCIUTILS_UnRegisterHCINotification) )
         {
 		    A_ERR("ERROR GETTING HCIUTILS SYMBOLS \n");
@@ -358,3 +358,4 @@ void Abf_HciLibDeInit(void)
     }
 #endif
 }
+

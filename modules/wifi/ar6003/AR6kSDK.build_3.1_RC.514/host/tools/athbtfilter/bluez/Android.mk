@@ -1,7 +1,7 @@
 #------------------------------------------------------------------------------
 # <copyright file="makefile" company="Atheros">
 #    Copyright (c) 2005-2010 Atheros Corporation.  All rights reserved.
-#
+#  
 #
 # Permission to use, copy, modify, and/or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -60,7 +60,7 @@ LOCAL_CFLAGS += -DCONFIG_NO_HCILIBS
 endif
 
 LOCAL_SHARED_LIBRARIES := \
-		libdbus \
+	 	libdbus \
 		libbluetooth \
 		libcutils \
 		libdl
@@ -83,7 +83,7 @@ LOCAL_C_INCLUDES := \
 	$(call include-path-for, bluez-libs)
 
 ifneq ($(PLATFORM_VERSION),$(filter $(PLATFORM_VERSION),1.5 1.6))
-LOCAL_C_INCLUDES += external/bluetooth/bluez/include/bluetooth external/bluetooth/bluez/lib/bluetooth
+LOCAL_C_INCLUDES += external/bluetooth/bluez/include/bluetooth external/bluetooth/bluez/lib/bluetooth 
 LOCAL_CFLAGS+=-DBLUEZ4_3
 else
 LOCAL_C_INCLUDES += external/bluez/libs/include/bluetooth

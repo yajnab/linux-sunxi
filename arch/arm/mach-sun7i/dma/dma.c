@@ -197,9 +197,9 @@ static int __devexit dma_drv_remove(struct platform_device *dev)
 int dma_drv_suspend(struct device *dev)
 {
 	if(NORMAL_STANDBY == standby_type)
-		DMA_INF("%s(%d): normal standby\n", __func__, __LINE__);
+ 		DMA_INF("%s(%d): normal standby\n", __func__, __LINE__);
 	else if(SUPER_STANDBY == standby_type) {
-		DMA_INF("%s(%d): super standby\n", __func__, __LINE__);
+ 		DMA_INF("%s(%d): super standby\n", __func__, __LINE__);
 		if(0 != dma_clk_deinit())
 			DMA_ERR("%s err, dma_clk_deinit failed\n", __func__);
 	}
@@ -215,9 +215,9 @@ int dma_drv_suspend(struct device *dev)
 int dma_drv_resume(struct device *dev)
 {
 	if(NORMAL_STANDBY == standby_type)
-		DMA_INF("%s(%d): normal standby\n", __func__, __LINE__);
+ 		DMA_INF("%s(%d): normal standby\n", __func__, __LINE__);
 	else if(SUPER_STANDBY == standby_type) {
-		DMA_INF("%s(%d): super standby\n", __func__, __LINE__);
+ 		DMA_INF("%s(%d): super standby\n", __func__, __LINE__);
 		if(0 != dma_clk_init())
 			DMA_ERR("%s err, dma_clk_init failed\n", __func__);
 	}
@@ -253,3 +253,4 @@ static int __init drv_dma_init(void)
 	return 0;
 }
 arch_initcall(drv_dma_init);
+

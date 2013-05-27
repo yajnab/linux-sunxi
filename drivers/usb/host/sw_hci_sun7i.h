@@ -53,7 +53,7 @@
 
 
 //---------------------------------------------------------------
-//  å® å®šä¹‰
+//  ºê ¶¨Òå
 //---------------------------------------------------------------
 #define  USBC_Readb(reg)	                    (*(volatile unsigned char *)(reg))
 #define  USBC_Readw(reg)	                    (*(volatile unsigned short *)(reg))
@@ -223,11 +223,11 @@ struct sw_hci_hcd{
 	script_item_u restrict_gpio_set;
 	u32 drv_vbus_gpio_valid;
 	u32 usb_restrict_valid;
-	__u32 power_flag;                   /* flag. æ˜¯å¦ä¾›ç”µ       */
+	__u32 power_flag;                   /* flag. ÊÇ·ñ¹©µç       */
 
-    __u32 used;                         /* flag. æ§åˆ¶å™¨æ˜¯å¦è¢«ä½¿ç”¨ */
-	__u32 probe;                        /* æ§åˆ¶å™¨åˆå§‹åŒ– */
-	__u32 host_init_state;				/* usb æ§åˆ¶å™¨çš„åˆå§‹åŒ–çŠ¶æ€ã€‚0 : ä¸å·¥ä½œ. 1 : å·¥ä½œ */
+    __u32 used;                         /* flag. ¿ØÖÆÆ÷ÊÇ·ñ±»Ê¹ÓÃ */
+	__u32 probe;                        /* ¿ØÖÆÆ÷³õÊ¼»¯ */
+	__u32 host_init_state;				/* usb ¿ØÖÆÆ÷µÄ³õÊ¼»¯×´Ì¬¡£0 : ²»¹¤×÷. 1 : ¹¤×÷ */
 	__u32 usb_restrict_flag;
 	__u32 usbc_type;                    /* usb controller type  */
 
@@ -241,3 +241,7 @@ struct sw_hci_hcd{
 
 
 #endif   //__SW_HCI_SUN4I_H__
+
+
+
+

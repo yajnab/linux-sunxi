@@ -42,8 +42,6 @@ struct aw_pm_info  pm_info;
 #define DRAM_BASE_ADDR      0xc0000000
 static __u8 dram_traning_area_back[DRAM_TRANING_SIZE];
 
-
-
 /*
 *********************************************************************************************************
 *                                   STANDBY MAIN PROCESS ENTRY
@@ -124,13 +122,16 @@ int main(struct aw_pm_info *arg)
             mem_enable_int(INT_SOURCE_TIMER0);
         }
     }
+    if(pm_info.standby_para.event_enable & SUSPEND_WAKEUP_SRC_PIO){
+        mem_enable_int(INT_SOURCE_GPIO);
+    }
 
     /* save stack pointer registger, switch stack to sram */
     sp_backup = save_sp();
     /* enable dram enter into self-refresh */
-    //dram_power_save_process();
-	mctl_self_refresh_entry();
-
+    dram_power_save_process(0);
+	//mctl_self_refresh_entry();
+    
     /* process standby */
     standby();
 
@@ -138,8 +139,9 @@ int main(struct aw_pm_info *arg)
     standby_tmr_enable_watchdog();
     /* restore dram */
     //dram_power_up_process();
-	mctl_self_refresh_exit();
-
+	//mctl_self_refresh_exit();
+    init_DRAM(&pm_info.dram_para);
+    
     /* disable watch-dog    */
     standby_tmr_disable_watchdog();
 
@@ -159,7 +161,7 @@ int main(struct aw_pm_info *arg)
     if(pm_info.standby_para.event_enable & SUSPEND_WAKEUP_SRC_KEY){
         standby_key_exit();
     }
-    standby_power_exit(pm_info.standby_para.axp_src);
+    standby_power_exit(pm_info.standby_para.event_enable);
     standby_tmr_exit();
     mem_int_exit();
     standby_clk_apbexit();
@@ -202,12 +204,11 @@ static void standby(void)
 	standby_clk_set_pll_factor(&local_pll);
 	change_runtime_env(1);
 	delay_ms(10);
-
+	
     /* switch cpu clock to HOSC, and disable pll */
     standby_clk_core2hosc();
 	change_runtime_env(1);
 	delay_us(1);
-    standby_clk_plldisable();
 
     if (pm_info.standby_para.axp_enable)
     {
@@ -215,7 +216,7 @@ static void standby(void)
         dcdc2 = standby_get_voltage(POWER_VOL_DCDC2);
         dcdc3 = standby_get_voltage(POWER_VOL_DCDC3);
         printk("dcdc2:%d, dcdc3:%d!\n", dcdc2, dcdc3);
-
+        
         /* adjust voltage */
         standby_set_voltage(POWER_VOL_DCDC3, STANDBY_DCDC3_VOL);
         standby_set_voltage(POWER_VOL_DCDC2, STANDBY_DCDC2_VOL);
@@ -223,16 +224,19 @@ static void standby(void)
     }
 
     /* set clock division cpu:axi:ahb:apb = 2:2:2:1 */
+    standby_clk_ahb_2pll();
     standby_clk_getdiv(&clk_div);
     tmp_clk_div.axi_div = 0;
     tmp_clk_div.ahb_div = 0;
     tmp_clk_div.apb_div = 0;
     standby_clk_setdiv(&tmp_clk_div);
+    
     /* swtich apb1 to losc */
     standby_clk_apb2losc();
 	change_runtime_env(1);
 	//delay_ms(1);
-
+    standby_clk_plldisable();
+	
     /* switch cpu to 32k */
     standby_clk_core2losc();
     #if(ALLOW_DISABLE_HOSC)
@@ -242,7 +246,6 @@ static void standby(void)
     #endif
 
     /* cpu enter sleep, wait wakeup by interrupt */
-//    printk("WFI!\n");
     asm("WFI");
 
     #if(ALLOW_DISABLE_HOSC)
@@ -285,6 +288,7 @@ static void standby(void)
 	change_runtime_env(1);
 	delay_ms(10);
 
+    standby_clk_ahb_restore();
     /* switch cpu clock to core pll */
     standby_clk_core2pll();
 	change_runtime_env(1);
@@ -294,9 +298,10 @@ static void standby(void)
 	standby_clk_set_pll_factor(&orig_pll);
 	change_runtime_env(1);
 	delay_ms(5);
-
+	
     /* gating on dram clock */
     standby_clk_dramgating(1);
 
     return;
 }
+

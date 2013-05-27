@@ -2,7 +2,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="abtfilt_bluez_dbus.c" company="Atheros">
 //    Copyright (c) 2007 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -76,7 +76,7 @@
 #define BTEV_GET_RETRANS_INTERVAL(p)    ((p)[11])
 #define BTEV_GET_RX_PKT_LEN(p)          ((A_UINT16)((p)[12]) | (((A_UINT16)((p)[13])) << 8))
 #define BTEV_GET_TX_PKT_LEN(p)          ((A_UINT16)((p)[14]) | (((A_UINT16)((p)[15])) << 8))
-#define BTEV_CMD_COMPLETE_GET_OPCODE(p) ((A_UINT16)((p)[1]) | (((A_UINT16)((p)[2])) << 8))
+#define BTEV_CMD_COMPLETE_GET_OPCODE(p) ((A_UINT16)((p)[1]) | (((A_UINT16)((p)[2])) << 8))          
 #define BTEV_CMD_COMPLETE_GET_STATUS(p) ((p)[3])
 
 #define DBUS_METHOD_CALL_TIMEOUT   (-1)   /* no timeout */
@@ -205,16 +205,16 @@ static void CleanupHciEventFilter(ABF_BT_INFO *pAbfBtInfo);
 static void CheckHciEventFilter(ABF_BT_INFO   *pAbfBtInfo);
 
 static A_STATUS IssueHCICommand(ABF_BT_INFO *pAbfBtInfo,
-                                A_UINT16    OpCode,
-                                A_UCHAR     *pCmdData,
+                                A_UINT16    OpCode, 
+                                A_UCHAR     *pCmdData, 
                                 int         CmdLength,
                                 int         EventRecvTimeoutMS,
                                 A_UCHAR     *pEventBuffer,
                                 int         MaxLength,
                                 A_UCHAR     **ppEventPtr,
                                 int         *pEventLength);
-
-     /* method call that involves only 1 input string (can be NULL) and/or 1 output string */
+     
+     /* method call that involves only 1 input string (can be NULL) and/or 1 output string */                           
 static A_STATUS DoMethodCall(DBusConnection *Bus,
                              char           *BusName,
                              char           *Path,
@@ -312,7 +312,7 @@ Abf_BtStackNotificationInit(ATH_BT_FILTER_INSTANCE *pInstance, A_UINT32 Flags)
         RegisterBtStackEventCb(pAbfBtInfo, BT_ADAPTER_REMOVED, (BT_EVENT_HANDLER)BtAdapterRemoved);
 
         if(pInfo->Flags & ABF_USE_ONLY_DBUS_FILTERING) {
-	    Abf_RegisterToHciLib(pAbfBtInfo);
+    	    Abf_RegisterToHciLib(pAbfBtInfo);
         }
 
         /* Spawn a thread which will be used to process events from dbus */
@@ -485,7 +485,7 @@ BtAdapterRemoved(const char *string, void * user_data)
     ABF_BT_INFO *pAbfBtInfo = (ABF_BT_INFO *)user_data;
 
     A_DEBUG("BtAdapterRemoved (%s) Callback ... \n", (string != NULL) ? string : "UNKNOWN");
-
+    
     if (!pAbfBtInfo->AdapterAvailable) return;
 
     if ((string != NULL) && strcmp(string,pAbfBtInfo->HCI_AdapterName) == 0) {
@@ -562,20 +562,20 @@ static void ReleaseDefaultAudioDevice(ABF_BT_INFO *pAbfBtInfo)
         DeRegisterBtStackEventCb(pAbfBtInfo, AUDIO_SOURCE_DISCONNECTED);
         pAbfBtInfo->AudioCbRegistered = FALSE;
     }
-
+    
     if (pAbfBtInfo->DefaultAudioDeviceAvailable) {
         pAbfBtInfo->DefaultAudioDeviceAvailable = FALSE;
         A_DEBUG("Default Audio Device Removed: %s\n", pAbfBtInfo->DefaultAudioDeviceName);
         A_MEMZERO(pAbfBtInfo->DefaultAudioDeviceName,sizeof(pAbfBtInfo->DefaultAudioDeviceName));
     }
-
+    
 }
 
 static A_STATUS DoMethodCall(DBusConnection *Bus,
                              char           *BusName,
                              char           *Path,
                              char           *Interface,
-                             char           *Method,
+                             char           *Method,                                  
                              void           *InputArg,
                              int             InputType,
                              int             InputLength,
@@ -589,38 +589,38 @@ static A_STATUS DoMethodCall(DBusConnection *Bus,
     DBusMessage *reply = NULL;
     void        *replyData;
     DBusMessageIter args;
-
+    
     dbus_error_init(&error);
 
-    do {
+    do { 
         msg = dbus_message_new_method_call(BusName, Path, Interface, Method);
-
+                                           
         if (NULL == msg) {
             A_ERR("[%s] failed new method call line \n", __FUNCTION__);
-            break;
+            break;    
         }
-
+        
             /* see if caller is providing an argument */
-        if (InputArg != NULL) {
+        if (InputArg != NULL) {           
             dbus_message_iter_init_append(msg, &args);
-            if (InputType == DBUS_TYPE_STRING) {
-                if (!dbus_message_iter_append_basic(&args, DBUS_TYPE_STRING, (char **)&InputArg)) {
+            if (InputType == DBUS_TYPE_STRING) { 
+                if (!dbus_message_iter_append_basic(&args, DBUS_TYPE_STRING, (char **)&InputArg)) { 
                     A_ERR("[%s] Failed to add string input argument \n", __FUNCTION__);
-                    break;
+                    break;  
                 }
             } else {
                 A_ERR("[%s] unsupported input arg type: %c \n", __FUNCTION__, (char)InputType);
-                break;
+                break;      
             }
         }
-
+              
         reply = dbus_connection_send_with_reply_and_block(Bus, msg, DBUS_METHOD_CALL_TIMEOUT, &error);
 
-
+       
         if (dbus_error_is_set(&error)) {
             A_ERR("[%s] Failed to invoke method call (%s : method : %s) %s \n",
                      __FUNCTION__, Interface, Method, error.message);
-            break;
+            break;    
         }
 
             /* check if caller expects a return string */
@@ -661,7 +661,7 @@ static A_STATUS DoMethodCall(DBusConnection *Bus,
                 dbus_message_get_args(reply, &error, OutputType, &replyData, DBUS_TYPE_INVALID);
 
                 if (dbus_error_is_set(&error)) {
-                    A_ERR("[%s] dbus_message_get_args failed (%s : method : %s) %s \n",
+                    A_ERR("[%s] dbus_message_get_args failed (%s : method : %s) %s \n", 
                          __FUNCTION__, Interface, Method, error.message);
                     break;
                 }
@@ -672,7 +672,7 @@ static A_STATUS DoMethodCall(DBusConnection *Bus,
             }
 
             if (NULL == replyData) {
-                A_ERR("[%s] type %c data pointer was not returned from method call \n",
+                A_ERR("[%s] type %c data pointer was not returned from method call \n", 
                     __FUNCTION__, (char)OutputType);
                 break;
             }
@@ -683,28 +683,28 @@ static A_STATUS DoMethodCall(DBusConnection *Bus,
                 A_ERR("  (p:0x%X) Array has %d elements: \n", replyData, MaxOutLength);
                     /* just copy what the caller expects for data */
 
-                A_MEMCPY(OutputArg, replyData, MaxOutLength);
+                A_MEMCPY(OutputArg, replyData, MaxOutLength);  
 
             } else if (OutputType == DBUS_TYPE_OBJECT_PATH) { /* Added by YG, November 19, 2009 */
                 strncpy(OutputArg, (char *)replyData, MaxOutLength);
             }
         }
-
-        status = A_OK;
-
+       
+        status = A_OK;     
+           
     } while (FALSE);
-
+     
     if (msg != NULL) {
         dbus_message_unref(msg);
     }
-
+    
     if (reply != NULL) {
-        dbus_message_unref(reply);
+        dbus_message_unref(reply);    
     }
 
     dbus_error_free(&error);
-
-    return status;
+   
+    return status;   
 }
 
 static void AcquireDefaultAudioDevice(ABF_BT_INFO *pAbfBtInfo)
@@ -1073,35 +1073,35 @@ DeRegisterBtStackEventCb(ABF_BT_INFO *pAbfBtInfo, BT_STACK_EVENT event)
     BT_NOTIFICATION_CONFIG_PARAMS *pNotificationConfig;
     DBusError                     error;
     char                          tempStr[STRING_SIZE_MAX];
-
+    
     dbus_error_init(&error);
-
+    
     do {
-
+        
         if (event >= BT_EVENTS_NUM_MAX) {
             A_ERR("[%s] Invalid Event: %d\n", __FUNCTION__, event);
-            break;
+            break;    
         }
-
+       
         pNotificationConfig = &g_NotificationConfig[event];
-
+           
         if (pAbfBtInfo->SignalHandlers[event] == NULL) {
             A_ERR("[%s] event: %d is not in use! \n", __FUNCTION__, event);
-            break;
+            break;    
         }
-
+        
         snprintf(tempStr, sizeof(tempStr),"type='signal',interface='%s'",pNotificationConfig->interface);
-
+        
         A_DEBUG(" rule to remove : %s \n", tempStr);
-
+        
             /* remove rule */
         dbus_bus_remove_match(pAbfBtInfo->Bus, tempStr, &error);
-
-        if (dbus_error_is_set(&error)) {
+        
+        if (dbus_error_is_set(&error)) { 
             A_ERR("[%s] dbus_bus_remove_match failed: %s n", __FUNCTION__, error.message);
             break;
         }
-
+                    
         dbus_connection_flush(pAbfBtInfo->Bus);
 
             /* delete handler */
@@ -1202,20 +1202,20 @@ ReleaseBTAdapter(ABF_BT_INFO *pAbfBtInfo)
         DeRegisterBtStackEventCb(pAbfBtInfo, REMOTE_DEVICE_CONNECTED);
         DeRegisterBtStackEventCb(pAbfBtInfo, REMOTE_DEVICE_DISCONNECTED);
         DeRegisterBtStackEventCb(pAbfBtInfo, AUDIO_DEVICE_ADDED);
-        DeRegisterBtStackEventCb(pAbfBtInfo, AUDIO_DEVICE_REMOVED);
+        DeRegisterBtStackEventCb(pAbfBtInfo, AUDIO_DEVICE_REMOVED);    
     }
-
-    ReleaseDefaultAudioDevice(pAbfBtInfo);
-
+   
+    ReleaseDefaultAudioDevice(pAbfBtInfo);  
+     
     CleanupHciEventFilter(pAbfBtInfo);
-
-    A_MEMZERO(pAbfBtInfo->HCI_DeviceAddress,
+    
+    A_MEMZERO(pAbfBtInfo->HCI_DeviceAddress, 
               sizeof(pAbfBtInfo->HCI_DeviceAddress));
-    A_MEMZERO(pAbfBtInfo->HCI_DeviceName,
+    A_MEMZERO(pAbfBtInfo->HCI_DeviceName, 
               sizeof(pAbfBtInfo->HCI_DeviceName));
-    A_MEMZERO(pAbfBtInfo->HCI_ManufacturerName,
+    A_MEMZERO(pAbfBtInfo->HCI_ManufacturerName, 
               sizeof(pAbfBtInfo->HCI_ManufacturerName));
-    A_MEMZERO(pAbfBtInfo->HCI_ProtocolVersion,
+    A_MEMZERO(pAbfBtInfo->HCI_ProtocolVersion, 
               sizeof(pAbfBtInfo->HCI_ProtocolVersion));
     pAbfBtInfo->HCI_LMPVersion = 0;
 
@@ -1233,18 +1233,18 @@ GetAdapterInfo(ABF_BT_INFO *pAbfBtInfo)
     int i;
     A_UCHAR eventBuffer[HCI_MAX_EVENT_SIZE];
     A_UCHAR *eventPtr;
-    int eventLen;
-
+    int eventLen; 
+        
         /* Get adapter/device address by issuing HCI command, Read_BD_ADDR */
     status = IssueHCICommand(pAbfBtInfo,
-                cmd_opcode_pack(OGF_INFO_PARAM, OCF_READ_BD_ADDR),
+                cmd_opcode_pack(OGF_INFO_PARAM, OCF_READ_BD_ADDR), 
                 0,
                 0,
                 2000,
                 eventBuffer,
                 sizeof(eventBuffer),
                 &eventPtr,
-                &eventLen);
+                &eventLen);          
 
     if (A_FAILED(status)) {
         A_ERR("[%s] Failed to get BD_ADDR \n", __FUNCTION__);
@@ -1252,16 +1252,16 @@ GetAdapterInfo(ABF_BT_INFO *pAbfBtInfo)
     }
 
     if (eventBuffer[6] == 0) { /* READ_BD_ADDR was a success */
-        for (i = 0; i < BD_ADDR_SIZE; i++) {
+        for (i = 0; i < BD_ADDR_SIZE; i++) { 
             pAbfBtInfo->HCI_DeviceAddress[i] = eventBuffer[i+7];
         }
-        A_DEBUG("BT-HCI Device Address: (%2.2X:%2.2X:%2.2X:%2.2X:%2.2X:%2.2X)\n",
-               pAbfBtInfo->HCI_DeviceAddress[0], pAbfBtInfo->HCI_DeviceAddress[1],
-               pAbfBtInfo->HCI_DeviceAddress[2], pAbfBtInfo->HCI_DeviceAddress[3],
+        A_DEBUG("BT-HCI Device Address: (%2.2X:%2.2X:%2.2X:%2.2X:%2.2X:%2.2X)\n", 
+               pAbfBtInfo->HCI_DeviceAddress[0], pAbfBtInfo->HCI_DeviceAddress[1], 
+               pAbfBtInfo->HCI_DeviceAddress[2], pAbfBtInfo->HCI_DeviceAddress[3], 
                pAbfBtInfo->HCI_DeviceAddress[4], pAbfBtInfo->HCI_DeviceAddress[5]);
     }
 
-    status = A_OK;
+    status = A_OK; 
 
     return status;
 }
@@ -1276,7 +1276,7 @@ GetAdapterInfo(ABF_BT_INFO *pAbfBtInfo)
     char        tempStr[STRING_SIZE_MAX];
 
     do {
-            /* device name */
+            /* device name */       
         status = DoMethodCall(pAbfBtInfo->Bus,
                               BLUEZ_NAME,
                               pAbfBtInfo->HCI_AdapterName,
@@ -1288,10 +1288,10 @@ GetAdapterInfo(ABF_BT_INFO *pAbfBtInfo)
                               pAbfBtInfo->HCI_DeviceName,
                               DBUS_TYPE_STRING,
                               sizeof(pAbfBtInfo->HCI_DeviceName));
-
+        
         if (A_FAILED(status)) {
             A_ERR("[%s] Failed to complete GetName \n", __FUNCTION__);
-            break;
+            break;    
         }
 
             /* Manufacturer name */
@@ -1306,13 +1306,13 @@ GetAdapterInfo(ABF_BT_INFO *pAbfBtInfo)
                               pAbfBtInfo->HCI_ManufacturerName,
                               DBUS_TYPE_STRING,
                               sizeof(pAbfBtInfo->HCI_ManufacturerName));
-
+        
         if (A_FAILED(status)) {
             A_ERR("[%s] Failed to complete GetManufacturer \n", __FUNCTION__);
-            break;
+            break;    
         }
-
-            /* get LMP version */
+ 
+            /* get LMP version */ 
         status = DoMethodCall(pAbfBtInfo->Bus,
                               BLUEZ_NAME,
                               pAbfBtInfo->HCI_AdapterName,
@@ -1324,15 +1324,15 @@ GetAdapterInfo(ABF_BT_INFO *pAbfBtInfo)
                               pAbfBtInfo->HCI_ProtocolVersion,
                               DBUS_TYPE_STRING,
                               sizeof(pAbfBtInfo->HCI_ProtocolVersion));
-
+        
         if (A_FAILED(status)) {
             A_ERR("[%s] Failed to complete GetVersion \n", __FUNCTION__);
-            break;
+            break;    
         }
 
 
-        for (count = 0;
-             ((count < sizeof(ver_map)/sizeof(hci_map)) && (ver_map[count].str));
+        for (count = 0; 
+             ((count < sizeof(ver_map)/sizeof(hci_map)) && (ver_map[count].str)); 
              count++)
         {
             if (strstr(pAbfBtInfo->HCI_ProtocolVersion, ver_map[count].str)) {
@@ -1341,7 +1341,7 @@ GetAdapterInfo(ABF_BT_INFO *pAbfBtInfo)
             }
         }
 
-            /* Device address */
+            /* Device address */        
         status = DoMethodCall(pAbfBtInfo->Bus,
                               BLUEZ_NAME,
                               pAbfBtInfo->HCI_AdapterName,
@@ -1353,21 +1353,21 @@ GetAdapterInfo(ABF_BT_INFO *pAbfBtInfo)
                               tempStr,
                               DBUS_TYPE_STRING,
                               sizeof(tempStr));
-
+        
         if (A_FAILED(status)) {
             A_ERR("[%s] Failed to get Address \n", __FUNCTION__);
-            break;
+            break;    
         }
-
+        
         A_STR2ADDR(tempStr, pAbfBtInfo->HCI_DeviceAddress);
-
+   
     } while (FALSE);
 
-
+    
     if (A_SUCCESS(status)) {
-        A_INFO("BT-HCI Device Address: (%2.2X:%2.2X:%2.2X:%2.2X:%2.2X:%2.2X)\n",
-               pAbfBtInfo->HCI_DeviceAddress[0], pAbfBtInfo->HCI_DeviceAddress[1],
-               pAbfBtInfo->HCI_DeviceAddress[2], pAbfBtInfo->HCI_DeviceAddress[3],
+        A_INFO("BT-HCI Device Address: (%2.2X:%2.2X:%2.2X:%2.2X:%2.2X:%2.2X)\n", 
+               pAbfBtInfo->HCI_DeviceAddress[0], pAbfBtInfo->HCI_DeviceAddress[1], 
+               pAbfBtInfo->HCI_DeviceAddress[2], pAbfBtInfo->HCI_DeviceAddress[3], 
                pAbfBtInfo->HCI_DeviceAddress[4], pAbfBtInfo->HCI_DeviceAddress[5]);
         A_INFO("BT-HCI Device Name: %s\n", pAbfBtInfo->HCI_DeviceName);
         A_INFO("BT-HCI Manufacturer Name: %s\n", pAbfBtInfo->HCI_ManufacturerName);
@@ -1698,7 +1698,7 @@ static A_STATUS CheckRemoteDeviceEDRCapable(ABF_BT_INFO *pAbfBtInfo, A_BOOL *pED
                         evtBuffer,
                         sizeof(evtBuffer),
                         &eventPtr,
-                        &eventLen);
+                        &eventLen);          
 
         if (A_FAILED(status)) {
             A_ERR("[%s] Failed to get remote features \n", __FUNCTION__);
@@ -1710,10 +1710,10 @@ static A_STATUS CheckRemoteDeviceEDRCapable(ABF_BT_INFO *pAbfBtInfo, A_BOOL *pED
 
         A_DUMP_BUFFER(lmp_features,sizeof(lmp_features),"Remote Device LMP Features:");
 
-        if ((lmp_features[LMP_FEATURE_ACL_EDR_2MBPS_BYTE_INDEX] & LMP_FEATURE_ACL_EDR_2MBPS_BIT_MASK)  ||
+        if ((lmp_features[LMP_FEATURE_ACL_EDR_2MBPS_BYTE_INDEX] & LMP_FEATURE_ACL_EDR_2MBPS_BIT_MASK)  ||    
                 (lmp_features[LMP_FEATURE_ACL_EDR_3MBPS_BYTE_INDEX] & LMP_FEATURE_ACL_EDR_3MBPS_BIT_MASK)) {
             A_INFO("Device (%s) is EDR capable \n", pAbfBtInfo->DefaultRemoteAudioDeviceAddress);
-            *pEDRCapable = TRUE;
+            *pEDRCapable = TRUE;          
         } else {
             A_INFO("Device (%s) is NOT EDR capable \n", pAbfBtInfo->DefaultRemoteAudioDeviceAddress);
             *pEDRCapable = FALSE;
@@ -1726,11 +1726,11 @@ static A_STATUS CheckRemoteDeviceEDRCapable(ABF_BT_INFO *pAbfBtInfo, A_BOOL *pED
 /* This is new function to check remote device LMP version */
 static A_STATUS GetRemoteDeviceLMPVersion(ABF_BT_INFO *pAbfBtInfo)
 {
-    A_STATUS status;
+    A_STATUS status;    
     A_UINT16 conn_handle;
     A_UCHAR evtBuffer[HCI_MAX_EVENT_SIZE];
     A_UCHAR *eventPtr;
-    int eventLen;
+    int eventLen; 
 
     do {
         status = GetRemoteAclDeviceHandle(pAbfBtInfo, &conn_handle);
@@ -1745,7 +1745,7 @@ static A_STATUS GetRemoteDeviceLMPVersion(ABF_BT_INFO *pAbfBtInfo)
                         evtBuffer,
                         sizeof(evtBuffer),
                         &eventPtr,
-                        &eventLen);
+                        &eventLen);          
 
         if (A_FAILED(status)) {
             A_ERR("[%s] Failed to get remote Version \n", __FUNCTION__);
@@ -1764,7 +1764,7 @@ static A_STATUS GetRemoteDeviceLMPVersion(ABF_BT_INFO *pAbfBtInfo)
             strcpy(&pAbfBtInfo->DefaultRemoteAudioDeviceVersion[0], "2.0");
         }
 
-        A_INFO("[%s], Remote Device LMP Version: %d, in string format this is: %s\n", __FUNCTION__, eventPtr[3],
+        A_INFO("[%s], Remote Device LMP Version: %d, in string format this is: %s\n", __FUNCTION__, eventPtr[3], 
                pAbfBtInfo->DefaultRemoteAudioDeviceVersion);
     } while (0);
 
@@ -1776,13 +1776,13 @@ static A_STATUS GetRemoteDeviceLMPVersion(ABF_BT_INFO *pAbfBtInfo)
 
 static A_STATUS CheckRemoteDeviceEDRCapable(ABF_BT_INFO *pAbfBtInfo, A_BOOL *pEDRCapable)
 {
-    A_STATUS  status = A_OK;
+    A_STATUS  status = A_OK; 
     A_UINT8   lmp_features[LMP_FEATURES_LENGTH];
-
+    
     do {
-
+        
         A_MEMZERO(lmp_features,sizeof(lmp_features));
-
+        
         status = DoMethodCall(pAbfBtInfo->Bus,
                               BLUEZ_NAME,
                               pAbfBtInfo->HCI_AdapterName,
@@ -1794,26 +1794,26 @@ static A_STATUS CheckRemoteDeviceEDRCapable(ABF_BT_INFO *pAbfBtInfo, A_BOOL *pED
                               lmp_features,
                               DBUS_TYPE_ARRAY,
                               sizeof(lmp_features));
-
+        
         if (A_FAILED(status)) {
             A_ERR("[%s] Failed to get remote features \n", __FUNCTION__);
-            break;
+            break;    
         }
-
+        
         A_DUMP_BUFFER(lmp_features,sizeof(lmp_features),"Remote Device LMP Features:");
-
-        if ((lmp_features[LMP_FEATURE_ACL_EDR_2MBPS_BYTE_INDEX] & LMP_FEATURE_ACL_EDR_2MBPS_BIT_MASK)  ||
+        
+        if ((lmp_features[LMP_FEATURE_ACL_EDR_2MBPS_BYTE_INDEX] & LMP_FEATURE_ACL_EDR_2MBPS_BIT_MASK)  ||    
                 (lmp_features[LMP_FEATURE_ACL_EDR_3MBPS_BYTE_INDEX] & LMP_FEATURE_ACL_EDR_3MBPS_BIT_MASK)) {
             A_INFO("Device (%s) is EDR capable \n", pAbfBtInfo->DefaultRemoteAudioDeviceAddress);
-            *pEDRCapable = TRUE;
+            *pEDRCapable = TRUE;          
         } else {
             A_INFO("Device (%s) is NOT EDR capable \n", pAbfBtInfo->DefaultRemoteAudioDeviceAddress);
             *pEDRCapable = FALSE;
         }
-
+        
     } while (FALSE);
 
-    return status;
+    return status;  
 }
 
 #endif
@@ -1875,30 +1875,30 @@ static void GetBtAudioConnectionProperties(ABF_BT_INFO              *pAbfBtInfo,
 }
 
 
-static A_STATUS WaitForHCIEvent(int         Socket,
-                                int         TimeoutMs,
+static A_STATUS WaitForHCIEvent(int         Socket, 
+                                int         TimeoutMs, 
                                 A_UCHAR     *pBuffer,
                                 int         MaxLength,
-                                A_UCHAR     EventCode,
+                                A_UCHAR     EventCode, 
                                 A_UINT16    OpCode,
                                 A_UCHAR     **ppEventPtr,
                                 int         *pEventLength)
 {
-
+    
     int                     eventLen;
     hci_event_hdr           *eventHdr;
     struct pollfd           pfd;
     int                     result;
-    A_UCHAR                 *eventPtr;
+    A_UCHAR                 *eventPtr; 
     A_STATUS                status = A_OK;
-
+    
     *ppEventPtr = NULL;
     A_MEMZERO(&pfd,sizeof(pfd));
     pfd.fd = Socket;
     pfd.events = POLLIN;
 
     if (EventCode == EVT_CMD_COMPLETE) {
-        A_INFO("Waiting for HCI CMD Complete Event, Opcode: 0x%4.4X (%d MS) \n",OpCode, TimeoutMs);
+        A_INFO("Waiting for HCI CMD Complete Event, Opcode: 0x%4.4X (%d MS) \n",OpCode, TimeoutMs);     
     } else {
         A_INFO("Waiting for HCI Event: %d (%d MS) \n",EventCode, TimeoutMs);
     }
@@ -1909,7 +1909,7 @@ static A_STATUS WaitForHCIEvent(int         Socket,
              * the caller usually calls this function when it knows there
              * is an event that is likely to be captured */
         result = poll(&pfd, 1, TimeoutMs);
-
+        
         if (result < 0) {
             if ((errno == EAGAIN) || (errno == EINTR)) {
                 /* interrupted */
@@ -1919,7 +1919,7 @@ static A_STATUS WaitForHCIEvent(int         Socket,
             }
             break;
         }
-
+        
         if (result == 0) {
             A_ERR("[%s], poll returned with 0 \n",__FUNCTION__);
             status = A_ERROR;
@@ -2064,22 +2064,22 @@ static void CleanupHciEventFilter(ABF_BT_INFO *pAbfBtInfo)
         pAbfBtInfo->HCIEventListenerSocket = -1;
 
         if (pAbfBtInfo->HCIFilterThreadCreated) {
-            A_INFO("[%s] Waiting for HCI filter thread to exit... \n",
+            A_INFO("[%s] Waiting for HCI filter thread to exit... \n", 
                       __FUNCTION__);
-                /* wait for thread to exit
+                /* wait for thread to exit 
                  * note: JOIN cleans up thread resources as per POSIX spec. */
             status = A_TASK_JOIN(&pAbfBtInfo->hBtHCIFilterThread);
             if (A_FAILED(status)) {
-                A_ERR("[%s] Failed to JOIN HCI filter thread \n",
+                A_ERR("[%s] Failed to JOIN HCI filter thread \n", 
                       __FUNCTION__);
             }
             A_MEMZERO(&pAbfBtInfo->hBtHCIFilterThread,sizeof(pAbfBtInfo->hBtHCIFilterThread));
-            pAbfBtInfo->HCIFilterThreadCreated = FALSE;
-        }
-
-        pAbfBtInfo->HCIFilterThreadShutdown = FALSE;
-    }
-
+            pAbfBtInfo->HCIFilterThreadCreated = FALSE;     
+        }   
+        
+        pAbfBtInfo->HCIFilterThreadShutdown = FALSE; 
+    }    
+    
 }
 
 
@@ -2232,40 +2232,40 @@ static A_STATUS IssueHCICommand(ABF_BT_INFO *pAbfBtInfo,
         } else if (OpCode == cmd_opcode_pack(OGF_LINK_CTL, OCF_READ_REMOTE_VERSION)) {
             hci_filter_clear(&filterSetting);
             hci_filter_set_ptype(HCI_EVENT_PKT, &filterSetting);
-            hci_filter_set_event(EVT_READ_REMOTE_VERSION_COMPLETE, &filterSetting);
+            hci_filter_set_event(EVT_READ_REMOTE_VERSION_COMPLETE, &filterSetting); 
         }
         else {
             hci_filter_clear(&filterSetting);
             hci_filter_set_ptype(HCI_EVENT_PKT,  &filterSetting);
             hci_filter_set_event(EVT_CMD_COMPLETE, &filterSetting);
         }
-
+    
         if (setsockopt(sk, SOL_HCI, HCI_FILTER, &filterSetting, sizeof(filterSetting)) < 0) {
             A_ERR("[%s] Failed to set socket opt: %d \n", __FUNCTION__, errno);
             break;
         }
-
+    
         A_MEMZERO(&addr,sizeof(addr));
         addr.hci_family = AF_BLUETOOTH;
         addr.hci_dev = pAbfBtInfo->AdapterId;
-
+        
         if (bind(sk,(struct sockaddr *)&addr, sizeof(addr)) < 0) {
             A_ERR("[%s] Can't bind to hci:%d (err:%d) \n", __FUNCTION__, pAbfBtInfo->AdapterId, errno);
             break;
         }
-
+        
         while ((result = writev(sk, iv, ivcount)) < 0) {
             if (errno == EAGAIN || errno == EINTR) {
                 continue;
             }
-            break;
+            break;            
         }
-
+        
         if (result <= 0) {
             A_ERR("[%s] Failed to write to hci:%d (err:%d) \n", __FUNCTION__, pAbfBtInfo->AdapterId, errno);
-            break;
+            break;    
         }
-
+        
         /* To support new HCI Commands */
         switch (OpCode) {
         case cmd_opcode_pack(OGF_LINK_CTL, OCF_READ_REMOTE_FEATURES):
@@ -2276,7 +2276,7 @@ static A_STATUS IssueHCICommand(ABF_BT_INFO *pAbfBtInfo,
                                      EVT_READ_REMOTE_FEATURES_COMPLETE,
                                      OpCode,
                                      ppEventPtr,
-                                     pEventLength);
+                                     pEventLength); 
             break;
         case cmd_opcode_pack(OGF_LINK_CTL, OCF_READ_REMOTE_VERSION):
             status = WaitForHCIEvent(sk,
@@ -2286,32 +2286,32 @@ static A_STATUS IssueHCICommand(ABF_BT_INFO *pAbfBtInfo,
                                      EVT_READ_REMOTE_VERSION_COMPLETE,
                                      OpCode,
                                      ppEventPtr,
-                                     pEventLength);
+                                     pEventLength); 
             break;
-        default:
+        default:              
             status = WaitForHCIEvent(sk,
                                      EventRecvTimeoutMS,
                                      pEventBuffer,
                                      MaxLength,
-                                     EVT_CMD_COMPLETE,
+                                     EVT_CMD_COMPLETE, 
                                      OpCode,
                                      ppEventPtr,
                                      pEventLength);
             break;
         }
-
+                    
         if (A_FAILED(status)) {
-            break;
+            break;    
         }
-
+        
         status = A_OK;
-
+        
     } while (FALSE);
-
+    
     if (sk >= 0) {
-        close(sk);
+        close(sk);    
     }
-
+    
     return status;
 }
 
@@ -2368,12 +2368,12 @@ static WLAN_CHANNEL_MAP g_ChannelMapTable[MAX_WLAN_CHANNELS + 1] = {
 static int LookUpChannel(int FreqMhz)
 {
     int i;
-
+    
     if (FreqMhz == 0) {
             /* not connected */
-        return 0;
+        return 0;    
     }
-
+    
     for (i = 0; i < MAX_WLAN_CHANNELS; i++) {
         if (FreqMhz <= g_ChannelTable[i].Center) {
             break;
@@ -2383,71 +2383,71 @@ static int LookUpChannel(int FreqMhz)
 }
 
 static A_STATUS IssueAFHChannelClassification(ABF_BT_INFO *pAbfBtInfo, int CurrentWLANChannel)
-{
-    A_UCHAR     evtBuffer[HCI_MAX_EVENT_SIZE];
+{  
+    A_UCHAR     evtBuffer[HCI_MAX_EVENT_SIZE];  
     A_STATUS    status;
     A_UCHAR     *eventPtr;
-    int         eventLen;
+    int         eventLen; 
     A_UCHAR     *pChannelMap;
-
+    
     A_INFO("WLAN Operating Channel: %d \n", CurrentWLANChannel);
-
+       
     if (CurrentWLANChannel > MAX_WLAN_CHANNELS) {
             /* check if this is expressed in Mhz */
         if (CurrentWLANChannel >= 2412) {
                 /* convert Mhz into a channel number */
-            CurrentWLANChannel = LookUpChannel(CurrentWLANChannel);
+            CurrentWLANChannel = LookUpChannel(CurrentWLANChannel);    
         } else {
-            return A_ERROR;
-        }
+            return A_ERROR;    
+        } 
     }
-
-    pChannelMap = &(g_ChannelMapTable[CurrentWLANChannel].Map[0]);
-
+          
+    pChannelMap = &(g_ChannelMapTable[CurrentWLANChannel].Map[0]);    
+    
     do {
-
+    
         status = IssueHCICommand(pAbfBtInfo,
                                  cmd_opcode_pack(3,0x3F),
-                                 pChannelMap,
+                                 pChannelMap, 
                                  AFH_CHANNEL_MAP_BYTES,
                                  AFH_COMMAND_COMPLETE_TIMEOUT_MS,
                                  evtBuffer,
                                  sizeof(evtBuffer),
                                  &eventPtr,
                                  &eventLen);
-
-
+                    
+        
         if (A_FAILED(status)) {
-            break;
+            break;    
         }
-
+        
         status = A_ERROR;
-
-        if (eventPtr == NULL) {
+        
+        if (eventPtr == NULL) {    
             A_ERR("[%s] Failed to capture AFH command complete event \n", __FUNCTION__);
-            break;
+            break;    
         }
-
+        
         if (eventLen < (sizeof(evt_cmd_complete) + 1)) {
             A_ERR("[%s] not enough bytes in AFH command complete event %d \n", __FUNCTION__, eventLen);
-            break;
+            break;    
         }
-
+        
             /* check status parameter that follows the command complete event body */
         if (eventPtr[sizeof(evt_cmd_complete)] != 0) {
-            A_ERR("[%s] AFH command complete event indicated failure : %d \n", __FUNCTION__,
+            A_ERR("[%s] AFH command complete event indicated failure : %d \n", __FUNCTION__, 
                 eventPtr[sizeof(evt_cmd_complete)]);
             break;
         }
-
+        
         A_INFO(" AFH Command successfully issued \n");
         //A_DUMP_BUFFER(pChannelMap, AFH_CHANNEL_MAP_BYTES, "AFH Channel Classification Map");
-
+                  
         status = A_OK;
-
+         
     } while (FALSE);
-
-    return status;
+                                 
+    return status;              
 }
 
 void IndicateCurrentWLANOperatingChannel(ATHBT_FILTER_INFO *pFilterInfo, int CurrentWLANChannel)
@@ -2583,45 +2583,45 @@ static void *HCIFilterThread(void *arg)
     A_UINT8                 buffer[300];
     A_UINT8                 *pBuffer;
     int                     eventLen;
-
+    
     A_INFO("[%s] starting up \n", __FUNCTION__);
-
+    
     while (1) {
-
+        
         pBuffer = buffer;
-
+        
         if (pAbfBtInfo->HCIFilterThreadShutdown) {
-            break;
+            break;    
         }
-
+        
             /* get the packet */
         eventLen = read(pAbfBtInfo->HCIEventListenerSocket, pBuffer, sizeof(buffer));
-
+        
         if (eventLen < 0) {
             if (!pAbfBtInfo->HCIFilterThreadShutdown) {
                 A_ERR("[%s] socket error %d \n", __FUNCTION__, eventLen);
             }
-            break;
+            break;    
         }
-
+        
         if (eventLen == 0) {
             /* no event */
             continue;
         }
-
+                
         if (eventLen < (1 + HCI_EVENT_HDR_SIZE)) {
             A_ERR("[%s] Unknown receive packet! len : %d \n", __FUNCTION__, eventLen);
             continue;
         }
-
+        
             /* first byte is a tag for the HCI packet type, we only care about events */
         if (pBuffer[0] != HCI_EVENT_PKT) {
             A_ERR("[%s] Unsupported packet type : %d \n", __FUNCTION__, buffer[0]);
             continue;
         }
-
+        
             /* pass this raw HCI event to the filter core */
-        AthBtFilterHciEvent(pInstance,&pBuffer[1],eventLen - 1);
+        AthBtFilterHciEvent(pInstance,&pBuffer[1],eventLen - 1); 
     }
 
     A_INFO("[%s] exiting \n", __FUNCTION__);
@@ -2630,3 +2630,5 @@ static void *HCIFilterThread(void *arg)
 }
 
 #endif
+
+

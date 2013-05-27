@@ -37,3 +37,4 @@ extern struct aw_pm_info  pm_info;
 #define unlikely(x)	__builtin_expect(!!(x), 0)
 
 #endif  //__SUPER_I_H__
+

@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="sdio_hcd_defs_pdk.h" company="Atheros">
 //    Copyright (c) 2007-2008 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -25,5 +25,5 @@
 
 /* this is a place holder for PDKs, you must have the HDK in order to compile
  * Host Controller Drivers  */
-
+ 
 #endif /* __SDIO_HCD_DEFS_H___ */

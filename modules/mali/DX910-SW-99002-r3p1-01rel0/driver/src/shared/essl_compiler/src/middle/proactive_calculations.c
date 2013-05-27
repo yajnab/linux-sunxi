@@ -1,9 +1,9 @@
 /*
  * Copyright (C) 2012 ARM Limited. All rights reserved.
- *
+ * 
  * This program is free software and is provided to you under the terms of the GNU General Public License version 2
  * as published by the Free Software Foundation, and any use by you of this program is subject to the terms of such GNU licence.
- *
+ * 
  * A copy of the licence is included with the program, and can also be obtained from Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
@@ -23,7 +23,7 @@
 /**
  * This file includes implementation of the pilot shading optimization.
  * The compiler identifies chains of operations dependent only on run-time constants (e.g. uniform varibales)
- * and moves them to a separate pilot shader (up to 4).
+ * and moves them to a separate pilot shader (up to 4). 
  * Afterwards driver executes these pilot shaders before main jobs
  */
 
@@ -40,7 +40,7 @@ ASSUME_ALIASING(run_time_nodes_list, generic_list);
 /**
  * structure that keeps all necessary infor about an rt node
  */
-typedef struct run_time_constant_node
+typedef struct run_time_constant_node 
 {
 	struct run_time_constant_node *next;	/* Next element in the list */
 	node *node;								/* an rt constant node to be moved to a pilot shader (with all necessary predecessors)*/
@@ -157,7 +157,7 @@ static essl_bool is_node_inputs_rt_constant(pilot_calculations_context *ctx, nod
 	{
 		return ESSL_TRUE;
 	}
-
+	
 	/* only uniform loads are conisdered to be run time constant */
 	if(op->hdr.kind == EXPR_KIND_LOAD)
 	{
@@ -181,7 +181,7 @@ static essl_bool is_node_inputs_rt_constant(pilot_calculations_context *ctx, nod
 	{
 		return ESSL_TRUE;
 	}
-
+	
 	/* it's too dififcult to process phi-nodes as it may involve  additional control flow analysis
 	 * jut returning false for now
 	 */
@@ -202,7 +202,7 @@ static essl_bool is_node_inputs_rt_constant(pilot_calculations_context *ctx, nod
 		node *child = GET_CHILD(op, i);
 		res &= is_node_inputs_rt_constant(ctx, child, weight, &child_weight);
 	}
-
+	
 	/* hash run time constants */
 	if(res == ESSL_TRUE)
 	{
@@ -251,7 +251,7 @@ static memerr collect_successors_for_node(pilot_calculations_context *ctx, node 
 		return MEM_OK;
 	}
 	ESSL_CHECK(_essl_ptrset_insert(&ctx->visited, n));
-
+	
 	if(n->hdr.kind == EXPR_KIND_PHI)
 	{
 		/* process phi-node */
@@ -261,7 +261,7 @@ static memerr collect_successors_for_node(pilot_calculations_context *ctx, node 
 			ESSL_CHECK(add_succs_to_list(ctx, src->source, n));
 			ESSL_CHECK(collect_successors_for_node(ctx, src->source));
 		}
-	} else
+	} else 
 	{
 		/* process regular node */
 		for(i = 0; i < GET_N_CHILDREN(n); ++i)
@@ -273,7 +273,7 @@ static memerr collect_successors_for_node(pilot_calculations_context *ctx, node 
 				ESSL_CHECK(collect_successors_for_node(ctx, child));
 			}
 		}
-	}
+	}	
 
 	return MEM_OK;
 }
@@ -302,7 +302,7 @@ static memerr collect_successors(pilot_calculations_context *ctx, basic_block *b
 	}
 
 	for(phi = b->phi_nodes; phi != 0; phi = phi->next)
-	{
+	{		
 		ESSL_CHECK(collect_successors_for_node(ctx, phi->phi_node));
 	}
 
@@ -347,7 +347,7 @@ static node_succs_list * find_rt_const_succs(pilot_calculations_context *ctx, no
 	{
 		return succs_list;
 	}
-
+	
 
 	return NULL;
 }
@@ -379,12 +379,12 @@ static essl_bool is_addressing_op(node *n)
 	return ESSL_FALSE;
 }
 
-static memerr add_to_hoist_points(pilot_calculations_context *ctx,
+static memerr add_to_hoist_points(pilot_calculations_context *ctx, 
 						node *n,
 						run_time_constant_node *rtc_elem,
-						node *succ,
+						node *succ, 
 						int weight,
-						essl_bool is_const,
+						essl_bool is_const, 
 						int *calc_weight,
 						essl_bool *prev_node_set)
 {
@@ -490,8 +490,8 @@ static memerr find_last_fully_const_succ(pilot_calculations_context *ctx, node *
 		}
 	}
 
-	/* if there are more than 2 successors to move we'll just drop,
-	 * don't know how to handle it now */
+	/* if there are more than 2 successors to move we'll just drop, 
+	 * don't know how to handle it now */	
 	if(_essl_ptrset_size(&ctx->hoist_points) > 1)
 	{
 		run_time_nodes_list * elem;
@@ -562,7 +562,7 @@ static memerr find_last_point_for_hoisting_out(pilot_calculations_context *ctx)
 	ctx->rtc_nodes = LIST_SORT(ctx->rtc_nodes, compare_rtc_nodes_by_weight, run_time_constant_node);
 
 	elem = ctx->rtc_nodes;
-	/* it is possible that for different candidates we found
+	/* it is possible that for different candidates we found 
 	 * the same successor which should be moved
 	 * let's remove duplicates
 	 * */
@@ -960,7 +960,7 @@ static memerr collect_rt_nodes(pilot_calculations_context *ctx, node *n, basic_b
 }
 
 /**
- * Finding  all initial candidates
+ * Finding  all initial candidates 
  */
 static memerr find_constant_input_calculations_nodes(pilot_calculations_context *ctx)
 {
@@ -1064,7 +1064,7 @@ static memerr optimize_constant_input_calculations(pilot_calculations_context *c
 	{
 		run_time_constant_node *elem;
 		unsigned num = 0;
-
+		
 		/* we add at least 1 instructon and some additional overhead in the driver
 		 * so the optimization will be applied if we remove at least 5 nodes from the main shader,
 		 * but not more than 4*/
@@ -1090,7 +1090,7 @@ static memerr find_constant_input_calculations_for_func(pilot_calculations_conte
 {
 	ctx->func = function;
 	ctx->cfg = function->control_flow_graph;
-
+	
 	ESSL_CHECK(find_constant_input_calculations_nodes(ctx));
 
 	return MEM_OK;
@@ -1136,3 +1136,4 @@ memerr _essl_optimise_constant_input_calculations(pass_run_context *pr_ctx, tran
 	return MEM_OK;
 
 }
+

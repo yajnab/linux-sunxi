@@ -22,7 +22,7 @@ typedef enum {
     _OP_READ_REG,
     _OP_WRITE_REG,
     _OP_READ_MEM,
-    _OP_WRITE_MEM,
+    _OP_WRITE_MEM,    
 
     _OP_MAX,
 } _CMD_OPCODES;

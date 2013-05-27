@@ -2,7 +2,7 @@
  *  arch/arm/mach-sun7i/include/mach/uncompress.h
  *
  * Copyright (c) Allwinner.  All rights reserved.
- * Benn Huang (benn@allwinnertech.com)
+ * Benn Huang (benn@allwinnertech.com) 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

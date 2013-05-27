@@ -2,7 +2,7 @@
 // Copyright (c) 2004-2010 Atheros Communications Inc.
 // All rights reserved.
 //
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -811,7 +811,7 @@ ar6000_ioctl_tcmd_get_rx_report(struct net_device *dev,
 void
 ar6000_tcmd_rx_report_event(AR_SOFTC_DEV_T *arPriv, A_UINT8 * results, int len)
 {
-
+    
     AR_SOFTC_T *ar = arPriv->arSoftc;
     TCMD_CONT_RX * rx_rep = (TCMD_CONT_RX *)results;
 
@@ -823,7 +823,7 @@ ar6000_tcmd_rx_report_event(AR_SOFTC_DEV_T *arPriv, A_UINT8 * results, int len)
         A_MEMCPY(ar->tcmdResp.buf, tCmd->buf, sizeof(ar->tcmdResp.buf));
         ar->tcmdRxReport = 1;
     }
-    else { /*(rx_rep->act == TCMD_CONT_RX_REPORT) */
+    else { /*(rx_rep->act == TCMD_CONT_RX_REPORT) */ 
     if (enablerssicompensation) {
         rx_rep->u.report.rssiInDBm = rssi_compensation_calc_tcmd(ar, tcmdRxFreq, rx_rep->u.report.rssiInDBm,rx_rep->u.report.totalPkt);
     }
@@ -949,7 +949,7 @@ ar6000_ioctl_get_ap_stats(struct net_device *dev, struct ifreq *rq)
     WMI_PER_STA_STAT *pStats = ar->arAPStats;
     WMI_AP_MODE_STAT ret_stat;
     A_UINT8 i, j=0;
-
+        
     if (ar->arWmiReady == FALSE) {
         return -EIO;
     }
@@ -993,7 +993,7 @@ ar6000_ioctl_get_ap_stats(struct net_device *dev, struct ifreq *rq)
     if (signal_pending(current)) {
         ret = -EINTR;
     }
-
+    
     A_MEMZERO(&ret_stat, sizeof(ret_stat));
     for(i = 0; i < NUM_CONN; i++) {
         if(ar->connTbl[i].arPriv == arPriv) {
@@ -1009,7 +1009,7 @@ ar6000_ioctl_get_ap_stats(struct net_device *dev, struct ifreq *rq)
             j++;
         }
     }
-
+    
     if (!ret && copy_to_user(rq->ifr_data, &ret_stat, sizeof(ret_stat))) {
         ret = -EFAULT;
     }
@@ -1999,7 +1999,7 @@ ar6000_sendkey(AR_SOFTC_DEV_T *arPriv, struct ieee80211req_key *ik, KEY_USAGE ke
 {
     A_STATUS status;
     CRYPTO_TYPE keyType = NONE_CRYPT;
-
+   
     switch (ik->ik_type) {
         case IEEE80211_CIPHER_WEP:
             keyType = WEP_CRYPT;
@@ -2013,7 +2013,7 @@ ar6000_sendkey(AR_SOFTC_DEV_T *arPriv, struct ieee80211req_key *ik, KEY_USAGE ke
         default:
             break;
     }
-
+    
     if (IEEE80211_CIPHER_CCKM_KRK != ik->ik_type) {
         if (NONE_CRYPT == keyType) {
             return A_ERROR;
@@ -2046,7 +2046,7 @@ ar6000_sendkey(AR_SOFTC_DEV_T *arPriv, struct ieee80211req_key *ik, KEY_USAGE ke
     } else {
         status = wmi_add_krk_cmd(arPriv->arWmi, ik->ik_keydata);
     }
-
+    
     return status;
 }
 
@@ -2066,7 +2066,7 @@ ar6000_ioctl_setkey(AR_SOFTC_DEV_T *arPriv, struct ieee80211req_key *ik)
 
     if(arPriv->arNextMode == AP_NETWORK) {
         AR_SOFTC_AP_T   *arAp = &arPriv->arAp;
-
+        
         if (keyUsage == GROUP_USAGE) {
             A_MEMCPY(&arAp->ap_mode_bkey, ik, sizeof(struct ieee80211req_key));
         }
@@ -2078,10 +2078,10 @@ ar6000_ioctl_setkey(AR_SOFTC_DEV_T *arPriv, struct ieee80211req_key *ik)
         #endif
 
         status = ar6000_sendkey(arPriv, ik, keyUsage);
-
+        
     } else {
         AR_SOFTC_STA_T   *arSta = &arPriv->arSta;
-
+        
         #ifdef USER_KEYS
         arSta->user_saved_keys.keyOk = FALSE;
         arSta->user_saved_keys.keyType = keyType;
@@ -2093,16 +2093,16 @@ ar6000_ioctl_setkey(AR_SOFTC_DEV_T *arPriv, struct ieee80211req_key *ik)
                      sizeof(struct ieee80211req_key));
         }
         #endif
-
-        if (((WPA_PSK_AUTH == arPriv->arAuthMode) ||
+        
+        if (((WPA_PSK_AUTH == arPriv->arAuthMode) || 
             (WPA2_PSK_AUTH == arPriv->arAuthMode)) &&
             (GROUP_USAGE & keyUsage))
         {
             A_UNTIMEOUT(&arSta->disconnect_timer);
         }
-
+        
         status = ar6000_sendkey(arPriv, ik, keyUsage);
-
+        
         #ifdef USER_KEYS
         if (status == A_OK) {
             arSta->user_saved_keys.keyOk = TRUE;
@@ -2122,7 +2122,7 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
     AR_SOFTC_DEV_T *arPriv = (AR_SOFTC_DEV_T *)ar6k_priv(dev);
     AR_SOFTC_T     *ar         =  arPriv->arSoftc;
     AR_SOFTC_STA_T *arSta      = &arPriv->arSta;
-    AR_SOFTC_AP_T  *arAp       = &arPriv->arAp;
+    AR_SOFTC_AP_T  *arAp       = &arPriv->arAp;  
     HIF_DEVICE *hifDevice = ar->arHifDevice;
     int ret = 0, param;
     unsigned int address = 0;
@@ -2350,7 +2350,7 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
                 wmi_test_cmd(arPriv->arWmi, (A_UINT8*)&pmCmd, sizeof(TCMD_PM));
             }
             break;
-
+          
         case AR6000_XIOCTL_TCMD_CMDS:
             {
                 TC_CMDS cmdsCmd;
@@ -2375,7 +2375,7 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
                 }
                 wmi_test_cmd(arPriv->arWmi, (A_UINT8*)&setRegCmd, sizeof(TCMD_SET_REG));
             }
-            break;
+            break;             
 #endif /* CONFIG_HOST_TCMD_SUPPORT */
 
         case AR6000_XIOCTL_BMI_DONE:
@@ -2716,7 +2716,7 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
                                      pmParams.tx_wakeup_policy,
                                      pmParams.num_tx_to_wakeup,
 #if WLAN_CONFIG_IGNORE_POWER_SAVE_FAIL_EVENT_DURING_SCAN
-                                     IGNORE_POWER_SAVE_FAIL_EVENT_DURING_SCAN
+                                     IGNORE_POWER_SAVE_FAIL_EVENT_DURING_SCAN 
 #else
                                      SEND_POWER_SAVE_FAIL_EVENT_ALWAYS
 #endif
@@ -2854,7 +2854,7 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
                 ret = -EFAULT;
             } else {
                 if (wmi_set_lpreamble_cmd(arPriv->arWmi, setLpreambleCmd.status,
-#if WLAN_CONFIG_DONOT_IGNORE_BARKER_IN_ERP
+#if WLAN_CONFIG_DONOT_IGNORE_BARKER_IN_ERP 
                            WMI_DONOT_IGNORE_BARKER_IN_ERP
 #else
                            WMI_IGNORE_BARKER_IN_ERP
@@ -3466,7 +3466,7 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
             get_user(state, (unsigned int *)userdata);
             if (ar6000_set_wlan_state(ar, state)!=A_OK) {
                 ret = -EIO;
-            }
+            }       
             break;
         }
 
@@ -3624,7 +3624,7 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
                     goto ioctl_done;
                 }
 
-                wait_event_interruptible_timeout(arPriv->arEvent, (arPriv->arRateMask[0] != 0xFFFFFFFF) &&
+                wait_event_interruptible_timeout(arPriv->arEvent, (arPriv->arRateMask[0] != 0xFFFFFFFF) && 
                                              (arPriv->arRateMask[1] != 0xFFFFFFFF), wmitimeout * HZ);
 
                 if (signal_pending(current)) {
@@ -4053,20 +4053,20 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
             do {
                 if (ar->arWmiReady == FALSE) {
                     ret = -EIO;
-                    break;
-                }
+                    break;        
+                } 
                 if(copy_from_user(&cmd, userdata,
-                            sizeof(WMI_ADD_WOW_PATTERN_CMD)))
+                            sizeof(WMI_ADD_WOW_PATTERN_CMD))) 
                 {
                     ret = -EFAULT;
-                    break;
+                    break;        
                 }
                 if (copy_from_user(pattern_data,
                                       userdata + 3,
-                                      cmd.filter_size))
+                                      cmd.filter_size)) 
                 {
                     ret = -EFAULT;
-                    break;
+                    break;        
                 }
                 if (copy_from_user(mask_data,
                                   (userdata + 3 + cmd.filter_size),
@@ -4180,7 +4180,7 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
         case AR6000_XIOCTL_WMI_SET_AKMP_PARAMS:
             {
                 WMI_SET_AKMP_PARAMS_CMD  akmpParams;
-
+            
                 if (ar->arWmiReady == FALSE) {
                     ret = -EIO;
                 } else if (copy_from_user(&akmpParams, userdata,
@@ -4200,7 +4200,7 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
                 if (ar->arWmiReady == FALSE) {
                    ret = -EIO;
                    break;
-                }
+                } 
                 if (copy_from_user(&pmkidInfo.numPMKID, userdata,
                                       sizeof(pmkidInfo.numPMKID))) {
                     ret = -EFAULT;
@@ -4297,7 +4297,7 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
 #endif
             break;
         }
-
+ 
         case AR6000_XIOCTL_AP_SET_ACL_POLICY:
         {
             A_UINT8    policy;
@@ -4454,7 +4454,7 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
                     WMI_P2P_SET_CMD set_p2p_config;
                     A_MEMZERO(&set_p2p_config, sizeof(WMI_P2P_SET_CMD));
 
-                    set_p2p_config.config_id = WMI_P2P_CONFID_INTRA_BSS;
+                    set_p2p_config.config_id = WMI_P2P_CONFID_INTRA_BSS; 
                     set_p2p_config.val.intra_bss.flag = intra;
 
                     wmi_p2p_set_cmd(arPriv->arWmi, &set_p2p_config);
@@ -4758,7 +4758,7 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
         {
             WMI_SET_RTS_CMD rts;
             rts.threshold = arAp->arRTS;
-
+         
             if (ar->arWmiReady == FALSE) {
                 ret = -EIO;
             } else if(copy_to_user((WMI_SET_RTS_CMD *)rq->ifr_data,
@@ -4815,7 +4815,7 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
 
             /*Issue the WMI_FIND CMD*/
             WMI_P2P_FIND_CMD find_param;
-
+            
             if (ar->arWmiReady == FALSE) {
                 ret = -EIO;
                 break;
@@ -4866,7 +4866,7 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
                 ret = -EIO;
             } else if (copy_from_user(&go_param, userdata, sizeof(WMI_P2P_GO_NEG_START_CMD))) {
                 ret = -EFAULT;
-            } else {
+            } else { 
                 if (p2p_go_neg_start(A_WMI_GET_P2P_CTX(arPriv), &go_param)
                         != A_OK) {
                     ret = -EFAULT;
@@ -4881,7 +4881,7 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
                 ret = -EIO;
             } else if (copy_from_user(&go_neg_auth_param, userdata, sizeof(WMI_P2P_GO_NEG_START_CMD))) {
                 ret = -EFAULT;
-            } else {
+            } else { 
                 if (p2p_auth_go_neg(A_WMI_GET_P2P_CTX(arPriv),
                             &go_neg_auth_param) != A_OK) {
                     ret = -EFAULT;
@@ -4898,7 +4898,7 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
             } else if (copy_from_user(p2p_reject_peer, userdata,
                             IEEE80211_ADDR_LEN)) {
                 ret = -EFAULT;
-            } else {
+            } else { 
                 if (p2p_peer_reject(A_WMI_GET_P2P_CTX(arPriv),
                          p2p_reject_peer) != A_OK) {
                 ret = -EFAULT;
@@ -4914,7 +4914,7 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
                 ret = -EIO;
             } else if (copy_from_user(&set_p2p_config, userdata, sizeof(WMI_P2P_SET_CONFIG_CMD))) {
                 ret = -EFAULT;
-            } else {
+            } else { 
                 wmi_p2p_set_config(arPriv->arWmi, &set_p2p_config);
             }
             break;
@@ -4942,7 +4942,7 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
             } else {
                  ni = wmi_find_node(arPriv->arWmi, macaddr);
                  if (ni) {
-                     if(copy_to_user((A_UINT16 *)rq->ifr_data,
+                     if(copy_to_user((A_UINT16 *)rq->ifr_data, 
                                     &ni->ni_cie.ie_chan, sizeof(A_UINT16))) {
                          ret = -EFAULT;
                      }
@@ -5006,7 +5006,7 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
                 ret = -EIO;
             } else if (copy_from_user(buf, userdata, 8)) {
                 ret = -EFAULT;
-            } else {
+            } else { 
                 A_MEMZERO(&prov_disc_req, sizeof(WMI_P2P_PROV_DISC_REQ_CMD));
                 A_MEMCPY(prov_disc_req.peer, buf, ATH_MAC_LEN);
                 prov_disc_req.wps_method = (*(A_UINT16 *)(&buf[6]));
@@ -5031,12 +5031,12 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
             } else {
                 if (p2p_get_ifaddr(A_WMI_GET_P2P_CTX(arPriv),
                         buf) == A_OK) {
-                    if(copy_to_user((A_UINT8 *)rq->ifr_data,
+                    if(copy_to_user((A_UINT8 *)rq->ifr_data, 
                                 buf+6, IEEE80211_ADDR_LEN)) {
                         ret = -EFAULT;
                     }
                 } else {
-                    if(copy_to_user((A_UINT8 *)rq->ifr_data,
+                    if(copy_to_user((A_UINT8 *)rq->ifr_data, 
                                 zero_mac, IEEE80211_ADDR_LEN)) {
                         ret = -EFAULT;
                     }
@@ -5056,12 +5056,12 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
             } else {
                 if (p2p_get_devaddr(A_WMI_GET_P2P_CTX(arPriv),
                         buf) == A_OK) {
-                    if(copy_to_user((A_UINT8 *)rq->ifr_data,
+                    if(copy_to_user((A_UINT8 *)rq->ifr_data, 
                                 buf+6, IEEE80211_ADDR_LEN)) {
                         ret = -EFAULT;
                     }
                 } else {
-                    if(copy_to_user((A_UINT8 *)rq->ifr_data,
+                    if(copy_to_user((A_UINT8 *)rq->ifr_data, 
                                 zero_mac, IEEE80211_ADDR_LEN)) {
                         ret = -EFAULT;
                     }
@@ -5078,7 +5078,7 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
                 ret = -EIO;
             } else if (copy_from_user(&set_p2p_config, userdata, sizeof(WMI_P2P_SET_CMD))) {
                 ret = -EFAULT;
-            } else {
+            } else { 
                 wmi_p2p_set_cmd(arPriv->arWmi, &set_p2p_config);
             }
             break;
@@ -5102,7 +5102,7 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
                     A_MEMZERO(&filt, sizeof(WMI_BSS_FILTER_CMD));
                     /*Set BSS filter to ALL*/
                     filt.bssFilter = ALL_BSS_FILTER;
-
+                 
                     if (wmi_bssfilter_cmd(arPriv->arWmi, filt.bssFilter, filt.ieMask)
                             != A_OK) {
                         ret = -EIO;
@@ -5110,19 +5110,19 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
                         A_MEMZERO(&find_param, sizeof(WMI_P2P_FIND_CMD));
                         arSta->arUserBssFilter = filt.bssFilter;
                         find_param.timeout = 5;
-                        find_param.type = WMI_P2P_FIND_START_WITH_FULL;
+                        find_param.type = WMI_P2P_FIND_START_WITH_FULL; 
                         wmi_p2p_discover(arPriv->arWmi, &find_param);
                         }
                 }
 
                 if (p2p_peer(A_WMI_GET_P2P_CTX(arPriv),
                         buf, *(buf+6)) == A_OK) {
-                    if(copy_to_user((A_UINT8 *)rq->ifr_data,
+                    if(copy_to_user((A_UINT8 *)rq->ifr_data, 
                                 buf, IEEE80211_ADDR_LEN)) {
                         ret = -EFAULT;
                     }
                 } else {
-                    if(copy_to_user((A_UINT16 *)rq->ifr_data,
+                    if(copy_to_user((A_UINT16 *)rq->ifr_data, 
                                 zero_mac, IEEE80211_ADDR_LEN)) {
                         ret = -EFAULT;
                     }
@@ -5150,7 +5150,7 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
                  if (wmi_p2p_get_go_params(A_WMI_GET_P2P_CTX(arPriv),
                      go_dev_addr, &go_params.oper_freq, go_params.ssid,
                           &go_params.ssid_len) == A_OK) {
-                     if(copy_to_user((A_UINT16 *)rq->ifr_data,
+                     if(copy_to_user((A_UINT16 *)rq->ifr_data, 
                                     &go_params, sizeof(go_params))) {
                          ret = -EFAULT;
                      }
@@ -5168,7 +5168,7 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
                 ret = -EIO;
             } else if (copy_from_user(auth_peer, userdata,IEEE80211_ADDR_LEN)) {
                 ret = -EFAULT;
-            } else {
+            } else { 
                 if (p2p_auth_invite(A_WMI_GET_P2P_CTX(arPriv),
                             auth_peer) != A_OK) {
                     ret = -EFAULT;
@@ -5185,7 +5185,7 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
             get_user(state, (unsigned int *)userdata);
             if (ar6000_set_bt_hw_state(ar, state)!=A_OK) {
                 ret = -EIO;
-            }
+            }       
             break;
         }
         case AR6000_XIOCTL_GET_BT_HW_POWER_STATE:
@@ -5194,9 +5194,9 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
 #endif
 
     case AR6000_XIOCTL_WMI_SET_TX_SGI_PARAM:
-    {
+    {   
             WMI_SET_TX_SGI_PARAM_CMD SGICmd;
-
+        
             if (ar->arWmiReady == FALSE) {
                 ret = -EIO;
             } else if (copy_from_user(&SGICmd, userdata,
@@ -5235,7 +5235,7 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
             } else {
                 if ( cmd.enable & 0x80 ) {
                     cmd.enable &= ~0x80;
-                    ar6000_send_generic_event_to_app(arPriv, WMI_ENABLE_WAC_CMDID,
+                    ar6000_send_generic_event_to_app(arPriv, WMI_ENABLE_WAC_CMDID, 
                                                     (A_UINT8*)&cmd, sizeof(WMI_WAC_ENABLE_CMD));
                 }
                 else {
@@ -5350,7 +5350,7 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
             }
             break;
         }
-
+        
         case AR6000_XIOCTL_WMI_SET_DIVERSITY_PARAM:
         {
             WMI_DIV_PARAMS_CMD cmd;
@@ -5360,7 +5360,7 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
             } else if (copy_from_user(&cmd, userdata, sizeof(cmd)))
             {
                 ret = -EFAULT;
-            } else
+            } else 
             {
                    if (wmi_set_div_param_cmd(arPriv->arWmi, cmd.divIdleTime, cmd.antRssiThresh, cmd.divEnable, cmd.active_treshold_rate)
                            != A_OK)
@@ -5374,7 +5374,7 @@ int ar6000_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
         case AR6000_XIOCTL_AP_GET_NUM_STA:
         {
             A_UINT8    num_sta, ret_num_sta;
-
+            
             if (ar->arWmiReady == FALSE) {
                 ret = -EIO;
             } else if (copy_from_user(&num_sta, userdata, sizeof(num_sta))) {

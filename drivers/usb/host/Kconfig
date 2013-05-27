@@ -621,7 +621,7 @@ config USB_PXA168_EHCI
 config USB_SW_SUN7I_HCD
     tristate "SoftWinner SUN7I USB Host Controller support"
 #	depends on USB && USB_SW_SUN7I_USB_MANAGER
-	depends on USB
+	depends on USB 
 	help
 	    SoftWinner SUN7I USB2.0 Host Controller support.
 
@@ -660,3 +660,4 @@ config USB_SW_SUN7I_OHCI1
 	depends on USB_SW_SUN7I_HCI
 	help
 	    SoftWinner SUN7I USB OHCI1.
+	    

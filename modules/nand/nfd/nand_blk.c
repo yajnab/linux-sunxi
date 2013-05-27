@@ -182,7 +182,7 @@ static int cache_align_page_request(struct nand_blk_ops * nandr, struct nand_blk
 
 		#ifndef NAND_CACHE_RW
 			LML_FlushPageCache();
-		ret = LML_Read(start, nsector, buf);
+  		ret = LML_Read(start, nsector, buf);
 		#else
 			//printk("Rs %lu %lu \n",start, nsector);
       LML_FlushPageCache();
@@ -247,10 +247,10 @@ static int nand_transfer(struct nand_blk_dev * dev, unsigned long start,unsigned
 
 		#ifndef NAND_CACHE_RW
 			LML_FlushPageCache();
-			ret = LML_Read(start, nsector, buf);
+  			ret = LML_Read(start, nsector, buf);
 		#else
 			//printk("Rs %lu %lu \n",start, nsector);
-		LML_FlushPageCache();
+      		LML_FlushPageCache();
 			ret = NAND_CacheRead(start, nsector, buf);
 			//printk("Rs %lu %lu \n",start, nsector);
 		#endif
@@ -502,7 +502,7 @@ static int nand_blktrans_thread(void *arg)
 		#if NAND_TEST_TICK
 		printk("[N]ticks=%ld\n",nand_rw_time);
 		#endif
-
+		
 
 		if((req->cmd_flags&REQ_SYNC)&&(req->cmd_flags&REQ_WRITE)&&(part_secur[dev->devnum]== 1)){
 		    //printk("req sync: 0x%x form part: 0x%x \n", req->cmd_flags, dev->devnum);
@@ -638,7 +638,7 @@ static int nand_ioctl(struct block_device *bdev, fmode_t mode, unsigned int cmd,
 			ret = nandr->getgeo(dev, &g);
 			if (ret)
 				return ret;
-			dbg_err("HDIO_GETGEO called!\n");
+  			dbg_err("HDIO_GETGEO called!\n");
 			g.start = get_start_sect(bdev);
 			if (copy_to_user((void __user *)arg, &g, sizeof(g)))
 				return -EFAULT;
@@ -920,7 +920,7 @@ int nand_blk_register(struct nand_blk_ops *nandr)
 	init_completion(&collect_arg.thread_exit);
 	init_waitqueue_head(&collect_arg.wait);
 	ret = kernel_thread(collect_thread, &collect_arg, CLONE_KERNEL);
-	if (ret < 0)
+ 	if (ret < 0)
 	{
 		dbg_err("sorry,thread creat failed\n");
 		return 0;
@@ -1013,14 +1013,14 @@ static int nand_flush(struct nand_blk_dev *dev)
 
 		dbg_inf("nand_flush \n");
 	}
-
+	
 	return 0;
 }
 
 static int nand_logrelease(struct nand_blk_dev *dev)
 {
     __s32 log_cnt =-1;
-
+	
     #ifdef NAND_LOG_AUTO_MERGE
 	if (0 == down_trylock(&mytr.nand_ops_mutex))
 	{
@@ -1035,7 +1035,7 @@ static int nand_logrelease(struct nand_blk_dev *dev)
 			return log_cnt;
 	}
 	#endif
-
+	
 	return -1;
 }
 
@@ -1093,7 +1093,7 @@ int cal_partoff_within_disk(char *name,struct inode *i)
 }
 
 #define SW_INT_IRQNO_NAND AW_IRQ_NAND
-
+   
 #ifndef CONFIG_SUN7I_NANDFLASH_TEST
 static int  init_blklayer(void)
 {
@@ -1113,8 +1113,8 @@ static int  init_blklayer(void)
 	ret = SCN_AnalyzeNandSystem();
 	if (ret < 0)
 		return ret;
-
-	printk("[NAND] nand driver version: 0x%x 0x%x \n", NAND_VERSION_0,NAND_VERSION_1);
+	
+	//printk("[NAND] nand driver version: 0x%x 0x%x \n", NAND_VERSION_0,NAND_VERSION_1);
 #ifdef __LINUX_NAND_SUPPORT_INT__
     NAND_ClearRbInt();
     spin_lock_init(&nand_rb_lock);
@@ -1129,26 +1129,26 @@ static int  init_blklayer(void)
 	else
 	{
 	    printk("nand interrupt register ok\n");
-	}
-#endif
+	}	
+#endif	
 	//modify ValidBlkRatio
 	script_ret = script_get_item("nand_para","good_block_ratio", &nand_good_block_ratio);
   if (script_ret!=SCIRPT_ITEM_VALUE_TYPE_INT)
   {
-	printk("nand init fetch nand_good_block_ratio failed\n");
+    	printk("nand init fetch nand_good_block_ratio failed\n");
   }
   else
-  {
+  { 
         if(nand_good_block_ratio.val <= 0)
         {
             printk("[NAND] use nand_good_block_ratio from default parameter\n");
         }
         else
-        {
+        {   
             printk("[NAND] get nand_good_block_ratio from script: %d \n",nand_good_block_ratio.val);
             NAND_SetValidBlkRatio(nand_good_block_ratio.val);
         }
-	}
+	}	
 
 	ret = PHY_ChangeMode(1);
 	if (ret < 0)
@@ -1175,7 +1175,7 @@ static int  init_blklayer(void)
 	#ifdef NAND_CACHE_RW
 		NAND_CacheOpen();
 	#endif
-
+	
 
 	return nand_blk_register(&mytr);
 }
@@ -1256,7 +1256,7 @@ static int nand_suspend(struct platform_device *plat_dev, pm_message_t state)
 		NAND_PIORelease();
 	}
 	for(i=0; i<(NAND_REG_LENGTH); i++){
-		nand_reg_state.nand_reg_back[i] = *(volatile u32 *)(NAND_GetIOBaseAddr() + i*0x04);
+		nand_reg_state.nand_reg_back[i] = *(volatile u32 *)(NAND_GetIOBaseAddr() + i*0x04); 
 		//pr_info("reg addr 0x%x : 0x%x \n", i, nand_reg_state.nand_reg_back[i]);
 	}
 	}
@@ -1291,10 +1291,10 @@ static int nand_resume(struct platform_device *plat_dev)
 			if(0x9 == i){
 				continue;
 			}
-			*(volatile u32 *)(NAND_GetIOBaseAddr()+ i*0x04) = nand_reg_state.nand_reg_back[i];
+			*(volatile u32 *)(NAND_GetIOBaseAddr()+ i*0x04) = nand_reg_state.nand_reg_back[i]; 
 		}
         //reset all chip
-	for(i=1; i<8; i++)
+    	for(i=1; i<8; i++)
         {
             if(NAND_GetChipConnect()&(0x1<<i)) //chip valid
             {
@@ -1305,20 +1305,20 @@ static int nand_resume(struct platform_device *plat_dev)
                     pr_info("nand reset chip %d failed!\n",i);
             }
         }
-	//init retry count
-	for(i=0;i<8;i++)
-	    RetryCount[i] = 0;
+    	//init retry count
+    	for(i=0;i<8;i++)
+    	    RetryCount[i] = 0;
 		//process for super standby
 		//restore reg state
 		for(i=0; i<(NAND_REG_LENGTH); i++){
 			if(0x9 == i){
 				continue;
 			}
-			*(volatile u32 *)(NAND_GetIOBaseAddr() + i*0x04) = nand_reg_state.nand_reg_back[i];
+			*(volatile u32 *)(NAND_GetIOBaseAddr() + i*0x04) = nand_reg_state.nand_reg_back[i]; 
 		}
 
 		up(&mytr.nand_ops_mutex);
-
+		
 	}
 
 
@@ -1399,7 +1399,7 @@ int nand_init(void)
     script_ret = script_get_item("nand_para","nand_used", &nand_used);
     if (script_ret!=SCIRPT_ITEM_VALUE_TYPE_INT)
     {
-	printk("nand init fetch emac using configuration failed\n");
+    	printk("nand init fetch emac using configuration failed\n");
 
     }
 
@@ -1440,7 +1440,7 @@ void nand_exit(void)
     script_ret = script_get_item("nand_para","nand_used", &nand_used);
     if (script_ret!=SCIRPT_ITEM_VALUE_TYPE_INT)
     {
-	printk("nand init fetch emac using configuration failed\n");
+    	printk("nand init fetch emac using configuration failed\n");
 
     }
 
@@ -1462,3 +1462,4 @@ void nand_exit(void)
 MODULE_LICENSE ("GPL");
 MODULE_AUTHOR ("nand flash groups");
 MODULE_DESCRIPTION ("Generic NAND flash driver code");
+

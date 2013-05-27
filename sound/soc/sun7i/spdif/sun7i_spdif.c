@@ -20,6 +20,7 @@
 #include <linux/clk.h>
 #include <linux/jiffies.h>
 #include <linux/io.h>
+#include <linux/gpio.h>
 
 #include <sound/core.h>
 #include <sound/pcm.h>
@@ -53,8 +54,8 @@ static struct sun7i_dma_params sun7i_spdif_stereo_out = {
 };
 #else
 static struct sun7i_dma_params sun7i_spdif_stereo_out = {
-	.name		= "spdif_out",
-	.dma_addr 	=	SUN7I_SPDIFBASE + SUN7I_SPDIF_TXFIFO,
+	.name		= "spdif_out",	
+	.dma_addr 	=	SUN7I_SPDIFBASE + SUN7I_SPDIF_TXFIFO,	
 };
 #endif
 
@@ -65,62 +66,62 @@ static struct clk *spdif_apbclk, *spdif_pll2clk, *spdif_pllx8, *spdif_moduleclk;
 void sun7i_snd_txctrl(struct snd_pcm_substream *substream, int on)
 {
 	u32 reg_val;
-
+	
 	if (substream->runtime->channels == 1) {
 		reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCFG);
 		reg_val |= SUN7I_SPDIF_TXCFG_SINGLEMOD;
 		writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCFG);
 	}
-
+	
 	//soft reset SPDIF
 	writel(0x1, sun7i_spdif.regs + SUN7I_SPDIF_CTL);
-
+	
 	//MCLK OUTPUT enable
 	reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_CTL);
 	reg_val |= SUN7I_SPDIF_CTL_MCLKOUTEN;
 	writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_CTL);
-
+	
 	//flush TX FIFO
 	reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_FCTL);
-	reg_val |= SUN7I_SPDIF_FCTL_FTX;
+	reg_val |= SUN7I_SPDIF_FCTL_FTX;	
 	writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_FCTL);
-
+	
 	//clear interrupt status
 	reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_ISTA);
 	writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_ISTA);
-
+	
 	//clear TX counter
 	writel(0, sun7i_spdif.regs + SUN7I_SPDIF_TXCNT);
 
 	if (on) {
 		//SPDIF TX ENBALE
 		reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCFG);
-		reg_val |= SUN7I_SPDIF_TXCFG_TXEN;
+		reg_val |= SUN7I_SPDIF_TXCFG_TXEN;	
 		writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCFG);
-
+		
 		//DRQ ENABLE
 		reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_INT);
-		reg_val |= SUN7I_SPDIF_INT_TXDRQEN;
+		reg_val |= SUN7I_SPDIF_INT_TXDRQEN;	
 		writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_INT);
-
+		
 		//global enable
 		reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_CTL);
-		reg_val |= SUN7I_SPDIF_CTL_GEN;
-		writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_CTL);
+		reg_val |= SUN7I_SPDIF_CTL_GEN;	
+		writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_CTL);		
 	} else {
 		//SPDIF TX DISABALE
 		reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCFG);
-		reg_val &= ~SUN7I_SPDIF_TXCFG_TXEN;
+		reg_val &= ~SUN7I_SPDIF_TXCFG_TXEN;	
 		writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCFG);
-
+		
 		//DRQ DISABLE
 		reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_INT);
-		reg_val &= ~SUN7I_SPDIF_INT_TXDRQEN;
+		reg_val &= ~SUN7I_SPDIF_INT_TXDRQEN;	
 		writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_INT);
-
+		
 		//global disable
 		reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_CTL);
-		reg_val &= ~SUN7I_SPDIF_CTL_GEN;
+		reg_val &= ~SUN7I_SPDIF_CTL_GEN;	
 		writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_CTL);
 	}
 }
@@ -133,7 +134,7 @@ static inline int sun7i_snd_is_clkmaster(void)
 static int sun7i_spdif_set_fmt(struct snd_soc_dai *cpu_dai, unsigned int fmt)
 {
 	u32 reg_val;
-
+		
 	reg_val = 0;
 	reg_val &= ~SUN7I_SPDIF_TXCFG_SINGLEMOD;
 	reg_val |= SUN7I_SPDIF_TXCFG_ASS;
@@ -141,7 +142,7 @@ static int sun7i_spdif_set_fmt(struct snd_soc_dai *cpu_dai, unsigned int fmt)
 	reg_val |= SUN7I_SPDIF_TXCFG_FMT16BIT;
 	reg_val |= SUN7I_SPDIF_TXCFG_CHSTMODE;
 	writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCFG);
-
+	
 	reg_val = 0;
 	reg_val &= ~SUN7I_SPDIF_FCTL_FIFOSRC;
 	reg_val |= SUN7I_SPDIF_FCTL_TXTL(16);
@@ -149,30 +150,30 @@ static int sun7i_spdif_set_fmt(struct snd_soc_dai *cpu_dai, unsigned int fmt)
 	reg_val |= SUN7I_SPDIF_FCTL_TXIM(1);
 	reg_val |= SUN7I_SPDIF_FCTL_RXOM(3);
 	writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_FCTL);
-
+	
 	if (!fmt) {//PCM
 		reg_val = 0;
 		reg_val |= (SUN7I_SPDIF_TXCHSTA0_CHNUM(2));
 		writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA0);
-
+		
 		reg_val = 0;
 		reg_val |= (SUN7I_SPDIF_TXCHSTA1_SAMWORDLEN(1));
 		writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);
-	} else {  //non PCM
+	} else {  //non PCM	
 		reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCFG);
 		reg_val |= SUN7I_SPDIF_TXCFG_NONAUDIO;
 		writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCFG);
-
+		
 		reg_val = 0;
 		reg_val |= (SUN7I_SPDIF_TXCHSTA0_CHNUM(2));
 		reg_val |= SUN7I_SPDIF_TXCHSTA0_AUDIO;
 		writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA0);
-
+		
 		reg_val = 0;
 		reg_val |= (SUN7I_SPDIF_TXCHSTA1_SAMWORDLEN(1));
 		writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);
 	}
-
+	
 	return 0;
 }
 
@@ -182,7 +183,7 @@ static int sun7i_spdif_hw_params(struct snd_pcm_substream *substream,
 {
 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
 	struct sun7i_dma_params *dma_data;
-
+	
 	/* play or record */
 	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
 		dma_data = &sun7i_spdif_stereo_out;
@@ -192,7 +193,7 @@ static int sun7i_spdif_hw_params(struct snd_pcm_substream *substream,
 	snd_soc_dai_set_dma_data(rtd->cpu_dai, substream, dma_data);
 
 	return 0;
-}
+}						
 
 static int sun7i_spdif_trigger(struct snd_pcm_substream *substream,
                               int cmd, struct snd_soc_dai *dai)
@@ -224,10 +225,10 @@ static int sun7i_spdif_trigger(struct snd_pcm_substream *substream,
 	}
 
 	return ret;
-}
+}					
 
-//freq:   1: 22.5792MHz   0: 24.576MHz
-static int sun7i_spdif_set_sysclk(struct snd_soc_dai *cpu_dai, int clk_id,
+//freq:   1: 22.5792MHz   0: 24.576MHz  
+static int sun7i_spdif_set_sysclk(struct snd_soc_dai *cpu_dai, int clk_id, 
                                  unsigned int freq, int dir)
 {
 	if (!freq) {
@@ -237,7 +238,7 @@ static int sun7i_spdif_set_sysclk(struct snd_soc_dai *cpu_dai, int clk_id,
 	}
 
 	return 0;
-}
+}		
 
 static int sun7i_spdif_set_clkdiv(struct snd_soc_dai *cpu_dai, int div_id, int div)
 {
@@ -246,19 +247,19 @@ static int sun7i_spdif_set_clkdiv(struct snd_soc_dai *cpu_dai, int div_id, int d
 	reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA0);
 	reg_val &= ~(SUN7I_SPDIF_TXCHSTA0_SAMFREQ(0xf));
 	writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA0);
-
+		
 	reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);
 	reg_val &= ~(SUN7I_SPDIF_TXCHSTA1_ORISAMFREQ(0xf));
-	writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);
-
+  	writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);	
+	
 	switch(div_id) {
 		case SUN7I_DIV_MCLK:
 		{
 			reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCFG);
-			reg_val &= ~SUN7I_SPDIF_TXCFG_TXRATIO(0x1F);
+			reg_val &= ~SUN7I_SPDIF_TXCFG_TXRATIO(0x1F);	
 			reg_val |= SUN7I_SPDIF_TXCFG_TXRATIO(div-1);
 			writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCFG);
-
+			
 			if(clk_get_rate(spdif_pll2clk) == 24576000)
 			{
 				switch(div)
@@ -268,67 +269,67 @@ static int sun7i_spdif_set_clkdiv(struct snd_soc_dai *cpu_dai, int div_id, int d
 						reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA0);
 						reg_val |= (SUN7I_SPDIF_TXCHSTA0_SAMFREQ(0x6));
 						writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA0);
-
+						
 						reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);
 						reg_val |= (SUN7I_SPDIF_TXCHSTA1_ORISAMFREQ(0x9));
 						writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);
 						break;
-
+						
 					//32KHZ
 					case 6:
 						reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA0);
 						reg_val |= (SUN7I_SPDIF_TXCHSTA0_SAMFREQ(0x3));
 						writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA0);
-
+						
 						reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);
 						reg_val |= (SUN7I_SPDIF_TXCHSTA1_ORISAMFREQ(0xC));
 						writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);
 						break;
-
+						
 					//48KHZ
 					case 4:
 						reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA0);
 						reg_val |= (SUN7I_SPDIF_TXCHSTA0_SAMFREQ(0x2));
 						writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA0);
-
+				
 						reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);
 						reg_val |= (SUN7I_SPDIF_TXCHSTA1_ORISAMFREQ(0xD));
-						writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);
+						writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);				
 						break;
-
+						
 					//96KHZ
 					case 2:
 						reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA0);
 						reg_val |= (SUN7I_SPDIF_TXCHSTA0_SAMFREQ(0xA));
 						writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA0);
-
+						
 						reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);
 						reg_val |= (SUN7I_SPDIF_TXCHSTA1_ORISAMFREQ(0x5));
 						writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);
 						break;
-
+						
 					//192KHZ
 					case 1:
 						reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA0);
 						reg_val |= (SUN7I_SPDIF_TXCHSTA0_SAMFREQ(0xE));
 						writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA0);
-
-						reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);
+					
+						reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);	
 						reg_val |= (SUN7I_SPDIF_TXCHSTA1_ORISAMFREQ(0x1));
 						writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);
 						break;
-
+						
 					default:
 						reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA0);
 						reg_val |= (SUN7I_SPDIF_TXCHSTA0_SAMFREQ(1));
 						writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA0);
-
+				
 						reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);
 						reg_val |= (SUN7I_SPDIF_TXCHSTA1_ORISAMFREQ(0));
 						writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);
 						break;
 				}
-			}else{  //22.5792MHz
+			}else{  //22.5792MHz		
 				switch(div)
 				{
 					//22.05khz
@@ -336,61 +337,61 @@ static int sun7i_spdif_set_clkdiv(struct snd_soc_dai *cpu_dai, int div_id, int d
 						reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA0);
 						reg_val |= (SUN7I_SPDIF_TXCHSTA0_SAMFREQ(0x4));
 						writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA0);
-
+				
 						reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);
 						reg_val |= (SUN7I_SPDIF_TXCHSTA1_ORISAMFREQ(0xb));
-						writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);
+						writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);				
 						break;
-
+						
 					//44.1KHZ
 					case 4:
 						reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA0);
 						reg_val |= (SUN7I_SPDIF_TXCHSTA0_SAMFREQ(0x0));
 						writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA0);
-
+				
 						reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);
 						reg_val |= (SUN7I_SPDIF_TXCHSTA1_ORISAMFREQ(0xF));
-						writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);
+						writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);				
 						break;
-
+						
 					//88.2khz
 					case 2:
 						reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA0);
 						reg_val |= (SUN7I_SPDIF_TXCHSTA0_SAMFREQ(0x8));
 						writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA0);
-
+					
 						reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);
 						reg_val |= (SUN7I_SPDIF_TXCHSTA1_ORISAMFREQ(0x7));
 						writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);
 						break;
-
+			
 					//176.4KHZ
 					case 1:
 						reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA0);
 						reg_val |= (SUN7I_SPDIF_TXCHSTA0_SAMFREQ(0xC));
 						writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA0);
-
+					
 						reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);
 						reg_val |= (SUN7I_SPDIF_TXCHSTA1_ORISAMFREQ(0x3));
 						writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);
 						break;
-
+						
 					default:
 						reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA0);
 						reg_val |= (SUN7I_SPDIF_TXCHSTA0_SAMFREQ(1));
 						writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA0);
-
+				
 						reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);
 						reg_val |= (SUN7I_SPDIF_TXCHSTA1_ORISAMFREQ(0));
 						writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_TXCHSTA1);
 						break;
 				}
-			}
+			}			
 		}
 		break;
 		case SUN7I_DIV_BCLK:
 		break;
-
+			
 		default:
 			return -EINVAL;
 	}
@@ -405,7 +406,7 @@ u32 sun7i_spdif_get_clockrate(void)
 EXPORT_SYMBOL_GPL(sun7i_spdif_get_clockrate);
 
 static int sun7i_spdif_dai_probe(struct snd_soc_dai *dai)
-{
+{			
 	return 0;
 }
 static int sun7i_spdif_dai_remove(struct snd_soc_dai *dai)
@@ -438,21 +439,21 @@ static int sun7i_spdif_suspend(struct snd_soc_dai *cpu_dai)
 {
 	u32 reg_val;
 	printk("[SPDIF]Enter %s\n", __func__);
-
+	
 	reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_CTL);
 	reg_val &= ~SUN7I_SPDIF_CTL_GEN;
 	writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_CTL);
 
 	spdifregsave();
-
+	
 	//disable the module clock
 	clk_disable(spdif_moduleclk);
-
-	clk_disable(spdif_apbclk);
+	
+	clk_disable(spdif_apbclk);	
 
 	printk("[SPDIF]SPECIAL CLK 0x01c20068 = %#x, line= %d\n", *(volatile int*)0xF1C20068, __LINE__);
 	printk("[SPDIF]SPECIAL CLK 0x01c200C0 = %#x, line= %d\n", *(volatile int*)0xF1C200C0, __LINE__);
-
+	
 	return 0;
 }
 
@@ -462,21 +463,21 @@ static int sun7i_spdif_resume(struct snd_soc_dai *cpu_dai)
 	printk("[SPDIF]Enter %s\n", __func__);
 
 	//disable the module clock
-	clk_enable(spdif_apbclk);
+	clk_enable(spdif_apbclk);		
 
 	//enable the module clock
 	clk_enable(spdif_moduleclk);
-
+	
 	spdifregrestore();
-
+	
 	reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_CTL);
 	reg_val |= SUN7I_SPDIF_CTL_GEN;
 	writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_CTL);
-
+	
 	//printk("[SPDIF]PLL2 0x01c20008 = %#x\n", *(volatile int*)0xF1C20008);
 	printk("[SPDIF]SPECIAL CLK 0x01c20068 = %#x, line= %d\n", *(volatile int*)0xF1C20068, __LINE__);
 	printk("[SPDIF]SPECIAL CLK 0x01c200C0 = %#x, line = %d\n", *(volatile int*)0xF1C200C0, __LINE__);
-
+	
 	return 0;
 }
 
@@ -486,7 +487,7 @@ static struct snd_soc_dai_ops sun7i_spdif_dai_ops = {
 	.hw_params 	= sun7i_spdif_hw_params,
 	.set_fmt 		= sun7i_spdif_set_fmt,
 	.set_clkdiv = sun7i_spdif_set_clkdiv,
-	.set_sysclk = sun7i_spdif_set_sysclk,
+	.set_sysclk = sun7i_spdif_set_sysclk, 
 };
 static struct snd_soc_dai_driver sun7i_spdif_dai = {
 	.probe 		= sun7i_spdif_dai_probe,
@@ -505,21 +506,21 @@ static struct snd_soc_dai_driver sun7i_spdif_dai = {
 		.formats = SNDRV_PCM_FMTBIT_S16_LE,},
 	.symmetric_rates = 1,
 	.ops = &sun7i_spdif_dai_ops,
-};
+};		
 
 static int __devinit sun7i_spdif_dev_probe(struct platform_device *pdev)
 {
 	int reg_val = 0;
 	int ret = 0;
-
+	
 	sun7i_spdif.regs = ioremap(SUN7I_SPDIFBASE, 0x100);
 	if(sun7i_spdif.regs == NULL)
 		return -ENXIO;
-
+	
 		//spdif apbclk
 		spdif_apbclk = clk_get(NULL, CLK_APB_SPDIF);
 		if(!spdif_apbclk || IS_ERR(spdif_apbclk)){
-		/* èŽ·å–æ—¶é’Ÿå¥æŸ„å¤±è´¥ */
+		/* »ñÈ¡Ê±ÖÓ¾ä±úÊ§°Ü */
 		printk("try to get CLK_APB_SPDIF failed!\n");
 		}
 		if(-1 == clk_enable(spdif_apbclk)){
@@ -528,44 +529,49 @@ static int __devinit sun7i_spdif_dev_probe(struct platform_device *pdev)
 
 		spdif_pllx8 = clk_get(NULL, CLK_SYS_PLL2X8);
 		if(!spdif_pllx8 || IS_ERR(spdif_pllx8)){
-		/* èŽ·å–æ—¶é’Ÿå¥æŸ„å¤±è´¥ */
+		/* »ñÈ¡Ê±ÖÓ¾ä±úÊ§°Ü */
 		printk("try to get CLK_SYS_PLL2X8 failed!\n");
 			}
-
-
+		
+		if(-1 == clk_enable(spdif_pllx8)){
+			printk("spdif_pllx8 failed! line = %d\n", __LINE__);
+		}
 		//spdif pll2clk
 		spdif_pll2clk = clk_get(NULL, CLK_SYS_PLL2);
 		if(!spdif_pll2clk || IS_ERR(spdif_pll2clk)){
-		/* èŽ·å–æ—¶é’Ÿå¥æŸ„å¤±è´¥ */
+		/* »ñÈ¡Ê±ÖÓ¾ä±úÊ§°Ü */
 		printk("try to get CLK_SYS_PLL2 failed!\n");
 			}
+		if (clk_enable(spdif_pll2clk)) {
+		printk("enable spdif_pll2clk failed; \n");
+		}
 
 		//spdif module clk
 		spdif_moduleclk = clk_get(NULL, CLK_MOD_SPDIF);
 		if(!spdif_moduleclk || IS_ERR(spdif_moduleclk)){
-		/* èŽ·å–æ—¶é’Ÿå¥æŸ„å¤±è´¥ */
+		/* »ñÈ¡Ê±ÖÓ¾ä±úÊ§°Ü */
 		printk("try to get spdif_moduleclk failed!\n");
 			}
 
 		if(clk_set_parent(spdif_moduleclk, spdif_pll2clk)){
 			printk("try to set parent of spdif_moduleclk to spdif_pll2ck failed! line = %d\n",__LINE__);
 		}
-
+		
 		if(clk_set_rate(spdif_moduleclk, 24576000/8)){
 			printk("set spdif_moduleclk clock freq to 24576000 failed! line = %d\n", __LINE__);
 		}
-
+		
 		if(-1 == clk_enable(spdif_moduleclk)){
 			printk("open spdif_moduleclk failed! line = %d\n", __LINE__);
 		}
-
+	
 		//global enbale
 		reg_val = readl(sun7i_spdif.regs + SUN7I_SPDIF_CTL);
 		reg_val |= SUN7I_SPDIF_CTL_GEN;
 		writel(reg_val, sun7i_spdif.regs + SUN7I_SPDIF_CTL);
-
+		
 		ret = snd_soc_register_dai(&pdev->dev, &sun7i_spdif_dai);
-
+			
 	return 0;
 }
 
@@ -575,21 +581,21 @@ static int __devexit sun7i_spdif_dev_remove(struct platform_device *pdev)
 		spdif_used = 0;
 		//release the module clock
 		clk_disable(spdif_moduleclk);
-
+	
 		//release pllx8clk
 		clk_put(spdif_pllx8);
-
+		
 		//release pll2clk
 		clk_put(spdif_pll2clk);
-
+	
 		//release apbclk
 		clk_put(spdif_apbclk);
-
+		
 //		gpio_release(spdif_handle, 2);
 		snd_soc_unregister_dai(&pdev->dev);
 		platform_set_drvdata(pdev, NULL);
 	}
-
+	
 	return 0;
 }
 
@@ -603,39 +609,62 @@ static struct platform_driver sun7i_spdif_driver = {
 	.driver = {
 		.name = "sun7i-spdif",
 		.owner = THIS_MODULE,
-	},
+	},	
 };
 
 static int __init sun7i_spdif_init(void)
 {
 	int err = 0;
-	static script_item_u   val;
+	int req_status;
+	script_item_u val;
+	script_item_u item;
 	script_item_value_type_e  type;
-	type=script_get_item("spdif_para", "spdif_used", &val);
-	if(SCIRPT_ITEM_VALUE_TYPE_INT != type){
-		pr_info("spdif user type err\n");
-	}
-     spdif_used=val.val;
-	if (spdif_used) {
-		/*spdif_handle = gpio_request_ex("spdif_para", NULL);*/
+
+	type = script_get_item("spdif_para", "spdif_used", &val);
+	if (SCIRPT_ITEM_VALUE_TYPE_INT != type) {
+        printk("[SPDIF] type err!\n");
+    }
+
+	spdif_used = val.val;
+ 	if (spdif_used) {
+		type = script_get_item("spdif_para", "spdif_dout", &item);
+		if (SCIRPT_ITEM_VALUE_TYPE_PIO != type) {
+			printk("script_get_item return type err\n");
+			return -EFAULT;
+		}
+
+		/*request gpio*/
+		req_status = gpio_request(item.gpio.gpio, NULL);
+		if (0!=req_status) {
+			printk("request gpio failed!\n");
+		}
+		/*config gpio info of spdif_dout*/
+		if (0 != sw_gpio_setall_range(&item.gpio, 1)) {
+			printk("sw_gpio_setall_range failed\n");
+		}
+		/*while set the pgio value, release gpio handle*/
+		if (0 == req_status) {
+			gpio_free(item.gpio.gpio);
+		}
 
 		if((platform_device_register(&sun7i_spdif_device))<0)
 			return err;
 
 		if ((err = platform_driver_register(&sun7i_spdif_driver)) < 0)
 			return err;
-
+			
 	} else {
         printk("[SPDIF]sun7i-spdif cannot find any using configuration for controllers, return directly!\n");
         return 0;
     }
-
+ 
 	return 0;
 }
+
 module_init(sun7i_spdif_init);
 
 static void __exit sun7i_spdif_exit(void)
-{
+{	
 	platform_driver_unregister(&sun7i_spdif_driver);
 }
 module_exit(sun7i_spdif_exit);

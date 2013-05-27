@@ -43,3 +43,4 @@ u32 gpio_eint_get_debounce(struct aw_gpio_chip *pchip, struct gpio_eint_debounce
 bool is_gpio_canbe_eint(u32 gpio);
 
 #endif /* __GPIO_EINT_H */
+

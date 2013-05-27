@@ -4,7 +4,7 @@
  *
  * Copyright (C) 2011, Broadcom Corporation
  * All Rights Reserved.
- *
+ * 
  * This is UNPUBLISHED PROPRIETARY SOURCE CODE of Broadcom Corporation;
  * the contents of this file may not be disclosed to third parties, copied
  * or duplicated in any form, in whole or in part, without the prior
@@ -708,7 +708,7 @@ static disconnect_cb_t disconnect_cb = NULL;
 static void *probe_arg = NULL;
 static void *disc_arg = NULL;
 
-/*
+/* 
  * dbus_intf_t common to all SDIO
  * These functions override dbus_sdio_os.c.
  */
@@ -4347,7 +4347,7 @@ dbus_sdh_probe(uint16 venid, uint16 devid, uint16 bus_no, uint16 slot,
 		return NULL;
 	}
 
-	/* The si_attach() will provide an SI handle, scan the
+	/* The si_attach() will provide an SI handle, scan the 
 	 * backplane, and initialize the PLL.
 	 */
 	if (!(g_probe_info.sih = si_attach((uint)devid, osh, regsva, SD_BUSTYPE, sdh,
@@ -4632,7 +4632,7 @@ err:
 #endif /* BCM_DNGL_EMBEDIMAGE */
 
 
-/*
+/* 
  * ProcessVars:Takes a buffer of "<var>=<value>\n" lines read from a file and ending in a NUL.
  * Removes carriage returns, empty lines, comment lines, and converts newlines to NULs.
  * Shortens buffer as needed and pads with NULs.  End of buffer is marked by two NULs.

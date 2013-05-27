@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="abtfilt_main.c" company="Atheros">
 //    Copyright (c) 2008 Atheros Corporation.  All rights reserved.
-//
+// 
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -33,7 +33,7 @@ static ATH_BT_FILTER_INSTANCE g_AthBtFilterInstance;
 A_FILE_HANDLE gConfigFile;
 static volatile sig_atomic_t terminated;
 ATHBT_FILTER_INFO *GpInfo=NULL;
-static void
+static void 
 usage(void)
 {
     fprintf(stderr, "usage:\n%s [options] \n", progname);
@@ -58,7 +58,7 @@ Abf_ShutDown(void)
     Abf_BtStackNotificationDeInit(&g_AthBtFilterInstance);
     Abf_WlanStackNotificationDeInit(&g_AthBtFilterInstance);
     AthBtFilter_Detach(&g_AthBtFilterInstance);
-
+    
     A_INFO("Shutting Down Complete\n");
 }
 

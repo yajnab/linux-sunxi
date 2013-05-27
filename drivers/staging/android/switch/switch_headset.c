@@ -35,9 +35,9 @@
 
 #undef SWITCH_DBG
 #if (0)
-    #define SWITCH_DBG(format,args...)  printk("[SWITCH] "format,##args)
+    #define SWITCH_DBG(format,args...)  printk("[SWITCH] "format,##args)    
 #else
-    #define SWITCH_DBG(...)
+    #define SWITCH_DBG(...)    
 #endif
 
 #define TP_CTRL0 			(0x0)
@@ -49,6 +49,7 @@
 
 #define FUNCTION_NAME "h2w"
 #define TIMER_CIRCLE 50
+//int  pa_dde=(volatile int *)0xf1c22c28;
 static int gpio_earphone_switch = 0;
 static void __iomem *tpadc_base;
 static int count_state;
@@ -56,10 +57,10 @@ static int switch_used = 0;
 
 struct gpio_switch_data {
 	struct switch_dev sdev;
-	int pio_hdle;
+	int pio_hdle;	
 	int state;
 	int pre_state;
-
+	unsigned int gpio_pa_shutdown;
 	struct work_struct work;
 	struct timer_list timer;
 };
@@ -68,115 +69,126 @@ static void earphone_hook_handle(unsigned long data)
 {
 	int fifo_val[4];
 	int ave_count;
-	int temp;
-	struct gpio_switch_data	*switch_data = (struct gpio_switch_data *)data;
-
+	int temp;	
+	struct gpio_switch_data	*switch_data = (struct gpio_switch_data *)data;	
+	
 	SWITCH_DBG("enter:%s,line:%d\n", __func__, __LINE__);
 	 //printk("earphone_hook_handle\n");
-	/*Âà§Êñ≠ÊòØÂê¶ÈúÄË¶ÅÈááÈõÜÊï∞ÊçÆ*/
+	/*≈–∂œ «∑Ò–Ë“™≤…ºØ ˝æ›*/
 	temp = readl(tpadc_base + TP_INT_FIFO_STATUS);
 	temp &= (1<<16);
-
-	if (temp) {
+	
+	if (temp) {	
 		fifo_val[0] = readl(tpadc_base + TP_DATA);
 		fifo_val[1] = readl(tpadc_base + TP_DATA);
 		fifo_val[2] = readl(tpadc_base + TP_DATA);
 		fifo_val[3] = readl(tpadc_base + TP_DATA);
-
-		/*Ê∏ÖÁêÜpending‰Ωç*/
+		
+		/*«Â¿ÌpendingŒª*/
 		temp = readl(tpadc_base + TP_INT_FIFO_STATUS);
 		temp |= (1<<16);
 		writel(temp, tpadc_base + TP_INT_FIFO_STATUS);
-
-		/*Âèñ4Ê¨°fifo‰∏≠ÁöÑÊï∞ÊçÆ‰Ωú‰∏∫Âπ≥ÂùáÊï∞*/
+		
+		/*»°4¥Œfifo÷–µƒ ˝æ›◊˜Œ™∆Ωæ˘ ˝*/
 		ave_count = (fifo_val[0] + fifo_val[1] + fifo_val[2] + fifo_val[3])/4;
+		
 
+		//SWITCH_DBG("%s,line:%d,fifo_val[0]:%d\n", __func__, __LINE__,fifo_val[0]);
+		//SWITCH_DBG("%s,line:%d,fifo_val[1]:%d\n", __func__, __LINE__,fifo_val[1]);
+		//SWITCH_DBG("%s,line:%d,fifo_val[2]:%d\n", __func__, __LINE__,fifo_val[2]);
+		//SWITCH_DBG("%s,line:%d,fifo_val[3]:%d\n", __func__, __LINE__,fifo_val[3]);
 
-		/*SWITCH_DBG("%s,line:%d,fifo_val[0]:%d\n", __func__, __LINE__,fifo_val[0]);
-		  SWITCH_DBG("%s,line:%d,fifo_val[1]:%d\n", __func__, __LINE__,fifo_val[1]);
-		  SWITCH_DBG("%s,line:%d,fifo_val[2]:%d\n", __func__, __LINE__,fifo_val[2]);
-		  SWITCH_DBG("%s,line:%d,fifo_val[3]:%d\n", __func__, __LINE__,fifo_val[3]);*/
-
-		/*Â¶ÇÊûúx2Á∫øÁ´ØÈááÊ†∑ÂÄºÂ§ß‰∫é2900Ôºå‰ª£Ë°®ËÄ≥Êú∫ÊãîÂá∫*/
+		/*»Áπ˚x2œﬂ∂À≤…—˘÷µ¥Û”⁄2900£¨¥˙±Ì∂˙ª˙∞Œ≥ˆ*/
 		//SWITCH_DBG("%s,line:%d,ave_count:%d\n", __func__, __LINE__,ave_count);
 		if (ave_count > 2200) {
 			switch_data->state = 0;
 			 //printk("state:%d\n",switch_data->state);
+			 //pa_dde=(pa_dde||(1<<2));
 			// printk("0xf1c22c00 is:%x\n", *(volatile int *)0xf1c22c28);
 			SWITCH_DBG("enter:%s,line:%d\n", __func__, __LINE__);
-		/*Â¶ÇÊûúx2Á∫øÁ´ØÈááÊ†∑ÂÄºÂú®0~500‰πãÈó¥Ôºå‰ª£Ë°®3ÊÆµËÄ≥Êú∫ÊèíÂÖ•*/
+		/*»Áπ˚x2œﬂ∂À≤…—˘÷µ‘⁄0~500÷Æº‰£¨¥˙±Ì3∂Œ∂˙ª˙≤Â»Î*/
 		} else if (ave_count < 500) {
 			switch_data->state = 2;
-
+			
 			//gpio_write_one_pin_value(gpio_earphone_switch, 0, "audio_earphone_ctrl");
+			//pa_dde=(pa_dde&&!(1<<2));
 			 //printk("0xf1c22c00 is:%x\n", *(volatile int *)0xf1c22c28);
 			//printk("state:%d\n",switch_data->state);
 			SWITCH_DBG("enter:%s,line:%d\n", __func__, __LINE__);
-		/*Â¶ÇÊûúx2Á∫øÁ´ØÈááÊ†∑ÂÄºÂ§ß‰∫é600,Â∞è‰∫é2600,‰ª£Ë°®4ÊÆµËÄ≥Êú∫ÊèíÂÖ•*/
+		/*»Áπ˚x2œﬂ∂À≤…—˘÷µ¥Û”⁄600,–°”⁄2600,¥˙±Ì4∂Œ∂˙ª˙≤Â»Î*/
 		} else if (ave_count >= 600 && ave_count < 2000) {
-			switch_data->state = 1;
+		   	switch_data->state = 1;
 		   //	printk("state:%d\n",switch_data->state);
 		   //	gpio_write_one_pin_value(gpio_earphone_switch, 1, "audio_earphone_ctrl");
-
-			SWITCH_DBG("enter:%s,line:%d\n", __func__, __LINE__);
+		   	
+		   	SWITCH_DBG("enter:%s,line:%d\n", __func__, __LINE__);
+	       	// pa_dde=(pa_dde&&!(1<<2));
 			 //printk("0xf1c22c00 is:%x\n", *(volatile int *)0xf1c22c28);
-
-			/*Â¶ÇÊûúÊòØ4ÊÆµËÄ≥Êú∫,ÈÇ£‰πà50msÂêéÂÜçÊ¨°Ê£ÄÊü•ÊòØÂê¶ÊâìÂºÄ‰∫Ühook(ÂèØ‰ª•ÈÄöËøáËÄ≥Êú∫micÈÄöËØù)*/
+		   	
+		   	/*»Áπ˚ «4∂Œ∂˙ª˙,ƒ«√¥50ms∫Û‘Ÿ¥ŒºÏ≤È «∑Ò¥Úø™¡Àhook(ø…“‘Õ®π˝∂˙ª˙micÕ®ª∞)*/
 			mdelay(30);
-
+			
 			temp = readl(tpadc_base + TP_INT_FIFO_STATUS);
 			temp &= (1<<16);
-			/*Âà§Êñ≠hookÈîÆÊòØÂê¶Êåâ‰∏ã*/
+			/*≈–∂œhookº¸ «∑Ò∞¥œ¬*/
 			if (temp) {
 				fifo_val[0] = readl(tpadc_base + TP_DATA);
 				fifo_val[1] = readl(tpadc_base + TP_DATA);
 				fifo_val[2] = readl(tpadc_base + TP_DATA);
 				fifo_val[3] = readl(tpadc_base + TP_DATA);
-
+				
 				temp = readl(tpadc_base + TP_INT_FIFO_STATUS);
 				temp |= (1<<16);
 				writel(temp, tpadc_base + TP_INT_FIFO_STATUS);
-
-				/*Âèñ4Ê¨°fifo‰∏≠ÁöÑÊï∞ÊçÆ‰Ωú‰∏∫Âπ≥ÂùáÊï∞*/
-				ave_count = (fifo_val[0] + fifo_val[1] + fifo_val[2] + fifo_val[3])/4;
+			
+				/*»°4¥Œfifo÷–µƒ ˝æ›◊˜Œ™∆Ωæ˘ ˝*/
+				ave_count = (fifo_val[0] + fifo_val[1] + fifo_val[2] + fifo_val[3])/4; 
 				if (ave_count <= 410) {
-					SWITCH_DBG("enter:%s,line:%d\n", __func__, __LINE__);
+					SWITCH_DBG("enter:%s,line:%d\n", __func__, __LINE__);		
 					switch_data->state = 3;
 				}
-			  /*SWITCH_DBG("%s,line:%d,fifo_val[0]:%d\n", __func__, __LINE__,fifo_val[0]);
+/*				SWITCH_DBG("%s,line:%d,fifo_val[0]:%d\n", __func__, __LINE__,fifo_val[0]);
 				SWITCH_DBG("%s,line:%d,fifo_val[1]:%d\n", __func__, __LINE__,fifo_val[1]);
 				SWITCH_DBG("%s,line:%d,fifo_val[2]:%d\n", __func__, __LINE__,fifo_val[2]);
 				SWITCH_DBG("%s,line:%d,fifo_val[3]:%d\n", __func__, __LINE__,fifo_val[3]);
-			  */
+*/
 			}
 		}
-
+	
 		if ((switch_data->pre_state != switch_data->state)
 			&& count_state++ >= 3) {
-			printk("enter:%s,line:%d, pre_state: %d, state: %d\n",
+			printk("enter:%s,line:%d, pre_state: %d, state: %d\n", 
 					__func__, __LINE__, switch_data->pre_state, switch_data->state);
 			switch_data->pre_state = switch_data->state;
-			switch_set_state(&switch_data->sdev, switch_data->state);
+			schedule_work(&switch_data->work);
+			//switch_set_state(&switch_data->sdev, switch_data->state);
 			count_state = 0;
 		}
 	}
-
-	mod_timer(&switch_data->timer, jiffies + msecs_to_jiffies(200));
+	
+	mod_timer(&switch_data->timer, jiffies + msecs_to_jiffies(200));	
 }
 
-static ssize_t switch_gpio_print_state(struct switch_dev *sdev, char *buf)
+static void earphone_switch_work(struct work_struct *work)
 {
+	struct gpio_switch_data	*data =
+		container_of(work, struct gpio_switch_data, work);
+	SWITCH_DBG("%s,line:%d, data->state:%d\n", __func__, __LINE__, data->state);
+	switch_set_state(&data->sdev, data->state);
+}
+static ssize_t switch_gpio_print_state(struct switch_dev *sdev, char *buf)
+{	
 	struct gpio_switch_data	*switch_data =
 		container_of(sdev, struct gpio_switch_data, sdev);
-
-	return sprintf(buf, "%d\n", switch_data->state);
+	
+	return sprintf(buf, "%d\n", switch_data->state);	
 }
 
 static ssize_t print_headset_name(struct switch_dev *sdev, char *buf)
 {
 	struct gpio_switch_data	*switch_data =
 		container_of(sdev, struct gpio_switch_data, sdev);
-
+	
 	return sprintf(buf, "%s\n", switch_data->sdev.name);
 }
 
@@ -186,29 +198,29 @@ static int gpio_switch_probe(struct platform_device *pdev)
 	struct gpio_switch_data *switch_data;
 	int ret = 0;
 	int temp;
-
+	
 	SWITCH_DBG("enter:%s,line:%d\n", __func__, __LINE__);
-
+	
 	if (!pdata) {
 		return -EBUSY;
 	}
 
-	tpadc_base = (void __iomem *)SW_VA_TP_IO_BASE;
-	writel(TP_CTRL_CLK_PARA, tpadc_base + TP_CTRL0);
+	tpadc_base = (void __iomem *)SW_VA_TP_IO_BASE;	
+	writel(TP_CTRL_CLK_PARA, tpadc_base + TP_CTRL0);	
 	temp = readl(tpadc_base + TP_CTRL1);
 	temp |= ((1<<3) | (0<<4)); //tp mode function disable and select ADC module.
-	temp |=0x1;//X2 channel
+	temp |=0x1;//X2 channel	
 	writel(temp, tpadc_base + TP_CTRL1);
 
 	temp = readl(tpadc_base + TP_INT_FIFO_CTR);
 	temp |= (1<<16); //TP FIFO Data available IRQ Enable
-	temp |= (0x3<<8); //4Ê¨°ÈááÊ†∑Êï∞ÊçÆÁöÑÂπ≥ÂùáÂÄº (3+1)
+	temp |= (0x3<<8); //4¥Œ≤…—˘ ˝æ›µƒ∆Ωæ˘÷µ (3+1)
 	writel(temp, tpadc_base + TP_INT_FIFO_CTR);
-
+	
 	temp = readl(tpadc_base + TP_CTRL1);
-	temp |= (1<<4);
-	writel(temp, tpadc_base + TP_CTRL1);
-
+	temp |= (1<<4);	
+	writel(temp, tpadc_base + TP_CTRL1);	
+	
 	SWITCH_DBG("TP adc 0xf1c25000 is:%x\n", *(volatile int *)0xf1c25000);
 	SWITCH_DBG("TP adc 0xf1c25004 is:%x\n", *(volatile int *)0xf1c25004);
 	SWITCH_DBG("TP adc 0xf1c25008 is:%x\n", *(volatile int *)0xf1c25008);
@@ -218,7 +230,7 @@ static int gpio_switch_probe(struct platform_device *pdev)
 	SWITCH_DBG("TP adc 0xf1c25018 is:%x\n", *(volatile int *)0xf1c25018);
 	SWITCH_DBG("TP adc 0xf1c2501c is:%x\n", *(volatile int *)0xf1c2501c);
 	SWITCH_DBG("TP adc 0xf1c25020 is:%x\n", *(volatile int *)0xf1c25020);
-
+	
 	switch_data = kzalloc(sizeof(struct gpio_switch_data), GFP_KERNEL);
 	if (!switch_data) {
 		return -ENOMEM;
@@ -229,20 +241,21 @@ static int gpio_switch_probe(struct platform_device *pdev)
 //		ret = gpio_earphone_switch;
 //		goto err_gpio_request;
 //	}
-//
+//	
 	switch_data->sdev.state = 0;
 	switch_data->pre_state = -1;
-	switch_data->sdev.name = pdata->name;
+	switch_data->sdev.name = pdata->name;	
 	switch_data->pio_hdle = gpio_earphone_switch;
 	switch_data->sdev.print_name = print_headset_name;
 	switch_data->sdev.print_state = switch_gpio_print_state;
+	INIT_WORK(&switch_data->work, earphone_switch_work);
 
     ret = switch_dev_register(&switch_data->sdev);
 	if (ret < 0) {
 		goto err_switch_dev_register;
 	}
 
-#if 0
+#if 0		
 	setup_timer(&switch_data->timer, earphone_hook_handle, (unsigned long)switch_data);
 	mod_timer(&switch_data->timer, jiffies + HZ/2);
 #endif
@@ -257,7 +270,7 @@ static int gpio_switch_probe(struct platform_device *pdev)
 	return 0;
 
 err_switch_dev_register:
-		/*gpio_release(switch_data->pio_hdle, 1);*/
+		//gpio_release(switch_data->pio_hdle, 1);
 err_gpio_request:
 		kfree(switch_data);
 
@@ -267,13 +280,13 @@ err_gpio_request:
 static int __devexit gpio_switch_remove(struct platform_device *pdev)
 {
 	struct gpio_switch_data *switch_data = platform_get_drvdata(pdev);
-
+	
 	SWITCH_DBG("enter:%s,line:%d\n", __func__, __LINE__);
-
-	/*gpio_release(switch_data->pio_hdle, 1);*/
+	
+	//gpio_release(switch_data->pio_hdle, 1);
 	//gpio_release(gpio_earphone_switch, 1);
 	SWITCH_DBG("enter:%s,line:%d\n", __func__, __LINE__);
-	del_timer(&switch_data->timer);
+	del_timer(&switch_data->timer);	
 	SWITCH_DBG("enter:%s,line:%d\n", __func__, __LINE__);
     switch_dev_unregister(&switch_data->sdev);
     SWITCH_DBG("enter:%s,line:%d\n", __func__, __LINE__);
@@ -291,29 +304,27 @@ static struct platform_driver gpio_switch_driver = {
 	},
 };
 
-static struct gpio_switch_platform_data headset_switch_data = {
+static struct gpio_switch_platform_data headset_switch_data = { 
     .name = "h2w",
 };
 
-static struct platform_device gpio_switch_device = {
+static struct platform_device gpio_switch_device = { 
     .name = "switch-gpio",
-    .dev = {
+    .dev = { 
             .platform_data = &headset_switch_data,
-    }
+    }   
 };
 
 static int __init gpio_switch_init(void)
 {
-	int ret = 0;
-	static script_item_u   val;
-	script_item_value_type_e  type;
-	/* Ëé∑Âèñaudio_usedÂÄº */
-	type = script_get_item("switch_para", "switch_used", &val);
-	if(SCIRPT_ITEM_VALUE_TYPE_INT != type){
-		printk("type err!");
-	}
-	pr_info("value is %d\n", val.val);
-    switch_used=val.val;
+	int ret = 0;	
+	static script_item_u   val;	
+	script_item_value_type_e  type;	/* ªÒ»°audio_used÷µ */	
+	type = script_get_item("switch_para", "switch_used", &val);	
+	if(SCIRPT_ITEM_VALUE_TYPE_INT != type){		
+		printk("type err!");	}	
+		pr_info("value is %d\n", val.val);    
+		switch_used=val.val;
     if (switch_used) {
 		ret = platform_device_register(&gpio_switch_device);
 		if (ret == 0) {

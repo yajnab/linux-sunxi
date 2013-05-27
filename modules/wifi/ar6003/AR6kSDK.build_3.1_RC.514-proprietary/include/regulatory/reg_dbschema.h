@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // Copyright (c) 2005-2010 Atheros Corporation.  All rights reserved.
-//
+// 
 // The software source and binaries included in this development package are
 // licensed, not sold. You, or your company, received the package under one
 // or more license agreements. The rights granted to you are specifically
@@ -10,7 +10,7 @@
 // portion of this package must be in strict compliance with the license
 // agreement(s) terms.
 // </copyright>
-//
+// 
 // <summary>
 // 	Wifi driver for AR6002
 // </summary>
@@ -32,7 +32,7 @@
  * information, while the "regulatoryData_G.bin" consists of G-ONLY regulatory
  * information. This binary file is parsed in the target for extracting
  * regulatory information.
- *
+ * 
  * The DB values used to populate the regulatory DB are defined in
  * reg_dbvalues.h
  *
@@ -81,9 +81,9 @@ enum data_tags_t{
 
 #define REG_DB_KEY          "RGDB" /* Should be EXACTLY 4-bytes */
 #define REG_DB_VER           7803  /* Between 0-9999 */
-/*  REG_DB_VER history in reverse chronological order:
- *  7803: 78 (ASCII code of N) + 03 (minor version number) - updated 08/03/10, p4#21
- *  7802: 78 (ASCII code of N) + 02 (minor version number) - updated 10/21/09, p4#17
+/*  REG_DB_VER history in reverse chronological order: 
+ *  7803: 78 (ASCII code of N) + 03 (minor version number) - updated 08/03/10, p4#21 
+ *  7802: 78 (ASCII code of N) + 02 (minor version number) - updated 10/21/09, p4#17 
  *  7801: 78 (ASCII code of N) + 01 (minor version number, increment on further changes)
  *  1178: '11N' = 11 + ASCII code of N(78)
  *  5379: initial version, no 11N support
@@ -99,7 +99,7 @@ enum data_tags_t{
 #define DB_TYPE_SZ          4
 #define DB_TAG_SZ           4
 
-#define REGDB_GET_MAGICKEY(x)     ((char *)x + MAGIC_KEY_OFFSET)
+#define REGDB_GET_MAGICKEY(x)     ((char *)x + MAGIC_KEY_OFFSET) 
 #define REGDB_GET_VERSION(x)      ((char *)x + VERSION_OFFSET)
 #define REGDB_GET_FILESIZE(x)     *((unsigned int *)((char *)x + FILE_SZ_OFFSET))
 #define REGDB_GET_DBTYPE(x)       *((char *)x + DB_TYPE_OFFSET)
@@ -137,7 +137,7 @@ typedef PREPACK struct dbMasterTable_t {    /* Hold ptrs to Table data structure
 /* used to get the number of rows in a table */
 #define REGDB_NUM_OF_ROWS(a)    (sizeof (a) / sizeof (a[0]))
 
-/*
+/* 
  * Used to set the RegDomain bitmask which chooses which frequency
  * band specs are used.
  */
@@ -189,7 +189,7 @@ typedef PREPACK struct reg_dmn_pair_mapping {
 #define MCS_HT40_G_NO  (0 << 3)
 
 typedef PREPACK struct {
-    A_UINT16    countryCode;
+    A_UINT16    countryCode;       
     A_UINT16    regDmnEnum;
     A_CHAR      isoName[3];
     A_CHAR      allowMode;  /* what mode is allowed - bit 0: OFDM; bit 1: MCS_HT20; bit 2: MCS_HT40_A; bit 3: MCS_HT40_G */
@@ -217,7 +217,7 @@ typedef PREPACK struct RegDmnFreqBand {
     A_UINT8     useDfs;         /* Use DFS in the RegDomain if corresponding bit is set */
     A_UINT8     mode;           /* Mode of operation */
     A_UINT32    usePassScan;    /* Use Passive Scan in the RegDomain if corresponding bit is set */
-    A_UINT32    ht40ChanMask;   /* lower 16 bits: indicate which frequencies in the block is HT40 capable
+    A_UINT32    ht40ChanMask;   /* lower 16 bits: indicate which frequencies in the block is HT40 capable 
                                    upper 16 bits: what rate (half/quarter) the channel is  */
 } POSTPACK REG_DMN_FREQ_BAND;
 

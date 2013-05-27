@@ -30,16 +30,16 @@ __s32 mem_ccu_save(__ccmu_reg_list_t *pReg)
 	// CmuReg.Pll1Tune2    = pReg->Pll1Tune2;
 	// CmuReg.Pll5Tune2    = pReg->Pll5Tune2;
 	CmuReg.Pll8Ctl	= pReg->Pll8Ctl;
-
+	
 	CmuReg.HoscCtl      = pReg->HoscCtl;
 	CmuReg.SysClkDiv    = pReg->SysClkDiv;
 	CmuReg.Apb1ClkDiv   = pReg->Apb1ClkDiv;
-
+	
 	CmuReg.AhbGate0     = pReg->AhbGate0;
 	CmuReg.AhbGate1     = pReg->AhbGate1;
 	CmuReg.Apb0Gate     = pReg->Apb0Gate;
 	CmuReg.Apb1Gate     = pReg->Apb1Gate;
-
+	
 	CmuReg.NandClk      = pReg->NandClk;
 	CmuReg.MsClk        = pReg->MsClk;
 	CmuReg.SdMmc0Clk    = pReg->SdMmc0Clk;
@@ -90,7 +90,7 @@ __s32 mem_ccu_save(__ccmu_reg_list_t *pReg)
 	CmuReg.GmacClk      = pReg->GmacClk;
 	CmuReg.ClkOutA      = pReg->ClkOutA;
 	CmuReg.ClkOutB      = pReg->ClkOutB;
-
+	
 	return 0;
 }
 
@@ -173,3 +173,4 @@ __s32 mem_ccu_restore(__ccmu_reg_list_t *pReg)
 
 	return 0;
 }
+

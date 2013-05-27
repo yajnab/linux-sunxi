@@ -3,7 +3,7 @@
 
 #include "cmdOpcodes.h"
 
-// test cmd sequence stream: version(1B) header(1B) length(2B) checksum(2B) headerDependentValue(2B) headerExtended(4B) cmdPayload(variable, 4xnB)
+// test cmd sequence stream: version(1B) header(1B) length(2B) checksum(2B) headerDependentValue(2B) headerExtended(4B) cmdPayload(variable, 4xnB) 
 
 // header
 #define REPEAT_TEST_SHIFT 0x0
@@ -15,20 +15,20 @@
 #define CMD_STREAM_HEADER_REPEAT_TEST           0x00000001  //  headerDepValue lower B: value=0-> infinite, non-zero val is the repeated count
 #define CMD_STREAM_HEADER_FAIL_RETRY            0x00000002  // headerDepValue higher B lower nible: value=0->beginning    , non-zero, value is the back steps
 #define CMD_STREAM_HEADER_TIMEOUT_RETRY         0x00000004  // headerDepValue higher B higher nible: value=0->beginning    , non-zero, value is the back steps
-#define CMD_STREAM_HEADER_CAL_W_TGTPWR          0x00000008  // header bit 0 -> tx gain CAL, 1 -> tgt power CAL
+#define CMD_STREAM_HEADER_CAL_W_TGTPWR          0x00000008  // header bit 0 -> tx gain CAL, 1 -> tgt power CAL  
 #define CMD_STERAM_HEADER_EXTENDED_RESERVED     0x00000080
 
 // headerDepValue
 
 // header extended value
-#define CMD_STREAM_HEADER_EXTENDED_BYTESTREAM_BYPASS     0x00000001
+#define CMD_STREAM_HEADER_EXTENDED_BYTESTREAM_BYPASS     0x00000001 
 
 // others
 #define TEST_FAIL_RETRY_STEPS                 2
 
 // version
-#define CMD_STREAM_VER1                       1
-#define CMD_STREAM_VER_LATEST                 CMD_STREAM_VER1
+#define CMD_STREAM_VER1                       1     
+#define CMD_STREAM_VER_LATEST                 CMD_STREAM_VER1                     
 
 // cmd payload
 #define CMD_PAYLOAD_LEN_MAX                   8 * 1024
@@ -57,7 +57,7 @@ typedef struct _parmVal {
 } __ATTRIB_PACK _PARM_VAL;
 #if defined(WIN32) || defined(WIN64)
 #pragma pack (pop)
-#endif
+#endif	
 
 typedef struct _parmOneOf {
     A_UINT8     parmCode;
@@ -88,8 +88,8 @@ typedef struct _cmdOneOf {
 } __ATTRIB_PACK  _CMD_ONEOF;
 #define CMD_ONOF_SIZE  sizeof(struct _cmdOnOf)
 
-// test flow cmd stream ------------
-// test cmd sequence stream: version(1B) header(1B) length(2B) checksum(2B) headerDependentValue(2B) headerExtended(4B) cmdPayload(variable, 4xnB)
+// test flow cmd stream ------------ 
+// test cmd sequence stream: version(1B) header(1B) length(2B) checksum(2B) headerDependentValue(2B) headerExtended(4B) cmdPayload(variable, 4xnB) 
 typedef struct _testFlowCmdStreamHeader {
     A_UINT8     version;
     A_UINT8     header;
@@ -97,7 +97,7 @@ typedef struct _testFlowCmdStreamHeader {
     A_UINT16    checkSum;
     A_UINT16    headerDepValue;
     A_UINT32    headerExtended;
-} __ATTRIB_PACK  _TESTFLOW_CMD_STREAM_HEADER;
+} __ATTRIB_PACK  _TESTFLOW_CMD_STREAM_HEADER; 
 
 typedef struct _testFlowCmdStream {
     _TESTFLOW_CMD_STREAM_HEADER cmdStreamHeader;
@@ -105,3 +105,4 @@ typedef struct _testFlowCmdStream {
 } __ATTRIB_PACK  _TESTFLOW_CMD_STREAM;
 
 #endif // #if !defined(_TEST_CMD_STREAM_H)
+

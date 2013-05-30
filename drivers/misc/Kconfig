@@ -10,11 +10,6 @@ config SENSORS_LIS3LV02D
 	select INPUT_POLLDEV
 	default n
 
-config SUNXI_GPIO_TEST
-	tristate "cubieboard gpio test"
-	help
-	  Tiny program to fire cubieboard gpio small test board
-
 config AD525X_DPOT
 	tristate "Analog Devices Digital Potentiometers"
 	depends on (I2C || SPI) && SYSFS

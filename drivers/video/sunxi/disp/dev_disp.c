@@ -532,6 +532,9 @@ static int disp_remove(struct platform_device *pdev)
 
 int disp_suspend(int clk, int status)
 {
+	pr_info("disp suspend\n");
+
+#if 0
 	int i = 0;
 
 	__inf("disp_suspend clk %d status %d call\n", clk, status);
@@ -550,12 +553,16 @@ int disp_suspend(int clk, int status)
 	}
 	BSP_disp_clk_off(clk);
 	suspend_status |= status;
+#endif
 
 	return 0;
 }
 
 int disp_resume(int clk, int status)
 {
+	pr_info("disp resume\n");
+
+#if 0
 	int i = 0;
 
 	__inf("disp_resume clk %d status %d call\n", clk, status);
@@ -575,6 +582,7 @@ int disp_resume(int clk, int status)
 	}
 
 	suspend_status &= ~status;
+#endif
 
 	return 0;
 }

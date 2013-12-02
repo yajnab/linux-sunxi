@@ -64,4 +64,4 @@ obj-$(CONFIG_SPI_TXX9)			+= spi-txx9.o
 obj-$(CONFIG_SPI_XILINX)		+= spi-xilinx.o
 obj-$(CONFIG_SPI_SUN4I)			+= spi_sunxi.o
 obj-$(CONFIG_SPI_SUN5I)			+= spi_sunxi.o
-
+obj-$(CONFIG_SPI_SUN7I)			+= spi-sun7i.o

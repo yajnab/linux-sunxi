@@ -20,6 +20,12 @@
 /*
  * Semaphore stuff seems quite broken in here. --libv
  */
+#include <linux/kobject.h>
+#include <linux/string.h>
+#include <linux/sysfs.h>
+#include <linux/module.h>
+#include <linux/init.h>
+
 #include "drv_hdmi_i.h"
 #include "hdmi_core.h"
 #include "dev_hdmi.h"
@@ -293,11 +299,19 @@ Hdmi_run_thread(void *parg)
 	return 0;
 }
 
+static int init_hdmi_obj(void);
+static void release_hdmi_obj(void);
+
 __s32 Hdmi_init(struct platform_device *dev)
 {
 	__audio_hdmi_func audio_func;
 	__disp_hdmi_func disp_func;
 	int err = 0;
+
+	if (init_hdmi_obj()) {
+		pr_warning("hdmi: init kobject failed\n");
+		return -1;
+	}
 
 	run_sem = kmalloc(sizeof(struct semaphore), GFP_KERNEL | __GFP_ZERO);
 	sema_init((struct semaphore *)run_sem, 0);
@@ -307,6 +321,7 @@ __s32 Hdmi_init(struct platform_device *dev)
 	err = hdmi_i2c_sunxi_probe(dev);
 	if (err)
 		return err;
+
 
 	audio_info.channel_num = 2;
 #if 0
@@ -373,5 +388,194 @@ __s32 Hdmi_exit(struct platform_device *dev)
 
 	hdmi_i2c_sunxi_remove(dev);
 
+	release_hdmi_obj();
+
 	return 0;
 }
+
+
+
+/* -----------------------------------hdmi kobject--------------------------------- */
+struct cb_hdmi_obj {
+	struct kobject kobj;
+	int value;
+};
+
+#define to_cb_hdmi_obj(x) container_of(x, struct cb_hdmi_obj, kobj)
+static struct kset *cb_hdmi_kset = NULL;
+static struct cb_hdmi_obj *cb_hdmi_notifier = NULL;
+
+struct cb_hdmi_attribute {
+	struct attribute attr;
+	ssize_t (*show)(struct cb_hdmi_obj *foo, struct cb_hdmi_attribute *attr, char *buf);
+	ssize_t (*store)(struct cb_hdmi_obj *foo, struct cb_hdmi_attribute *attr, const char *buf, size_t count);
+};
+#define to_cb_hdmi_attr(x) container_of(x, struct cb_hdmi_attribute, attr)
+
+static ssize_t cb_hdmi_attr_show(struct kobject *kobj,
+				 struct attribute *attr,
+				 char *buf)
+{
+	struct cb_hdmi_attribute *attribute;
+	struct cb_hdmi_obj *foo;
+
+	attribute = to_cb_hdmi_attr(attr);
+	foo = to_cb_hdmi_obj(kobj);
+
+	if (!attribute->show)
+		return -EIO;
+
+	return attribute->show(foo, attribute, buf);
+}
+
+static ssize_t cb_hdmi_attr_store(struct kobject *kobj,
+				  struct attribute *attr,
+				  const char *buf, size_t len)
+{
+	struct cb_hdmi_attribute *attribute;
+	struct cb_hdmi_obj *foo;
+
+	attribute = to_cb_hdmi_attr(attr);
+	foo = to_cb_hdmi_obj(kobj);
+
+	if (!attribute->store)
+		return -EIO;
+
+	return attribute->store(foo, attribute, buf, len);
+}
+
+static struct sysfs_ops cb_hdmi_sysfs_ops = {
+	.show = cb_hdmi_attr_show,
+	.store = cb_hdmi_attr_store,
+};
+
+static void cb_hdmi_release(struct kobject *kobj)
+{
+	struct cb_hdmi_obj *foo;
+
+	foo = to_cb_hdmi_obj(kobj);
+	kfree(foo);
+}
+
+static ssize_t value_show(struct cb_hdmi_obj *foo_obj, struct cb_hdmi_attribute *attr,
+                       char *buf)
+{
+       return sprintf(buf, "%d\n", foo_obj->value);
+}
+
+static ssize_t value_store(struct cb_hdmi_obj *foo_obj, struct cb_hdmi_attribute *attr,
+                        const char *buf, size_t count)
+{
+       sscanf(buf, "%du", &foo_obj->value);
+       return count;
+}
+
+static struct cb_hdmi_attribute value_attribute =
+       __ATTR(value, 0666, value_show, value_store);
+
+static struct attribute *cb_hdmi_default_attrs[] = {
+       &value_attribute.attr,
+       NULL,   /* need to NULL terminate the list of attributes */
+};
+
+static struct kobj_type cb_hdmi_ktype = {
+       .sysfs_ops = &cb_hdmi_sysfs_ops,
+       .release = cb_hdmi_release,
+       .default_attrs = cb_hdmi_default_attrs,
+};
+
+
+static struct cb_hdmi_obj *cb_create_hdmi_obj(const char *name)
+{
+       struct cb_hdmi_obj *foo;
+       int retval;
+
+       /* allocate the memory for the whole object */
+       foo = kzalloc(sizeof(*foo), GFP_KERNEL);
+       if (!foo)
+               return NULL;
+       foo->kobj.kset = cb_hdmi_kset;
+
+       retval = kobject_init_and_add(&foo->kobj, &cb_hdmi_ktype, NULL, "%s", name);
+       if (retval) {
+               kobject_put(&foo->kobj);
+               return NULL;
+       }
+
+       /*
+        * We are always responsible for sending the uevent that the kobject
+        * was added to the system.
+        */
+       kobject_uevent(&foo->kobj, KOBJ_ADD);
+
+       return foo;
+}
+
+static void cb_delete_hdmi_obj(struct cb_hdmi_obj *foo)
+{
+       kobject_put(&foo->kobj);
+}
+
+static int cb_kset_filter(struct kset *kset, struct kobject *kobj)
+{
+       return 1;
+}
+
+static const char *cb_kset_name(struct kset *kset, struct kobject *kobj)
+{
+       static char buf[20];
+       memset(buf, 0, sizeof(buf));
+       sprintf(buf, "%s", "disp");
+       return buf;
+}
+
+static int cb_kset_uevent(struct kset *kset, struct kobject *kobj,struct kobj_uevent_env *env)
+{
+       return 0;
+}
+
+struct kset_uevent_ops uevent_ops =
+{
+       .filter = cb_kset_filter,
+       .name   = cb_kset_name,
+       .uevent = cb_kset_uevent,
+};
+
+static int init_hdmi_obj(void)
+{
+	cb_hdmi_kset = kset_create_and_add("disp", &uevent_ops, kernel_kobj);
+	if (!cb_hdmi_kset)
+		return -ENOMEM;
+
+	cb_hdmi_notifier = cb_create_hdmi_obj("hdmi");
+	if (cb_hdmi_notifier == NULL) {
+		kset_unregister(cb_hdmi_kset);
+		cb_hdmi_kset = NULL;
+		cb_hdmi_notifier = NULL;
+		return -ENOMEM;
+	}
+
+	return 0;
+}
+
+
+static void release_hdmi_obj(void)
+{
+	if (cb_hdmi_notifier) {
+		cb_delete_hdmi_obj(cb_hdmi_notifier);
+		cb_hdmi_notifier = NULL;
+	}
+
+	if (cb_hdmi_kset) {
+		kset_unregister(cb_hdmi_kset);
+		cb_hdmi_kset = NULL;
+	}
+}
+
+void notify_hdmi_change(enum kobject_action action)
+{
+	if (cb_hdmi_notifier != NULL) {
+		kobject_uevent(&cb_hdmi_notifier->kobj, action);
+	}
+}
+EXPORT_SYMBOL(notify_hdmi_change);

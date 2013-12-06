@@ -17,6 +17,7 @@
  * MA 02111-1307 USA
  */
 
+#include <linux/kobject.h>
 #include <linux/module.h>
 #include <plat/system.h>
 #include "../disp/sunxi_disp_regs.h"
@@ -123,6 +124,8 @@ main_Hpd_Check(void)
 		return 0;
 }
 
+extern void notify_hdmi_change(enum kobject_action action);
+
 __s32 hdmi_main_task_loop(void)
 {
 	int rc, i;
@@ -131,6 +134,7 @@ __s32 hdmi_main_task_loop(void)
 	if (!HPD && hdmi_state > HDMI_State_Wait_Hpd) {
 		__inf("plugout\n");
 		hdmi_state = HDMI_State_Wait_Hpd;
+		notify_hdmi_change(KOBJ_OFFLINE);
 	}
 
 	hdmi_cec_task_loop();
@@ -141,6 +145,7 @@ __s32 hdmi_main_task_loop(void)
 		if (HPD) {
 			hdmi_state = HDMI_State_EDID_Parse;
 			__inf("plugin\n");
+			notify_hdmi_change(KOBJ_ONLINE);
 		} else
 			return 0;
 

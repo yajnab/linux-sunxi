@@ -108,8 +108,7 @@ __s32 hdmi_core_initial(void)
 	return 0;
 }
 
-static __s32
-main_Hpd_Check(void)
+static __s32 main_Hpd_Check(void)
 {
 	__s32 i, times;
 	times = 0;
@@ -124,6 +123,14 @@ main_Hpd_Check(void)
 	else
 		return 0;
 }
+
+int is_hdmi_plugin(void)
+{
+	int flag = main_Hpd_Check();
+	return flag;
+}
+EXPORT_SYMBOL(is_hdmi_plugin);
+
 
 extern void notify_hdmi_change(enum kobject_action action);
 

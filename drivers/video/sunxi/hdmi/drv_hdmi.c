@@ -459,10 +459,11 @@ static void cb_hdmi_release(struct kobject *kobj)
 	kfree(foo);
 }
 
+extern int is_hdmi_plugin(void);
 static ssize_t value_show(struct cb_hdmi_obj *foo_obj, struct cb_hdmi_attribute *attr,
                        char *buf)
 {
-       return sprintf(buf, "%d\n", foo_obj->value);
+	return sprintf(buf, "%d\n", is_hdmi_plugin());
 }
 
 static ssize_t value_store(struct cb_hdmi_obj *foo_obj, struct cb_hdmi_attribute *attr,

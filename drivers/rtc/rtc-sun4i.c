@@ -743,7 +743,7 @@ static void __exit sunxi_rtc_exit(void)
 	platform_driver_unregister(&sunxi_rtc_driver);
 }
 
-module_init(sunxi_rtc_init);
+late_initcall(sunxi_rtc_init);
 module_exit(sunxi_rtc_exit);
 
 MODULE_DESCRIPTION("Sochip sunxi RTC Driver");

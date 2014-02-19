@@ -165,6 +165,8 @@ config FB_SYS_IMAGEBLIT
 	  blitting. This is used by drivers that don't provide their own
 	  (accelerated) version and the framebuffer is in system RAM.
 
+
+
 menuconfig FB_FOREIGN_ENDIAN
 	bool "Framebuffer foreign endianness support"
 	depends on FB
@@ -304,6 +306,14 @@ config FB_SUNXI_HDMI
         depends on FB_SUNXI_LCD
         ---help---
         default m
+
+config RPUSBDISP
+       tristate "rpusbdisp driver"
+       depends on FB && FB_SYS_FILLRECT
+       default n
+       ---help---
+         rpusbdisp video driver
+
 
 config HDMI_CEC
 	tristate "Consumer Electronics Control (CEC)"

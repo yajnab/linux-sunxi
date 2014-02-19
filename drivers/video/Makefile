@@ -31,6 +31,8 @@ obj-$(CONFIG_FB_DDC)           += fb_ddc.o
 obj-$(CONFIG_FB_DEFERRED_IO)   += fb_defio.o
 obj-$(CONFIG_FB_WMT_GE_ROPS)   += wmt_ge_rops.o
 
+obj-$(CONFIG_RPUSBDISP) += rpusbdisp/drivers/linux-driver/
+
 obj-$(CONFIG_FB_SUNXI)		+= sunxi/disp/
 obj-$(CONFIG_FB_SUNXI_LCD)	+= sunxi/lcd/
 obj-$(CONFIG_FB_SUNXI_HDMI)	+= sunxi/hdmi/

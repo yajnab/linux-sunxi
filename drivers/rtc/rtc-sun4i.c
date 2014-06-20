@@ -673,7 +673,7 @@ static void __exit sunxi_rtc_exit(void)
 	platform_driver_unregister(&sunxi_rtc_driver);
 }
 
-module_init(sunxi_rtc_init);
+late_initcall(sunxi_rtc_init);
 module_exit(sunxi_rtc_exit);
 
 static int i2c_write_reg(struct i2c_adapter *adapter, u8 adr,
